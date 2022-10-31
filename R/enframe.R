@@ -32,23 +32,29 @@ enframe_general <- function(..., at, arg_name, fn_prefix, sep,
 	ellipsis <- rlang::quos(...)
 	ellipsis <- rlang::quos_auto_name(ellipsis)
 	distributions <- lapply(ellipsis, rlang::eval_tidy)
-	is_distributions <- vapply(distributions, is_distribution,
-							   FUN.VALUE = logical(1L))
-	if (!all(is_distributions)) {
-		stop("`enframe_*()` functions only accept distributions. ",
-			 "Entries that are not distributions: ",
-			 paste(which(!is_distributions), collapse = ", "))
-	}
-
 	n <- length(distributions)
 	if (n == 0L) {
-		stop("Need at least one distribution in the `enframe_*()` function.")
+	  stop("Need at least one distribution in the `enframe_*()` function.")
+	}
+	is_distributions <- vapply(distributions, is_distribution,
+	                           FUN.VALUE = logical(1L))
+	is_null <- vapply(distributions, function(d) {
+	  !is_distribution(d) && (is.na(d) || is.null(d))
+	}, FUN.VALUE = logical(1L))
+	if (!all(is_distributions | is_null)) {
+	  stop("`enframe_*()` functions only accept distributions. ",
+	       "Entries that are not distributions: ",
+	       paste(which(!is_distributions), collapse = ", "))
 	}
 	f <- list()
 	for (i in seq_len(n)) {
-		f[[i]] <- rlang::exec(
-			eval_fn, distribution = distributions[[i]], at = at, !!!fn_args
-		)
+	  if (is_null[i]) {
+	    f[[i]] <- NA_real_
+	  } else {
+	    f[[i]] <- rlang::exec(
+	      eval_fn, distribution = distributions[[i]], at = at, !!!fn_args
+	    )
+	  }
 	}
 	if (n == 1L) {
 		eval_col_names <- fn_prefix
