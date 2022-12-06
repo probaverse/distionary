@@ -10,14 +10,11 @@ eval_chf(distribution, at)
 enframe_chf(..., at, arg_name = ".arg", fn_prefix = "chf", sep = "_")
 }
 \arguments{
-\item{distribution}{A distribution, or possibly multiple
+\item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
 \item{at}{Vector of values to evaluate the cdf at. Must be named when using
 in \code{enframe_}.}
-
-\item{...}{A distribution, or possibly multiple
-distributions in the case of \code{...}.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments.}

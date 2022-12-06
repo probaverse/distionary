@@ -17,7 +17,7 @@ enframe_pmf(
 )
 }
 \arguments{
-\item{distribution}{A distribution, or possibly multiple
+\item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
 \item{at}{Vector of values to evaluate the cdf at. Must be named when using
@@ -25,9 +25,6 @@ in \code{enframe_}.}
 
 \item{strict}{Only evaluate when the pmf exists? \code{TRUE} if so;
 if \code{FALSE}, simply evaluates the probability of the specified outcomes.}
-
-\item{...}{A distribution, or possibly multiple
-distributions in the case of \code{...}.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments.}
