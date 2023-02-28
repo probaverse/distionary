@@ -5,9 +5,9 @@
 \alias{enframe_cdf}
 \title{Cumulative Distribution Function}
 \usage{
-eval_cdf(distribution, at)
+eval_cdf(distribution, ...)
 
-enframe_cdf(..., at, arg_name = ".arg", fn_prefix = "cdf", sep = "_")
+enframe_cdf(...)
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple

@@ -23,17 +23,37 @@
 #' enframe_cdf(d1, d2, at = 0:4)
 #' @rdname cdf
 #' @export
-eval_cdf <- function(distribution, at) UseMethod("eval_cdf")
+eval_cdf <- function(distribution, ...) UseMethod("eval_cdf")
 
 #' @export
-eval_cdf.dst <- function(distribution, at) {
+eval_cdf.dst <- function(distribution, at, ...) {
   stop("Can't find a cdf for this distribution.")
 }
 
 #' @rdname cdf
 #' @export
-enframe_cdf <- function(..., at, arg_name = ".arg", fn_prefix = "cdf",
-						sep = "_") {
-	enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-					sep = sep, eval_fn = eval_cdf)
+enframe_cdf <- function(...) UseMethod("enframe_cdf")
+
+#' @export
+enframe_cdf.dst <- function(..., at, arg_name = ".arg", fn_prefix = "cdf",
+                            sep = "_") {
+  enframe_univariate(..., at = at,
+                     arg_name = arg_name, fn_prefix = fn_prefix,
+                     sep = sep, eval_fn = eval_cdf)
+}
+
+#' @export
+enframe_cdf.bi_dst <- function(..., x, y, arg_name = ".arg", fn_prefix = "cdf",
+                            sep = "_") {
+  enframe_bivariate(..., x = x, y = y,
+                    arg_name = arg_name, fn_prefix = fn_prefix,
+                    sep = sep, eval_fn = eval_cdf)
+}
+
+#' @export
+enframe_cdf.multi_dst <- function(..., .l, arg_name = ".arg", fn_prefix = "cdf",
+                               sep = "_") {
+  enframe_multivariate(..., .l,
+                       arg_name = arg_name, fn_prefix = fn_prefix,
+                       sep = sep, eval_fn = eval_cdf)
 }

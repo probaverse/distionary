@@ -13,7 +13,7 @@
 #' @family distributional representations
 #' @rdname survival
 #' @export
-eval_survival <- function(distribution, at) UseMethod("eval_survival")
+eval_survival <- function(distribution, ...) UseMethod("eval_survival")
 
 #' @export
 eval_survival.dst <- function(distribution, at) {

@@ -13,8 +13,8 @@
 #' @family distributional representations
 #' @rdname odds
 #' @export
-eval_odds <- function(distribution, at) {
-	p <- eval_pmf(distribution, at = at, strict = FALSE)
+eval_odds <- function(distribution, ...) {
+	p <- eval_pmf(distribution, ...)
 	p / (1 - p)
 }
 

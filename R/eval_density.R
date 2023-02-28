@@ -3,8 +3,6 @@
 #' Access a distribution's probability density function (pdf).
 #'
 #' @inheritParams eval_cdf
-#' @param strict Only evaluate when the density exists? `TRUE` if so;
-#' if `FALSE`, evaluates the derivative of the cdf.
 #' @return The evaluated density in vector form (for `eval_`) and data frame
 #' or tibble form (for `enframe_`).
 #' @examples
@@ -15,11 +13,12 @@
 #' @family distributional representations
 #' @rdname density
 #' @export
-eval_density <- function(distribution, at, strict = TRUE) {
+eval_density <- function(distribution, ...) {
 	UseMethod("eval_density")
 }
 
-
+#' @param strict Only evaluate when the density exists? `TRUE` if so;
+#' if `FALSE`, evaluates the derivative of the cdf.
 #' @export
 eval_density.dst <- function(distribution, at, strict = TRUE) {
   if (variable(distribution) == "continuous") {

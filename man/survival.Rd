@@ -5,7 +5,7 @@
 \alias{enframe_survival}
 \title{Survival Function}
 \usage{
-eval_survival(distribution, at)
+eval_survival(distribution, ...)
 
 enframe_survival(..., at, arg_name = ".arg", fn_prefix = "survival", sep = "_")
 }

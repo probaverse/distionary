@@ -5,7 +5,7 @@
 \alias{enframe_odds}
 \title{Odds Function}
 \usage{
-eval_odds(distribution, at)
+eval_odds(distribution, ...)
 
 enframe_odds(..., at, arg_name = ".arg", fn_prefix = "odds", sep = "_")
 }
