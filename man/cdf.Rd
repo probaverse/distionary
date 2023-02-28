@@ -3,20 +3,26 @@
 \name{eval_cdf}
 \alias{eval_cdf}
 \alias{enframe_cdf}
+\alias{enframe_cdf.dst}
+\alias{enframe_cdf.bi_dst}
+\alias{enframe_cdf.multi_dst}
 \title{Cumulative Distribution Function}
 \usage{
 eval_cdf(distribution, ...)
 
 enframe_cdf(...)
+
+\method{enframe_cdf}{dst}(..., at, arg_name = ".arg", fn_prefix = "cdf", sep = "_")
+
+\method{enframe_cdf}{bi_dst}(..., x, y, arg_name = ".arg", fn_prefix = "cdf", sep = "_")
+
+\method{enframe_cdf}{multi_dst}(..., .l, arg_name = ".arg", fn_prefix = "cdf", sep = "_")
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
-\item{at}{Vector of values to evaluate the cdf at. Must be named when using
-in \code{enframe_}.}
-
-\item{arg_name}{For \code{enframe_}, name of the column containing
+\item{arg_name}{For \code{enframe_}, name(s) of the column containing
 the function arguments.}
 
 \item{fn_prefix}{For \code{enframe_}, name of the function to

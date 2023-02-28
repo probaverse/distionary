@@ -4,9 +4,7 @@
 #'
 #' @param distribution,... A distribution, or possibly multiple
 #' distributions in the case of `...`.
-#' @param at Vector of values to evaluate the cdf at. Must be named when using
-#' in `enframe_`.
-#' @param arg_name For `enframe_`, name of the column containing
+#' @param arg_name For `enframe_`, name(s) of the column containing
 #' the function arguments.
 #' @param fn_prefix For `enframe_`, name of the function to
 #' appear in the column(s).
@@ -25,8 +23,21 @@
 #' @export
 eval_cdf <- function(distribution, ...) UseMethod("eval_cdf")
 
+#' @param at Vector of values to evaluate the univariate cdf at.
 #' @export
 eval_cdf.dst <- function(distribution, at, ...) {
+  stop("Can't find a cdf for this distribution.")
+}
+
+#' @param x,y Vectors of values to evaluate the bivariate cdf at.
+#' @export
+eval_cdf.bi_dst <- function(distribution, x, y, ...) {
+  stop("Can't find a cdf for this distribution.")
+}
+
+#' @param .l List of vectors of values to evaluate the multivariate cdf at.
+#' @export
+eval_cdf.multi_dst <- function(distribution, .l, ...) {
   stop("Can't find a cdf for this distribution.")
 }
 
@@ -34,6 +45,7 @@ eval_cdf.dst <- function(distribution, at, ...) {
 #' @export
 enframe_cdf <- function(...) UseMethod("enframe_cdf")
 
+#' @rdname cdf
 #' @export
 enframe_cdf.dst <- function(..., at, arg_name = ".arg", fn_prefix = "cdf",
                             sep = "_") {
@@ -42,6 +54,7 @@ enframe_cdf.dst <- function(..., at, arg_name = ".arg", fn_prefix = "cdf",
                      sep = sep, eval_fn = eval_cdf)
 }
 
+#' @rdname cdf
 #' @export
 enframe_cdf.bi_dst <- function(..., x, y, arg_name = ".arg", fn_prefix = "cdf",
                             sep = "_") {
@@ -50,6 +63,7 @@ enframe_cdf.bi_dst <- function(..., x, y, arg_name = ".arg", fn_prefix = "cdf",
                     sep = sep, eval_fn = eval_cdf)
 }
 
+#' @rdname cdf
 #' @export
 enframe_cdf.multi_dst <- function(..., .l, arg_name = ".arg", fn_prefix = "cdf",
                                sep = "_") {

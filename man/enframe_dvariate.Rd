@@ -38,12 +38,18 @@ enframe_multivariate(
 )
 }
 \arguments{
+\item{at}{Vector of values to evaluate the univariate cdf at.}
+
 \item{eval_fn}{Name of the \code{eval_} function for the desired distributional
 representation, such as \code{eval_cdf} and \code{eval_density}.}
 
 \item{fn_args}{A named list of arguments to pass to the \code{eval_fn} function,
 besides the distribution and \code{.l} argument (the \code{strict} argument
 being the most common, and perhaps the only use case).}
+
+\item{x, y}{Vectors of values to evaluate the bivariate cdf at.}
+
+\item{.l}{List of vectors of values to evaluate the multivariate cdf at.}
 }
 \value{
 A data frame or tibble of the input argument(s) (\code{.l}), with the

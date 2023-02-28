@@ -15,7 +15,7 @@ distributions in the case of \code{...}.}
 
 \item{at}{Vector of return periods >=1.}
 
-\item{arg_name}{For \code{enframe_}, name of the column containing
+\item{arg_name}{For \code{enframe_}, name(s) of the column containing
 the function arguments.}
 
 \item{fn_prefix}{For \code{enframe_}, name of the function to

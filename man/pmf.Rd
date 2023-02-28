@@ -20,10 +20,7 @@ enframe_pmf(
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
-\item{at}{Vector of values to evaluate the cdf at. Must be named when using
-in \code{enframe_}.}
-
-\item{arg_name}{For \code{enframe_}, name of the column containing
+\item{arg_name}{For \code{enframe_}, name(s) of the column containing
 the function arguments.}
 
 \item{fn_prefix}{For \code{enframe_}, name of the function to
