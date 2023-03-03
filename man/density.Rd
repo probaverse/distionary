@@ -8,7 +8,7 @@
 \alias{enframe_density.multi_dst}
 \title{Probability Density Function}
 \usage{
-eval_density(distribution, ...)
+eval_density(distribution, at)
 
 enframe_density(...)
 
@@ -25,7 +25,7 @@ enframe_density(...)
   ...,
   x,
   y,
-  arg_name = ".arg",
+  arg_name = NULL,
   fn_prefix = "density",
   sep = "_",
   strict = TRUE
@@ -34,7 +34,7 @@ enframe_density(...)
 \method{enframe_density}{multi_dst}(
   ...,
   .l,
-  arg_name = ".arg",
+  arg_name = NULL,
   fn_prefix = "density",
   sep = "_",
   strict = TRUE
@@ -43,6 +43,8 @@ enframe_density(...)
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
+
+\item{at}{Vector of values to evaluate the function at.}
 
 \item{arg_name}{For \code{enframe_}, name(s) of the column containing
 the function arguments.}
@@ -69,6 +71,7 @@ eval_density(dst_pois(1), at = 0:4, strict = FALSE)
 }
 \seealso{
 Other distributional representations: 
+\code{\link{eval_bicdf}()},
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_hazard}()},

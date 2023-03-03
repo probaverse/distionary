@@ -25,3 +25,6 @@ enframe_odds <- function(..., at, arg_name = ".arg", fn_prefix = "odds",
 	enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
 					sep = sep, eval_fn = eval_odds)
 }
+
+
+enframe_odds <- function(...) enframe_general(..., eval_fn = eval_odds)

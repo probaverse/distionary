@@ -2,25 +2,15 @@
 % Please edit documentation in R/eval_cdf.R
 \name{eval_cdf}
 \alias{eval_cdf}
-\alias{enframe_cdf}
-\alias{enframe_cdf.dst}
-\alias{enframe_cdf.bi_dst}
-\alias{enframe_cdf.multi_dst}
 \title{Cumulative Distribution Function}
 \usage{
-eval_cdf(distribution, ...)
-
-enframe_cdf(...)
-
-\method{enframe_cdf}{dst}(..., at, arg_name = ".arg", fn_prefix = "cdf", sep = "_")
-
-\method{enframe_cdf}{bi_dst}(..., x, y, arg_name = ".arg", fn_prefix = "cdf", sep = "_")
-
-\method{enframe_cdf}{multi_dst}(..., .l, arg_name = ".arg", fn_prefix = "cdf", sep = "_")
+eval_cdf(distribution, at)
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
+
+\item{at}{Vector of values to evaluate the function at.}
 
 \item{arg_name}{For \code{enframe_}, name(s) of the column containing
 the function arguments.}
@@ -47,6 +37,7 @@ enframe_cdf(d1, d2, at = 0:4)
 }
 \seealso{
 Other distributional representations: 
+\code{\link{eval_bicdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_density}()},
 \code{\link{eval_hazard}()},

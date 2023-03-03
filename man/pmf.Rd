@@ -20,6 +20,8 @@ enframe_pmf(
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
+\item{at}{Vector of values to evaluate the function at.}
+
 \item{arg_name}{For \code{enframe_}, name(s) of the column containing
 the function arguments.}
 
@@ -45,6 +47,7 @@ eval_pmf(dst_norm(0, 1), at = -3:3, strict = FALSE)
 }
 \seealso{
 Other distributional representations: 
+\code{\link{eval_bicdf}()},
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_density}()},

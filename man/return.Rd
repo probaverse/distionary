@@ -41,6 +41,7 @@ enframe_chf(d, at = c(2, 25, 100, 200))
 }
 \seealso{
 Other distributional representations: 
+\code{\link{eval_bicdf}()},
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_density}()},

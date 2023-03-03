@@ -14,7 +14,7 @@
 #' @family distributional representations
 #' @rdname density
 #' @export
-eval_density <- function(distribution, ...) UseMethod("eval_density")
+eval_density <- function(distribution, at) UseMethod("eval_density")
 
 #' @param strict Only evaluate when the density exists? `TRUE` if so;
 #' if `FALSE`, evaluates the derivative of the cdf.
@@ -93,7 +93,7 @@ enframe_density.dst <- function(..., at, arg_name = ".arg",
 
 #' @rdname density
 #' @export
-enframe_density.bi_dst <- function(..., x, y, arg_name = ".arg",
+enframe_density.bi_dst <- function(..., x, y, arg_name = NULL,
                                    fn_prefix = "density",
                                    sep = "_", strict = TRUE) {
   enframe_bivariate(..., x = x, y = y,
@@ -103,7 +103,7 @@ enframe_density.bi_dst <- function(..., x, y, arg_name = ".arg",
 
 #' @rdname density
 #' @export
-enframe_density.multi_dst <- function(..., .l, arg_name = ".arg",
+enframe_density.multi_dst <- function(..., .l, arg_name = NULL,
                                       fn_prefix = "density",
                                       sep = "_", strict = TRUE) {
   enframe_multivariate(..., .l,
