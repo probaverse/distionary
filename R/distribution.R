@@ -20,11 +20,13 @@ new_distribution <- function(l, variable, ...,
 #' @param object Object to be tested
 #' @rdname distribution
 #' @export
-is_distribution <- function(object) inherits(object, "dst")
+is_distribution <- function(object) {
+  inherits(object, "dst") || inherits(object, "multidst")
+}
 
 #' @rdname distribution
 #' @export
-is.distribution <- function(object) inherits(object, "dst")
+is.distribution <- is_distribution
 
 #' Make a blank distribution
 #'
