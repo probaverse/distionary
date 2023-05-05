@@ -13,7 +13,8 @@ enframe_chf(..., at, arg_name = ".arg", fn_prefix = "chf", sep = "_")
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
-\item{at}{Vector of values to evaluate the function at.}
+\item{at}{A vector of values to evaluate the distributional
+representation at.}
 
 \item{arg_name}{For \code{enframe_}, name(s) of the column containing
 the function arguments.}
@@ -39,8 +40,7 @@ enframe_chf(d, at = 0:4)
 }
 \seealso{
 Other distributional representations: 
-\code{\link{eval_bicdf}()},
-\code{\link{eval_cdf}()},
+\code{\link{enframe_cdf}()},
 \code{\link{eval_density}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},

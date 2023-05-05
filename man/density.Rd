@@ -3,16 +3,13 @@
 \name{eval_density}
 \alias{eval_density}
 \alias{enframe_density}
-\alias{enframe_density.dst}
-\alias{enframe_density.bi_dst}
+\alias{enframe_bi_density}
 \alias{enframe_density.multi_dst}
 \title{Probability Density Function}
 \usage{
 eval_density(distribution, at)
 
-enframe_density(...)
-
-\method{enframe_density}{dst}(
+enframe_density(
   ...,
   at,
   arg_name = ".arg",
@@ -21,7 +18,7 @@ enframe_density(...)
   strict = TRUE
 )
 
-\method{enframe_density}{bi_dst}(
+enframe_bi_density(
   ...,
   x,
   y,
@@ -31,7 +28,7 @@ enframe_density(...)
   strict = TRUE
 )
 
-\method{enframe_density}{multi_dst}(
+enframe_density.multi_dst(
   ...,
   .l,
   arg_name = NULL,
@@ -44,7 +41,8 @@ enframe_density(...)
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
-\item{at}{Vector of values to evaluate the function at.}
+\item{at}{A vector of values to evaluate the distributional
+representation at.}
 
 \item{arg_name}{For \code{enframe_}, name(s) of the column containing
 the function arguments.}
@@ -54,6 +52,14 @@ appear in the column(s).}
 
 \item{sep}{When \code{enframe}'ing more than one distribution, the
 character that will be separating the \code{fn_name} and the distribution name.}
+
+\item{x, y}{Vectors of values to evaluate the (bivariate) distributional
+representation at.}
+
+\item{.l}{A list of vectors, one for each dimension of the distribution,
+to evaluate the distributional representation at. Optionally, a single
+vector of the same length, for evaluating the representation at a single
+point.}
 }
 \value{
 The evaluated density
@@ -71,8 +77,7 @@ eval_density(dst_pois(1), at = 0:4, strict = FALSE)
 }
 \seealso{
 Other distributional representations: 
-\code{\link{eval_bicdf}()},
-\code{\link{eval_cdf}()},
+\code{\link{enframe_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
