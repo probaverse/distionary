@@ -4,18 +4,18 @@
 \alias{send_fmls_to_enframe}
 \title{Send arguments to an \code{enframe_} function}
 \usage{
-send_fmls_to_enframe(variate, eval_fn)
+send_fmls_to_enframe(variate, repres)
 }
 \arguments{
 \item{variate}{One of \code{"uni"}, \code{"bi"}, or \code{"multi"}.}
 
-\item{eval_fn}{String; suffix of an \code{eval_} function, specifying the
-distributional representation to be evaluated.}
+\item{repres}{String; suffix of an \code{eval_} function, specifying the
+distributional representation to be evaluated; e.g., \code{"cdf"}.}
 }
 \value{
 Either the \code{enframe_uni()}, \code{enframe_bi()}, or \code{enframe_multi()}
 function (depending on the \code{variate} input), evaluated at the
-encapsulating function's arguments, with the \code{eval_fn} argument
+encapsulating function's arguments, with the proper \code{eval_fn} argument
 also passed.
 }
 \description{

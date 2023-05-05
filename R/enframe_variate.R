@@ -5,6 +5,8 @@
 #' standardize the arguments in which to evaluate the distributional
 #' representation at, before calling a general enframer function.
 #'
+#' @param eval_fn Character name of the eval function to enframe;
+#' e.g., `"eval_multi_cdf"`.
 #' @details
 #'
 #' - The univariate version puts the `at` input into a list,

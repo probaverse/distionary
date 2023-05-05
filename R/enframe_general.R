@@ -5,9 +5,7 @@
 #' multivariate distributions, for multiple distributions,
 #' and places the results in a data frame or tibble.
 #'
-#' @inheritParams eval_multicdf
-#' @param eval_fn Name of the `eval_` function for the desired distributional
-#' representation, such as `eval_cdf` and `eval_density`.
+#' @inheritParams enframe_variate
 #' @param fn_args A named list of arguments to pass to the `eval_fn` function,
 #' besides the distribution and `.l` argument (the `strict` argument
 #' being the most common, and perhaps the only use case).

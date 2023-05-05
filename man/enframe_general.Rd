@@ -7,9 +7,6 @@
 enframe_general(..., .l, fn_prefix, eval_fn, fn_args = list())
 }
 \arguments{
-\item{eval_fn}{Name of the \code{eval_} function for the desired distributional
-representation, such as \code{eval_cdf} and \code{eval_density}.}
-
 \item{fn_args}{A named list of arguments to pass to the \code{eval_fn} function,
 besides the distribution and \code{.l} argument (the \code{strict} argument
 being the most common, and perhaps the only use case).}

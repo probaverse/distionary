@@ -12,6 +12,10 @@ enframe_bi(..., x, y, arg_name, fn_prefix, sep, eval_fn)
 
 enframe_multi(..., .l, arg_name, fn_prefix, sep, eval_fn)
 }
+\arguments{
+\item{eval_fn}{Character name of the eval function to enframe;
+e.g., \code{"eval_multi_cdf"}.}
+}
 \value{
 Calls the \code{enframe_general()} function with a standardized
 \code{.l} input.
