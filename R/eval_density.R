@@ -39,28 +39,16 @@ eval_density.dst <- function(distribution, at, strict = TRUE, ...) {
 #' @param strict Only evaluate when the density exists? `TRUE` if so;
 #' if `FALSE`, evaluates the derivative of the cdf.
 #' @export
-eval_density.bi_dst <- function(distribution, x, y, strict = TRUE, ...) {
-  n <- vctrs::vec_size_common(x, y)
-  if (variable(distribution) == "continuous") {
-    stop("Cannot find this distribution's density function.")
-  }
-  if (strict) {
-    stop("This distribution does not have a density function. ",
-         "Maybe you want to evaluate outside of strict mode?")
-  } else {
-    if (variable(distribution) == "discrete") {
-      return(rep(0, n))
-    } else {
-      stop("Cannot find the derivative of the cdf.")
-    }
-  }
+eval_bi_density <- function(distribution, x, y, strict = TRUE, ...) {
+  .l <- vctrs::vec_recycle_common(x, y)
+  eval_multi_density(distribution, .l = .l, ...)
 }
 
 #' @inheritParams eval_density.dst
 #' @param strict Only evaluate when the density exists? `TRUE` if so;
 #' if `FALSE`, evaluates the derivative of the cdf.
 #' @export
-eval_density.multi_dst <- function(distribution, .l, strict = TRUE, ...) {
+eval_multi_density.multi_dst <- function(distribution, .l, strict = TRUE, ...) {
   n <- vctrs::vec_size_common(!!!.l)
   if (variable(distribution) == "continuous") {
     stop("Cannot find this distribution's density function.")
@@ -77,25 +65,22 @@ eval_density.multi_dst <- function(distribution, .l, strict = TRUE, ...) {
   }
 }
 
-#' @rdname density
-#' @export
-enframe_density <- function(...) UseMethod("enframe_density")
 
 #' @rdname density
 #' @export
-enframe_density.dst <- function(..., at, arg_name = ".arg",
-                                fn_prefix = "density",
-                                sep = "_", strict = TRUE) {
-  enframe_univariate(..., at = at,
-                     arg_name = arg_name, fn_prefix = fn_prefix,
-                     sep = sep, eval_fn = eval_density)
+enframe_density <- function(..., at, arg_name = ".arg",
+                            fn_prefix = "density",
+                            sep = "_", strict = TRUE) {
+  .l <- rlang::set_names(list(at), arg_name)
+  enframe_general(..., .l = .l, fn_prefix = fn_prefix, sep = sep,
+                  eval_fn = eval_cdf)
 }
 
 #' @rdname density
 #' @export
-enframe_density.bi_dst <- function(..., x, y, arg_name = NULL,
-                                   fn_prefix = "density",
-                                   sep = "_", strict = TRUE) {
+enframe_bi_density <- function(..., x, y, arg_name = NULL,
+                               fn_prefix = "density",
+                               sep = "_", strict = TRUE) {
   enframe_bivariate(..., x = x, y = y,
                     arg_name = arg_name, fn_prefix = fn_prefix,
                     sep = sep, eval_fn = eval_density)
