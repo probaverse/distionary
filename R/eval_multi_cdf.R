@@ -6,6 +6,21 @@
 #' @export
 eval_multi_cdf <- function(distribution, .l) UseMethod("eval_multi_cdf")
 
+#' Evaluate a univariate distribution in a multivariate framework
+#'
+#' This method allows a user to use a multivariate evaluation function for
+#' a univariate distribution.
+#'
+#' @inheritParams cdf
+eval_multi_cdf.dst <- function(distribution, .l) {
+  if (length(.l) > 1) {
+    stop("For a univariate distribution, `.l` cannot have ", length(.l),
+         " entries.")
+  }
+  at <- .l[[1]]
+  eval_cdf(distribution, at = at)
+}
+
 #' @export
 eval_cdf.default <- function(distribution, .l) {
   stop("Can't find a cdf for this distribution.")

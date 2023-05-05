@@ -4,6 +4,7 @@
 #' @export
 eval_bi_cdf <- function(distribution, x, y) UseMethod("eval_bi_cdf")
 
+#' @rdname cdf
 #' @export
 eval_bi_cdf.default <- function(distribution, x, y) {
   xy <- vctrs::vec_recycle_common(x, y)
