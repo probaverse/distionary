@@ -12,6 +12,20 @@ eval_multi_cdf <- function(distribution, .l) UseMethod("eval_multi_cdf")
 #' a univariate distribution.
 #'
 #' @inheritParams cdf
+eval_multi_cdf.bidst <- function(distribution, .l) {
+  if (length(.l) == 2) {
+    stop("For a bivariate distribution, `.l` cannot have ", length(.l),
+         " entries.")
+  }
+  eval_bi_cdf(distribution, x = .l[[1]], y = .l[[2]])
+}
+
+#' Evaluate a univariate distribution in a multivariate framework
+#'
+#' This method allows a user to use a multivariate evaluation function for
+#' a univariate distribution.
+#'
+#' @inheritParams cdf
 eval_multi_cdf.dst <- function(distribution, .l) {
   if (length(.l) > 1) {
     stop("For a univariate distribution, `.l` cannot have ", length(.l),
