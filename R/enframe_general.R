@@ -52,9 +52,8 @@ enframe_general <- function(..., .l, fn_prefix, eval_fn, fn_args = list()) {
 #' "input" being the function argument being evaluated, and
 #' "output" being the evaluated function.
 #'
-#' @param ... Arguments contained in the ellipsis of an enframe_ function.
 #' @rdname enframed_names
-#' @inheritParams enframe_univariate
+#' @inheritParams enframe_cdf
 name_distributions <- function(..., fn_prefix) {
   ellipsis <- dots_to_quos(...)
   n <- length(distributions)
@@ -67,66 +66,5 @@ name_distributions <- function(..., fn_prefix) {
   }
   output_names
 }
-
-
-
-
-#' #' @rdname enframe_dvariate
-#' enframe_univariate_OLD <- function(..., at, arg_name, fn_prefix, sep,
-#'                                eval_fn, fn_args = list()) {
-#'   output_cols <- process_ellipsis_for_enframe(...)
-#'   names(output_cols) <- enframed_names_output(..., fn_prefix, sep)
-#'   at_enquo <- rlang::quos_auto_name(rlang::enquos(at))
-#'   at_names <- rlang::names2(at_enquo)
-#'   input_cols <- lapply(at_enquo, rlang::eval_tidy)
-#'   names(input_cols) <- enframed_names_input(at_names, arg_name)
-#'   n <- length(output_cols)
-#'   for (i in seq_len(n)) if (!is.na(output_cols[[i]])) {
-#'     output_cols[[i]] <- rlang::exec(
-#'       eval_fn, distribution = output_cols[[i]], at = at, !!!fn_args
-#'     )
-#'   }
-#'   res <- as.data.frame(c(input_cols, output_cols))
-#'   convert_dataframe_to_tibble(res)
-#' }
-#'
-#' #' @rdname enframe_dvariate
-#' enframe_bivariate_OLD <- function(..., x, y, arg_name, fn_prefix, sep,
-#'                               eval_fn, fn_args = list()) {
-#'   output_cols <- process_ellipsis_for_enframe(...)
-#'   names(output_cols) <- enframed_names_output(..., fn_prefix, sep)
-#'   xy_enquo <- rlang::quos_auto_name(rlang::enquos(x, y))
-#'   xy_names <- rlang::names2(xy_enquo)
-#'   input_cols <- lapply(xy_enquo, rlang::eval_tidy)
-#'   names(input_cols) <- enframed_names_input(xy_names, arg_name)
-#'   n <- length(output_cols)
-#'   for (i in seq_len(n)) if (!is.na(output_cols[[i]])) {
-#'     output_cols[[i]] <- rlang::exec(
-#'       eval_fn, distribution = output_cols[[i]], x = x, y = y, !!!fn_args
-#'     )
-#'   }
-#'   res <- as.data.frame(c(input_cols, output_cols))
-#'   convert_dataframe_to_tibble(res)
-#' }
-#'
-#' #' @rdname enframe_dvariate
-#' enframe_multivariate_OLD <- function(..., .l, arg_name, fn_prefix, sep,
-#'                                  eval_fn, fn_args = list()) {
-#'   output_cols <- process_ellipsis_for_enframe(...)
-#'   names(output_cols) <- enframed_names_output(..., fn_prefix, sep)
-#'   .l_enquo <- rlang::quos_auto_name(rlang::enquos(!!!.l))
-#'   .l_names <- rlang::names2(.l_enquo)
-#'   input_cols <- lapply(.l_enquo, rlang::eval_tidy)
-#'   names(input_cols) <- enframed_names_input(.l_names, arg_name)
-#'   n <- length(output_cols)
-#'   for (i in seq_len(n)) if (!is.na(output_cols[[i]])) {
-#'     output_cols[[i]] <- rlang::exec(
-#'       eval_fn, distribution = output_cols[[i]], .l = .l, !!!fn_args
-#'     )
-#'   }
-#'   res <- as.data.frame(c(input_cols, output_cols))
-#'   convert_dataframe_to_tibble(res)
-#' }
-
 
 
