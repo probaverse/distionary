@@ -15,7 +15,7 @@ check_dsts <- function(distributions) {
     stop("Ellipsis can only contain distributions or NULL/NA values. ",
          "Bad entries: ", paste(which(bad_dots), collapse = ", "), ".")
   }
-  dims <- vapply(distribution, dimension, FUN.VALUE = integer(1L))
+  dims <- vapply(distribution, dimension, FUN.VALUE = numeric(1L))
   if (length(unique(dims)) > 1) {
     stop("Distributions must all have the same dimension. Dimensions ",
          "received: ", paste(dims, collapse = ", "), ".")
