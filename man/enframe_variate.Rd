@@ -13,8 +13,29 @@ enframe_bi(..., x, y, arg_name, fn_prefix, sep, eval_fn)
 enframe_multi(..., .l, arg_name, fn_prefix, sep, eval_fn)
 }
 \arguments{
+\item{...}{f}
+
+\item{at}{A vector of values to evaluate the univariate distributional
+representation at.}
+
+\item{arg_name}{Name(s) of the column(s) containing
+the function arguments, one per dimension of the distribution. See details.}
+
+\item{fn_prefix}{Name of the prefix to appear in the function
+evaluation column(s).}
+
+\item{sep}{Deprecated; no longer used.}
+
 \item{eval_fn}{Character name of the eval function to enframe;
 e.g., \code{"eval_multi_cdf"}.}
+
+\item{x, y}{Vectors of values to evaluate the bivariate distributional
+representation at.}
+
+\item{.l}{A list of vectors, one for each dimension of the distribution,
+to evaluate the distributional representation at. Optionally, a single
+vector of the same length, for evaluating the representation at a single
+point.}
 }
 \value{
 Calls the \code{enframe_general()} function with a standardized

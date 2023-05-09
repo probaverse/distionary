@@ -7,6 +7,7 @@
 #'
 #' @param eval_fn Character name of the eval function to enframe;
 #' e.g., `"eval_multi_cdf"`.
+#' @inheritParams enframe_cdf
 #' @details
 #'
 #' - The univariate version puts the `at` input into a list,
@@ -18,7 +19,6 @@
 #'
 #' @return Calls the `enframe_general()` function with a standardized
 #' `.l` input.
-#' @inheritParams cdf
 #' @rdname enframe_variate
 enframe_uni <- function(..., at, arg_name, fn_prefix, sep, eval_fn) {
   .l <- rlang::set_names(list(at), arg_name)

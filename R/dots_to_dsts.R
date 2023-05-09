@@ -5,9 +5,9 @@
 #' of distributions. `dots_to_quos()` returns a squashed list of quosures;
 #' `dots_to_dsts()` returns a squashed list of distributions.
 #'
-#' @param ... Distribution objects, possibly also nested lists of distributions.
 #' @param na.rm Logical; remove NA entries? Note that NULL entries are
 #' always removed.
+#' @inheritParams enframe_cdf
 #' @return A list of distributions contained in the `...`, with NULL
 #' entries discarded. If no distributions are present, returns `list()`.
 #' @details An error is thrown if, after discarding NULL entries,

@@ -10,19 +10,10 @@ eval_return(distribution, at)
 enframe_return(..., at, arg_name = ".arg", fn_prefix = "return", sep = "_")
 }
 \arguments{
-\item{distribution, ...}{A distribution, or possibly multiple
-distributions in the case of \code{...}.}
+\item{distribution}{A distribution, inheriting the class
+\code{"dst"}, \code{"bidst"}, or \code{"multidst"}.}
 
 \item{at}{Vector of return periods >=1.}
-
-\item{arg_name}{For \code{enframe_}, name(s) of the column containing
-the function arguments.}
-
-\item{fn_prefix}{For \code{enframe_}, name of the function to
-appear in the column(s).}
-
-\item{sep}{When \code{enframe}'ing more than one distribution, the
-character that will be separating the \code{fn_name} and the distribution name.}
 }
 \value{
 The return levels associated with the specified return periods
@@ -41,7 +32,7 @@ enframe_chf(d, at = c(2, 25, 100, 200))
 }
 \seealso{
 Other distributional representations: 
-\code{\link{enframe_cdf}()},
+\code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_density}()},
 \code{\link{eval_hazard}()},

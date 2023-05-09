@@ -17,20 +17,11 @@ enframe_pmf(
 )
 }
 \arguments{
-\item{distribution, ...}{A distribution, or possibly multiple
-distributions in the case of \code{...}.}
+\item{distribution}{A distribution, inheriting the class
+\code{"dst"}, \code{"bidst"}, or \code{"multidst"}.}
 
-\item{at}{A vector of values to evaluate the distributional
+\item{at}{A vector of values to evaluate the univariate distributional
 representation at.}
-
-\item{arg_name}{For \code{enframe_}, name(s) of the column containing
-the function arguments.}
-
-\item{fn_prefix}{For \code{enframe_}, name of the function to
-appear in the column(s).}
-
-\item{sep}{When \code{enframe}'ing more than one distribution, the
-character that will be separating the \code{fn_name} and the distribution name.}
 }
 \value{
 The evaluated probabilities
@@ -48,7 +39,7 @@ eval_pmf(dst_norm(0, 1), at = -3:3, strict = FALSE)
 }
 \seealso{
 Other distributional representations: 
-\code{\link{enframe_cdf}()},
+\code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_density}()},
 \code{\link{eval_hazard}()},

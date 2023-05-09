@@ -10,8 +10,8 @@ eval_odds(distribution, ...)
 enframe_odds(...)
 }
 \arguments{
-\item{distribution, ...}{A distribution, or possibly multiple
-distributions in the case of \code{...}.}
+\item{distribution}{A distribution, inheriting the class
+\code{"dst"}, \code{"bidst"}, or \code{"multidst"}.}
 }
 \value{
 The evaluated odds in vector form (for \code{eval_}) and data frame
@@ -28,7 +28,7 @@ enframe_odds(d, at = 0:4)
 }
 \seealso{
 Other distributional representations: 
-\code{\link{enframe_cdf}()},
+\code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_density}()},
 \code{\link{eval_hazard}()},

@@ -7,7 +7,10 @@
 name_distributions(..., fn_prefix)
 }
 \arguments{
-\item{...}{Arguments contained in the ellipsis of an enframe_ function.}
+\item{...}{f}
+
+\item{fn_prefix}{Name of the prefix to appear in the function
+evaluation column(s).}
 }
 \description{
 Derive names for the columns in the enframe_ family of functions;
