@@ -10,7 +10,9 @@ dots_to_quos(...)
 dots_to_dsts(..., na.rm = FALSE)
 }
 \arguments{
-\item{...}{Distribution objects, possibly also nested lists of distributions.}
+\item{...}{Distributions, or possibly a nested list of distributions,
+inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
+Must be of the same dimension.}
 
 \item{na.rm}{Logical; remove NA entries? Note that NULL entries are
 always removed.}

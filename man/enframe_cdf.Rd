@@ -13,7 +13,9 @@ enframe_bi_cdf(..., x, y, arg_name = NULL, fn_prefix = "cdf", sep = "_")
 enframe_multi_cdf(..., .l, arg_name = NULL, fn_prefix = "cdf", sep = "_")
 }
 \arguments{
-\item{...}{f}
+\item{...}{Distributions, or possibly a nested list of distributions,
+inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
+Must be of the same dimension.}
 
 \item{at}{A vector of values to evaluate the univariate distributional
 representation at.}

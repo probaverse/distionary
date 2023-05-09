@@ -21,4 +21,5 @@ is_bidst <- function(object) inherits(object, "bidst")
 #' @export
 is_multidst <- function(object) inherits(object, "multidst")
 
-
+#' @rdname is_distribution
+is.distribution <- is_distribution

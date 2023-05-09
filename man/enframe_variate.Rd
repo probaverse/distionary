@@ -13,7 +13,9 @@ enframe_bi(..., x, y, arg_name, fn_prefix, sep, eval_fn)
 enframe_multi(..., .l, arg_name, fn_prefix, sep, eval_fn)
 }
 \arguments{
-\item{...}{f}
+\item{...}{Distributions, or possibly a nested list of distributions,
+inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
+Must be of the same dimension.}
 
 \item{at}{A vector of values to evaluate the univariate distributional
 representation at.}

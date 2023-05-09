@@ -7,7 +7,9 @@
 name_distributions(..., fn_prefix)
 }
 \arguments{
-\item{...}{f}
+\item{...}{Distributions, or possibly a nested list of distributions,
+inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
+Must be of the same dimension.}
 
 \item{fn_prefix}{Name of the prefix to appear in the function
 evaluation column(s).}
