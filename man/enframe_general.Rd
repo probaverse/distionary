@@ -7,6 +7,21 @@
 enframe_general(..., .l, fn_prefix, eval_fn, fn_args = list())
 }
 \arguments{
+\item{...}{Distributions, or possibly a nested list of distributions,
+inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
+Must be of the same dimension.}
+
+\item{.l}{A list of vectors, one for each dimension of the distribution,
+to evaluate the distributional representation at. Optionally, a single
+vector of the same length, for evaluating the representation at a single
+point.}
+
+\item{fn_prefix}{Name of the prefix to appear in the function
+evaluation column(s).}
+
+\item{eval_fn}{Character name of the eval function to enframe;
+e.g., \code{"eval_multi_cdf"}.}
+
 \item{fn_args}{A named list of arguments to pass to the \code{eval_fn} function,
 besides the distribution and \code{.l} argument (the \code{strict} argument
 being the most common, and perhaps the only use case).}

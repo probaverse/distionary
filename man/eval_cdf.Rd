@@ -44,7 +44,6 @@ enframe_cdf(d1, d2, at = 0:4)
 \seealso{
 Other distributional representations: 
 \code{\link{eval_chf}()},
-\code{\link{eval_density}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
 \code{\link{eval_pmf}()},

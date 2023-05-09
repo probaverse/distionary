@@ -41,7 +41,6 @@ eval_pmf(dst_norm(0, 1), at = -3:3, strict = FALSE)
 Other distributional representations: 
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
-\code{\link{eval_density}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
 \code{\link{eval_quantile}()},

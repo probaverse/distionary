@@ -32,7 +32,6 @@ enframe_quantile(d, at = 1:9 / 10)
 Other distributional representations: 
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
-\code{\link{eval_density}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
 \code{\link{eval_pmf}()},

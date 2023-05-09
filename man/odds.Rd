@@ -30,7 +30,6 @@ enframe_odds(d, at = 0:4)
 Other distributional representations: 
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
-\code{\link{eval_density}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_pmf}()},
 \code{\link{eval_quantile}()},

@@ -16,8 +16,6 @@
 #' @export
 eval_pmf <- function(distribution, ...) UseMethod("eval_pmf")
 
-#' @param strict Only evaluate when the pmf exists? `TRUE` if so;
-#' if `FALSE`, simply evaluates the probability of the specified outcomes.
 #' @export
 eval_pmf.dst <- function(distribution, at, strict = TRUE) {
   if (variable(distribution) == "discrete") {
