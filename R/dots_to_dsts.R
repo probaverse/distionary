@@ -24,12 +24,12 @@ dots_to_quos <- function(...) {
 
 #' @rdname dots_to
 dots_to_dsts <- function(..., na.rm = FALSE) {
-  dsts <- dots_to_quos(...)
-  dsts <- lapply(dsts, rlang::eval_tidy)
+  dsts <- rlang::squash(rlang::list2(...))
   nulls <- vapply(dsts, is.null, FUN.VALUE = logical(1L))
+  nas <- vapply(dsts, function(x) any(is.na(x)), FUN.VALUE = logical(1L))
   is_na <- function(x) length(x) == 1L && is.na(x)
   if (na.rm) {
-    nulls <- nulls | vapply(dsts, is_na, FUN.VALUE = logical(1L))
+    nulls <- nulls | nas
     acceptable_entry <- is_distribution
   } else {
     acceptable_entry <- function(x) is_distribution(x) || is_na(x)

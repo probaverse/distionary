@@ -27,9 +27,9 @@
 #' same names.
 #' @rdname enframe_general
 enframe_general <- function(..., .l, fn_prefix, eval_fn, fn_args = list()) {
-  check_dsts(...)
   input_cols <- .l
   output_cols <- dots_to_dsts(...)
+  check_dsts(output_cols)
   names(output_cols) <- name_distributions(..., fn_prefix = fn_prefix)
   n <- length(.l[[1]])
   d <- length(output_cols)
@@ -56,7 +56,7 @@ enframe_general <- function(..., .l, fn_prefix, eval_fn, fn_args = list()) {
 #' @inheritParams enframe_cdf
 name_distributions <- function(..., fn_prefix) {
   ellipsis <- dots_to_quos(...)
-  n <- length(distributions)
+  n <- length(ellipsis)
   if (n == 1L) {
     output_names <- fn_prefix
   } else {

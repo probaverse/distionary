@@ -5,17 +5,17 @@
 #' an error is thrown.
 #'
 #' @param distributions List of objects to check. Should be flattened if
-#' coming from `...`.
+#' coming from `...` upstream.
 #' @return Invisible; ran for the potential error.
 check_dsts <- function(distributions) {
-  bad_dots <- vapply(distributions, function(dst) {
-    !is_distribution(dst) && !is.na(dst) && !is.null(dst)
+  not_dsts <- vapply(distributions, function(dst) {
+    !is_distribution(dst) && !all(is.na(dst)) && !is.null(dst)
   }, FUN.VALUE = logical(1L))
-  if (any(bad_dots)) {
-    stop("Ellipsis can only contain distributions or NULL/NA values. ",
-         "Bad entries: ", paste(which(bad_dots), collapse = ", "), ".")
+  if (any(not_dsts)) {
+    stop("Bad distribution entries:", paste(which(not_dsts), collapse = ", "),
+         ".")
   }
-  dims <- vapply(distribution, dimension, FUN.VALUE = numeric(1L))
+  dims <- vapply(distributions, dimension, FUN.VALUE = numeric(1L))
   if (length(unique(dims)) > 1) {
     stop("Distributions must all have the same dimension. Dimensions ",
          "received: ", paste(dims, collapse = ", "), ".")

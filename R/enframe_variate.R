@@ -20,22 +20,24 @@
 #' @return Calls the `enframe_general()` function with a standardized
 #' `.l` input.
 #' @rdname enframe_variate
-enframe_uni <- function(..., at, arg_name, fn_prefix, sep, eval_fn) {
+enframe_uni <- function(..., at, arg_name, fn_prefix, sep, eval_fn, fn_args) {
   .l <- rlang::set_names(list(at), arg_name)
-  enframe_general(..., .l = .l, fn_prefix = fn_prefix, eval_fn = eval_fn)
+  enframe_general(..., .l = .l, fn_prefix = fn_prefix, eval_fn = eval_fn,
+                  fn_args = fn_args)
 }
 
 #' @rdname enframe_variate
-enframe_bi <- function(..., x, y, arg_name, fn_prefix, sep, eval_fn) {
+enframe_bi <- function(..., x, y, arg_name, fn_prefix, sep, eval_fn, fn_args) {
   .l <- vctrs::vec_recycle_common(x = x, y = y)
   if (!is.null(arg_name)) {
     names(.l) <- arg_name
   }
-  enframe_general(..., .l = .l, fn_prefix = fn_prefix, eval_fn = eval_fn)
+  enframe_general(..., .l = .l, fn_prefix = fn_prefix, eval_fn = eval_fn,
+                  fn_args = fn_args)
 }
 
 #' @rdname enframe_variate
-enframe_multi <- function(..., .l, arg_name, fn_prefix, sep, eval_fn) {
+enframe_multi <- function(..., .l, arg_name, fn_prefix, sep, eval_fn, fn_args) {
   if (!is.list(.l)) {
     .l <- as.list(.l)
   }
@@ -52,5 +54,6 @@ enframe_multi <- function(..., .l, arg_name, fn_prefix, sep, eval_fn) {
     }
     names(.l2) <- arg_name
   }
-  enframe_general(..., .l = .l2, fn_prefix = fn_prefix, eval_fn = eval_fn)
+  enframe_general(..., .l = .l2, fn_prefix = fn_prefix, eval_fn = eval_fn,
+                  fn_args = fn_args)
 }
