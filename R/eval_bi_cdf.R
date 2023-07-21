@@ -1,18 +1,12 @@
+#' Convenience Functions for Bivariate Distributions
+#'
+#' Evaluate bivariate distributions using `x` and `y` arguments, instead
+#' of providing a list in the `at` argument of `eval_<representation>()`.
+#'
+#' @param x,y Numeric vectors specifying where to evaluate the bivariate
+#' representation at.
+#' @inheritParams eval_cdf
 #' @export
-eval_bi_cdf.dst <- function(distribution, x, y) {
-  stop("Expecting a bivariate distribution; received univariate.")
-}
-
-#' @export
-eval_bi_cdf.bidst <- function(distribution, x, y) {
-  stop("Cannot find a cdf for this distribution.")
-}
-
-#' @export
-eval_bi_cdf.multidst <- function(distribution, x, y) {
-  d <- dimension(distribution)
-  if (d == 2) {
-    return(eval_multi_cdf(distribution, list(xy[[1]], xy[[2]])))
-  }
-  stop("Expecting a bivariate distribution; received ", d, "-variate.")
+eval_bi_cdf <- function(distribution, x, y, ...) {
+  eval_cdf(distribution, at = list(x, y), ...)
 }
