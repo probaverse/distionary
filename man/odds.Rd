@@ -9,10 +9,6 @@ eval_odds(distribution, ...)
 
 enframe_odds(...)
 }
-\arguments{
-\item{distribution}{A distribution, inheriting the class
-\code{"dst"}, \code{"bidst"}, or \code{"multidst"}.}
-}
 \value{
 The evaluated odds in vector form (for \code{eval_}) and data frame
 or tibble form (for \code{enframe_}).
@@ -28,10 +24,8 @@ enframe_odds(d, at = 0:4)
 }
 \seealso{
 Other distributional representations: 
-\code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_hazard}()},
-\code{\link{eval_pmf}()},
 \code{\link{eval_quantile}()},
 \code{\link{eval_return}()},
 \code{\link{eval_survival}()}

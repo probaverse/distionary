@@ -6,19 +6,16 @@
 \alias{enframe_multi}
 \title{Standardize arguments and enframe}
 \usage{
-enframe_uni(..., at, arg_name, fn_prefix, sep, eval_fn)
+enframe_uni(..., at, arg_name, fn_prefix, sep, eval_fn, fn_args)
 
-enframe_bi(..., x, y, arg_name, fn_prefix, sep, eval_fn)
+enframe_bi(..., x, y, arg_name, fn_prefix, sep, eval_fn, fn_args)
 
-enframe_multi(..., .l, arg_name, fn_prefix, sep, eval_fn)
+enframe_multi(..., .l, arg_name, fn_prefix, sep, eval_fn, fn_args)
 }
 \arguments{
 \item{...}{Distributions, or possibly a nested list of distributions,
 inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
 Must be of the same dimension.}
-
-\item{at}{A vector of values to evaluate the univariate distributional
-representation at.}
 
 \item{arg_name}{Name(s) of the column(s) containing
 the function arguments, one per dimension of the distribution. See details.}
@@ -30,14 +27,6 @@ evaluation column(s).}
 
 \item{eval_fn}{Character name of the eval function to enframe;
 e.g., \code{"eval_multi_cdf"}.}
-
-\item{x, y}{Vectors of values to evaluate the bivariate distributional
-representation at.}
-
-\item{.l}{A list of vectors, one for each dimension of the distribution,
-to evaluate the distributional representation at. Optionally, a single
-vector of the same length, for evaluating the representation at a single
-point.}
 }
 \value{
 Calls the \code{enframe_general()} function with a standardized

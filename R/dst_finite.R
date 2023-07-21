@@ -49,7 +49,7 @@ dst_finite <- function(y, probs, data, ...) {
   if (any(w < 0, na.rm = TRUE)) {
     stop("Probabilities must not be negative.")
   }
-  if (sum(probs) != 1) {
+  if (sum(w) != 1) {
     stop(
       "Probabilities must add up to 1. ",
       "Perhaps you'd prefer to use `dst_empirical()`?"

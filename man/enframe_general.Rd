@@ -11,11 +11,6 @@ enframe_general(..., .l, fn_prefix, eval_fn, fn_args = list())
 inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
 Must be of the same dimension.}
 
-\item{.l}{A list of vectors, one for each dimension of the distribution,
-to evaluate the distributional representation at. Optionally, a single
-vector of the same length, for evaluating the representation at a single
-point.}
-
 \item{fn_prefix}{Name of the prefix to appear in the function
 evaluation column(s).}
 

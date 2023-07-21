@@ -9,13 +9,6 @@ eval_survival(distribution, ...)
 
 enframe_survival(..., at, arg_name = ".arg", fn_prefix = "survival", sep = "_")
 }
-\arguments{
-\item{distribution}{A distribution, inheriting the class
-\code{"dst"}, \code{"bidst"}, or \code{"multidst"}.}
-
-\item{at}{A vector of values to evaluate the univariate distributional
-representation at.}
-}
 \value{
 The evaluated survival function
 in vector form (for \code{eval_}) and data frame
@@ -31,11 +24,9 @@ enframe_survival(d, at = 0:4)
 }
 \seealso{
 Other distributional representations: 
-\code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
-\code{\link{eval_pmf}()},
 \code{\link{eval_quantile}()},
 \code{\link{eval_return}()}
 }

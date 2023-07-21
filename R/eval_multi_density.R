@@ -1,9 +1,3 @@
-#' @rdname eval_density
-#' @export
-eval_multi_density <- function(distribution, .l, strict = TRUE, ...) {
-  UseMethod("eval_multi_density")
-}
-
 #' @export
 eval_multi_density.dst <- function(distribution, .l, strict = TRUE, ...) {
   if (length(.l) != 1) {

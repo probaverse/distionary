@@ -10,9 +10,6 @@ eval_return(distribution, at)
 enframe_return(..., at, arg_name = ".arg", fn_prefix = "return", sep = "_")
 }
 \arguments{
-\item{distribution}{A distribution, inheriting the class
-\code{"dst"}, \code{"bidst"}, or \code{"multidst"}.}
-
 \item{at}{Vector of return periods >=1.}
 }
 \value{
@@ -32,11 +29,9 @@ enframe_chf(d, at = c(2, 25, 100, 200))
 }
 \seealso{
 Other distributional representations: 
-\code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
-\code{\link{eval_pmf}()},
 \code{\link{eval_quantile}()},
 \code{\link{eval_survival}()}
 }

@@ -8,7 +8,7 @@ check_dsts(distributions)
 }
 \arguments{
 \item{distributions}{List of objects to check. Should be flattened if
-coming from \code{...}.}
+coming from \code{...} upstream.}
 }
 \value{
 Invisible; ran for the potential error.

@@ -17,9 +17,6 @@ enframe_multi_cdf(..., .l, arg_name = NULL, fn_prefix = "cdf", sep = "_")
 inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
 Must be of the same dimension.}
 
-\item{at}{A vector of values to evaluate the univariate distributional
-representation at.}
-
 \item{arg_name}{Name(s) of the column(s) containing
 the function arguments, one per dimension of the distribution. See details.}
 
@@ -27,14 +24,6 @@ the function arguments, one per dimension of the distribution. See details.}
 evaluation column(s).}
 
 \item{sep}{Deprecated; no longer used.}
-
-\item{x, y}{Vectors of values to evaluate the bivariate distributional
-representation at.}
-
-\item{.l}{A list of vectors, one for each dimension of the distribution,
-to evaluate the distributional representation at. Optionally, a single
-vector of the same length, for evaluating the representation at a single
-point.}
 }
 \value{
 A data frame, or a tibble if the tibble package is accessible, with

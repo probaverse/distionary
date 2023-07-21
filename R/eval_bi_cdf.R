@@ -1,7 +1,3 @@
-#' @rdname eval_cdf
-#' @export
-eval_bi_cdf <- function(distribution, x, y) UseMethod("eval_bi_cdf")
-
 #' @export
 eval_bi_cdf.dst <- function(distribution, x, y) {
   stop("Expecting a bivariate distribution; received univariate.")

@@ -1,18 +1,3 @@
-#' Probability Density Function
-#'
-#' Evaluate a distribution's probability density function (PDF).
-#'
-#' @inheritParams eval_cdf
-#' @param strict Only evaluate when the density exists? `TRUE` if so;
-#' if `FALSE`, evaluates the derivative of the cdf.
-#' @seealso [eval_cdf()]
-#' @rdname eval_density
-#' @export
-eval_density <- function(distribution, at, strict = TRUE, ...) {
-  UseMethod("eval_density")
-}
-
-
 #' @export
 eval_density.dst <- function(distribution, at, strict = TRUE, ...) {
   if (variable(distribution) == "continuous") {

@@ -1,7 +1,3 @@
-#' @rdname eval_cdf
-#' @export
-eval_multi_cdf <- function(distribution, .l) UseMethod("eval_multi_cdf")
-
 #' @export
 eval_multi_cdf.dst <- function(distribution, .l) {
   if (length(.l) != 1) {

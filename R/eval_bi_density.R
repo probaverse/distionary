@@ -1,9 +1,3 @@
-#' @rdname eval_density
-#' @export
-eval_bi_density <- function(distribution, x, y, strict = TRUE, ...) {
-  UseMethod("eval_bi_density")
-}
-
 #' @export
 eval_bi_density.dst <- function(distribution, x, y, strict = TRUE, ...) {
   stop("Expecting a bivariate distribution; received univariate.")
