@@ -17,6 +17,9 @@ enframe_multi(..., .l, arg_name, fn_prefix, sep, eval_fn, fn_args)
 inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
 Must be of the same dimension.}
 
+\item{at}{A vector of values to evaluate the univariate distributional
+representation at.}
+
 \item{arg_name}{Name(s) of the column(s) containing
 the function arguments, one per dimension of the distribution. See details.}
 

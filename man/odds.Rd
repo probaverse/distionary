@@ -9,6 +9,9 @@ eval_odds(distribution, ...)
 
 enframe_odds(...)
 }
+\arguments{
+\item{distribution}{A distribution, inheriting the class \code{"dst"}.}
+}
 \value{
 The evaluated odds in vector form (for \code{eval_}) and data frame
 or tibble form (for \code{enframe_}).

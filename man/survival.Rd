@@ -9,6 +9,12 @@ eval_survival(distribution, ...)
 
 enframe_survival(..., at, arg_name = ".arg", fn_prefix = "survival", sep = "_")
 }
+\arguments{
+\item{distribution}{A distribution, inheriting the class \code{"dst"}.}
+
+\item{at}{A vector of values to evaluate the univariate distributional
+representation at.}
+}
 \value{
 The evaluated survival function
 in vector form (for \code{eval_}) and data frame

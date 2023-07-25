@@ -9,6 +9,12 @@ eval_quantile(distribution, at)
 
 enframe_quantile(..., at, arg_name = ".arg", fn_prefix = "quantile", sep = "_")
 }
+\arguments{
+\item{distribution}{A distribution, inheriting the class \code{"dst"}.}
+
+\item{at}{A vector of values to evaluate the univariate distributional
+representation at.}
+}
 \value{
 The evaluated quantiles in vector form (for \code{eval_}) and data frame
 or tibble form (for \code{enframe_}).

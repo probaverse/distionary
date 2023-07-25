@@ -6,6 +6,9 @@
 \usage{
 dimension(distribution)
 }
+\arguments{
+\item{distribution}{A distribution, inheriting the class \code{"dst"}.}
+}
 \value{
 Integer.
 }

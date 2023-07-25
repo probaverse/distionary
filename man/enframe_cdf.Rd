@@ -17,6 +17,9 @@ enframe_multi_cdf(..., .l, arg_name = NULL, fn_prefix = "cdf", sep = "_")
 inheriting the class \code{"dst"}, \code{"bidst"}, or \code{"multidst"}.
 Must be of the same dimension.}
 
+\item{at}{A vector of values to evaluate the univariate distributional
+representation at.}
+
 \item{arg_name}{Name(s) of the column(s) containing
 the function arguments, one per dimension of the distribution. See details.}
 

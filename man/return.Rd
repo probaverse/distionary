@@ -10,6 +10,8 @@ eval_return(distribution, at)
 enframe_return(..., at, arg_name = ".arg", fn_prefix = "return", sep = "_")
 }
 \arguments{
+\item{distribution}{A distribution, inheriting the class \code{"dst"}.}
+
 \item{at}{Vector of return periods >=1.}
 }
 \value{
