@@ -304,6 +304,19 @@
       }
     },
     evi = shape
+  ),
+  sknorm = rlang::exprs(
+    mean = mu + scale * shape / sqrt(1 + shape^2) * sqrt(2 / pi),
+    variance = shape^2 * (1 - 2 * shape^2 / (1 + shape^2) / pi),
+    skewness = {
+      delta <- shape / sqrt(1 + shape^2)
+      (4 - pi) / 2 * (delta * sqrt(2 / pi))^3 / (1 - 2 * delta^2 / pi)^(3 / 2)
+    },
+    kurtosis_exc = {
+      delta <- shape / sqrt(1 + shape^2)
+      2 * (pi - 3) * delta ^ 4 * 4 / pi^2 / (1 - 2 * delta^2 / pi)^2
+    },
+    range = c(-Inf, Inf)
   )
 )
 
