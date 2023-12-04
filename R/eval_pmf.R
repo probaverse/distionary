@@ -38,8 +38,8 @@ eval_pmf.dst <- function(distribution, at, strict = TRUE) {
 #' @rdname pmf
 #' @export
 enframe_pmf <- function(..., at, arg_name = ".arg", fn_prefix = "pmf",
-							sep = "_", strict = TRUE) {
-	enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-					sep = sep, eval_fn = eval_pmf,
-					fn_args = list(strict = strict))
+                        sep = "_", strict = TRUE) {
+  enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
+                  sep = sep, eval_fn = eval_pmf,
+                  fn_args = list(strict = strict))
 }
