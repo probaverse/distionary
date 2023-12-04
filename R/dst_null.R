@@ -68,6 +68,11 @@ eval_cdf.dst_null <- function(distribution, at) {
 }
 
 #' @export
+eval_hazard.dst_null <- function(distribution, at) {
+  rep(NA_real_, length(at))
+}
+
+#' @export
 eval_quantile.dst_null <- function(distribution, at) {
   rep(NA, length(at))
 }
