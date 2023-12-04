@@ -10,13 +10,10 @@ eval_return(distribution, at)
 enframe_return(..., at, arg_name = ".arg", fn_prefix = "return", sep = "_")
 }
 \arguments{
-\item{distribution}{A distribution, or possibly multiple
+\item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
 \item{at}{Vector of return periods >=1.}
-
-\item{...}{A distribution, or possibly multiple
-distributions in the case of \code{...}.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments.}

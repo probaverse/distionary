@@ -16,7 +16,7 @@
 #' @rdname density
 #' @export
 eval_density <- function(distribution, at, strict = TRUE) {
-	UseMethod("eval_density")
+  UseMethod("eval_density")
 }
 
 
@@ -40,8 +40,8 @@ eval_density.dst <- function(distribution, at, strict = TRUE) {
 #' @rdname density
 #' @export
 enframe_density <- function(..., at, arg_name = ".arg", fn_prefix = "density",
-							sep = "_", strict = TRUE) {
-	enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-					sep = sep, eval_fn = eval_density,
-					fn_args = list(strict = strict))
+                            sep = "_", strict = TRUE) {
+  enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
+                  sep = sep, eval_fn = eval_density,
+                  fn_args = list(strict = strict))
 }
