@@ -13,7 +13,7 @@
 #' @family distributional representations
 #' @rdname survival
 #' @export
-eval_survival <- function(distribution, ...) UseMethod("eval_survival")
+eval_survival <- function(distribution, at) UseMethod("eval_survival")
 
 #' @export
 eval_survival.dst <- function(distribution, at) {
@@ -23,7 +23,7 @@ eval_survival.dst <- function(distribution, at) {
 #' @rdname survival
 #' @export
 enframe_survival <- function(..., at, arg_name = ".arg", fn_prefix = "survival",
-							 sep = "_") {
-	enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-					sep = sep, eval_fn = eval_survival)
+                             sep = "_") {
+  enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
+                  sep = sep, eval_fn = eval_survival)
 }
