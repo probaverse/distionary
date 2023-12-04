@@ -13,9 +13,10 @@ enframe_quantile(..., at, arg_name = ".arg", fn_prefix = "quantile", sep = "_")
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
-\item{at}{Vector of values to evaluate the function at.}
+\item{at}{Vector of values to evaluate the cdf at. Must be named when using
+in \code{enframe_}.}
 
-\item{arg_name}{For \code{enframe_}, name(s) of the column containing
+\item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments.}
 
 \item{fn_prefix}{For \code{enframe_}, name of the function to
@@ -38,7 +39,6 @@ enframe_quantile(d, at = 1:9 / 10)
 }
 \seealso{
 Other distributional representations: 
-\code{\link{eval_bicdf}()},
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_density}()},

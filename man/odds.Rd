@@ -5,13 +5,25 @@
 \alias{enframe_odds}
 \title{Odds Function}
 \usage{
-eval_odds(distribution, ...)
+eval_odds(distribution, at)
 
-enframe_odds(...)
+enframe_odds(..., at, arg_name = ".arg", fn_prefix = "odds", sep = "_")
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
+
+\item{at}{Vector of values to evaluate the cdf at. Must be named when using
+in \code{enframe_}.}
+
+\item{arg_name}{For \code{enframe_}, name of the column containing
+the function arguments.}
+
+\item{fn_prefix}{For \code{enframe_}, name of the function to
+appear in the column(s).}
+
+\item{sep}{When \code{enframe}'ing more than one distribution, the
+character that will be separating the \code{fn_name} and the distribution name.}
 }
 \value{
 The evaluated odds in vector form (for \code{eval_}) and data frame
@@ -28,7 +40,6 @@ enframe_odds(d, at = 0:4)
 }
 \seealso{
 Other distributional representations: 
-\code{\link{eval_bicdf}()},
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_density}()},

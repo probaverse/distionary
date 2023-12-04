@@ -3,38 +3,14 @@
 \name{eval_density}
 \alias{eval_density}
 \alias{enframe_density}
-\alias{enframe_density.dst}
-\alias{enframe_density.bi_dst}
-\alias{enframe_density.multi_dst}
 \title{Probability Density Function}
 \usage{
-eval_density(distribution, at)
+eval_density(distribution, at, strict = TRUE)
 
-enframe_density(...)
-
-\method{enframe_density}{dst}(
+enframe_density(
   ...,
   at,
   arg_name = ".arg",
-  fn_prefix = "density",
-  sep = "_",
-  strict = TRUE
-)
-
-\method{enframe_density}{bi_dst}(
-  ...,
-  x,
-  y,
-  arg_name = NULL,
-  fn_prefix = "density",
-  sep = "_",
-  strict = TRUE
-)
-
-\method{enframe_density}{multi_dst}(
-  ...,
-  .l,
-  arg_name = NULL,
   fn_prefix = "density",
   sep = "_",
   strict = TRUE
@@ -44,9 +20,13 @@ enframe_density(...)
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
-\item{at}{Vector of values to evaluate the function at.}
+\item{at}{Vector of values to evaluate the cdf at. Must be named when using
+in \code{enframe_}.}
 
-\item{arg_name}{For \code{enframe_}, name(s) of the column containing
+\item{strict}{Only evaluate when the density exists? \code{TRUE} if so;
+if \code{FALSE}, evaluates the derivative of the cdf.}
+
+\item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments.}
 
 \item{fn_prefix}{For \code{enframe_}, name of the function to
@@ -56,8 +36,7 @@ appear in the column(s).}
 character that will be separating the \code{fn_name} and the distribution name.}
 }
 \value{
-The evaluated density
-in vector form (for \code{eval_}) and data frame
+The evaluated density in vector form (for \code{eval_}) and data frame
 or tibble form (for \code{enframe_}).
 }
 \description{
@@ -71,7 +50,6 @@ eval_density(dst_pois(1), at = 0:4, strict = FALSE)
 }
 \seealso{
 Other distributional representations: 
-\code{\link{eval_bicdf}()},
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
 \code{\link{eval_hazard}()},
