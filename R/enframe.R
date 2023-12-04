@@ -155,7 +155,7 @@ vec_recycle_common_and_rename <- function(...) {
 
 
 #' @rdname enframe_dvariate
-enframe_univariate <- function(..., at, arg_name, fn_prefix = , sep,
+enframe_univariate <- function(..., at, arg_name, fn_prefix, sep,
                                eval_fn, fn_args = list()) {
   output_cols <- process_ellipsis_for_enframe(...)
   names(output_cols) <- enframed_names_output(..., fn_prefix, sep)
