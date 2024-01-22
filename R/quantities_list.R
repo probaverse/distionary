@@ -256,8 +256,8 @@
     },
     median = ifelse(
       shape != 0,
-      location + scale * (log10(2)^(-shape) - 1) / shape,
-      location - scale * log10(log10(2))
+      location + scale * (log(2)^(-shape) - 1) / shape,
+      location - scale * log(log(2))
     ),
     variance = {
       if (shape > 0.5) {
