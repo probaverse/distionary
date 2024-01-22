@@ -45,3 +45,9 @@ realise.finite <- function(distribution, n = 1, ...) {
 	location <- distribution$probabilities$location
 	sample(location, size = n, replace = TRUE, prob = size)
 }
+
+#' @export
+realise.degenerate <- function(distribution, n = 1, ...) {
+  x <- distribution$probabilities$location
+  rep(x, n)
+}
