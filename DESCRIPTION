@@ -29,3 +29,4 @@ Imports:
     rlang,
     vctrs
 VignetteBuilder: knitr
+URL: https://probaverse.github.io/distionary/

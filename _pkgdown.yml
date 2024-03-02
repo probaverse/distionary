@@ -1,18 +1,4 @@
-destination: docs
-
-home:
-  title: distionary
-  description: Create and evaluate univariate probability distributions.
-
-navbar:
-  right:
-   - icon: fa-github
-     href: https://github.com/vincenzocoia/distionary
-
-authors:
-  Vincenzo Coia:
-    href: http://vincenzocoia.com
-
+url: https://distionary.netlify.app/
 template:
-  params:
-    ganalytics: 293869026
+  bootstrap: 5
+
