@@ -14,6 +14,7 @@ coverage](https://codecov.io/gh/vincenzocoia/distionary/branch/main/graph/badge.
 [![R-CMD-check](https://github.com/vincenzocoia/distionary/workflows/R-CMD-check/badge.svg)](https://github.com/vincenzocoia/distionary/actions)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
+[![R-CMD-check](https://github.com/probaverse/distionary/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/probaverse/distionary/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 distionary:
@@ -50,12 +51,12 @@ We can make distributions from standard families, like beta and Poisson:
 
 ``` r
 (d_beta <- dst_beta(2, 4))
-#> beta parametric dst
+#> [1] "beta"       "parametric" "dst"       
 #> 
 #>  name :
 #> [1] "beta"
 (d_pois <- dst_pois(1.2))
-#> pois parametric dst
+#> [1] "pois"       "parametric" "dst"       
 #> 
 #>  name :
 #> [1] "pois"
@@ -66,7 +67,7 @@ We can also make empirical distributions from data:
 ``` r
 x <- c(4.1, 2.3, 3.4, 5.5, 1.0, 6.8)
 (d_emp <- dst_empirical(x))
-#> finite dst
+#> [1] "finite" "dst"   
 #> 
 #>  probabilities :
 #> # A tibble: 6 × 2
