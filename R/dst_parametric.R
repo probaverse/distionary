@@ -41,6 +41,18 @@ dst_parametric <- function(
 	new_distribution(res, variable = v, class = c(.name, "parametric"))
 }
 
+# dst_parametric2 <- function(
+#     .name, ..., .variable = c("unknown", "continuous", "discrete", "mixed"),
+#     representations = representations()
+#     ) {
+#
+# }
+
+# representations <- function(..., pkg) {
+#   dots <- rlang::list2(...)
+#   fns <- lapply(dots, function(x) )
+# }
+
 #' Are there p/d/q functions available?
 #'
 #' For a given distribution name, such as "norm", checks to see

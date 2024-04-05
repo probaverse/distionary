@@ -3,26 +3,30 @@
 \name{is_distribution}
 \alias{is_distribution}
 \alias{is.distribution}
-\alias{distribution}
-\title{Distribution Objects}
+\title{#' Constructor Function for "dst" Objects
+#'
+#' @param l List containing the components of a distribution object.
+#' @param variable Type of random variable: "continuous", "discrete",
+#'   or "mixed".
+#' @param ... Attributes to add to the list.
+#' @param class If making a subclass, specify its name here.
+#' @export
+new_distribution <- function(l, variable, ...,
+class = character()) {
+structure(
+l,
+variable = variable,
+class    = c(class, "dst")
+)
+}}
 \usage{
 is_distribution(object)
 
 is.distribution(object)
-
-distribution(variable = c("continuous", "discrete", "mixed"))
 }
 \arguments{
 \item{object}{Object to be tested}
-
-\item{variable}{Is this variable continuous, discrete, or mixed?}
-}
-\value{
-A distribution object with nothing in it.
 }
 \description{
-Currently, this function makes a distribution object with nothing in it. The
-idea is that you can then set things downstream, with functions such as
-set_cdf() and set_mean(). The idea behind this function is expected to be in
-flux.
+Distribution Objects
 }
