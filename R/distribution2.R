@@ -5,8 +5,8 @@
 #' @param variable Is this variable continuous, discrete, or mixed?
 #' @param parameters Vector of unquoted variable names acting as the
 #' distribution's parameters, if relevant.
-#' @param env Either the package name where Environment containing objects needed for evaluating the
-#' distribution.
+#' @param env Either the package name where Environment containing objects
+#' needed for evaluating the distribution.
 #' @details
 #' This function sets up a distribution object with high-level
 #' information about the distribution. You can add / modify information about
@@ -16,16 +16,53 @@
 #' is needed to be evaluated, it ultimately looks here.
 #' @return A distribution object with nothing in it.
 #' @export
-distribution2 <- function(variable = c("continuous", "discrete", "mixed"),
-                          parameters = params(), env = rlang::new_environment()) {
-  v <- match.arg(variable)
-  mask <- rlang::new_data_mask(rlang::new_environment(parent = env), top = env)
-  res <- list(variable = v,
-              parameters = parameters,
-              paramspace = list(),
-              mask = mask)
-  new_distribution(res, variable = v)
+distribution2 <- function(..., .vtype = c("continuous", "discrete", "mixed"),
+                          parameters = params()) {
+  dots <- rlang::enquos(...)
+  # Can't just do rlang::env_bind(e, ...) because functions in ... gets
+  #  evaluated enclosing distionary. Want it to enclose the environment
+  #  containing other things in ...
+  #
+  # When calling this function, an environment opens up below the distionary
+  #  namespace. I need the enclosing environment to be able to find objects
+  #  in ..., but then be able to look in parent environments for operations
+  #  like `+` and objects like `pi`. It should not enclose an environment
+  #  below the distionary namespace, in case the user wants to reference
+  #  an object in Global but gets intercepted by distionary namespace.
+  # Conclusion: put the environment below caller environment (because they
+  #  may not be calling it from Global.)
+  e <- rlang::env(rlang::caller_env())
+  # Evaluate ... within e, so that functions that are made enclose e.
+  # obs <- with(e, lapply(dots, rlang::eval_tidy))
+  mask <- new_data_mask(e)
+  obs <- lapply(dots, \(x) rlang::eval_tidy(x, data = mask))
+  # Now bind these objects to e.
+  rlang::env_bind(e, !!!obs)
+  attr(e, "vtype") <- match.arg(.vtype)
+  attr(e, "parameters") <- parameters
+  class(e) <- c("dst", class(e))
+  e
 }
+
+
+eval_density2 <- function(distribution, at) {
+  # cll <- rlang::call2("density", at)
+  rlang::exec(".density", at, .env = rlang::as_environment(distribution))
+}
+
+
+
+#' @export
+set_params <- function(distribution, ...) {
+  pairs <- rlang::enquos(...)
+  pairs <- lapply(pairs, rlang::eval_tidy)
+  rlang::new_distribution()
+  rlang::env_bind(distribution, !!!pairs)
+  distribution
+}
+
+# distribution3() |> set_density(dnorm)
+
 
 #' Constructor Function for "dst" Objects
 #'
@@ -35,8 +72,7 @@ distribution2 <- function(variable = c("continuous", "discrete", "mixed"),
 #' @param ... Attributes to add to the list.
 #' @param class If making a subclass, specify its name here.
 #' @export
-new_distribution <- function(l, variable, ...,
-                             class = character()) {
+new_distribution <- function(l, variable, ..., class = character()) {
   structure(
     l,
     variable = variable,
@@ -56,9 +92,15 @@ params <- function(...) {
 #' @export
 param_resolve <- function(distribution, ...) {
   ell <- rlang::enquos(...)
-  ell2 <- lapply(ell, function(l) rlang::eval_tidy(l, data = distribution$mask))
-  check_params(ell2)
-  rlang::env_bind(distribution$mask, !!!ell2)
+  names_ <- names(ell)
+  # childenv <- rlang::new_environment(parent = distribution$bottom)
+  # distribution$bottom <- childenv
+  # mask <- rlang::new_data_mask(distribution$bottom, distribution$top)
+  for (i in seq_along(ell)) {
+    name_ <- names_[i]
+    rlang::eval_tidy(rlang::expr(assign(name_, ell[[i]])), data = distribution$mask)
+  }
+  check_params(ell)
   distribution
 }
 
@@ -89,15 +131,6 @@ set_density <- function(distribution, fun) {
   distribution
 }
 
-#' @export
-eval_density2 <- function(distribution, at) UseMethod("eval_density2")
-
-#' @export
-eval_density2.dst <- function(distribution, at) {
-  f <- distribution$representations$density
-  # cll <- rlang::call2(f, at)
-  rlang::eval_tidy(f, data = distribution$mask)
-}
 
 #' @export
 restrict_params <- function(distribution, ..., .env) {
@@ -105,13 +138,7 @@ restrict_params <- function(distribution, ..., .env) {
   distribution$paramspace <- append(distribution$paramspace, new_restrictions)
 }
 
-#' @export
-set_params <- function(distribution, ...) {
-  pairs <- rlang::enquos(...)
-  pairs <- lapply(pairs, rlang::eval_tidy)
-  rlang::env_bind(distribution$mask, !!!pairs)
-  distribution
-}
+
 
 
 # ### Sample
