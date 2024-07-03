@@ -31,17 +31,18 @@ distribution2 <- function(..., .vtype = c("continuous", "discrete", "mixed"),
   #  an object in Global but gets intercepted by distionary namespace.
   # Conclusion: put the environment below caller environment (because they
   #  may not be calling it from Global.)
-  e <- rlang::env(rlang::caller_env())
+  fn_env <- rlang::env(rlang::caller_env())
+  param_env <- rlang::env(fn_env)
   # Evaluate ... within e, so that functions that are made enclose e.
   # obs <- with(e, lapply(dots, rlang::eval_tidy))
-  mask <- new_data_mask(e)
+  mask <- new_data_mask(param_env, fn_env) # Recreate data mask as parameters are resolved.
   obs <- lapply(dots, \(x) rlang::eval_tidy(x, data = mask))
   # Now bind these objects to e.
-  rlang::env_bind(e, !!!obs)
-  attr(e, "vtype") <- match.arg(.vtype)
-  attr(e, "parameters") <- parameters
-  class(e) <- c("dst", class(e))
-  e
+  rlang::env_bind(mask, !!!obs)
+  attr(mask, "vtype") <- match.arg(.vtype)
+  attr(mask, "parameters") <- parameters
+  class(mask) <- c("dst", class(mask))
+  mask
 }
 
 
