@@ -5,25 +5,26 @@
 \title{Make a distribution from scratch}
 \usage{
 distribution2(
-  variable = c("continuous", "discrete", "mixed"),
+  ...,
+  .vtype = c("continuous", "discrete", "mixed"),
   parameters = params(),
-  env = rlang::empty_env()
+  parenv = rlang::caller_env()
 )
 }
 \arguments{
-\item{variable}{Is this variable continuous, discrete, or mixed?}
-
 \item{parameters}{Vector of unquoted variable names acting as the
 distribution's parameters, if relevant.}
 
-\item{env}{Either the package name where Environment containing objects needed for evaluating the
-distribution.}
+\item{variable}{Is this variable continuous, discrete, or mixed?}
+
+\item{env}{Either the package name where Environment containing objects
+needed for evaluating the distribution.}
 }
 \value{
 A distribution object with nothing in it.
 }
 \description{
-Initiate a distribution object.
+Initiate a distribution object by specifying the representation space.
 }
 \details{
 This function sets up a distribution object with high-level
