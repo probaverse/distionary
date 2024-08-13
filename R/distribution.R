@@ -14,6 +14,55 @@
 #' most situations. An example is building a subclass of a distribution, and
 #' using the larger class's representation environment as the parent.
 #' @return A distribution object with nothing in it.
+#' @details
+#' In order for a distribution to be meaningful, it must contain at least one
+#' representation from which probabilities and properties can be determined.
+#' Here is a complete list of names to specify in `...` that will be
+#' recognized. They begin with `.` to avoid duplication with
+#' similarly named objects. When defining them, use the names of the
+#' distribution parameters (if present) as if they are known constants;
+#' they will be found using a data mask (keep reading to find out more).
+#'
+#' Representations that fully define the distribution:
+#'
+#' - `.density`
+#' - `.cdf`
+#' - `.survival`
+#' - `.mass`
+#' - `.`
+#'
+#' Properties of the distribution:
+#'
+#' - `.mean`
+#' - `.stdev`
+#' - `.skewness`
+#'
+#' Not all of these need to be specified, but more is generally better, because
+#' unspecified quantities will need to be computed, sometimes with an
+#' algorithm that may be slower than outright specification.
+#'
+#' These representations and properties (whenever available) are stored in
+#' a special representation environment whose parent is `.parenv`, so that
+#' the environment is like the namespace of a mini R package.
+#' Like an R package, the representation environment is locked to prevent
+#' accidental redefinition of distribution families.
+#' Objects in this
+#' environment may depend on distribution parameters, which are not defined
+#' in the representation environment, and therefore may not evaluate on
+#' their own. To evaluate, a data mask is constructed with the parameters
+#' fully specified.
+#'
+#' The representation environment is akin to a distribution family or class
+#' of distributions, which cannot be evaluated on their own without specifying
+#' parameters.
+#' @examples
+#' # <standard example: hard-coded distribution with no parameters>
+#' # <example with parameters>
+#' # <advanced example defining a distribution class with a general function
+#' #  g, and then making a sub class using .parenv = representation env>
+#' # <advanced example like the above, but perhaps only by specifying a
+#' #  parameter, such as getting the Normal family by setting skew = 0 in the
+#' #  skew Normal family.>
 #' @export
 distribution <- function(
     ..., .name = NULL, .vtype = NULL, .params = params(),
@@ -71,12 +120,12 @@ distribution <- function(
   #
   # This setup also means that parameters can act as a data mask.
   repres_env <- rlang::env(parenv)
-  bind_to_repres_env(repres_env, ...)
+  env_eval_and_bind(repres_env, ...)
   rlang::env_lock(repres_env)
   res <- list(
     name = .name,
     vtype = .vtype,
-    params = .params,
+    parameters = .params,
     repres_env = repres_env,
   )
   ## UNLOCKED OPTION
@@ -98,53 +147,6 @@ distribution <- function(
   res
 }
 
-repres_env <- function(distribution) {
-  attr(distribution, "repres")
-}
-
-bind_to_repres_env <- function(repres_env, ...) {
-  dots <- rlang::enexprs(...)
-  obs <- lapply(dots, \(x) eval(x, repres_env))
-  rlang::env_bind(repres_env, !!!obs)
-  invisible()
-}
-
-
-eval_density2 <- function(distribution, at) {
-  cll <- rlang::call2(".density", at)
-  rlang::eval_tidy(cll, data = distribution, env = repres_env(distribution))
-  # rlang::exec(".density", at, .env = repres_env(distribution))
-}
-
-
-
-#' @export
-set_params <- function(distribution, ...) {
-  pairs <- rlang::enquos(...)
-  pairs <- lapply(pairs, rlang::eval_tidy)
-  distribution$params <- append(distribution$params, pairs)
-  distribution
-}
-
-# distribution3() |> set_density(dnorm)
-
-
-#' Constructor Function for "dst" Objects
-#'
-#' @param l List containing the components of a distribution object.
-#' @param variable Type of random variable: "continuous", "discrete",
-#'   or "mixed".
-#' @param ... Attributes to add to the list.
-#' @param class If making a subclass, specify its name here.
-#' @export
-new_distribution <- function(l, variable, ..., class = character()) {
-  structure(
-    l,
-    variable = variable,
-    class    = c(class, "dst")
-  )
-}
-
 #' Parameters are a named list, the names being the parameters,
 #' and the contents of each parameter entry being expressions defining
 #' the parameter space. COMPLICATION: space defined with more than one
@@ -154,81 +156,11 @@ params <- function(...) {
   rlang::ensyms(..., .named = TRUE)
 }
 
-#' @export
-param_resolve <- function(distribution, ...) {
-  ell <- rlang::enquos(...)
-  names_ <- names(ell)
-  # childenv <- rlang::new_environment(parent = distribution$bottom)
-  # distribution$bottom <- childenv
-  # mask <- rlang::new_data_mask(distribution$bottom, distribution$top)
-  for (i in seq_along(ell)) {
-    name_ <- names_[i]
-    rlang::eval_tidy(rlang::expr(assign(name_, ell[[i]])), data = distribution$mask)
-  }
-  check_params(ell)
-  distribution
+
+eval_density2 <- function(distribution, at) {
+  cll <- rlang::call2(".density", at)
+  rlang::eval_tidy(
+    cll, data = distribution, env = repres_env(distribution)
+  )
 }
 
-check_params <- function(params) {
-  # Check that parameters fall within the parameter space.
-  invisible(params)
-}
-
-#' Specify a distributional representation
-#'
-#' Add a representation to a distribution, such as density, CDF,
-#' hazard function, PMF, etc. If a representation is already specified,
-#' it will be replaced with a warning message.
-#' @param distribution A distribution object.
-#' @param fun A function specifying the distributional representation,
-#' with arguments only for the distribution variables (not, for example,
-#' parameters).
-#' @param env Environment; if upon executing the function `fun` an object
-#' has not been defined, this environment will be searched,
-#' followed by the global one specified in
-#' the `distribution()` function.
-set_density <- function(distribution, fun) {
-  if (!is.null(distribution$representations$density)) {
-    warning("Density function has already been specified for this ",
-            "distribution; replacing with the new one.")
-  }
-  distribution$representations$density <- fun
-  distribution
-}
-
-
-#' @export
-restrict_params <- function(distribution, ..., .env) {
-  new_restrictions <- rlang::enquos(...)
-  distribution$paramspace <- append(distribution$paramspace, new_restrictions)
-}
-
-
-
-
-# ### Sample
-#
-# distribution2(density = \(x) 2 * x, support = c(0, 1))
-#
-# dst_norm <- function(mu, sigma) distribution2(
-#   density = \(x) pnorm(x, mu, sigma),
-#   cdf = \(x) pnorm(x, mu, sigma),
-#   survival = \(x) pnorm(x, mu, sigma, lower.tail = FALSE),
-#   .pkg = "stats"
-# )
-#
-#
-# dst_gev <- function(loc, scale, shape) dst_parametric("gev", .pkg = "ismev")
-#
-# dst_gev <- as_parametric("gev", .pkg = "ismev")
-#
-# dst_gev <- \(loc, scale, shape) distribution2(
-#   density = \(x) devd(x, loc, scale, shape, type = "GEV"),
-#   ...
-# )
-#
-# # OR:
-# dst_gev <- distribution2(
-#   density = \(x) devd(x, loc, scale, shape, type = "GEV"),
-#   parameters = parameters(loc, scale > 0, shape >= 0, my_fun(shape) < my_upper_bd)
-# )

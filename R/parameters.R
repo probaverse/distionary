@@ -2,9 +2,7 @@
 #'
 #' @param distribution Distribution.
 #' @export
-parameters <- function(distribution) UseMethod("parameters")
-
-#' @export
-parameters.dst <- function(distribution) {
+parameters <- function(distribution) {
   distribution[["parameters"]]
 }
+

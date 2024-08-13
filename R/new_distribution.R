@@ -26,6 +26,8 @@ is.distribution <- is_distribution
 #' A low-level checker that all the fields of a distribution object are in
 #' place. Does not check whether the distributional representations and
 #' properties are valid.
+#' @inheritParams is_distribution
+#' @returns The input object, invisibly.
 #' @export
 validate_distribution <- function(object) {
   nms <- names(object)
@@ -46,5 +48,5 @@ validate_distribution <- function(object) {
   if (!is.environment(object[["repres_env"]])) {
     stop("Distribution needs a 'repres_env' field containing an environment.")
   }
-  invisible()
+  invisible(object)
 }
