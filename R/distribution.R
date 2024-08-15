@@ -119,14 +119,14 @@ distribution <- function(
   #   stored as an attribute, to abstract away the representations.
   #
   # This setup also means that parameters can act as a data mask.
-  repres_env <- rlang::env(parenv)
-  env_eval_and_bind(repres_env, ...)
+  repres_env <- rlang::env(.parenv)
+  env_bind_within_lazy(repres_env, ...)
   rlang::env_lock(repres_env)
   res <- list(
     name = .name,
     vtype = .vtype,
     parameters = .params,
-    repres_env = repres_env,
+    repres_env = repres_env
   )
   ## UNLOCKED OPTION
   # nms <- names(repres_env)
@@ -157,10 +157,5 @@ params <- function(...) {
 }
 
 
-eval_density2 <- function(distribution, at) {
-  cll <- rlang::call2(".density", at)
-  rlang::eval_tidy(
-    cll, data = distribution, env = repres_env(distribution)
-  )
-}
+
 

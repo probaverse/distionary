@@ -42,8 +42,8 @@ validate_distribution <- function(object) {
   if (!"vtype" %in% nms) {
     stop("Distribution is missing a 'vtype' field.")
   }
-  if (!"params" %in% nms) {
-    stop("Distribution is missing a 'params' field.")
+  if (!"parameters" %in% nms) {
+    stop("Distribution is missing a 'parameters' field.")
   }
   if (!is.environment(object[["repres_env"]])) {
     stop("Distribution needs a 'repres_env' field containing an environment.")

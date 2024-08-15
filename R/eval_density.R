@@ -20,6 +20,13 @@ eval_density <- function(distribution, at, strict = TRUE) {
 }
 
 
+eval_density2 <- function(distribution, at) {
+  cll <- rlang::call2(".density", at)
+  rlang::eval_tidy(
+    cll, data = distribution, env = repres_env(distribution)
+  )
+}
+
 #' @export
 eval_density.dst <- function(distribution, at, strict = TRUE) {
   if (variable(distribution) == "continuous") {

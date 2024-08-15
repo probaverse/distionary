@@ -14,12 +14,18 @@
 #' e1 <- env()
 #' e2 <- env()
 #' env_bind(e1, f = \(x) x^2)
-#' env_eval_and_bind(e2, f = \(x) x^2)
+#' env_bind_within(e2, f = \(x) x^2)
 #' fn_env(e1$f)
 #' fn_env(e2$f)
-env_eval_and_bind <- function(.env, ...) {
+env_bind_within <- function(.env, ...) {
   dots <- rlang::enexprs(...)
   obs <- lapply(dots, \(x) eval(x, .env))
   rlang::env_bind(.env, !!!obs)
+  invisible(.env)
+}
+
+env_bind_within_lazy <- function(.env, ...) {
+  dots <- rlang::enexprs(...)
+  rlang::env_bind(.env, !!!dots)
   invisible(.env)
 }

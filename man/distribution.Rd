@@ -42,3 +42,56 @@ A distribution object with nothing in it.
 \description{
 Initiate a distribution object by specifying the representation space.
 }
+\details{
+In order for a distribution to be meaningful, it must contain at least one
+representation from which probabilities and properties can be determined.
+Here is a complete list of names to specify in \code{...} that will be
+recognized. They begin with \code{.} to avoid duplication with
+similarly named objects. When defining them, use the names of the
+distribution parameters (if present) as if they are known constants;
+they will be found using a data mask (keep reading to find out more).
+
+Representations that fully define the distribution:
+\itemize{
+\item \code{.density}
+\item \code{.cdf}
+\item \code{.survival}
+\item \code{.mass}
+\item \code{.}
+}
+
+Properties of the distribution:
+\itemize{
+\item \code{.mean}
+\item \code{.stdev}
+\item \code{.skewness}
+}
+
+Not all of these need to be specified, but more is generally better, because
+unspecified quantities will need to be computed, sometimes with an
+algorithm that may be slower than outright specification.
+
+These representations and properties (whenever available) are stored in
+a special representation environment whose parent is \code{.parenv}, so that
+the environment is like the namespace of a mini R package.
+Like an R package, the representation environment is locked to prevent
+accidental redefinition of distribution families.
+Objects in this
+environment may depend on distribution parameters, which are not defined
+in the representation environment, and therefore may not evaluate on
+their own. To evaluate, a data mask is constructed with the parameters
+fully specified.
+
+The representation environment is akin to a distribution family or class
+of distributions, which cannot be evaluated on their own without specifying
+parameters.
+}
+\examples{
+# <standard example: hard-coded distribution with no parameters>
+# <example with parameters>
+# <advanced example defining a distribution class with a general function
+#  g, and then making a sub class using .parenv = representation env>
+# <advanced example like the above, but perhaps only by specifying a
+#  parameter, such as getting the Normal family by setting skew = 0 in the
+#  skew Normal family.>
+}

@@ -9,6 +9,7 @@
 \alias{skewness}
 \alias{stdev}
 \alias{stdev.dst}
+\alias{stdev2}
 \alias{variance}
 \title{Moments of a Distribution}
 \usage{
@@ -25,6 +26,8 @@ skewness(distribution)
 stdev(distribution)
 
 \method{stdev}{dst}(distribution)
+
+stdev2(distribution)
 
 variance(distribution)
 }
