@@ -120,7 +120,8 @@ distribution <- function(
   #
   # This setup also means that parameters can act as a data mask.
   repres_env <- rlang::env(.parenv)
-  env_bind_within_lazy(repres_env, ...)
+  env_bind_representations(repres_env, ...)
+
   rlang::env_lock(repres_env)
   res <- list(
     name = .name,
@@ -155,7 +156,3 @@ params <- function(...) {
   ellipsis::check_dots_unnamed() # No assignment allowed.
   rlang::ensyms(..., .named = TRUE)
 }
-
-
-
-

@@ -19,7 +19,6 @@ eval_density <- function(distribution, at, strict = TRUE) {
   UseMethod("eval_density")
 }
 
-
 eval_density2 <- function(distribution, at) {
   cll <- rlang::call2(".density", at)
   rlang::eval_tidy(
