@@ -2,12 +2,19 @@
 % Please edit documentation in R/distribution.R
 \name{params}
 \alias{params}
-\title{Parameters are a named list, the names being the parameters,
-and the contents of each parameter entry being expressions defining
-the parameter space. COMPLICATION: space defined with more than one
-parameter together.}
+\title{Define parameters}
 \usage{
 params(...)
+}
+\arguments{
+\item{...}{Unquoted names of parameters; must be valid symbols.
+Also included are restrictions of the parameter space, defined such that all
+entries of \code{...} must hold. These expressions are to be run in the
+distribution's representation environment,
+so you can refer to bindings contained in that environment or above.}
+}
+\value{
+A list of the parameter names and parameter space.
 }
 \description{
 Parameters are a named list, the names being the parameters,

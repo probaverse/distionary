@@ -89,6 +89,7 @@ parameters.
 \examples{
 # <standard example: hard-coded distribution with no parameters>
 # <example with parameters>
+
 # <advanced example defining a distribution class with a general function
 #  g, and then making a sub class using .parenv = representation env>
 # <advanced example like the above, but perhaps only by specifying a

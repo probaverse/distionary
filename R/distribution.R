@@ -58,6 +58,7 @@
 #' @examples
 #' # <standard example: hard-coded distribution with no parameters>
 #' # <example with parameters>
+#'
 #' # <advanced example defining a distribution class with a general function
 #' #  g, and then making a sub class using .parenv = representation env>
 #' # <advanced example like the above, but perhaps only by specifying a
@@ -148,11 +149,26 @@ distribution <- function(
   res
 }
 
+#' Define parameters
+#'
 #' Parameters are a named list, the names being the parameters,
 #' and the contents of each parameter entry being expressions defining
 #' the parameter space. COMPLICATION: space defined with more than one
 #' parameter together.
+#' @param ... Unquoted names of parameters; must be valid symbols.
+#' Also included are restrictions of the parameter space, defined such that all
+#' entries of `...` must hold. These expressions are to be run in the
+#' distribution's representation environment,
+#' so you can refer to bindings contained in that environment or above.
+#' @returns A list of the parameter names and parameter space.
+#' @export
 params <- function(...) {
-  ellipsis::check_dots_unnamed() # No assignment allowed.
-  rlang::ensyms(..., .named = TRUE)
+  ellipsis::check_dots_unnamed() # Maybe allow immediate resolving in the future
+  dots <- rlang::enexprs(...)
+  symb <- vapply(dots, rlang::is_symbol, FUN.VALUE = logical(1L))
+  vals <- dots[symb]
+  names(vals) <- as.character(vals)
+  vals <- lapply(vals, function(x) NULL)
+  space <- dots[!symb]
+  list(values = vals, space = space)
 }
