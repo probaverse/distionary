@@ -1,231 +1,79 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://distionary.netlify.app/404.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/SUPPORT.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/articles/evaluate.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/articles/specify.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/index.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/aggregate_weights.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/bracket_parameters.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/cdf.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/chf.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/degenerate.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/density.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/directional_inverse.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/discrete_helpers.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/discretes.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/distribution.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dot-quantities.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_bern.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_beta.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_binom.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_cauchy.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_chisq.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_empirical.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_exp.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_f.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_finite.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_gamma.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_geom.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_gev.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_gpd.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_hyper.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_lnorm.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_nbinom.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_norm.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_null.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_parametric.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_pois.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_t.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_unif.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/dst_weibull.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/encapsulate_p.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/enframe_general.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/eval_quantile_from_cdf.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/evi.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/flexible_cdf.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/gev_raw.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/gev_t_function.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/gpd_raw.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/hazard.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/is_finite.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/moments.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/narrow_by_discretes.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/new_distribution.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/new_finite.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/new_parametric.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/odds.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/parameters.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/parametric.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/pdq_functions_exist.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/plot.dst.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/pmf.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/pretty_name.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/quantile.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/quantity_parametric.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/range.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/realise.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/representation_as_function.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/return.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/survival.html</loc>
-  </url>
-  <url>
-    <loc>https://distionary.netlify.app/reference/variable.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://distionary.netlify.app/404.html</loc></url>
+<url><loc>https://distionary.netlify.app/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://distionary.netlify.app/CONTRIBUTING.html</loc></url>
+<url><loc>https://distionary.netlify.app/LICENSE-text.html</loc></url>
+<url><loc>https://distionary.netlify.app/LICENSE.html</loc></url>
+<url><loc>https://distionary.netlify.app/SUPPORT.html</loc></url>
+<url><loc>https://distionary.netlify.app/articles/evaluate.html</loc></url>
+<url><loc>https://distionary.netlify.app/articles/index.html</loc></url>
+<url><loc>https://distionary.netlify.app/articles/specify.html</loc></url>
+<url><loc>https://distionary.netlify.app/authors.html</loc></url>
+<url><loc>https://distionary.netlify.app/index.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/aggregate_weights.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/bracket_parameters.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/cdf.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/chf.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/degenerate.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/density.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/directional_inverse.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/discrete_helpers.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/discretes.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/distribution.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dot-quantities.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_bern.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_beta.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_binom.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_cauchy.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_chisq.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_empirical.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_exp.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_f.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_finite.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_gamma.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_geom.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_gev.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_gpd.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_hyper.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_lnorm.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_nbinom.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_norm.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_null.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_parametric.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_pois.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_t.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_unif.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/dst_weibull.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/encapsulate_p.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/enframe_general.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/eval_quantile_from_cdf.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/evi.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/flexible_cdf.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/gev_raw.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/gev_t_function.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/gpd_raw.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/hazard.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/index.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/is_finite.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/moments.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/narrow_by_discretes.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/new_distribution.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/new_finite.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/new_parametric.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/odds.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/parameters.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/parametric.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/pdq_functions_exist.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/plot.dst.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/pmf.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/pretty_name.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/quantile.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/quantity_parametric.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/range.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/realise.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/representation_as_function.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/return.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/survival.html</loc></url>
+<url><loc>https://distionary.netlify.app/reference/variable.html</loc></url>
 </urlset>
+
