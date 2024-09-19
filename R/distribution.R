@@ -149,6 +149,14 @@ distribution <- function(
   res
 }
 
+distribution2 <- function(...) {
+  list(repres_env = enquos(...))
+}
+
+eval_cdf2 <- function(distribution, at) {
+  eval_tidy(call2(distribution$repres_env$.cdf, at), data = distribution$parameters)
+}
+
 #' Define parameters
 #'
 #' Parameters are a named list, the names being the parameters,

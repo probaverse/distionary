@@ -22,7 +22,7 @@ eval_density <- function(distribution, at, strict = TRUE) {
 eval_density2 <- function(distribution, at) {
   cll <- rlang::call2(".density", at)
   rlang::eval_tidy(
-    cll, data = distribution, env = repres_env(distribution)
+    cll, data = parameters(distribution), env = repres_env(distribution)
   )
 }
 
