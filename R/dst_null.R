@@ -53,12 +53,12 @@ evi.dst_null <- function(x) {
 }
 
 #' @export
-eval_density.dst_null <- function(distribution, at) {
+eval_density.dst_null <- function(distribution, at, strict) {
   rep(NA_real_, length(at))
 }
 
 #' @export
-eval_pmf.dst_null <- function(distribution, at) {
+eval_pmf.dst_null <- function(distribution, at, strict) {
   rep(NA_real_, length(at))
 }
 
