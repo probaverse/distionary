@@ -23,6 +23,10 @@ dgev(x, location, scale, shape)
 
 \item{x, q}{Vector of quantiles.}
 }
+\value{
+CDF, density, and quantile functions corresponding
+to the input values.
+}
 \description{
 Representations of the Generalized Extreme Value Distribution
 }

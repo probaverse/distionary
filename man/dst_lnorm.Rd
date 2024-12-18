@@ -11,7 +11,7 @@ dst_lnorm(meanlog, variancelog)
 on a log scale.}
 }
 \value{
-Object of class \code{c("lnorm", "dst")}.
+A distribution.
 dst_lnorm(0, 1)
 }
 \description{

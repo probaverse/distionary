@@ -9,6 +9,9 @@ dst_bern(prob)
 \arguments{
 \item{prob}{Probability of success.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 bernoulli distributions.

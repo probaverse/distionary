@@ -9,6 +9,9 @@ dst_geom(prob)
 \arguments{
 \item{prob}{Probability of success in each trial; 0 < \code{p} <= 1.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 geometric distributions.

@@ -14,7 +14,7 @@ dst_gpd(location, scale, shape)
 \item{shape}{Shape parameter; numeric.}
 }
 \value{
-Object of class "dst" of a GPD.
+A distribution.
 }
 \description{
 Makes a distribution belonging to the family of

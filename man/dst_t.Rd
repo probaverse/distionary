@@ -9,6 +9,9 @@ dst_t(df)
 \arguments{
 \item{df}{Degrees of freedom; positive.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 t distributions.

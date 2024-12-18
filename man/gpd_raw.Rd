@@ -26,6 +26,10 @@ if \code{FALSE}, survival function.}
 
 \item{x, q}{Vector of quantiles.}
 }
+\value{
+CDF, density, and quantile functions corresponding
+to the input values.
+}
 \description{
 Representations of the Generalized Pareto Distribution
 }

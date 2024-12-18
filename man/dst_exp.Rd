@@ -9,6 +9,9 @@ dst_exp(rate)
 \arguments{
 \item{rate}{Rate.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 exponential distributions.

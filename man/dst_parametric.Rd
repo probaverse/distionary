@@ -27,6 +27,9 @@ representation, or the name of an environment (or any object that
 can be coerced to an environment with \code{as.environment()}.) Defaults to
 the calling environment.}
 }
+\value{
+A distribution.
+}
 \description{
 When a distribution has \code{p}, \code{d}, \code{q}, \code{r} functions available (such as
 \code{pnorm()}, \code{dnorm()}, etc.), \code{dst_parametric()} creates a distribution

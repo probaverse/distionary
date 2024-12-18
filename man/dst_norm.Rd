@@ -9,6 +9,9 @@ dst_norm(mean, variance)
 \arguments{
 \item{mean, variance}{Mean and variance of the distribution.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 Normal (Gaussian) distributions.

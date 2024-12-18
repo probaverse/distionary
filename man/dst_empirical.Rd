@@ -23,7 +23,7 @@ representing probabilities.}
 \item{...}{Additional arguments, currently not used.}
 }
 \value{
-An object of class \code{c("finite", "dst")}.
+A distribution.
 }
 \description{
 An empirical distribution is a non-parametric way to

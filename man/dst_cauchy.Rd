@@ -11,6 +11,9 @@ dst_cauchy(location, scale)
 
 \item{scale}{positive}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 cauchy distributions.

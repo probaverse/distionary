@@ -13,6 +13,9 @@ dst_gev(location, scale, shape)
 
 \item{shape}{Shape parameter; numeric.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 Generalized Extreme Value (GEV) distributions.

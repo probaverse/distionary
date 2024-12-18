@@ -23,9 +23,3 @@ realise.dst <- function(distribution, n = 1) {
 realize <- function(distribution, n = 1) {
 	realise(distribution, n = n)
 }
-
-#' @rdname realise
-#' @export
-observe <- function(distribution, n = 1) {
-	realise(distribution, n = n)
-}

@@ -11,6 +11,9 @@ dst_f(df1, df2)
 
 \item{df2}{degree of freedom, positive.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 F distributions.

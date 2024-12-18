@@ -9,6 +9,9 @@ dst_chisq(df)
 \arguments{
 \item{df}{degrees of freedom}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 Chi-squared distributions.

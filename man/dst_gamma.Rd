@@ -11,6 +11,9 @@ dst_gamma(shape, rate)
 
 \item{rate}{Rate parameter; positive.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 Gamma distributions.

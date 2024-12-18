@@ -11,6 +11,9 @@ dst_nbinom(size, prob)
 
 \item{prob}{Probability parameter; between 0 and 1.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 negative binomial distributions.

@@ -10,7 +10,7 @@ dst_pois(lambda)
 \item{lambda}{Mean of the Poisson distribution.}
 }
 \value{
-Object of class "dst".
+A distribution.
 dst_pois(1)
 }
 \description{

@@ -23,7 +23,7 @@ probabilities \code{probs}. Optional.}
 \item{...}{Additional arguments, currently not used.}
 }
 \value{
-An object of class \code{c("finite", "dst")}.
+A distribution.
 }
 \description{
 A finite distribution assigns probabilities to a finite

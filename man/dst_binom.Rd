@@ -11,6 +11,9 @@ dst_binom(size, prob)
 
 \item{prob}{Success probability for each trial.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 binomial distributions.

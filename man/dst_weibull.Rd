@@ -11,6 +11,9 @@ dst_weibull(shape, scale)
 
 \item{scale}{Scale parameter; positive.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 Weibull distributions.

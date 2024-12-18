@@ -18,7 +18,7 @@ is.degenerate(object)
 \item{object}{Object to test}
 }
 \value{
-Object of class "dst".
+A distribution.
 }
 \description{
 Makes a distribution belonging to the degenerate family of

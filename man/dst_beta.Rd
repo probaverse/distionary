@@ -10,6 +10,9 @@ dst_beta(shape1, shape2)
 \item{shape1, shape2}{Parameters, greater than 0. Also known as alpha
 and beta.}
 }
+\value{
+A distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 beta distributions.
