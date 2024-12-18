@@ -4,7 +4,7 @@
 #' bernoulli distributions.
 #'
 #' @param prob Probability of success.
-#'
+#' @returns A distribution.
 #' @examples
 #' dst_bern(0.3)
 #'

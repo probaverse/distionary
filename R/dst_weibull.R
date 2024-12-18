@@ -5,7 +5,7 @@
 #'
 #' @param scale Scale parameter; positive.
 #' @param shape Shape parameter; positive.
-#'
+#' @returns A distribution.
 #' @examples
 #' dst_weibull(1, 1)
 #'

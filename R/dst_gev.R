@@ -6,6 +6,7 @@
 #' @param location Location parameter; numeric.
 #' @param scale Scale parameter; positive numeric.
 #' @param shape Shape parameter; numeric.
+#' @returns A distribution.
 #' @examples
 #' dst_gev(0, 1, 1)
 #' @export

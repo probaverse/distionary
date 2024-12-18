@@ -1,6 +1,5 @@
 #' @importFrom stats median
 #'
-#' @param x Distribution to calculate median from.
 #' @details
 #' Median is calculated as the 0.5-quantile. So, when the median is
 #' non-unique, we take the smallest of the possibilities.

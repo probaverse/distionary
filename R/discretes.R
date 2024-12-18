@@ -36,7 +36,6 @@ next_discrete <- function(distribution, from, n = 1L, include_from = FALSE) {
 }
 
 #' @export
-#' @inheritParams next_discrete
 next_discrete.dst <- function(distribution, from, n, include_from) {
   numeric(0L)
 }
@@ -48,7 +47,6 @@ prev_discrete <- function(distribution, from, n = 1L, include_from = FALSE) {
 }
 
 #' @export
-#' @inheritParams next_discrete
 prev_discrete.dst <- function(distribution, from, n, include_from) {
   numeric(0L)
 }
@@ -87,11 +85,14 @@ has_infinite_discretes.dst <- function(distribution, from, to) {
 #' Helper functions for finding discrete values
 #'
 #' `*_discrete_finite` finds discrete values from a
-#' finite set of possibilities. `*_discret_natural` finds
+#' finite set of possibilities. `*_discrete_natural` finds
 #' discrete values amongst the natural numbers (including 0).
 #'
 #' @param x A vector of all possible discrete values.
-#' @inheritParams next_discrete
+#' @param from Reference value.
+#' @param n Number of discrete values to find.
+#' @param include_from Logical; should the `from` value be included
+#' in the query?
 #' @rdname discrete_helpers
 next_discrete_finite <- function(x, from, n, include_from) {
   if (include_from) {

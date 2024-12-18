@@ -4,6 +4,7 @@
 #' Normal (Gaussian) distributions.
 #'
 #' @param mean,variance Mean and variance of the distribution.
+#' @returns A distribution.
 #' @examples
 #' dst_norm(0, 1)
 #' @export

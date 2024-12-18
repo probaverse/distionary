@@ -8,49 +8,40 @@
 \alias{median.dst}
 \alias{skewness}
 \alias{stdev}
-\alias{stdev.dst}
-\alias{stdev2}
 \alias{variance}
 \title{Moments of a Distribution}
 \usage{
-kurtosis_raw(distribution)
+kurtosis_raw(distribution, ...)
 
-kurtosis_exc(distribution)
+kurtosis_exc(distribution, ...)
 
 \method{mean}{dst}(x, ...)
 
 \method{median}{dst}(x, ...)
 
-skewness(distribution)
+skewness(distribution, ...)
 
-stdev(distribution)
+stdev(distribution, ...)
 
-\method{stdev}{dst}(distribution)
-
-stdev2(distribution)
-
-variance(distribution)
+variance(distribution, ...)
 }
 \arguments{
-\item{distribution}{Distribution to compute skewness from.}
+\item{...}{Other arguments to pass to \code{integrate()} when
+deploying numerical algorithm.}
 
-\item{x}{Distribution to calculate median from.}
-
-\item{...}{When calculating the mean via integration of the quantile
-function, arguments passed to \code{stats::integrate()}.}
+\item{x, distribution}{Distribution to compute moment of.}
 }
 \value{
 A single numeric.
 }
 \description{
 Get common moment-related quantities of a
-distribution: mean, variance, standard deviation (sd),
-skewness, and kurtosis.
+distribution.
 }
 \details{
-If there is no method associated with a subclass of
-\code{x}, then moments are calculated using
-\code{stats::integrate()} from the quantile function.
+If there is no moment specified in the distribution
+definition, then moments are calculated numerically using
+\code{stats::integrate()}.
 
 Median is calculated as the 0.5-quantile. So, when the median is
 non-unique, we take the smallest of the possibilities.

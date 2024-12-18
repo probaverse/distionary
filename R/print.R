@@ -1,6 +1,6 @@
 #' @export
 print.dst <- function(x, ...) {
-  nm <- distribution_name(x)
+  nm <- x$name
   if (is.null(nm)) {
     nm <- "Unnamed distribution."
   }

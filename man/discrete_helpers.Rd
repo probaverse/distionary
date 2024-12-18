@@ -18,10 +18,15 @@ prev_discrete_natural(from, n, include_from)
 \arguments{
 \item{x}{A vector of all possible discrete values.}
 
+\item{from}{Reference value.}
+
 \item{n}{Number of discrete values to find.}
+
+\item{include_from}{Logical; should the \code{from} value be included
+in the query?}
 }
 \description{
 \verb{*_discrete_finite} finds discrete values from a
-finite set of possibilities. \verb{*_discret_natural} finds
+finite set of possibilities. \verb{*_discrete_natural} finds
 discrete values amongst the natural numbers (including 0).
 }

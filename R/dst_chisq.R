@@ -4,7 +4,7 @@
 #' Chi-squared distributions.
 #'
 #' @param df degrees of freedom
-#'
+#' @returns A distribution.
 #' @examples
 #' dst_chisq(3)
 #'

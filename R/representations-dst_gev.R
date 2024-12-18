@@ -2,6 +2,8 @@
 #'
 #' @param x,q Vector of quantiles.
 #' @param p Vector of probabilities.
+#' @returns CDF, density, and quantile functions corresponding
+#' to the input values.
 #' @examples
 #' pgev(1:10, 0, 1, 1)
 #' dgev(1:10, 0, 2, 0)
@@ -18,6 +20,12 @@ pgev <- function(q, location, scale, shape) {
   res
 }
 
+#' @export
+eval_cdf.gev <- function(distribution, at) {
+  theta <- parameters(distribution)
+  pgev(at, theta[[1]], theta[[2]], theta[[3]])
+}
+
 #' @rdname gev_raw
 #' @inheritParams pgev
 #' @export
@@ -32,6 +40,12 @@ qgev <- function(p, location, scale, shape) {
   res
 }
 
+#' @export
+eval_quantile.gev <- function(distribution, at) {
+  theta <- parameters(distribution)
+  qgev(at, theta[[1]], theta[[2]], theta[[3]])
+}
+
 #' @rdname gev_raw
 #' @inheritParams pgev
 #' @export
@@ -42,6 +56,12 @@ dgev <- function(x, location, scale, shape) {
   res[x <= r[1L]] <- 0
   res[x > r[2L]] <- 0
   res
+}
+
+#' @export
+eval_density.gev <- function(distribution, at, strict = TRUE) {
+  theta <- parameters(distribution)
+  dgev(at, theta[[1]], theta[[2]], theta[[3]])
 }
 
 #' 't()' function for calculating GEV quantities

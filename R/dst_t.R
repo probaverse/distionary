@@ -3,9 +3,9 @@
 #' Makes a distribution belonging to the family of
 #' t distributions.
 #'
-#'@param df Degrees of freedom; positive.
-#'
-#'@examples
+#' @param df Degrees of freedom; positive.
+#' @returns A distribution.
+#' @examples
 #' dst_t(3)
 #'
 #'@export

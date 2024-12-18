@@ -4,6 +4,7 @@
 #' Uniform distributions.
 #'
 #' @param min,max Minimum and maximum of the distribution.
+#' @returns A distribution.
 #' @examples
 #' dst_unif(0, 1)
 #' @export

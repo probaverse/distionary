@@ -15,7 +15,6 @@ Description: Make univariate probability distribution objects
 License: MIT + file LICENSE
 Suggests: 
     covr,
-    knitr,
     rmarkdown,
     testthat (>= 3.0.0),
     tibble
@@ -27,6 +26,6 @@ RoxygenNote: 7.3.2
 Imports: 
     ellipsis,
     rlang,
+    stats,
     vctrs
-VignetteBuilder: knitr
 URL: https://distionary.netlify.app/

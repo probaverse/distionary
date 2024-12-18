@@ -5,13 +5,9 @@ mean.finite <- function(x, ...) {
 	})
 }
 
-#' @export
-evi.finite <- function(distribution) {
-	NaN
-}
 
 #' @export
-variance.finite <- function(distribution) {
+variance.finite <- function(distribution, ...) {
   mu <- mean(distribution)
 	with(distribution$probabilities, {
 		mu2 <- sum(size * location^2)
@@ -20,7 +16,7 @@ variance.finite <- function(distribution) {
 }
 
 #' @export
-skewness.finite <- function(distribution) {
+skewness.finite <- function(distribution, ...) {
 	mu <- mean(distribution)
 	sigma <- stdev(distribution)
 	with(distribution$probabilities, {
@@ -30,7 +26,7 @@ skewness.finite <- function(distribution) {
 }
 
 #' @export
-kurtosis_exc.finite <- function(distribution) {
+kurtosis_exc.finite <- function(distribution, ...) {
 	mu <- mean(distribution)
 	sigma <- stdev(distribution)
 	with(distribution$probabilities, {

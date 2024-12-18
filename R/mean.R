@@ -1,16 +1,15 @@
 #' Moments of a Distribution
 #'
 #' Get common moment-related quantities of a
-#' distribution: mean, variance, standard deviation (sd),
-#' skewness, and kurtosis.
+#' distribution.
 #'
-#' @param x Distribution to evaluate.
-#' @param ... When calculating the mean via integration of the quantile
-#' function, arguments passed to `stats::integrate()`.
+#' @param x,distribution Distribution to compute moment of.
+#' @param ... Other arguments to pass to `integrate()` when
+#' deploying numerical algorithm.
 #'
-#' @details If there is no method associated with a subclass of
-#' \code{x}, then moments are calculated using
-#' \code{stats::integrate()} from the quantile function.
+#' @details If there is no moment specified in the distribution
+#' definition, then moments are calculated numerically using
+#' \code{stats::integrate()}.
 #'
 #' @return A single numeric.
 #' @examples

@@ -14,7 +14,7 @@
 #' @param data Data frame containing the outcomes `y` and/or
 #'   probabilities `probs`. Optional.
 #' @param ... Additional arguments, currently not used.
-#' @return An object of class `c("finite", "dst")`.
+#' @returns A distribution.
 #' @note This distribution is called "finite" and not
 #' "discrete", because a discrete distribution could have
 #' an infinite amount of possible outcomes, as in the
@@ -38,7 +38,7 @@ dst_finite <- function(y, probs, data, ...) {
       "Can't make a finite distribution from empty data. ",
       "Returning an empty distribution."
     )
-    return(distribution())
+    return(dst_null())
   }
   if (length(w) < length(y)) {
     stop("Not enough probabilities to match outcomes `y`.")

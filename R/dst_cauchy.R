@@ -5,7 +5,7 @@
 #'
 #' @param location Location parameter
 #' @param scale positive
-#'
+#' @returns A distribution.
 #' @examples
 #' dst_cauchy(0, 1)
 #'

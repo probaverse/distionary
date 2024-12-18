@@ -18,7 +18,7 @@
 #'   (unlike [dst_finite()]),
 #'   representing probabilities.
 #' @param ... Additional arguments, currently not used.
-#' @return An object of class `c("finite", "dst")`.
+#' @returns A distribution.
 #' @seealso [dst_finite()]
 #' @examples
 #' x <- rnorm(100)
@@ -40,7 +40,7 @@ dst_empirical <- function(y, data, weights = 1, ...) {
       "Can't make an empirical distribution from empty data. ",
       "Returning an empty distribution."
     )
-    return(distribution())
+    return(dst_null())
   }
   if (any(w < 0, na.rm = TRUE)) {
     stop("Weights must not be negative.")

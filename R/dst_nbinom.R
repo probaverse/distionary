@@ -5,6 +5,7 @@
 #'
 #' @param prob Probability parameter; between 0 and 1.
 #' @param size Target for number of successful trials; non-negative.
+#' @returns A distribution.
 #' @examples
 #' dst_nbinom(10, 0.5)
 #' @export

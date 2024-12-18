@@ -4,6 +4,8 @@
 #' @param p Vector of probabilities.
 #' @param lower.tail Logical. If `TRUE`, cdf (default);
 #' if `FALSE`, survival function.
+#' @returns CDF, density, and quantile functions corresponding
+#' to the input values.
 #' @examples
 #' pgpd(1:10, 0, 1, 1)
 #' dgpd(1:10, 0, 2, 0)
@@ -45,6 +47,11 @@ pgpd <- function(q, location, scale, shape, lower.tail = TRUE) {
   }
 }
 
+#' @export
+eval_cdf.gpd <- function(distribution, at) {
+  theta <- parameters(distribution)
+  pgpd(at, theta[[1]], theta[[2]], theta[[3]])
+}
 
 #' @rdname gpd_raw
 #' @inheritParams pgpd
@@ -66,6 +73,12 @@ qgpd <- function(p, location, scale, shape) {
     res[invalid] <- NaN
     res
   }
+}
+
+#' @export
+eval_quantile.gpd <- function(distribution, at) {
+  theta <- parameters(distribution)
+  qgpd(at, theta[[1]], theta[[2]], theta[[3]])
 }
 
 #' @rdname gpd_raw
@@ -91,3 +104,8 @@ dgpd <- function(x, location, scale, shape) {
   }
 }
 
+#' @export
+eval_density.gpd <- function(distribution, at, strict = TRUE) {
+  theta <- parameters(distribution)
+  dgpd(at, theta[[1]], theta[[2]], theta[[3]])
+}

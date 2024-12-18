@@ -4,6 +4,7 @@
 #' beta distributions.
 #' @param shape1,shape2 Parameters, greater than 0. Also known as alpha
 #' and beta.
+#' @returns A distribution.
 #' @examples
 #' dst_beta(2, 3)
 #' @export

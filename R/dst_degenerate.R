@@ -3,7 +3,7 @@
 #' Makes a distribution belonging to the degenerate family of
 #' distributions. That is, distributions of fixed values.
 #' @param location Parameter of the distribution family.
-#' @return Object of class "dst".
+#' @returns A distribution.
 #' @examples
 #' require(graphics)
 #' d <- dst_degenerate(5)

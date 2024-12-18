@@ -5,7 +5,7 @@
 #'
 #' @param shape Shape parameter; positive.
 #' @param rate Rate parameter; positive.
-#'
+#' @returns A distribution.
 #' @examples
 #' dst_gamma(2, 1)
 #' @export

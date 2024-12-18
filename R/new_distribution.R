@@ -1,9 +1,6 @@
 #' Constructor Function for "dst" Objects
 #'
 #' @param l Object containing the components of a distribution object.
-#' @param vtype Type of random variable. Common options
-#' include "continuous", "discrete", or "mixed", but remains open for
-#' extensibility.
 #' @param ... Attributes to add to the object.
 #' @param class If making a subclass, specify its name here.
 #' @export

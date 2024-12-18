@@ -12,10 +12,6 @@ new_distribution(l, ..., class = character())
 \item{...}{Attributes to add to the object.}
 
 \item{class}{If making a subclass, specify its name here.}
-
-\item{vtype}{Type of random variable. Common options
-include "continuous", "discrete", or "mixed", but remains open for
-extensibility.}
 }
 \description{
 Constructor Function for "dst" Objects

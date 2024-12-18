@@ -4,7 +4,7 @@
 #' Log Normal distributions.
 #' @param meanlog,variancelog Mean and variance of the distribution
 #' on a log scale.
-#' @return Object of class `c("lnorm", "dst")`.
+#' @returns A distribution.
 #' dst_lnorm(0, 1)
 #' @export
 dst_lnorm <- function(meanlog, variancelog) {

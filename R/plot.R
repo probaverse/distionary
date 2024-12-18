@@ -9,9 +9,10 @@
 #' plot(dst_norm(5, 5))
 #' plot(dst_empirical(-5:2), "cdf", n = 1001)
 #' @export
-plot.dst <- function(x,
-                     what = c("density", "cdf", "survival", "quantile", "hazard", "chf"),
-                     ...) {
+plot.dst <- function(
+    x, what = c("density", "cdf", "survival", "quantile", "hazard", "chf"),
+    ...
+) {
   ellipsis <- rlang::list2(...)
   fname <- match.arg(what)
   if (fname == "density" && variable(x) != "continuous") {

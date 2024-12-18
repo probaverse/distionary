@@ -5,7 +5,7 @@
 #'
 #' @param size Number of trials.
 #' @param prob Success probability for each trial.
-#'
+#' @returns A distribution.
 #' @examples
 #' dst_binom(10, 0.6)
 #' @export

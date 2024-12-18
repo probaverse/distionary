@@ -4,6 +4,7 @@
 #' geometric distributions.
 #'
 #' @param prob Probability of success in each trial; 0 < `p` <= 1.
+#' @returns A distribution.
 #' @examples
 #' dst_geom(0.4)
 #' @export

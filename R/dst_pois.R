@@ -3,7 +3,7 @@
 #' Makes a distribution belonging to the family of
 #' Poisson distributions.
 #' @param lambda Mean of the Poisson distribution.
-#' @return Object of class "dst".
+#' @returns A distribution.
 #' dst_pois(1)
 #' @export
 dst_pois <- function(lambda) {

@@ -15,6 +15,7 @@
 #' representation, or the name of an environment (or any object that
 #' can be coerced to an environment with `as.environment()`.) Defaults to
 #' the calling environment.
+#' @returns A distribution.
 #' @examples
 #' d <- dst_parametric("norm", mean = 0, sd = 1, .variable = "continuous")
 #' eval_density(d, at = -3:3)

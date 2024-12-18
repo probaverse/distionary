@@ -6,7 +6,7 @@
 #' data. This contructor makes such a distribution object. It always evaluates
 #' to an `NA` vector.
 #'
-#' @return Distribution object of class `"dst_null"`.
+#' @returns A null distribution, having no properties defined.
 #' @examples
 #' x <- dst_null()
 #' mean(x)
@@ -28,37 +28,32 @@ mean.dst_null <- function(x, ...) {
 }
 
 #' @export
-variance.dst_null <- function(x, ...) {
+variance.dst_null <- function(distribution, ...) {
   NA_real_
 }
 
 #' @export
-skewness.dst_null <- function(x, ...) {
+skewness.dst_null <- function(distribution, ...) {
   NA_real_
 }
 
 #' @export
-kurtosis_exc.dst_null <- function(x, ...) {
+kurtosis_exc.dst_null <- function(distribution, ...) {
   NA_real_
 }
 
 #' @export
-kurtosis_raw.dst_null <- function(x, ...) {
+kurtosis_raw.dst_null <- function(distribution, ...) {
   NA_real_
 }
 
 #' @export
-evi.dst_null <- function(x) {
-  NA_real_
-}
-
-#' @export
-eval_density.dst_null <- function(distribution, at) {
+eval_density.dst_null <- function(distribution, at, strict = TRUE) {
   rep(NA_real_, length(at))
 }
 
 #' @export
-eval_pmf.dst_null <- function(distribution, at) {
+eval_pmf.dst_null <- function(distribution, at, strict = TRUE) {
   rep(NA_real_, length(at))
 }
 

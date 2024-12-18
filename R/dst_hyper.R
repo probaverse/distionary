@@ -6,7 +6,7 @@
 #' @param N the population size
 #' @param K the number of success states in the population
 #' @param n the number of draws
-#'
+#' @returns A distribution.
 #' @examples
 #' dst_hyper(1, 5, 10)
 #'

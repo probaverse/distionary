@@ -13,7 +13,7 @@ pretty_name <- function(distribution, param_digits = 0) {
     name <- distribution$name
   }
   low_name <- tolower(name)
-  if (low_name == "frechet") name <- "Fréchet"
+  if (low_name == "frechet") name <- "Frechet"
   if (low_name == "gev") name <- "GEV"
   if (low_name == "gpd") name <- "GPD"
   if (param_digits > 0) {

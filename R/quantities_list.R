@@ -118,7 +118,8 @@
   ),
   geom = rlang::exprs(
     mean = (1 - prob)/prob,
-    #median = ifelse((-1)/log2(1 - p)%%1 != 0, (-1)/log2(1 - p), 'No unique integer'), # not sure
+    #median = ifelse((-1)/log2(1 - p)%%1 != 0,
+    #(-1)/log2(1 - p), 'No unique integer'), # not sure
     variance = (1 - prob)/prob^2,
     skewness = ifelse(prob < 1, (2 - prob) / sqrt(1 - prob), NaN),
     kurtosis_exc = ifelse(prob < 1, 6 + prob^2 / (1 - prob), NaN),
@@ -158,7 +159,6 @@
       ((gamma(1+4/1) - 4*sk*(var^3)*mu - 6*(mu^2)*(var^2) - mu^4)/(var^4) - 3)
     },
     range = c(0, Inf)
-    #evi = FILL_THIS_IN
   ),
   gamma = rlang::exprs(
     mean = shape / rate,
@@ -166,7 +166,6 @@
     skewness = 2 / sqrt(shape),
     kurtosis_exc = 6 / shape,
     range = c(0, Inf)
-    #evi = FILL_THIS_IN
   ),
   chisq = rlang::exprs(
       mean = df,

@@ -4,7 +4,7 @@
 #' exponential distributions.
 #'
 #' @param rate Rate.
-#'
+#' @returns A distribution.
 #' @examples
 #' dst_exp(1)
 #'

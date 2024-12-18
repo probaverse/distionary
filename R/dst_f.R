@@ -5,7 +5,7 @@
 #'
 #' @param df1 degree of freedom, positive.
 #' @param df2 degree of freedom, positive.
-#'
+#' @returns A distribution.
 #' @examples
 #' dst_f(2, 3)
 #' @export

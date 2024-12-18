@@ -5,28 +5,23 @@ mean.parametric <- function(x, ...) {
 }
 
 #' @export
-variance.parametric <- function(distribution) {
+variance.parametric <- function(distribution, ...) {
 	quantity_parametric(distribution, "variance")
 }
 
 #' @export
-stdev.parametric <- function(distribution) {
+stdev.parametric <- function(distribution, ...) {
   quantity_parametric(distribution, "stdev")
 }
 
 #' @export
-skewness.parametric <- function(distribution) {
+skewness.parametric <- function(distribution, ...) {
 	quantity_parametric(distribution, "skewness")
 }
 
 #' @export
-kurtosis_exc.parametric <- function(distribution) {
+kurtosis_exc.parametric <- function(distribution, ...) {
 	quantity_parametric(distribution, "kurtosis_exc")
-}
-
-#' @export
-evi.parametric <- function(distribution) {
-	quantity_parametric(distribution, "evi")
 }
 
 #' @export
