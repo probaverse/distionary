@@ -239,6 +239,8 @@ d <- seal_distribution(d)
 eval_density(d, at = 5)
 eval_density(d, at = .dst$quantile(0.5))
 eval_representation(d, "quantile", c(0.5, 1))
+# eval_distribution(d, quantile(c(0.5, 1, lambda)))
+eval_representation(d, "survival", c(0.5, 1))
 eval_distribution(d, lambda)
 eval_distribution(d, foofy)
 
