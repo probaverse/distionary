@@ -75,7 +75,8 @@ standard_network <- function() {
 #' duplicate environments each time a function has a different
 #' enclosing environment.
 #'
-# inject_mask_into_function <- function(args, body, env, bottom, top, wrapping_env = caller_env()) {
+# inject_mask_into_function <- function(args, body, env, bottom, top,
+# wrapping_env = caller_env()) {
 inject_mask_into_function <- function(fn_name, bottom, top, where_fn) {
   fmls <- eval_tidy(expr(formals(!!fn_name)), env = where_fn)
   # higher_args <- rlang::call_args(rlang::call_match())
@@ -225,6 +226,68 @@ resolve_params <- function(distribution, ...) {
   distribution$params <- c(distribution$params, dots)
   distribution
 }
+
+#' Parameter tracking in a distribution family
+#'
+#' @param ... Specification of parameters and parameter space. Bare
+#' expressions are stored in the parameter space (e.g., `sigma > 0`);
+#' named bindings are assumed to be parameters
+#' (e.g., `mu = 0` sets `mu` as a parameter with the known value 0); and
+#' bare symbols are assumed to be parameters with unknown values
+#' (e.g., `sigma` means that `sigma` is an unknown parameter of the
+#' distribution, equivalent to `sigma = NULL`).
+#' @examples
+#' params(mu = 5, sigma, sigma > 0)
+#' @export
+params <- function(...) {
+  dots <- rlang::enexprs(...)
+  nms <- names(dots)
+  dots_named <- dots[nms != ""]
+  bindings <- lapply(dots_named, rlang::eval_tidy)
+  # Remaining symbols and parameter space
+  dots <- dots[nms == ""]
+  lgl_syms <- vapply(dots, rlang::is_symbol, FUN.VALUE = logical(1))
+  dots_syms <- dots[lgl_syms]
+  pspace <- dots[!lgl_syms]
+  # Remove symbols with bindings already.
+  already_bound <- names(bindings)
+  specified_names <- vapply(dots_syms, rlang::as_name, FUN.VALUE = character(1))
+  remaining_names <- setdiff(specified_names, already_bound)
+  null_bindings <- rep(list(NULL), length(remaining_names))
+  names(null_bindings) <- remaining_names
+  bindings <- append(bindings, null_bindings)
+  list(
+    bindings = bindings,
+    parameter_space = pspace
+  )
+}
+
+#' Get and set distribution parameters
+#'
+#' @seealso [params()] for setting up parameter tracking in a new
+#' distribution family.
+#' @rdname parameters
+#' @export
+parameters <- function(distribution) {
+  distribution$parameters
+}
+
+`parameters<-` <- function(distribution, value) {
+  distribution$parameters <- value
+  distribution
+}
+
+#' @rdname parameters
+#' @export
+set_parameters <- function(distribution, ...) {
+  params <- rlang::enquos(...)
+  distribution$parameters <- c(distribution$parameters, params)
+  return(d)
+}
+
+
+
+# ----- DEMO ------
 
 f <- distribution(
   cdf = \(x) x^2 * lambda,
