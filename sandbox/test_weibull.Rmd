@@ -1,0 +1,84 @@
+---
+title: "Untitled"
+author: "Shuyi Tan"
+date: "28/11/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+d1 <- dst_weibull(1,1) 
+
+d2 <- dst_weibull(1,2)
+
+#d3 <- dst_weibull(1, 2)
+
+shape = 2
+scale = 1
+
+sk <- skewness(d2)
+var <- variance(d2)
+mu <- mean(d2)
+```
+
+
+$$
+\gamma_{2}=\frac{-6 \Gamma_{1}^{4}+12 \Gamma_{1}^{2} \Gamma_{2}-3 \Gamma_{2}^{2}-4 \Gamma_{1} \Gamma_{3}+\Gamma_{4}}{\left[\Gamma_{2}-\Gamma_{1}^{2}\right]^{2}}
+$$
+
+```{r}
+g1 <- gamma(1 + 1 / shape)
+g2 <- gamma(1 + 2 / shape)
+g3 <- gamma(1 + 3 / shape)
+g4 <- gamma(1 + 4 / shape)
+((-6 * g1^4 + 12 * g1^2 * g2 - 3 * g2^2 - 4 * g1 * g3 + g4) /
+(g1 - g2^2)^2)
+
+
+kurtosis_exc.dst(d2)
+```
+
+$$
+\gamma_{2}=\frac{\lambda^{4} \Gamma\left(1+\frac{4}{k}\right)-4 \gamma_{1} \sigma^{3} \mu-6 \mu^{2} \sigma^{2}-\mu^{4}}{\sigma^{4}}-3
+$$
+
+```{r}
+# d <- dst_weibull(1,1)
+# sk <- skewness(d)
+# var <- variance(d)
+# mu <- mean(d)
+# ((gamma(1+4/1) - 4*sk*(var^3)*mu - 6*(mu^2)*(var^2) - mu^4)/(var^4) - 3)
+
+
+g1 <- gamma(1 + 1 / shape)
+g2 <- gamma(1 + 2 / shape)
+g3 <- gamma(1 + 3 / shape)
+g4 <- gamma(1 + 4 / shape)
+mu <- scale * g1
+var <- scale^2 * (g2 - g1^2)
+sigma <- sqrt(var)
+
+
+sk <- (g3 * scale^3 - 3 * mu * var - mu^3) / sigma^3
+((gamma(1+4/1) - 4*sk*(var^3)*mu - 6*(mu^2)*(var^2) - mu^4)/(var^4) - 3)
+
+kurtosis_exc.dst(d2)
+```
+
+
+$$
+\gamma_{2} = \frac{\Gamma\left(1+\frac{4}{\tau}\right) \lambda^{4}-4 \mu \Gamma\left(1+\frac{3}{\tau}\right) \lambda^{3}+6 \mu^{2} \Gamma\left(1+\frac{2}{\tau}\right) \lambda^{2}-3 \mu^{4}}{\sigma^{4}} -3
+$$
+
+```{r}
+var <- variance(d2)
+mu <- mean(d2)
+
+((gamma(1 +  4/shape)*(scale^4) - 4*mu*gamma(1 + 3/shape)*(scale^3) + 6*(mu^2)*gamma(1+2/shape)*(scale^2) - 3*(mu^4))/(var^4) - 3)
+```
+
+
+
+
+

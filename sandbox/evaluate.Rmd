@@ -1,0 +1,122 @@
+---
+title: "Evaluating distributions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Evaluating distributions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(distionary)
+```
+
+One purpose of `distplyr` is to handle the menial distribution-related calculations for you. Just specify a distribution once, and there is no need to manage its components anymore. 
+
+**Example**: want to compute the variance of a Uniform(-1, 1) distribution, get the 0.25- and 0.75-quantiles, and generate a sample of size 10? 
+
+Without `distplyr`:
+
+```{r}
+a <- -1
+b <- 1
+# Look up formula for variance:
+(b - a) ^ 2 / 12
+# Get quantiles:
+qunif(c(0.25, 0.75), min = a, max = b)
+# Get sample of size 10:
+runif(10, min = a, max = b)
+```
+
+With `distplyr`:
+
+```{r}
+d <- dst_unif(-1, 1)
+variance(d)
+eval_quantile(d, at = c(0.25, 0.75))
+realise(d, 10)
+```
+
+
+## Functional Representations of a Distribution
+
+A distribution can be represented by different functions, such as a density function, a cumulative distribution function, and others. In `distplyr`, you can: 
+
+- evaluate the function directly by calling `eval_*`;
+- evaluate the function and enframe results together with the function arguments with `enframe_*`; or 
+- get the function itself using `get_*`. 
+
+Here are the representations and the corresponding `distplyr` functions:  
+
+| Quantity                         | `distplyr` Functions              |
+|----------------------------------|-----------------------------------|
+| Cumulative Distribution Function | `eval_cdf()`,      `get_cdf()`,      `enframe_cdf()`      |
+| Survival Function                | `eval_survival()`, `get_survival()`, `enframe_survival()` |
+| Quantile Function                | `eval_quantile()`, `get_quantile()`, `enframe_quantile()` |
+| Hazard Function                  | `eval_hazard()`,   `get_hazard()`,   `enframe_hazard()`   |
+| Cumulative Hazard Function       | `eval_chf()`,      `get_chf()`,      `enframe_chf()`      |
+| Probability density function     | `eval_density()`,  `get_density()`,  `enframe_density()`  |
+| Probability mass function        | `eval_pmf()`,      `get_pmf()`,      `enframe_pmf()`      |
+
+These functions all take a distribution object as their first argument, and `eval_*` and `enframe_*` have a second argument named `at` indicating where to evaluate the function. The `at` argument is vectorized.
+
+
+
+Here is an example of evaluating the hazard function and the random sample generator of a Uniform(-1,1) distribution, and enframing the density:
+
+```{r}
+eval_hazard(d, at = 0:10)
+enframe_density(d, at = 0:10)
+set.seed(10)
+```
+
+
+## Drawing a random sample
+
+To draw a random sample from a distribution, use the `realise()` or `realize()` function:
+
+```{r}
+realise(d, n = 5)
+```
+
+You can read this call as "realise distribution `d` five times". By default, `n` is set to 1, so that realizing a distribution converts it to a numeric draw:
+
+```{r}
+realise(d)
+```
+
+
+Perhaps surprisingly, distplyr does not consider `realise()` as a functional representation of a distribution, even though random sampling falls into the same family as the `stats::p*/d*/q*/r*` functions. This is because it's impossible to perfectly describe a distribution based on a sample. 
+
+
+## Properties of Distributions
+
+Distributions have various numeric properties. Common examples are the mean and variance, but there are many others as well. 
+
+Below is a table of the properties incorporated in `distplyr`:
+
+| Property | `distplyr` Function |
+|----------|---------------------|
+| Mean                       | `mean()` |
+| Median                     | `median()` |
+| Variance                   | `variance()` |
+| Standard Deviation         | `sd()` |
+| Skewness                   | `skewness()` |
+| Excess Kurtosis            | `kurtosis_exc()` |
+| Kurtosis                   | `kurtosis_raw()` |
+
+Here are some properties of our original Uniform(-1, 1) distribution:
+
+```{r}
+mean(d)
+stdev(d)
+```
+
+

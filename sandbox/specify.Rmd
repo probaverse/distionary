@@ -1,0 +1,85 @@
+---
+title: "Specify a distribution"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Specify a distribution}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(distionary)
+```
+
+You're able to make a wide range of probability distributions using distplyr's manipulation functions, but you'll need to start with more standard, basic distributions first. There are typically three use cases for building a basic distribution:
+
+1. Parametric families
+2. Empirical distributions
+3. Manually specified distributions
+
+## 1\. Parametric Families
+
+These include distributions like Normal, Exponential, Poisson, etc.
+
+distplyr includes distributions present in base R's `r*`/`p*`/`d*`/`q*` selection of distributions. For example, a Normal distribution in base R has associated functions `rnorm()` etc. In distplyr:
+
+```{r}
+dst_norm(0, 1)
+```
+
+distplyr also includes other common distributions not present in base R, such as a generalized Pareto distribution:
+
+```{r}
+dst_gpd(0, 1, 1)
+```
+
+**November 2020**: Until this package gains some stability in its structure, there will be a limited number of these distributions -- but there will be plenty available in the not-too-distant future. 
+
+## 2\. Empirical Distributions
+
+Whereas base R only has the `ecdf()` function to handle empirical distributions, distplyr provides full functionality with `dst_empirical()`. Empirical distribution of `hp` values in the `mtcars` dataset:
+
+```{r}
+(hp <- dst_empirical(hp, data = mtcars))
+```
+
+The "step" in the name comes from the cdf:
+
+```{r, fig.width = 4, fig.height = 3}
+plot(hp, "cdf", n = 501)
+```
+
+You can also weigh the outcomes differently. This is useful for explicitly specifying a probability mass function, as well as for other applications such as using kernel smoothing to find a conditional distribution. Here is an estimate of the conditional distribution of `hp` given `disp = 150`, with cdf depicted as the dashed line compared o the marginal with the solid line:
+
+```{r}
+K <- function(x) dnorm(x, sd = 25)
+hp2 <- dst_empirical(hp, data = mtcars, weights = K(disp - 150))
+plot(hp, "cdf", n = 1001)
+plot(hp2, "cdf", n = 1001, lty = 2, add = TRUE)
+```
+
+The weighting provides us with a far more informative prediction of `hp` when `disp = 150` compared to the loess, which just gives us the mean:
+
+```{r}
+mean(hp2)
+```
+
+With a distribution, you can get much more, such as this 90% prediction interval:
+
+```{r}
+eval_quantile(hp2, at = c(0.05, 0.95))
+```
+
+Here's the proportion of variance that's reduced compared to the marginal:
+
+```{r}
+1 - variance(hp2) / variance(hp)
+```
+
