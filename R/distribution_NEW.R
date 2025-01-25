@@ -194,12 +194,13 @@ eval_distribution <- function(distribution, x) {
   rlang::eval_tidy(x, distribution$base_mask)
 }
 
-distribution <- function(..., .params = rlang::pairlist2()) {
+distribution <- function(..., .params = params()) {
   definition_env <- rlang::new_environment(parent = rlang::caller_env())
   env_bind_definitions(definition_env, ...)
   distribution <- list(
     definition_env = definition_env,
-    params = .params
+    parameters = .params$parameters,
+    parspace = .params$parspace
   )
   class(distribution) <- "fam"
   update_dst_class(distribution)
@@ -348,7 +349,7 @@ validate_parameters <- function(distribution, ..., .error = TRUE) {
 #' @param parameters List of parameters, like the output of `parameters()`.
 #' @inheritParams validate_parameters
 #' @returns The same as the user-facing `validate_parameters()` function.
-validate_parameters_bare(distribution, parameters, .error = TRUE) {
+validate_parameters_bare <- function(distribution, parameters, .error = TRUE) {
   bottom <- rlang::as_environment(parameters, parent = distribution$bottom)
   dmask <- new_distribution_mask(bottom = bottom, top = distribution$top)
   parspace <- distribution$parspace
@@ -458,9 +459,33 @@ parameters <- function(distribution) {
   distribution$parameters
 }
 
+#' @rdname parameters
+#' @export
 `parameters<-` <- function(distribution, value) {
+  original_param_names <- names(distribution$parameters)
+  new_param_names <- names(value)
+  added_params <- setdiff(new_param_names, original_param_names)
+  removed_params <- setdiff(original_param_names, new_param_names)
+  if (length(added_params) > 0) {
+    stop(
+      "Parameters `", paste0(added_params, collapse = "`, `"),
+      "` are not being tracked in this distribution. ",
+      "Did you misspell a parameter, or need to redefine the family?"
+    )
+  }
+  if (length(removed_params) > 0) {
+    stop(
+      "Parameters `", paste0(removed_params, collapse = "`, `"),
+      "` cannot be untracked from the distribution family in this way. ",
+      "Did you mean to use `embed_parameters()`?"
+    )
+  }
   distribution$parameters <- value
   update_dst_class(distribution)
+}
+
+embed_parameters <- function(distribution, ...) {
+
 }
 
 #' Add or remove the "dst" class as appropriate
@@ -485,7 +510,7 @@ update_dst_class.fam <- function(distribution) {
     )
     distribution$network_env <- network_env
     base_mask <- new_distribution_mask(
-      as_environment(distribution$params, parent = network_env),
+      as_environment(parameters(distribution), parent = network_env),
       top = network_env
     )
     distribution$base_mask <- base_mask
