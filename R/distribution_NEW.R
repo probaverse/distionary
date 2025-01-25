@@ -197,75 +197,261 @@ eval_distribution <- function(distribution, x) {
 distribution <- function(..., .params = rlang::pairlist2()) {
   definition_env <- rlang::new_environment(parent = rlang::caller_env())
   env_bind_definitions(definition_env, ...)
-  res <- list(
+  distribution <- list(
     definition_env = definition_env,
     params = .params
   )
-  class(res) <- "fam"
-  res
+  class(distribution) <- "fam"
+  update_dst_class(distribution)
 }
 
-#' Parameters are resolved; inherit dst, and generate network env.
-seal_distribution <- function(distribution) {
-  network_env <- generate_network_environment(
-    def_env = distribution$definition_env,
-    param_list = distribution$params
-  )
-  distribution$network_env <- network_env
-  base_mask <- new_distribution_mask(
-    as_environment(distribution$params, parent = network_env),
-    top = network_env
-  )
-  distribution$base_mask <- base_mask
-  class(distribution) <- append("dst", class(distribution))
-  distribution
+
+
+
+
+
+
+# ----- parameters ------
+
+parameters_all_resolved <- function(distribution) {
+  params <- parameters(distribution)
+  nulls <- vapply(params, is.null, FUN.VALUE = logical(1))
+  all(!nulls)
 }
 
-resolve_params <- function(distribution, ...) {
-  dots <- list(...)
-  distribution$params <- c(distribution$params, dots)
-  distribution
+#' Resolve Parameters
+#'
+#' For a given distribution family, specify values for the parameters.
+#' This includes freeing up parameters after having been specified.
+#' @param distribution Distribution or distribution family.
+#' @param ... Name-value pairs that bind a value to distribution
+#' parameters. Set to `NULL` to reset a parameter.
+#' @param .force Logical; should restrictions imposed by the parameter
+#' space be ignored? `FALSE` if not (the default); `TRUE` if so.
+#' @examples
+#' fam <- dst_norm()
+#' d <- resolve_parameters(fam, mu = 5, sigma = 3)
+#' resolve_parameters(d, mu = NULL)
+#'
+#' # A value outside of the parameter space cannot be specified unless
+#' # it is forced.
+#' resolve_parameters(fam, sigma = -1, .force = TRUE)
+#'
+resolve_parameters <- function(distribution, ..., .force = FALSE) {
+  new_parameters <- update_parameters_list(distribution, ...)
+  if (!.force) {
+    validate_parameters_bare(new_parameters, distribution$parspace)
+  }
+  distribution$parameters <- new_parameters
+  update_dst_class(distribution)
+}
+
+#' Update parameters with specified values. NULL is allowed.
+#' The parameter space is not checked. The updated list of
+#' parameters is returned, not the distribution object with the
+#' parameters updated.
+#' As usual, parameters are evaluated under tidy evaluation, but
+#' not under the distribution data mask, because presumably values
+#' in the data mask are not ready to be called until the distribution
+#' is resolved.
+update_parameters_list <- function(distribution, ...) {
+  dots <- rlang::enquos(...)
+  dot_names <- names(dots)
+  parameters <- parameters(distribution)
+  parnames <- names(parameters)
+  for (nm in dot_names) {
+    if (nm == "") stop(
+      "Resolving parameters requires a name-value pair. ",
+      "The following entry is missing a name: ",
+      rlang::expr_text(dots[[i]])
+    )
+    if (!(nm %in% parnames)) stop(
+      "Parameter `", nm, "` is not being tracked in this distribution. ",
+      "Did you misspell a parameter, or need to redefine the family?"
+    )
+  }
+  dots_evald <- lapply(dots, rlang::eval_tidy)
+  for (i in seq_along(dots_evald)) {
+    nm <- dot_names[i]
+    val <- dots_evald[[i]]
+    if (is.null(val)) {
+      parameters[nm] <- list(NULL)
+    } else {
+      parameters[[nm]] <- val
+    }
+  }
+  parameters
+}
+
+#' Validate whether parameter values are valid
+#'
+#' Check to see whether a parameter specification is valid (i.e., falls
+#' within the parameter space).
+#'
+#' Note: if the parameter specification is incomplete and the parameter space
+#' has rules containing both specified and unspecified parameters,
+#' it is possible for the specification to be deemed valid even if
+#' it is mathematically invalid. See examples.
+#'
+#' @param distribution Distribution or distribution family.
+#' @param ... Name-value pairs that bind a value to distribution
+#' parameters.
+#' @param .error Logical; if `TRUE`, throws an error if parameter
+#' values are outside of the parameter space. If `FALSE`, returns
+#' a single logical indicating whether parameter values are valid.
+#' @returns If `.error` is `TRUE`, either throws an error if
+#' parameter values are invalid, or invisibly returns the input
+#' `distribution` if valid.
+#'
+#' If `.error` is `FALSE`, returns `TRUE` if the parameter values
+#' are valid, and `FALSE` if not.
+#' @details
+#' This function first obtains a hypothetical new parameter set based
+#' on the specification in `...`, in the same way that
+#' `resolve_parameters()` updates the parameter set. But instead
+#' of assigning this new parameter set to the distribution,
+#' the parameter set is checked against each rule in the parameter
+#' space.
+#'
+#' This means that this function is not vectorised:
+#' it does not check whether each specification in `...` is
+#' valid.
+#'
+#' @examples
+#' fam <- dst_norm()
+#' validate_parameters(fam, mu = 5, sigma = -2, .error = FALSE)
+#' validate_parameters(fam)
+#'
+#' # Validating can still be done after parameters are resolved.
+#' d <- dst_norm(0, 1)
+#' validate_parameters(d, sigma = -2, .error = TRUE)
+#'
+#' # An example where a parameter is mistakenly seen as valid,
+#' # because of a rule that involves an unspecified and specified
+#' # parameter. In this case, the implicit rule `theta >= 0` should
+#' # be added to avoid this issue.
+#' fam <- distribution(.parameters = params(theta, gamma, theta > gamma^2))
+#' validate_parameters(fam, theta = -1, .error = FALSE)
+#' @export
+validate_parameters <- function(distribution, ..., .error = TRUE) {
+  new_parameters <- update_parameters_list(distribution, ...)
+  validate_parameters_bare(
+    new_parameters, distribution$parspace, .error = .error
+  )
+}
+
+#' Validate parameters, bare function
+#'
+#' This internal function is the workhorse behind checking parameter
+#' values against the parameter space. It expects a parameter list
+#' to be provided to it.
+#' @param parameters List of parameters, like the output of `parameters()`.
+#' @inheritParams validate_parameters
+#' @returns The same as the user-facing `validate_parameters()` function.
+validate_parameters_bare(distribution, parameters, .error = TRUE) {
+  bottom <- rlang::as_environment(parameters, parent = distribution$bottom)
+  dmask <- new_distribution_mask(bottom = bottom, top = distribution$top)
+  parspace <- distribution$parspace
+  for (i in seq_along(parspace)) {
+    passes <- rlang::eval_tidy(parspace[[i]], data = dmask)
+    if (length(passes) == 0) passes <- TRUE # NULL in the rule.
+    if (!passes) {
+      if (.error) {
+        stop(
+          "Parameter value is invalid. Rule broken: ",
+          rlang::expr_text(parspace[[i]])
+        )
+      } else {
+        return(FALSE)
+      }
+    }
+  }
+  if (.error) {
+    invisible(distribution)
+  } else {
+    TRUE
+  }
 }
 
 #' Parameter tracking in a distribution family
 #'
-#' @param ... Specification of parameters and parameter space. Bare
-#' expressions are stored in the parameter space (e.g., `sigma > 0`);
-#' named bindings are assumed to be parameters
-#' (e.g., `mu = 0` sets `mu` as a parameter with the known value 0); and
-#' bare symbols are assumed to be parameters with unknown values
-#' (e.g., `sigma` means that `sigma` is an unknown parameter of the
-#' distribution, equivalent to `sigma = NULL`).
+#' @param ... Specification of parameters and parameter space. See
+#' details.
+#' @details
+#' The `...` is parsed as follows:
+#'
+#' - Bare expressions are stored in the parameter space.
+#'   For example, `sigma > 0`.
+#' - Named bindings are assumed to be parameters.
+#'   For example, `mu = 0` sets `mu` as a parameter with the known value 0.
+#' - Bare symbols imply that these symbols should be tracked as parameters,
+#'   and have lower priority compared to named bindings. For example,
+#'   `mu, mu = 0, sigma` is the same as `mu = 0, sigma`.
+#'
+#' Bare expressions representing the parameter space are stored as quosures
+#' and evaluated in the distribution data mask. This means that you can
+#' reference distributional representations / properties.
+#' @returns A list with two components:
+#'
+#' - `$parameters`: A named list, whose names are the parameter names,
+#'    and values are the parameter values (`NULL` if not yet resolved).
+#' - `$parspace`: An unnamed list of rules making up the parameter space.
+#'    these rules are quosures, which pair the input expressions with
+#'    the environment in which they were created.
 #' @examples
 #' params(mu = 5, sigma, sigma > 0)
+#'
+#' # ...is the same as
+#' params(mu, mu = 5, sigma, sigma > 0)
+#'
+#' # This function is intended to be used when specifying a distributon
+#' # family.
+#' my_fam <- distribution(
+#'   cdf = \(x) stats::pnorm(x, mu, sigma),
+#'   .parameters = params(mu, sigma, sigma > 0)
+#' )
+#'
+#' # The parameter space is evaluated in the distribution data mask,
+#' so distribution properties can also be referenced.
+#' params(alpha, beta, alpha > 0, beta > 0, .dst$mean < 0.5)
+#'
+#' # Parameters need not be numeric.
+#' params(rho = diag(3), person, is.character(person))
 #' @export
 params <- function(...) {
   dots <- rlang::enexprs(...)
   nms <- names(dots)
-  dots_named <- dots[nms != ""]
-  bindings <- lapply(dots_named, rlang::eval_tidy)
-  # Remaining symbols and parameter space
-  dots <- dots[nms == ""]
-  lgl_syms <- vapply(dots, rlang::is_symbol, FUN.VALUE = logical(1))
-  dots_syms <- dots[lgl_syms]
-  pspace <- dots[!lgl_syms]
-  # Remove symbols with bindings already.
-  already_bound <- names(bindings)
-  specified_names <- vapply(dots_syms, rlang::as_name, FUN.VALUE = character(1))
-  remaining_names <- setdiff(specified_names, already_bound)
-  null_bindings <- rep(list(NULL), length(remaining_names))
-  names(null_bindings) <- remaining_names
-  bindings <- append(bindings, null_bindings)
+  is_binding <- nms != ""
+  is_sym <- vapply(dots, rlang::is_symbol, FUN.VALUE = logical(1))
+  is_to_track <- !is_binding & is_sym
+  is_bare_expr <- !is_binding & !is_sym
+  parspace <- dots[is_bare_expr]
+  dots_w_names <- rlang::quos_auto_name(dots)
+  all_param_names <- unique(names(dots_w_names[is_binding | is_to_track]))
+  parameters <- rep(list(NULL), length(all_param_names))
+  names(parameters) <- all_param_names
+  bindings <- lapply(dots[is_binding], rlang::eval_tidy)
+  for (i in seq_along(bindings)) {
+    nm <- names(bindings)[i]
+    parameters[[nm]] <- bindings[[nm]]
+  }
   list(
-    bindings = bindings,
-    parameter_space = pspace
+    parameters = parameters,
+    parspace = parspace
   )
 }
 
 #' Get and set distribution parameters
 #'
+#' @param distribution A distribution or distribution family object.
 #' @seealso [params()] for setting up parameter tracking in a new
 #' distribution family.
+#' @examples
+#' d <- dst_norm(mu = 0)
+#' parameters(d)
+#' parameters(d)$mu <- 2
+#' parameters(d)$sigma <- 3
+#' parameters(d)
 #' @rdname parameters
 #' @export
 parameters <- function(distribution) {
@@ -274,18 +460,54 @@ parameters <- function(distribution) {
 
 `parameters<-` <- function(distribution, value) {
   distribution$parameters <- value
+  update_dst_class(distribution)
+}
+
+#' Add or remove the "dst" class as appropriate
+update_dst_class <- function(distribution) UseMethod("update_dst_class")
+
+update_dst_class.dst <- function(distribution) {
+  should_be_dst <- parameters_all_resolved(distribution)
+  if (!should_be_dst) {
+    clss <- class(distribution)
+    i <- which(clss == "dst")
+    class(distribution) <- clss[(i + 1:length(clss))]
+  }
   distribution
 }
 
-#' @rdname parameters
-#' @export
-set_parameters <- function(distribution, ...) {
-  params <- rlang::enquos(...)
-  distribution$parameters <- c(distribution$parameters, params)
-  return(d)
+update_dst_class.fam <- function(distribution) {
+  should_be_dst <- parameters_all_resolved(distribution)
+  if (should_be_dst) {
+    network_env <- generate_network_environment(
+      def_env = distribution$definition_env,
+      param_list = distribution$params
+    )
+    distribution$network_env <- network_env
+    base_mask <- new_distribution_mask(
+      as_environment(distribution$params, parent = network_env),
+      top = network_env
+    )
+    distribution$base_mask <- base_mask
+    class(distribution) <- append("dst", class(distribution))
+  }
+  distribution
 }
 
+# ------ parspace ------
 
+parspace <- function(distribution) distribution$parspace
+
+`parspace<-` <- function(distribution, value) {
+  distribution$parspace <- value
+  distribution
+}
+
+constrain_parspace <- function(distribution, ...) {
+  constraints <- rlang::enquos(...)
+  distribution$parspace <- append(distribution$parspace, constraints)
+  distribution
+}
 
 # ----- DEMO ------
 
