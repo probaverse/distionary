@@ -12,10 +12,11 @@
 #' @family distributional representations
 #' @rdname hazard
 #' @export
-eval_hazard <- function(distribution, at) UseMethod("eval_hazard")
+eval_hazard <- function(distribution, at) {
+  eval_representation(distribution, "odds", at)
+}
 
-#' @export
-eval_hazard.dst <- function(distribution, at) {
+eval_hazard_from_network <- function(distribution, at) {
   if (variable(distribution) != "continuous") {
     stop("Hazard function requires a continuous distribution.")
   }

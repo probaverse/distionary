@@ -15,8 +15,21 @@ dst_nbinom <- function(size, prob) {
   if (size <= 0) {
     stop('size must be positive.')
   }
-  dst_parametric(
-    "nbinom", size = size, prob = prob,
-    .variable = "discrete", .env = "package:stats"
+  distribution(
+    parameters = list(size = size, prob = prob),
+    density = \(x) stats::dnbinom(x, size = size, prob = prob),
+    cdf = \(x) stats::pnbinom(x, size = size, prob = prob),
+    quantile = \(p) stats::qnbinom(p, size = size, prob = prob),
+    realise = \(n) stats::rnbinom(n, size = size, prob = prob),
+    survival = \(x) stats::pnbinom(
+      x, size = size, prob = prob, lower.tail = FALSE
+    ),
+    mean = (1 - prob) * size / prob,
+    variance = (1 - prob) * size / prob^2,
+    skewness = (2 - prob) / sqrt((1 - prob) * size),
+    kurtosis_exc = 6 / size + (1 - prob)^2 / (prob * size),
+    range = c(0, Inf),
+    .name = "Negative Binomial",
+    .vtype = "discrete"
   )
 }

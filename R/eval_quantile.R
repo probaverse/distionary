@@ -12,11 +12,8 @@
 #' @family distributional representations
 #' @rdname quantile
 #' @export
-eval_quantile <- function(distribution, at) UseMethod("eval_quantile")
-
-#' @export
-eval_quantile.dst <- function(distribution, at) {
-	eval_quantile_from_cdf(distribution, at = at, tol = 1e-9, maxiter = 200)
+eval_quantile <- function(distribution, at) {
+  eval_representation(distribution, "quantile", at)
 }
 
 #' @rdname quantile

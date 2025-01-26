@@ -14,8 +14,20 @@ dst_unif <- function(min, max) {
 	if (max == min) {
 		return(dst_degenerate(min))
 	}
-  dst_parametric(
-    "unif", min = min, max = max,
-    .variable = "continuous", .env = "package:stats"
+  distribution(
+    parameters = list(min = min, max = max),
+    density = \(x) stats::dunif(x, min = min, max = max),
+    cdf = \(x) stats::punif(x, min = min, max = max),
+    quantile = \(p) stats::qunif(p, min = min, max = max),
+    realise = \(n) stats::runif(n, min = min, max = max),
+    survival = \(x) stats::punif(x, min = min, max = max, lower.tail = FALSE),
+    mean = (min + max) / 2,
+    median = (min + max) / 2,
+    variance = (min - max)^2 / 12,
+    skewness = 0,
+    kurtosis_exc = -6 / 5,
+    range = c(min, max),
+    .name = "Uniform",
+    .vtype = "continuous"
   )
 }

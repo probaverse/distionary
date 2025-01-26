@@ -1,42 +1,56 @@
-#' Constructor Function for "dst" Objects
+#' Make a distribution
 #'
-#' @param l List containing the components of a distribution object.
-#' @param variable Type of random variable: "continuous", "discrete",
-#'   or "mixed".
-#' @param ... Attributes to add to the list.
-#' @param class If making a subclass, specify its name here.
-#' @export
-new_distribution <- function(l, variable, ...,
-                             class = character()) {
-  structure(
-    l,
-    variable = variable,
-    class    = c(class, "dst")
-  )
-}
-
-
-#' Distribution Objects
-#' @param object Object to be tested
-#' @rdname distribution
-#' @export
-is_distribution <- function(object) inherits(object, "dst")
-
-#' @rdname distribution
-#' @export
-is.distribution <- function(object) inherits(object, "dst")
-
-#' Make a blank distribution
+#' Make a distribution object by specifying its representations
+#' (e.g., cdf, density, mean, etc.).
+#' Some representations, if not included, will be calculated based
+#' on other representations that are included (e.g., quantile from cdf).
+#' A list of these representations can be found in the details.
+#' Note that any object can be added to the distribution.
 #'
-#' Currently, this function makes a distribution object with nothing in it. The
-#' idea is that you can then set things downstream, with functions such as
-#' set_cdf() and set_mean(). The idea behind this function is expected to be in
-#' flux.
+#' @param ... Name-value pairs to add to the distribution list.
+#' @param .vtype The variable type, indicating the values for which
+#' the distribuion provides probabilities for. For example,.
+#' `"continuous"` implies that the distribution acts on real numbers;
+#' `"discrete"` implies discrete values.
+#' @param .name If this distribution has a name (e.g., "Normal"),
+#' optionally specify it here.
+#' @return A distribution object.
+#' @details
+#' Currently, at least two representations are required to be specified if
+#' you want to be able to retrieve other properties without specifying them:
 #'
-#' @param variable Is this variable continuous, discrete, or mixed?
-#' @return A distribution object with nothing in it.
+#' - `cdf`: the cumulative distribution function.
+#' - `density`, the probability density function for continuous variables,
+#'   or `pmf`, the probability mass function for discrete variables.
+#'
+#' Other representations that will be retrieved if missing include:
+#'
+#' - `survival`: the survival function, or one minus the cdf.
+#' - `hazard`: the hazard function, for continuous variables only.
+#' - `chf`: the cumulative hazard function, for continuous variables only.
+#' - `quantile`: the quantile function, or left-inverse of the cdf.
+#' - `realise` or `realize`: a function that takes an integer and generates
+#'   a vector of that many random draws from the distribution.
+#' - `odds`: for discrete variables, the probability odds function
+#'   (pmf / (1 - pmf))
+#' - `return`: the quantiles associated with the provided return periods,
+#'   where events are exceedances.
+#'
+#' All functions should be vectorized.
+#'
+#' Properties that can be retrieved if not specified include the following:
+#'
+#' - `mean`, `stdev`, `variance`, `skewness`, `median` are self-explanatory.
+#' - `kurtosis_exc` and `kurtosis_raw` are the distribution's excess
+#'   kurtosis and kurtosis.
+#' - `range`: A vector of the minimum and maximum value of a distribution's
+#'   support.
+#'
+#' A later version of distionary will allow for the specification of
+#' custom representations / properties.
 #' @export
-distribution <- function(variable = c("continuous", "discrete", "mixed")) {
-  variable <- match.arg(variable)
-  new_distribution(list(), variable = variable)
+distribution <- function(..., .vtype = NULL, .name = NULL) {
+  dots <- rlang::enquos(...)
+  representations <- lapply(dots, rlang::eval_tidy)
+  new_distribution(representations, vtype = .vtype, name = .name)
 }

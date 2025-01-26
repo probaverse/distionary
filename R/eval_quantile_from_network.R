@@ -7,7 +7,9 @@
 #' @param at A vector of values for which to evaluate the quantile function.
 #' @param tol,maxiter Tolerance (a small positive number) and maximum number
 #' of iterations
-eval_quantile_from_cdf <- function(distribution, at, tol, maxiter) {
+eval_quantile_from_network <- function(
+    distribution, at, tol = 1e-9, maxiter = 200
+) {
   n <- length(at)
   if (n == 0) return(numeric(0L))
   ord <- order(at)
@@ -59,7 +61,7 @@ eval_quantile_from_cdf <- function(distribution, at, tol, maxiter) {
 #' `"right"` for calculating right-inverse.
 #' @note If 0 or 1 are included in the vector `p`, one of the endpoints might
 #' be infinite.
-#' @inheritParams eval_quantile_from_cdf
+#' @inheritParams eval_quantile_from_network
 encapsulate_p <- function(distribution, p, direction) {
   if (length(p) == 0) return(c(NA, NA))
   p_min <- min(p)

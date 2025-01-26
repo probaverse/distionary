@@ -13,10 +13,11 @@
 #' @family distributional representations
 #' @rdname survival
 #' @export
-eval_survival <- function(distribution, at) UseMethod("eval_survival")
+eval_survival <- function(distribution, at) {
+  eval_representation(distribution, "survival", at)
+}
 
-#' @export
-eval_survival.dst <- function(distribution, at) {
+eval_survival_from_network <- function(distribution, at) {
   1 - eval_cdf(distribution, at = at)
 }
 

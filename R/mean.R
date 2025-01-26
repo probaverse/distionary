@@ -24,12 +24,22 @@
 #' @rdname moments
 #' @export
 mean.dst <- function(x, ...) {
-  qf <- representation_as_function(x, "quantile")
+  ellipsis::check_dots_empty()
+  eval_representation(x, "mean")
+}
+
+eval_mean_from_network <- function(distribution, ...) {
+  qf <- distribution[["quantile"]]
+  if (is.null(qf)) {
+    qf <- \(x) eval_quantile_from_network(distribution, x)
+  }
   int <- try(stats::integrate(qf, lower = 0, upper = 1, ...))
   if (inherits(int, "try-error")) {
-    warning("Integral did not converge. This might mean that the mean does
-            not exist, or that the integral simply did not converge.
-            Returning NaN.")
+    warning(
+      "Integral did not converge. This might mean that the mean does ",
+      "not exist, or that the integral simply did not converge. ",
+      "Returning `NaN`."
+    )
     return(NaN)
   }
   int$value

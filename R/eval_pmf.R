@@ -16,10 +16,11 @@
 #' @family distributional representations
 #' @rdname pmf
 #' @export
-eval_pmf <- function(distribution, at, strict = TRUE) UseMethod("eval_pmf")
+eval_pmf <- function(distribution, at, strict = TRUE) {
+  eval_representation(distribution, "pmf", at)
+}
 
-#' @export
-eval_pmf.dst <- function(distribution, at, strict = TRUE) {
+eval_pmf_from_network <- function(distribution, at, strict = TRUE) {
   if (variable(distribution) == "discrete") {
     stop("Cannot find the pmf for this distribution.")
   }

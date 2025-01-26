@@ -5,7 +5,7 @@
 \alias{enframe_density}
 \title{Probability Density Function}
 \usage{
-eval_density(distribution, at, strict = TRUE)
+eval_density(distribution, at)
 
 enframe_density(
   ...,
@@ -22,9 +22,6 @@ distributions in the case of \code{...}.}
 
 \item{at}{Vector of values to evaluate the cdf at. Must be named when using
 in \code{enframe_}.}
-
-\item{strict}{Only evaluate when the density exists? \code{TRUE} if so;
-if \code{FALSE}, evaluates the derivative of the cdf.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments.}

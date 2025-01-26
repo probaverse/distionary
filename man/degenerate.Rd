@@ -2,20 +2,12 @@
 % Please edit documentation in R/dst_degenerate.R
 \name{dst_degenerate}
 \alias{dst_degenerate}
-\alias{is_degenerate}
-\alias{is.degenerate}
 \title{Make a Degenerate Distribution}
 \usage{
 dst_degenerate(location)
-
-is_degenerate(object)
-
-is.degenerate(object)
 }
 \arguments{
 \item{location}{Parameter of the distribution family.}
-
-\item{object}{Object to test}
 }
 \value{
 Object of class "dst".

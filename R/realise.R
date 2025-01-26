@@ -10,22 +10,17 @@
 #' because this function name is common amongst other packages.
 #' @rdname realise
 #' @export
-realise <- function(distribution, n = 1) UseMethod("realise")
+realise <- function(distribution, n = 1) {
+  eval_representation(distribution, "realise", n)
+}
 
-#' @export
-realise.dst <- function(distribution, n = 1) {
+eval_realise_from_network <- function(distribution, n) {
   u <- stats::runif(n)
-  return(eval_quantile(distribution, at = u))
+  eval_quantile(distribution, at = u)
 }
 
 #' @rdname realise
 #' @export
 realize <- function(distribution, n = 1) {
-	realise(distribution, n = n)
-}
-
-#' @rdname realise
-#' @export
-observe <- function(distribution, n = 1) {
-	realise(distribution, n = n)
+  eval_representation(distribution, "realize", n)
 }

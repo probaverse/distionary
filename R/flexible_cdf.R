@@ -13,11 +13,6 @@
 #' @rdname flexible_cdf
 #' @export
 prob_left <- function(distribution, of, inclusive) {
-  UseMethod("prob_left")
-}
-
-#' @export
-prob_left.dst <- function(distribution, of, inclusive) {
 	p_left <- eval_cdf(distribution, at = of)
 	if (!inclusive) {
 		p_break <- eval_pmf(distribution, at = of, strict = FALSE)
@@ -29,11 +24,6 @@ prob_left.dst <- function(distribution, of, inclusive) {
 #' @rdname flexible_cdf
 #' @export
 prob_right <- function(distribution, of, inclusive) {
-  UseMethod("prob_right")
-}
-
-#' @export
-prob_right.dst <- function(distribution, of, inclusive) {
 	p_right <- eval_survival(distribution, at = of)
 	if (inclusive) {
 		p_break <- eval_pmf(distribution, at = of, strict = FALSE)

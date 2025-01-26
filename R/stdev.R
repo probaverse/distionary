@@ -1,7 +1,7 @@
 #' @rdname moments
 #' @export
 stdev <- function(distribution) {
-  UseMethod("stdev")
+  eval_representation(distribution, "stdev")
 }
 
 

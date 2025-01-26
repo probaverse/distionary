@@ -24,7 +24,7 @@ skewness(distribution)
 
 stdev(distribution)
 
-\method{stdev}{dst}(distribution)
+stdev.dst(distribution)
 
 variance(distribution)
 }
@@ -33,8 +33,7 @@ variance(distribution)
 
 \item{x}{Distribution to calculate median from.}
 
-\item{...}{When calculating the mean via integration of the quantile
-function, arguments passed to \code{stats::integrate()}.}
+\item{...}{Not used.}
 }
 \value{
 A single numeric.
@@ -49,8 +48,9 @@ If there is no method associated with a subclass of
 \code{x}, then moments are calculated using
 \code{stats::integrate()} from the quantile function.
 
-Median is calculated as the 0.5-quantile. So, when the median is
-non-unique, we take the smallest of the possibilities.
+Median is calculated as the 0.5-quantile when not found in the
+distribution. So, when the median is
+non-unique, the smallest of the possibilities is taken.
 }
 \examples{
 a <- dst_gpd(0, 1, 0.5)

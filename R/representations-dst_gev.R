@@ -10,7 +10,7 @@
 #' @inheritParams dst_gev
 #' @export
 pgev <- function(q, location, scale, shape) {
-  r <- rlang::eval_tidy(.quantities[["gev"]][["range"]])
+  r <- gev_range(location, scale, shape)
   t <- gev_t_function(q, location = location, scale = scale, shape = shape)
   res <- exp(-t)
   res[q <= r[1L]] <- 0
@@ -36,7 +36,7 @@ qgev <- function(p, location, scale, shape) {
 #' @inheritParams pgev
 #' @export
 dgev <- function(x, location, scale, shape) {
-  r <- rlang::eval_tidy(.quantities[["gev"]][["range"]])
+  r <- gev_range(location, scale, shape)
   t <- gev_t_function(x, location = location, scale = scale, shape = shape)
   res <- t^(shape + 1) / scale * exp(-t)
   res[x <= r[1L]] <- 0
@@ -58,5 +58,19 @@ gev_t_function <- function(x, location, scale, shape) {
     exp(-z)
   } else {
     (1 + shape * z)^(-1 / shape)
+  }
+}
+
+#' Range of a GEV distribution
+#'
+#' @inheritParams dst_gev
+#' @returns A vector of length 2 indicating the support of the distribution.
+gev_range <- function(location, scale, shape) {
+  if (shape > 0) {
+    c(location - scale / shape, Inf)
+  } else if (shape == 0) {
+    c(-Inf, Inf)
+  } else if (shape < 0) {
+    c(-Inf, location - scale / shape)
   }
 }

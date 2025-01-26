@@ -13,15 +13,16 @@
 #' @family distributional representations
 #' @rdname chf
 #' @export
-eval_chf <- function(distribution, at) UseMethod("eval_chf")
+eval_chf <- function(distribution, at) {
+  eval_representation(distribution, "chf", at)
+}
 
-#' @export
-eval_chf.dst <- function(distribution, at) {
+eval_chf_from_network <- function(distribution, at) {
   if (variable(distribution) == "continuous") {
     sf <- eval_survival(distribution, at = at)
     -log(sf)
   } else {
-    stop("Not programmed yet")
+    stop("Not valid for non-continuous distributions.")
   }
 }
 

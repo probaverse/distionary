@@ -12,7 +12,7 @@ test_that("Quantile function algorithm works for several distributions", {
   )
   for (d_ in d) {
     expect_equal(
-      distionary:::eval_quantile.dst(d_, at = p),
+      distionary:::eval_quantile_from_network(d_, at = p),
       eval_quantile(d_, at = p),
       tolerance = 1e-6
     )
@@ -21,7 +21,7 @@ test_that("Quantile function algorithm works for several distributions", {
 
 test_that("Quantile algorithm handles NA appropriately.", {
   pfoo <- pnorm
-  d <- dst_parametric("foo", .variable = "continuous")
+  d <- dst_parametric("foo", .vtype = "continuous")
   expect_equal(eval_quantile(d, at = NA), NA_real_)
   expect_equal(eval_quantile(d, at = NaN), NaN)
   expect_length(eval_quantile(d, at = numeric(0L)), 0)

@@ -4,7 +4,7 @@
 \alias{dst_norm}
 \title{Normal (Gaussian) Distribution}
 \usage{
-dst_norm(mean, variance)
+dst_norm(mean, sd)
 }
 \arguments{
 \item{mean, variance}{Mean and variance of the distribution.}

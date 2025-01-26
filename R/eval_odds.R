@@ -14,6 +14,10 @@
 #' @rdname odds
 #' @export
 eval_odds <- function(distribution, at) {
+  eval_representation(distribution, "odds", at)
+}
+
+eval_odds_from_network <- function(distribution, at) {
   p <- eval_pmf(distribution, at = at, strict = FALSE)
   p / (1 - p)
 }

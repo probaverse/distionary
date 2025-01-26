@@ -13,5 +13,8 @@ dst_bern <- function(prob){
   if (prob < 0 || prob > 1) {
     stop('prob must be within 0 and 1.')
   }
-  dst_binom(size = 1, prob = prob)
+  d <- dst_binom(size = 1, prob = prob)
+  parameters(d)$size <- NULL
+  attr(d, "name") <- "Bernoulli"
+  d
 }

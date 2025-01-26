@@ -3,14 +3,11 @@
 \name{realise}
 \alias{realise}
 \alias{realize}
-\alias{observe}
 \title{Generate a Sample from a Distribution}
 \usage{
 realise(distribution, n = 1)
 
 realize(distribution, n = 1)
-
-observe(distribution, n = 1)
 }
 \arguments{
 \item{distribution}{Distribution.}

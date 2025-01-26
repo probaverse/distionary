@@ -19,5 +19,10 @@
 #' @rdname range
 #' @export
 range.dst <- function(distribution, ...) {
+  ellipsis::check_dots_empty()
+  eval_representation(distribution, "range")
+}
+
+eval_range_from_network <- function(distribution) {
   eval_quantile(distribution, at = 0:1)
 }

@@ -23,11 +23,8 @@
 #' enframe_cdf(d1, d2, at = 0:4)
 #' @rdname cdf
 #' @export
-eval_cdf <- function(distribution, at) UseMethod("eval_cdf")
-
-#' @export
-eval_cdf.dst <- function(distribution, at) {
-  stop("Can't find a cdf for this distribution.")
+eval_cdf <- function(distribution, at) {
+  eval_representation(distribution, "cdf", at)
 }
 
 #' @rdname cdf

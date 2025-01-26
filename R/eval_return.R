@@ -17,6 +17,10 @@
 #' @rdname return
 #' @export
 eval_return <- function(distribution, at) {
+  eval_representation(distribution, "return", at)
+}
+
+eval_return_from_network <- function(distribution, at) {
   eval_quantile(distribution, at = 1 - 1 / at)
 }
 
