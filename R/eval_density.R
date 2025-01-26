@@ -9,7 +9,7 @@
 #' d <- dst_unif(0, 4)
 #' eval_density(d, at = 0:4)
 #' enframe_density(d, at = 0:4)
-#' eval_density(dst_pois(1), at = 0:4, strict = FALSE)
+#' eval_density(dst_pois(1), at = 0:4)
 #' @family distributional representations
 #' @rdname density
 #' @export
@@ -17,28 +17,17 @@ eval_density <- function(distribution, at) {
   eval_representation(distribution, "density", at)
 }
 
-
-eval_density_from_network <- function(distribution, at, strict = TRUE) {
-  if (variable(distribution) == "continuous") {
-    stop("Cannot find this distribution's density function.")
-  }
-  if (strict) {
-    stop("This distribution does not have a density function. ",
-         "Maybe you want to evaluate outside of strict mode?")
-  } else {
-    if (variable(distribution) == "discrete") {
-      return(rep(0, length(at)))
-    } else {
-      stop("Cannot find the derivative of the cdf.")
-    }
-  }
+eval_density_from_network <- function(distribution, at) {
+  stop(
+    "Cannot find density function. Density must be specified ",
+    "in the distribution."
+  )
 }
 
 #' @rdname density
 #' @export
 enframe_density <- function(..., at, arg_name = ".arg", fn_prefix = "density",
-                            sep = "_", strict = TRUE) {
+                            sep = "_") {
   enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-                  sep = sep, eval_fn = eval_density,
-                  fn_args = list(strict = strict))
+                  sep = sep, eval_fn = eval_density)
 }

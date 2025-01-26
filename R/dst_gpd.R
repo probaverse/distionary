@@ -18,7 +18,7 @@ dst_gpd <- function(scale, shape) {
       x, location = 0, scale = scale, shape = shape
     ),
     quantile = \(p) qgpd(p, location = 0, scale = scale, shape = shape),
-    density = \(x) dgpd(p, location = 0, scale = scale, shape = shape),
+    density = \(x) dgpd(x, location = 0, scale = scale, shape = shape),
     mean = ifelse(shape < 1, scale / (1 - shape), Inf),
     variance = ifelse(
       shape < 1 / 2,

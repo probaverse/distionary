@@ -9,8 +9,7 @@
 #' @param eval_fn Name of the `eval_` function for the desired distributional
 #' representation, such as `eval_cdf` and `eval_density`.
 #' @param fn_args A named list of arguments to pass to the `eval_fn` function,
-#' besides the distribution and `at` argument (the `strict` argument
-#' being the most common, and perhaps the only use case).
+#' besides the distribution and `at` argument.
 #' @return A data frame or tibble of the input argument (`at`), with the
 #' evaluated distributional representation for each distribution in
 #' `...` in its own column.

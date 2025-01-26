@@ -15,7 +15,7 @@
 prob_left <- function(distribution, of, inclusive) {
 	p_left <- eval_cdf(distribution, at = of)
 	if (!inclusive) {
-		p_break <- eval_pmf(distribution, at = of, strict = FALSE)
+		p_break <- eval_pmf(distribution, at = of)
 		p_left <- p_left - p_break
 	}
 	p_left
@@ -26,7 +26,7 @@ prob_left <- function(distribution, of, inclusive) {
 prob_right <- function(distribution, of, inclusive) {
 	p_right <- eval_survival(distribution, at = of)
 	if (inclusive) {
-		p_break <- eval_pmf(distribution, at = of, strict = FALSE)
+		p_break <- eval_pmf(distribution, at = of)
 		p_right <- p_right + p_break
 	}
 	p_right
