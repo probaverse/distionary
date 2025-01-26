@@ -19,7 +19,7 @@
 #' c <- dst_norm(3, 4)
 #' mean(a)
 #' variance(b)
-#' kurtosis_raw(c)
+#' kurtosis(c)
 #' kurtosis_exc(c)
 #' @rdname moments
 #' @export

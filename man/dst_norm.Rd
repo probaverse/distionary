@@ -7,7 +7,7 @@
 dst_norm(mean, sd)
 }
 \arguments{
-\item{mean, variance}{Mean and variance of the distribution.}
+\item{mean, sd}{Mean and standard deviation of the distribution.}
 }
 \description{
 Makes a distribution belonging to the family of

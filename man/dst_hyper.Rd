@@ -13,6 +13,9 @@ dst_hyper(K, N, n)
 
 \item{n}{the number of draws}
 }
+\value{
+A Hypergeometric distribution.
+}
 \description{
 Makes a distribution belonging to the family of
 hypergeometric distributions.

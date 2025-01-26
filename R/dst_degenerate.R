@@ -23,11 +23,15 @@ dst_degenerate <- function(location) {
   }
   distribution(
     parameters = list(location = location),
-    cdf = \(x) as.numeric(x <= location),
-    quantile = \(p) rep(location, length(p)),
+    cdf = \(x) as.numeric(x >= location),
+    quantile = function(p) {
+      res <- rep(location, length(p))
+      res[p < 0 | p > 1] <- NaN
+      res
+    },
     pmf = \(x) as.numeric(x == location),
     realise = \(n) rep(location, n),
-    survival = \(x) as.numeric(x > location),
+    survival = \(x) as.numeric(x < location),
     mean = location,
     stdev = 0,
     variance = 0,

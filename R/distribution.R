@@ -41,8 +41,8 @@
 #' Properties that can be retrieved if not specified include the following:
 #'
 #' - `mean`, `stdev`, `variance`, `skewness`, `median` are self-explanatory.
-#' - `kurtosis_exc` and `kurtosis_raw` are the distribution's excess
-#'   kurtosis and kurtosis.
+#' - `kurtosis_exc` and `kurtosis` are the distribution's excess
+#'   kurtosis and regular kurtosis.
 #' - `range`: A vector of the minimum and maximum value of a distribution's
 #'   support.
 #'

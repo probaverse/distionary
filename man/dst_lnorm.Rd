@@ -4,14 +4,14 @@
 \alias{dst_lnorm}
 \title{Log Normal Distribution}
 \usage{
-dst_lnorm(meanlog, variancelog)
+dst_lnorm(meanlog, sdlog)
 }
 \arguments{
-\item{meanlog, variancelog}{Mean and variance of the distribution
+\item{meanlog, sdlog}{Mean and variance of the distribution
 on a log scale.}
 }
 \value{
-Object of class \code{c("lnorm", "dst")}.
+A Log Normal distribution.
 dst_lnorm(0, 1)
 }
 \description{

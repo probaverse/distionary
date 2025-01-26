@@ -14,7 +14,7 @@ Sometimes it's convenient to work with a distribution object that is empty,
 akin to a \code{NULL} value. This is especially true when programmatically
 outputting distributions, such as when a distribution fails to fit to
 data. This contructor makes such a distribution object. It always evaluates
-to an \code{NA} vector.
+to \code{NA}.
 }
 \examples{
 x <- dst_null()

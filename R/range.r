@@ -19,7 +19,14 @@
 #' @rdname range
 #' @export
 range.dst <- function(distribution, ...) {
-  ellipsis::check_dots_empty()
+  dots <- rlang::enexprs(...)
+  dots[["na.rm"]] <- NULL
+  if (length(dots) > 0) {
+    stop(
+      "`range()` is expecting no arguments in `...`. ",
+      "Did you accidentally misspell 'distribution'?"
+    )
+  }
   eval_representation(distribution, "range")
 }
 

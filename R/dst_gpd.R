@@ -37,7 +37,7 @@ dst_gpd <- function(scale, shape) {
         ((1 - 3 * shape) * (1 - 4 * shape)) - 3,
       Inf
     ),
-    range = c(0, ifelse(shape >= 0, Inf, - (scale / shape))),
+    range = c(0, ifelse(shape >= 0, Inf, -(scale / shape))),
     .name = "Generalised Pareto",
     .vtype = "continuous"
   )

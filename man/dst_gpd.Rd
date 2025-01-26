@@ -4,11 +4,9 @@
 \alias{dst_gpd}
 \title{Generalized Pareto Distribution}
 \usage{
-dst_gpd(location, scale, shape)
+dst_gpd(scale, shape)
 }
 \arguments{
-\item{location}{Location parameter; numeric.}
-
 \item{scale}{Scale parameter; positive numeric.}
 
 \item{shape}{Shape parameter; numeric.}
@@ -21,5 +19,5 @@ Makes a distribution belonging to the family of
 generalized Pareto distributions (GPD).
 }
 \examples{
-dst_gpd(0, 1, 1)
+dst_gpd(1, 1)
 }
