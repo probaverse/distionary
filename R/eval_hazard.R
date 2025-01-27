@@ -17,7 +17,7 @@ eval_hazard <- function(distribution, at) {
 }
 
 eval_hazard_from_network <- function(distribution, at) {
-  if (variable(distribution) != "continuous") {
+  if (vtype(distribution) != "continuous") {
     stop("Hazard function requires a continuous distribution.")
   }
   sf <- eval_survival(distribution, at)

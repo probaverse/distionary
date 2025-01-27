@@ -14,11 +14,11 @@ plot.dst <- function(x,
                      ...) {
   ellipsis <- rlang::list2(...)
   fname <- match.arg(what)
-  if (fname == "density" && variable(x) != "continuous") {
+  if (fname == "density" && vtype(x) != "continuous") {
     warning("Density function does not exist. Plotting cdf instead.")
     fname <- "cdf"
   }
-  if (fname == "pmf" && variable(x) != "discrete") {
+  if (fname == "pmf" && vtype(x) != "discrete") {
     warning("Probability mass function does not exist. Plotting cdf instead.")
     fname <- "cdf"
   }

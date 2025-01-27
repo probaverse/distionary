@@ -62,7 +62,7 @@ num_discretes <- function(distribution, from, to, include_from, include_to) {
 #' @export
 num_discretes.dst <- function(distribution, from, to,
                               include_from, include_to) {
-  if (variable(distribution) == "continuous") {
+  if (vtype(distribution) == "continuous") {
     return(0L)
   }
   NA_integer_
@@ -76,7 +76,7 @@ has_infinite_discretes <- function(distribution, from = -Inf, to = Inf) {
 
 #' @export
 has_infinite_discretes.dst <- function(distribution, from, to) {
-  if (variable(distribution) == "continuous") {
+  if (vtype(distribution) == "continuous") {
     return(FALSE)
   }
   NA

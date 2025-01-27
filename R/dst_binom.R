@@ -16,10 +16,6 @@ dst_binom <- function(size, prob) {
   if (prob < 0 || prob > 1) {
     stop("prob must be within 0 and 1")
   }
-  dst_parametric(
-    "binom", size = size, prob = prob,
-    .variable = "discrete", .env = "package:stats"
-  )
   distribution(
     parameters = list(size = size, prob = prob),
     pmf = \(x) stats::dbinom(x, size = size, prob = prob),

@@ -64,8 +64,8 @@ All functions should be vectorized.
 Properties that can be retrieved if not specified include the following:
 \itemize{
 \item \code{mean}, \code{stdev}, \code{variance}, \code{skewness}, \code{median} are self-explanatory.
-\item \code{kurtosis_exc} and \code{kurtosis_raw} are the distribution's excess
-kurtosis and kurtosis.
+\item \code{kurtosis_exc} and \code{kurtosis} are the distribution's excess
+kurtosis and regular kurtosis.
 \item \code{range}: A vector of the minimum and maximum value of a distribution's
 support.
 }

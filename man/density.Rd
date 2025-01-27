@@ -7,14 +7,7 @@
 \usage{
 eval_density(distribution, at)
 
-enframe_density(
-  ...,
-  at,
-  arg_name = ".arg",
-  fn_prefix = "density",
-  sep = "_",
-  strict = TRUE
-)
+enframe_density(..., at, arg_name = ".arg", fn_prefix = "density", sep = "_")
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
@@ -43,7 +36,7 @@ Access a distribution's probability density function (pdf).
 d <- dst_unif(0, 4)
 eval_density(d, at = 0:4)
 enframe_density(d, at = 0:4)
-eval_density(dst_pois(1), at = 0:4, strict = FALSE)
+eval_density(dst_pois(1), at = 0:4)
 }
 \seealso{
 Other distributional representations: 

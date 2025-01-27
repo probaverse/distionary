@@ -13,8 +13,7 @@ representation_as_function(distribution, representation)
 to an \code{eval_} function.}
 }
 \value{
-A function with one argument (\code{at}) that's fed into the
-corresponding \code{eval_} function.
+A function of the representation.
 }
 \description{
 Get a distribution's representation as a function

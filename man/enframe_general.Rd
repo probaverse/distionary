@@ -23,8 +23,7 @@ character that will be separating the \code{fn_name} and the distribution name.}
 representation, such as \code{eval_cdf} and \code{eval_density}.}
 
 \item{fn_args}{A named list of arguments to pass to the \code{eval_fn} function,
-besides the distribution and \code{at} argument (the \code{strict} argument
-being the most common, and perhaps the only use case).}
+besides the distribution and \code{at} argument.}
 }
 \value{
 A data frame or tibble of the input argument (\code{at}), with the
