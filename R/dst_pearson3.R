@@ -14,7 +14,9 @@ dst_pearson3 <- function(location, scale, shape) {
     stop("shape parameter cannot be less than 0.")
   }
   distribution(
-    parameters = list(location = location, scale = scale, shape = shape),
+    parameters = list(
+      location = location, scale = scale, shape = shape
+    ),
     cdf = \(x) stats::pgamma(x - location, scale = scale, shape = shape),
     survival = \(x) stats::pgamma(
       x - location, scale = scale, shape = shape, lower.tail = FALSE
@@ -23,11 +25,12 @@ dst_pearson3 <- function(location, scale, shape) {
       x - location, scale = scale, shape = shape
     ),
     quantile = \(p) location + stats::qgamma(p, shape = shape, scale = scale),
+    realise = \(n) location + stats::rgamma(n, shape = shape, scale = scale),
     mean = location + scale * shape,
     variance = shape * scale^2,
     skewness = 2 / sqrt(shape),
     kurtosis_exc = 6 / shape,
-    .name = "Log Pearson Type III",
+    .name = "Pearson Type III",
     .vtype = "continuous"
   )
 }
