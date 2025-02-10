@@ -91,6 +91,8 @@ has_infinite_discretes.dst <- function(distribution, from, to) {
 #' discrete values amongst the natural numbers (including 0).
 #'
 #' @param x A vector of all possible discrete values.
+#' @param from Reference value.
+#' @param include_from Logical; should the `from` value be inclusive?
 #' @inheritParams next_discrete
 #' @rdname discrete_helpers
 next_discrete_finite <- function(x, from, n, include_from) {

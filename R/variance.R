@@ -4,12 +4,11 @@ variance <- function(distribution) {
   eval_representation(distribution, "variance")
 }
 
-#' @export
 eval_variance_from_network <- function(distribution) {
   mu <- mean(distribution)
   sf <- representation_as_function(distribution, "survival")
   sf2 <- function(t) 1 + sf(mu + sqrt(t)) - sf(mu - sqrt(t))
-  int <- stats::integrate(sf2, 0, Inf, ...)
+  int <- stats::integrate(sf2, 0, Inf)
   if (inherits(int, "try-error")) {
     warning(
       "Integral did not converge. This might mean that the variance does ",

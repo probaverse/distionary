@@ -1,6 +1,6 @@
 #' Log Pearson Type III distribution
 #'
-#' @inheritParams dlpearson3
+#' @param meanlog,sdlog,skew Parameters.
 #' @returns A Log Pearson Type III distribution.
 #' @export
 dst_lp3 <- function(meanlog, sdlog, skew) {
@@ -24,7 +24,7 @@ dst_lp3 <- function(meanlog, sdlog, skew) {
       log(x) - shift, shape = shape, scale = scale
     ) / x,
     quantile = \(p) exp(
-      stats::qgamma(tau, shape = shape, scale = scale) + shift
+      stats::qgamma(p, shape = shape, scale = scale) + shift
     ),
     realise = \(n) exp(stats::rgamma(n, shape = shape, scale = scale) + shift),
     .name = "Log Pearson Type III",

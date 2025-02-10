@@ -2,6 +2,7 @@
 #'
 #' @param x,q Vector of quantiles.
 #' @param p Vector of probabilities.
+#' @param location Location parameter to shift the GPD by.
 #' @param lower.tail Logical. If `TRUE`, cdf (default);
 #' if `FALSE`, survival function.
 #' @examples

@@ -17,7 +17,6 @@ test_that("enframe matches eval", {
 
 test_that("enframe throws error if an ellipsis entry is not a distribution", {
 	d <- dst_norm(0, 1)
-	expect_error(enframe_cdf(d, at = 1:10))
 	expect_error(enframe_cdf(d, 5, at = 1:10))
 	expect_error(enframe_cdf(at = 1:10))
 })

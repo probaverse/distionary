@@ -2,7 +2,7 @@
 #'
 #' @param location,scale,shape Distribution parameters. Need scale > 0
 #' and shape > 0.
-#' @returns A Log Pearson Type III distribution.
+#' @returns A Pearson Type III distribution.
 #' @details This is the equivalent of the Gamma distribution in the
 #' stats package with parameters `scale` and `shape`,
 #' @export

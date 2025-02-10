@@ -22,7 +22,7 @@ dst_geom <- function(prob) {
     variance = (1 - prob) / prob^2,
     skewness = ifelse(prob < 1, (2 - prob) / sqrt(1 - prob), NaN),
     kurtosis_exc = ifelse(prob < 1, 6 + prob^2 / (1 - prob), NaN),
-    range = c(0, size),
+    range = c(0, Inf),
     .name = "Geometric",
     .vtype = "discrete"
   )

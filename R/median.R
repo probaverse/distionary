@@ -13,7 +13,6 @@ median.dst <- function(x, ...) {
   eval_representation(x, "median")
 }
 
-#' @export
 eval_median_from_network <- function(distribution) {
   eval_quantile(distribution, at = 0.5)
 }

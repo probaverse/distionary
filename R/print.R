@@ -9,16 +9,16 @@ print.dst <- function(x, ...) {
     cat(nm, "distribution")
   }
   if (!is.null(vtype)) {
-    cat(paste0("(", vtype, ")", collapse = ""))
+    cat(paste0(" (", vtype, ")", collapse = ""))
   }
-  if (!is.null(param) && !is.na(param)) {
+  if (!is.null(param) && all(!is.na(param))) {
     all_numeric <- all(vapply(
       param, \(x) is.numeric(x) && length(x) == 1, FUN.VALUE = logical(1)
     ))
     if (all_numeric) {
       param <- unlist(param)
     }
-    cat("\nParameters:\n")
+    cat("\n--Parameters--\n")
     print(param)
   }
   invisible(x)

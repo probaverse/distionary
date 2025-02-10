@@ -13,6 +13,8 @@ qgpd(p, location, scale, shape)
 dgpd(x, location, scale, shape)
 }
 \arguments{
+\item{location}{Location parameter to shift the GPD by.}
+
 \item{scale}{Scale parameter; positive numeric.}
 
 \item{shape}{Shape parameter; numeric.}

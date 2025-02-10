@@ -7,6 +7,8 @@
 enframe_general(..., at, arg_name, fn_prefix, sep, eval_fn, fn_args = list())
 }
 \arguments{
+\item{...}{Distributions to enframe; optionally, named.}
+
 \item{at}{Vector of values to evaluate the cdf at. Must be named when using
 in \code{enframe_}.}
 

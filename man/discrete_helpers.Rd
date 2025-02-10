@@ -18,7 +18,11 @@ prev_discrete_natural(from, n, include_from)
 \arguments{
 \item{x}{A vector of all possible discrete values.}
 
+\item{from}{Reference value.}
+
 \item{n}{Number of discrete values to find.}
+
+\item{include_from}{Logical; should the \code{from} value be inclusive?}
 }
 \description{
 \verb{*_discrete_finite} finds discrete values from a

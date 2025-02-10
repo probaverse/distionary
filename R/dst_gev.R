@@ -19,7 +19,7 @@ dst_gev <- function(location, scale, shape) {
       x, location = location, scale = scale, shape = shape
     ),
     quantile = \(p) qgev(p, location = location, scale = scale, shape = shape),
-    density = \(x) dgev(p, location = location, scale = scale, shape = shape),
+    density = \(x) dgev(x, location = location, scale = scale, shape = shape),
     mean = {
       if (shape >= 1) {
         Inf
@@ -36,18 +36,6 @@ dst_gev <- function(location, scale, shape) {
         scale^2 * pi^2 / 6
       } else {
         scale^2 * (gamma(1 - 2 * shape) - gamma(1 - shape)^2) / shape^2
-      }
-    },
-    skewness = {
-      if (shape == 0) {
-        12 * sqrt(6) * zeta(3) / pi^3
-      } else if (shape < 1 / 3) {
-        g1 <- gamma(1 - shape)
-        g2 <- gamma(1 - 2 * shape)
-        g3 <- gamma(1 - 3 * shape)
-        sign(shape) * (g3 - 3 * g2 * g1 + 2 * g1^3) / (g2 - g1^2)^(3 / 2)
-      } else {
-        NaN
       }
     },
     kurtosis_exc = {

@@ -1,8 +1,8 @@
 test_that("cdf and pdf of GPD align via numerical derivative.", {
   d <- list(
-    dst_gpd(0, 1, 1),
-    dst_gpd(0, 1, 0),
-    dst_gpd(0, 10, -1)
+    dst_gpd(1, 1),
+    dst_gpd(1, 0),
+    dst_gpd(10, -1)
   )
   x <- 1:11
   eps <- 1e-6
@@ -17,11 +17,11 @@ test_that("cdf and pdf of GPD align via numerical derivative.", {
 
 test_that("cdf and qf of GPD align.", {
   d <- list(
-    dst_gpd(0, 1, 1),
-    dst_gpd(0, 1, 0),
-    dst_gpd(0, 10, -1)
+    dst_gpd(1, 1),
+    dst_gpd(1, 0),
+    dst_gpd(10, -1)
   )
-  p <- 1:9/10
+  p <- 1:9 / 10
   for (i in seq_along(d)) {
     qf <- eval_quantile(d[[i]], at = p)
     cdf <- eval_cdf(d[[i]], at = qf)
@@ -31,11 +31,11 @@ test_that("cdf and qf of GPD align.", {
 
 test_that("quantile function of GPD is valid, validating the distribution.", {
   d <- list(
-    dst_gpd(0, 1, 1),
-    dst_gpd(0, 1, 0),
-    dst_gpd(0, 10, -1)
+    dst_gpd(1, 1),
+    dst_gpd(1, 0),
+    dst_gpd(10, -1)
   )
-  p <- 0:100/100
+  p <- 0:100 / 100
   for (i in seq_along(d)) {
     r <- range(d[[i]])
     qf <- eval_quantile(d[[i]], at = p)

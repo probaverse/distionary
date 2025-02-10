@@ -4,7 +4,10 @@
 \alias{dst_lp3}
 \title{Log Pearson Type III distribution}
 \usage{
-dst_lp3(locationlog, scalelog, shape)
+dst_lp3(meanlog, sdlog, skew)
+}
+\arguments{
+\item{meanlog, sdlog, skew}{Parameters.}
 }
 \value{
 A Log Pearson Type III distribution.

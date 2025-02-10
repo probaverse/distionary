@@ -34,7 +34,7 @@ or tibble form (for \code{enframe_}).
 Access a distribution's probability mass function (pmf).
 }
 \examples{
-d <- dst_empirical(1:10)
+d <- dst_pois(5)
 eval_pmf(d, at = c(1, 2, 2.5))
 enframe_pmf(d, at = 0:4)
 eval_pmf(dst_norm(0, 1), at = -3:3)

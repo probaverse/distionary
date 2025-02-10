@@ -11,7 +11,7 @@ dst_pearson3(location, scale, shape)
 and shape > 0.}
 }
 \value{
-A Log Pearson Type III distribution.
+A Pearson Type III distribution.
 }
 \description{
 Pearson Type III distribution

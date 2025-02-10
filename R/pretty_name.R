@@ -7,16 +7,23 @@
 #' followed by parameters in brackets.
 #' @export
 pretty_name <- function(distribution, param_digits = 0) {
-  if (is_empirical(distribution)) {
-    name <- "empirical"
-  } else {
-    name <- distribution$name
+  name <- attributes(distribution)$name
+  if (is.null(name)) {
+    return("Unnamed distribution")
   }
   low_name <- tolower(name)
-  if (low_name == "frechet") name <- "Fréchet"
+  if (low_name == "frechet") {
+    name <- "Fr\xE9chet"
+    Encoding(name) <- "latin1"
+    name <- iconv(
+      name,
+      "latin1",
+      "UTF-8"
+    )
+  }
   if (low_name == "gev") name <- "GEV"
   if (low_name == "gpd") name <- "GPD"
-  if (param_digits > 0) {
+  if (param_digits > 0 && !is.null(parameters(distribution))) {
     brackets <- bracket_parameters(distribution, param_digits = param_digits)
     name <- paste0(name, brackets)
   }
