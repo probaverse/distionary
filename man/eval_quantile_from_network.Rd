@@ -14,7 +14,12 @@ eval_quantile_from_network(distribution, at, tol = 1e-09, maxiter = 200)
 \item{tol, maxiter}{Tolerance (a small positive number) and maximum number
 of iterations}
 }
+\value{
+The \code{at}-quantiles of the distribution.
+}
 \description{
-Intended for internal use only. Calls the \code{directional_inverse()}
-algorithm for each new entry of \code{at}.
+Pulls together all the pieces needed to calculate the left inverse
+of the CDF. Intended for internal use only. Calls the
+\code{encapsulate_p()} function to figure out where to start looking for
+solutions, then \code{directional_inverse()} to run the algorithm.
 }

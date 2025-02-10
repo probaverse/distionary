@@ -14,9 +14,16 @@ encapsulate_p(distribution, p, direction)
 \item{direction}{One of \code{"left"} for calculating left-inverse, or
 \code{"right"} for calculating right-inverse.}
 }
+\value{
+A range of values containing the solutions to the left
+inverse of the CDF at \code{p}.
+}
 \description{
-Find a range of possible outcomes where the cdf evaluates to values
-that encapsulate the range of probabilities contained in the vector \code{p}.
+In order to run the directional inverse algorithm, we need to know
+approximately where the solution lies. This function
+finds a range of possible outcomes where the cdf evaluates to values
+(probabilities) contain the vector \code{p}, and therefore should come
+before the inversion algorithm begins.
 }
 \note{
 If 0 or 1 are included in the vector \code{p}, one of the endpoints might

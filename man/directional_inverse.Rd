@@ -20,14 +20,16 @@ of iterations}
 \item{direction}{One of \code{"left"} for calculating left-inverse, or
 \code{"right"} for calculating right-inverse.}
 }
+\value{
+The left inverse of the CDF evaluated at \code{p}.
+}
 \description{
 Calculates the smallest value for which a function \code{f}
 evaluates to be greater than or equal to \code{y} -- that is,
-the left inverse of \code{f} at \code{y}. Intended for internal use only.
+the left inverse of \code{f} at \code{y}.
 }
 \details{
 This algorithm works by progressively
-cutting the specified range in half, so that the width
-of the range after k iterations is 1/2^k times the
-original width.
+cutting the specified range in half, moving into the left or right
+half depending on where the solution is.
 }

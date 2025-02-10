@@ -130,9 +130,7 @@ encapsulate_p <- function(distribution, p, direction) {
 #' of iterations
 #' @details This algorithm works by progressively
 #' cutting the specified range in half, moving into the left or right
-#' half depending on where the solution is. An additional step is conducted
-#' in case the solution falls on a discrete value, by narrowing the range
-#' to the next discrete value next to the new endpoint.
+#' half depending on where the solution is.
 #' @returns The left inverse of the CDF evaluated at `p`.
 #' @inheritParams encapsulate_p
 directional_inverse <- function(distribution, p, low, high, tol, maxiter,
@@ -164,21 +162,9 @@ directional_inverse <- function(distribution, p, low, high, tol, maxiter,
     tol <- min(max_tol / slope, tol, na.rm = TRUE)
     if (ineq(p, cdf_mid)) {
       high <- mid
-      discrete <- prev_discrete(
-        distribution, from = high, n = 1L, include_from = TRUE
-      )
     } else {
       low <- mid
-      discrete <- next_discrete(
-        distribution, from = low, n = 1L, include_from = TRUE
-      )
     }
-    low_high <- snap_range_to_value(
-      distribution, p = p, low = low, high = high, discrete = discrete,
-      direction = direction
-    )
-    low <- low_high[1L]
-    high <- low_high[2L]
     if (low == high) return(low)
     w <- high - low
     mid <- (high + low) / 2
@@ -193,49 +179,4 @@ directional_inverse <- function(distribution, p, low, high, tol, maxiter,
   mid
 }
 
-#' Snap a range to an intermediate value
-#'
-#' When finding the inverse of the cdf at `p`, and with the solution
-#' between `low` and `high`, this function narrows this range by pulling
-#' one or both of the endpoints towards a given intermediate value,
-#' such that the new range still contains the solution.
-#'
-#' @param p Value of the cdf to calculate inverse at.
-#' @param low,high Single numerics specifying the lower and upper bound
-#' to look between.
-#' @param intermediate Numeric value indicating an intermediate value to
-#' narrow the solution range to. This could have length 0, in which
-#' case the original range `c(low, high)` is returned; useful for when
-#' there are no discrete values in a distribution. This is also the case
-#' if `NA` or a value outside of the range `c(low, high)` is input.
-#' @returns An updated range (vector of length 2) containing the solution,
-#' with `intermediate` as a new endpoint.
-#' @inheritParams encapsulate_p
-snap_range_to_value <- function(
-    distribution, p, low, high, intermediate, direction
-) {
-  if (is.na(intermediate) || !length(intermediate) ||
-      intermediate < low || intermediate > high) {
-    return(c(low, high))
-  }
-  cdf_upper <- prob_left(distribution, of = intermediate, inclusive = TRUE)
-  cdf_lower <- prob_left(distribution, of = intermediate, inclusive = FALSE)
-  if (direction == "left") {
-    lower_lt <- `<`
-    upper_gt <- `>=`
-  } else if (direction == "right") {
-    lower_lt <- `<=`
-    upper_gt <- `>`
-  } else {
-    stop("`direction` must be one of 'left' or 'right'. Received '",
-         direction, "'.")
-  }
-  if (lower_lt(cdf_lower, p)) {
-    low <- intermediate
-  }
-  if (upper_gt(cdf_upper, p)) {
-    high <- intermediate
-  }
-  c(low, high)
-}
 
