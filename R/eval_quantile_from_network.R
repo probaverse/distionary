@@ -1,13 +1,18 @@
 #' Evaluate Quantiles from a CDF
 #'
-#' Intended for internal use only. Calls the `directional_inverse()`
-#' algorithm for each new entry of `at`.
+#' Pulls together all the pieces needed to calculate the left inverse
+#' of the CDF. Intended for internal use only. Calls the
+#' `encapsulate_p()` function to figure out where to start looking for
+#' solutions, then `directional_inverse()` to run the algorithm.
 #'
 #' @param distribution A distribution having access to a cdf.
 #' @param at A vector of values for which to evaluate the quantile function.
 #' @param tol,maxiter Tolerance (a small positive number) and maximum number
 #' of iterations
-eval_quantile_from_cdf <- function(distribution, at, tol, maxiter) {
+#' @returns The `at`-quantiles of the distribution.
+eval_quantile_from_network <- function(
+    distribution, at, tol = 1e-9, maxiter = 200
+) {
   n <- length(at)
   if (n == 0) return(numeric(0L))
   ord <- order(at)
@@ -51,15 +56,20 @@ eval_quantile_from_cdf <- function(distribution, at, tol, maxiter) {
 
 #' Find a range of possible outcomes
 #'
-#' Find a range of possible outcomes where the cdf evaluates to values
-#' that encapsulate the range of probabilities contained in the vector `p`.
+#' In order to run the directional inverse algorithm, we need to know
+#' approximately where the solution lies. This function
+#' finds a range of possible outcomes where the cdf evaluates to values
+#' (probabilities) contain the vector `p`, and therefore should come
+#' before the inversion algorithm begins.
 #'
 #' @param p Vector of values between 0 and 1 (inclusive).
 #' @param direction One of `"left"` for calculating left-inverse, or
 #' `"right"` for calculating right-inverse.
 #' @note If 0 or 1 are included in the vector `p`, one of the endpoints might
 #' be infinite.
-#' @inheritParams eval_quantile_from_cdf
+#' @returns A range of values containing the solutions to the left
+#' inverse of the CDF at `p`.
+#' @inheritParams eval_quantile_from_network
 encapsulate_p <- function(distribution, p, direction) {
   if (length(p) == 0) return(c(NA, NA))
   p_min <- min(p)
@@ -111,7 +121,7 @@ encapsulate_p <- function(distribution, p, direction) {
 #'
 #' Calculates the smallest value for which a function `f`
 #' evaluates to be greater than or equal to `y` -- that is,
-#' the left inverse of `f` at `y`. Intended for internal use only.
+#' the left inverse of `f` at `y`.
 
 #' @param p Single value for which to calculate the left inverse.
 #' @param low,high Single numeric values forming a range
@@ -119,10 +129,11 @@ encapsulate_p <- function(distribution, p, direction) {
 #' @param tol,maxiter Tolerance (a small positive number) and maximum number
 #' of iterations
 #' @details This algorithm works by progressively
-#' cutting the specified range in half, so that the width
-#' of the range after k iterations is 1/2^k times the
-#' original width.
-#' @export
+#' cutting the specified range in half, moving into the left or right
+#' half depending on where the solution is. An additional step is conducted
+#' in case the solution falls on a discrete value, by narrowing the range
+#' to the next discrete value next to the new endpoint.
+#' @returns The left inverse of the CDF evaluated at `p`.
 #' @inheritParams encapsulate_p
 directional_inverse <- function(distribution, p, low, high, tol, maxiter,
                                 direction) {
@@ -162,8 +173,8 @@ directional_inverse <- function(distribution, p, low, high, tol, maxiter,
         distribution, from = low, n = 1L, include_from = TRUE
       )
     }
-    low_high <- narrow_by_discretes(
-      distribution, p = p, low = low, high = high, discrete = discrete,
+    low_high <- snap_range_to_value(
+      distribution, p = p, low = low, high = high, intermediate = discrete,
       direction = direction
     )
     low <- low_high[1L]
@@ -182,30 +193,33 @@ directional_inverse <- function(distribution, p, low, high, tol, maxiter,
   mid
 }
 
-#' Narrow a range of possible values by a discrete
+#' Snap a range to an intermediate value
 #'
 #' When finding the inverse of the cdf at `p`, and with the solution
-#' between `low` and `high`, this function narrows this range based
-#' on an intermediate discrete value, and zeroes-in on that
-#' discrete value if it's the solution.
+#' between `low` and `high`, this function narrows this range by pulling
+#' one or both of the endpoints towards a given intermediate value,
+#' such that the new range still contains the solution.
 #'
 #' @param p Value of the cdf to calculate inverse at.
 #' @param low,high Single numerics specifying the lower and upper bound
 #' to look between.
-#' @param discrete Numeric value indicating a discrete point to possibly
-#' narrow the range by. Could be `NA`; could have length 0; could be
-#' outside of the range `c(low, high)`.
-#' @note The benefit of this step when inverting a cdf is to return
-#' the exact discrete value if `p` falls within its jump discontinuity.
+#' @param intermediate Numeric value indicating an intermediate value to
+#' narrow the solution range to. This could have length 0, in which
+#' case the original range `c(low, high)` is returned; useful for when
+#' there are no discrete values in a distribution. This is also the case
+#' if `NA` or a value outside of the range `c(low, high)` is input.
+#' @returns An updated range (vector of length 2) containing the solution,
+#' with `intermediate` as a new endpoint.
 #' @inheritParams encapsulate_p
-narrow_by_discretes <- function(distribution, p, low, high, discrete,
-                                direction) {
-  if (is.na(discrete) || !length(discrete) ||
-      discrete < low || discrete > high) {
+snap_range_to_value <- function(
+    distribution, p, low, high, intermediate, direction
+) {
+  if (is.na(intermediate) || !length(intermediate) ||
+      intermediate < low || intermediate > high) {
     return(c(low, high))
   }
-  cdf_upper <- prob_left(distribution, of = discrete, inclusive = TRUE)
-  cdf_lower <- prob_left(distribution, of = discrete, inclusive = FALSE)
+  cdf_upper <- prob_left(distribution, of = intermediate, inclusive = TRUE)
+  cdf_lower <- prob_left(distribution, of = intermediate, inclusive = FALSE)
   if (direction == "left") {
     lower_lt <- `<`
     upper_gt <- `>=`
@@ -217,10 +231,10 @@ narrow_by_discretes <- function(distribution, p, low, high, discrete,
          direction, "'.")
   }
   if (lower_lt(cdf_lower, p)) {
-    low <- discrete
+    low <- intermediate
   }
   if (upper_gt(cdf_upper, p)) {
-    high <- discrete
+    high <- intermediate
   }
   c(low, high)
 }
