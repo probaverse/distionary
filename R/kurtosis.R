@@ -20,7 +20,13 @@ eval_kurtosis_from_network <- function(distribution) {
     sf <- \(x) eval_survival(distribution, at = x)
   }
   sf2 <- function(t) 1 + sf(mu + t^(1 / 4)) - sf(mu - t^(1 / 4))
-  int <- stats::integrate(sf2, 0, Inf)
+  int <- try(
+    stats::integrate(sf2, 0, Inf, rel.tol = 1e-9, subdivisions = 200L),
+    silent = TRUE
+  )
+  if (inherits(int, "try-error")) {
+    return(NaN)
+  }
   int$value / var^2
 }
 

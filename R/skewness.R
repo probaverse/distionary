@@ -9,34 +9,42 @@ skewness <- function(distribution) {
 }
 
 eval_skewness_from_network <- function(distribution) {
+  # skewness = E[(X - mu)^3] / sigma^3
+  # (X - mu)^3 has cdf F(mu + x^(1 / 3)), but note R evaluates (-1)^(1 / 3)
+  # as NaN, supposedly grabbing a complex root of unity rather than just -1,
+  # so look at positive and negative part of the CDF.
   mu <- mean(distribution)
   sigma <- stdev(distribution)
   sf <- distribution[["survival"]]
+  cdf <- distribution[["cdf"]]
+  rng <- range(distribution)
+  rng2 <- (rng - mu)^3
   if (is.null(sf)) {
     sf <- \(x) eval_survival(distribution, at = x)
   }
-  sf2 <- function(t) sf(mu + t^(1 / 3))
-  one_minus_flipped <- function(t) 1 - sf(mu - t^(1 / 3))
+  sf_upper <- function(t) sf(mu + t^(1 / 3))
+  cdf_lower <- function(t) cdf(mu - t^(1 / 3))
+  # one_minus_flipped <- function(t) cdf(mu - t^(1 / 3)) #1 - sf(mu - t^(1 / 3))
   # (flipped about t=0 because (-1)^(1/3) returns a complex root of
   #  unity, or NaN, instead of the real one, -1.)
-  # pos_int <- stats::integrate(sf2, 0, Inf, ...)
-  pos_int <- try(stats::integrate(sf2, 0, Inf), silent = TRUE)
-  if (inherits(pos_int, "try-error")) {
-    warning(
-      "Integral did not converge. This might mean that the skewness does ",
-      "not exist, or that the integral simply did not converge. ",
-      "Returning `NaN`."
-    )
+  # positive_part <- stats::integrate(sf2, 0, Inf, ...)
+  positive_part <- try(
+    stats::integrate(
+      sf_upper, 0, rng2[2], rel.tol = 1e-9, subdivisions = 200L
+    ),
+    silent = TRUE
+  )
+  if (inherits(positive_part, "try-error")) {
     return(NaN)
   }
-  neg_int <- try(stats::integrate(one_minus_flipped, 0, Inf), silent = TRUE)
-  if (inherits(neg_int, "try-error")) {
-    warning(
-      "Integral did not converge. This might mean that the skewness does ",
-      "not exist, or that the integral simply did not converge. ",
-      "Returning `NaN`."
-    )
+  negative_part <- try(
+    stats::integrate(
+      cdf_lower, 0, abs(rng2[1]), rel.tol = 1e-9, subdivisions = 200L
+    ),
+    silent = TRUE
+  )
+  if (inherits(negative_part, "try-error")) {
     return(NaN)
   }
-  (pos_int$value - neg_int$value) / sigma^3
+  (positive_part$value - negative_part$value) / sigma^3
 }

@@ -5,7 +5,11 @@ validate_mean <- function(
   mean_builtin <- distribution$mean
   distribution$mean <- NULL
   mean_derived <- mean(distribution)
-  diff_ <- abs(mean_builtin - mean_derived)
+  if (identical(mean_builtin, mean_derived)) {
+    diff_ <- 0
+  } else {
+    diff_ <- abs(mean_builtin - mean_derived)
+  }
   if (diff_ < tol) {
     return(TRUE)
   } else {
@@ -26,7 +30,11 @@ validate_variance <- function(
   variance_builtin <- distribution$variance
   distribution$variance <- NULL
   variance_derived <- variance(distribution)
-  diff_ <- abs(variance_builtin - variance_derived)
+  if (identical(variance_builtin, variance_derived)) {
+    diff_ <- 0
+  } else {
+    diff_ <- abs(variance_builtin - variance_derived)
+  }
   if (diff_ < tol) {
     return(TRUE)
   } else {
@@ -47,7 +55,11 @@ validate_stdev <- function(
   stdev_builtin <- distribution$stdev
   distribution$stdev <- NULL
   stdev_derived <- stdev(distribution)
-  diff_ <- abs(stdev_builtin - stdev_derived)
+  if (identical(stdev_builtin, stdev_derived)) {
+    diff_ <- 0
+  } else {
+    diff_ <- abs(stdev_builtin - stdev_derived)
+  }
   if (diff_ < tol) {
     return(TRUE)
   } else {
@@ -68,7 +80,11 @@ validate_skewness <- function(
   skewness_builtin <- distribution$skewness
   distribution$skewness <- NULL
   skewness_derived <- skewness(distribution)
-  diff_ <- abs(skewness_builtin - skewness_derived)
+  if (identical(skewness_builtin, skewness_derived)) {
+    diff_ <- 0
+  } else {
+    diff_ <- abs(skewness_builtin - skewness_derived)
+  }
   if (diff_ < tol) {
     return(TRUE)
   } else {
@@ -89,7 +105,11 @@ validate_kurtosis <- function(
   kurtosis_builtin <- distribution$kurtosis
   distribution$kurtosis <- NULL
   kurtosis_derived <- kurtosis(distribution)
-  diff_ <- abs(kurtosis_builtin - kurtosis_derived)
+  if (identical(kurtosis_builtin, kurtosis_derived)) {
+    diff_ <- 0
+  } else {
+    diff_ <- abs(kurtosis_builtin - kurtosis_derived)
+  }
   if (diff_ < tol) {
     return(TRUE)
   } else {
@@ -110,7 +130,11 @@ validate_kurtosis_exc <- function(
   kurtexc_builtin <- distribution$kurtosis_exc
   distribution$kurtosis_exc <- NULL
   kurtexc_derived <- kurtexc(distribution)
-  diff_ <- abs(kurtexc_builtin - kurtexc_derived)
+  if (identical(kurtexc_builtin, kurtexc_derived)) {
+    diff_ <- 0
+  } else {
+    diff_ <- abs(kurtexc_builtin - kurtexc_derived)
+  }
   if (diff_ < tol) {
     return(TRUE)
   } else {

@@ -23,7 +23,7 @@ dst_f <- function(df1, df2){
     quantile = \(p) stats::qf(p, df1 = df1, df2 = df2),
     realise = \(n) stats::rf(n, df1 = df1, df2 = df2),
     survival = \(x) stats::pf(x, df1 = df1, df2 = df2, lower.tail = FALSE),
-    mean = ifelse(df2 > 4, df2 / (df2 - 2), NaN),
+    mean = ifelse(df2 > 2, df2 / (df2 - 2), NaN),
     variance = ifelse(
       df2 > 4,
       2 * df2^2 * (df1 + df2 - 2) / (df1 * (df2 - 2)^2 * (df2 - 4)),

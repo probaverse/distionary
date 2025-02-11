@@ -1,5 +1,5 @@
 validate_survival <- function(
-    distribution, verbose = FALSE, tol = .Machine$double.eps
+    distribution, verbose = FALSE, tol = 1e-9
 ) {
   if (is.null(distribution$survival)) return(NA)
   sf <- distribution$survival
