@@ -94,7 +94,7 @@ encapsulate_p <- function(distribution, p, direction) {
     left <- 2 * left
     cdf_left <- eval_cdf(distribution, at = left)
   }
-  if (p_max >= 0.9) {
+  if (p_max >= 0.9 && !is.null(distribution$survival)) {
     survival_right <- eval_survival(distribution, at = right)
     while (survival_gt(survival_right, 1 - p_max)) {
       right <- 2 * right

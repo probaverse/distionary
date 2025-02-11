@@ -11,6 +11,8 @@ kurtosis_exc <- function(distribution) {
 }
 
 eval_kurtosis_from_network <- function(distribution) {
+  k_exc <- distribution$kurtosis_exc
+  if (!is.null(k_exc)) return(k_exc + 3)
   mu <- mean(distribution)
   var <- variance(distribution)
   sf <- distribution[["survival"]]

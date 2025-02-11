@@ -8,7 +8,6 @@
 \alias{median.dst}
 \alias{skewness}
 \alias{stdev}
-\alias{stdev.dst}
 \alias{variance}
 \title{Moments of a Distribution}
 \usage{
@@ -23,8 +22,6 @@ kurtosis_exc(distribution)
 skewness(distribution)
 
 stdev(distribution)
-
-stdev.dst(distribution)
 
 variance(distribution)
 }

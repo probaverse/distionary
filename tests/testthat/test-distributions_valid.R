@@ -39,12 +39,128 @@ for (i in seq_along(stats_distributions)) {
     if (v == "continuous") expect_null(d$pmf)
   })
 
-  test_that(paste("Distribution", i, "quantities are valid."), {
-    for (paramset in item$valid) {
-      d <- rlang::exec(item$distribution, !!!paramset)
-      ppties <- names(d)
-      ppties <- ppties[ppties != "parameters"]
-      # check_
+  test_that(
+    paste(
+      "All representations describe the same distribution: distribution ",
+      i, "."
+    ),
+    {
+      # Need to make sure that provided representations all describe the
+      # same distribution. This can be achieved by deriving the representation
+      # as if it was absent. This also checks that the derivations are correct
+      # when a representation is missing -- but not all derivations: for
+      # example, distionary never defines a hazard function in its
+      # distributions, so that and others will have to be checked another way.
+      for (paramset in item$valid) {
+        d <- rlang::exec(item$distribution, !!!paramset)
+        v <- vtype(d)
+        ## Quantile
+        check_q <- validate_quantile(d)
+        expect_true(check_q || is.na(check_q))
+        ## Survival
+        check_s <- validate_survival(d)
+        expect_true(check_s || is.na(check_s))
+        ## Density
+        dens_fun <- d$density
+        cdf_fun <- d$cdf
+        if (v == "continuous" && !is.null(dens_fun)) {
+          x <- eval_quantile(d, at = 1:50 / 50)
+          rng <- range(d)
+          cdf_derived <- vapply(
+            x, function(x_) {
+              int <- integrate(dens_fun, lower = rng[1], upper = x_)
+              int$value
+            }, FUN.VALUE = numeric(1)
+          )
+          cdf_evald <- eval_cdf(d, at = x)
+          expect_equal(cdf_derived, cdf_evald, tolerance = 1e-6)
+        }
+        ## PMF
+        pmf_fun <- d$pmf
+        if (v == "discrete" && !is.null(pmf_fun)) {
+          x <- 0:100
+          pmf_evald <- eval_pmf(d, at = x)
+          pmf_derived <- prob_left(d, of = x, inclusive = TRUE) -
+            prob_left(d, of = x, inclusive = FALSE)
+          expect_equal(pmf_derived, pmf_evald)
+        }
+        ## Mean
+        check_mean <- validate_mean(d)
+        expect_true(check_mean || is.na(check_mean))
+        ## Variance
+        check_var <- validate_variance(d)
+        expect_true(check_var || is.na(check_var))
+        ## Standard Deviation
+        check_sd <- validate_stdev(d)
+        expect_true(check_sd || is.na(check_sd))
+        ## Skewness
+        check_sk <- validate_skewness(d, T)
+        expect_true(check_sk || is.na(check_sk))
+        ## Kurtosis
+        check_kur <- validate_kurtosis(d)
+        expect_true(check_kur || is.na(check_kur))
+        ## Excess Kurtosis
+        check_exc <- validate_kurtosis_exc(d)
+        expect_true(check_exc || is.na(check_exc))
+        ## Range
+        check_rng <- validate_range(d)
+        expect_true(check_rng || is.na(check_rng))
+      }
     }
-  })
+  )
+
+  test_that(
+    paste(
+      "Defined representations correspond to a distribution: Distribution ",
+      i, "."
+    ),
+    {
+      # For the representations built in to the distribution, make sure that
+      # they correspond to a valid distribution. This doesn't check
+      # whether the representations point to the *same* distribution,
+      # but that they are each valid (e.g., density integrates to 1).
+      for (paramset in item$valid) {
+        d <- rlang::exec(item$distribution, !!!paramset)
+        v <- vtype(d)
+        p <- 0:50 / 50
+        x <- eval_quantile(d, at = p)
+        ## CDF
+        cdf_vals <- eval_cdf(d, at = x)
+        if (v == "continuous") expect_equal(cdf_vals[1], 0)
+        expect_equal(cdf_vals[51], 1)
+        expect_true(all(diff(cdf_vals) >= 0))
+        ## Survival
+        if (!is.null(d$survival)) {
+          surv <- eval_survival(d, at = x)
+          if (v == "continuous") expect_equal(surv[1], 1)
+          expect_equal(surv[51], 0)
+          expect_true(all(diff(surv) <= 0))
+        }
+        ## Density
+        dens_fun <- d$density
+        if (!is.null(dens_fun)) {
+          dens_vals <- eval_density(d, at = x)
+          expect_true(all(dens_vals >= 0))
+          int <- integrate(dens_fun, lower = x[1], upper = x[51])
+          expect_equal(int$value, 1)
+        }
+        ## Mass
+        pmf_fun <- d$pmf
+        if (!is.null(pmf_fun)) {
+          pmf_vals <- eval_pmf(d, at = 0:1000)
+          expect_true(all(pmf_vals >= 0))
+          expect_gt(sum(pmf_vals), 0.9)
+          expect_lte(sum(pmf_vals), 1)
+        }
+        ## Quantile
+        qf <- d$quantile
+        if (!is.null(qf)) {
+          p <- 0:50 / 50
+          x <- eval_quantile(d, at = p)
+          expect_true(all(diff(x) >= 0))
+          if (v == "continuous") expect_equal(eval_cdf(d, at = x), p)
+        }
+      }
+    }
+  )
 }
