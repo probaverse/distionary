@@ -32,6 +32,8 @@ for (i in seq_along(stats_distributions)) {
     }
   })
 
+  # Make sure there's no density for discrete variables, and no
+  # PMF for continuous variables.
   test_that(paste("Distribution", i, "density / mass lineup with vtype"), {
     d <- rlang::exec(item$distribution, !!!item$valid[[1]])
     v <- vtype(d)
@@ -39,21 +41,24 @@ for (i in seq_along(stats_distributions)) {
     if (v == "continuous") expect_null(d$pmf)
   })
 
-  test_that(
-    paste(
-      "All representations describe the same distribution: distribution ",
-      i, "."
-    ),
-    {
-      # Need to make sure that provided representations all describe the
-      # same distribution. This can be achieved by deriving the representation
-      # as if it was absent. This also checks that the derivations are correct
-      # when a representation is missing -- but not all derivations: for
-      # example, distionary never defines a hazard function in its
-      # distributions, so that and others will have to be checked another way.
-      for (paramset in item$valid) {
-        d <- rlang::exec(item$distribution, !!!paramset)
-        v <- vtype(d)
+  for (paramset in item$valid) {
+    d <- rlang::exec(item$distribution, !!!paramset)
+    v <- vtype(d)
+    prettynm <- pretty_name(d, param_digits = 2)
+
+    # Need to make sure that provided representations all describe the
+    # same distribution. This can be achieved by deriving the
+    # representation as if it was absent. This also checks that the
+    # derivations are correct when a representation is missing -- but
+    # not all derivations: for example, distionary never defines a
+    # hazard function in its distributions, so that and others will
+    # have to be checked another way.
+    test_that(
+      paste(
+        "All representations describe the same distribution: ",
+        prettynm, "."
+      ),
+      {
         ## Quantile
         check_q <- validate_quantile(d)
         expect_true(check_q || is.na(check_q))
@@ -61,29 +66,11 @@ for (i in seq_along(stats_distributions)) {
         check_s <- validate_survival(d)
         expect_true(check_s || is.na(check_s))
         ## Density
-        dens_fun <- d$density
-        cdf_fun <- d$cdf
-        if (v == "continuous" && !is.null(dens_fun)) {
-          x <- eval_quantile(d, at = 1:50 / 50)
-          rng <- range(d)
-          cdf_derived <- vapply(
-            x, function(x_) {
-              int <- integrate(dens_fun, lower = rng[1], upper = x_)
-              int$value
-            }, FUN.VALUE = numeric(1)
-          )
-          cdf_evald <- eval_cdf(d, at = x)
-          expect_equal(cdf_derived, cdf_evald, tolerance = 1e-6)
-        }
+        check_dens <- validate_density(d)
+        expect_true(check_dens || is.na(check_dens))
         ## PMF
-        pmf_fun <- d$pmf
-        if (v == "discrete" && !is.null(pmf_fun)) {
-          x <- 0:100
-          pmf_evald <- eval_pmf(d, at = x)
-          pmf_derived <- prob_left(d, of = x, inclusive = TRUE) -
-            prob_left(d, of = x, inclusive = FALSE)
-          expect_equal(pmf_derived, pmf_evald)
-        }
+        check_pmf <- validate_pmf(d)
+        expect_true(check_pmf || is.na(check_pmf))
         ## Mean
         check_mean <- validate_mean(d)
         expect_true(check_mean || is.na(check_mean))
@@ -106,22 +93,18 @@ for (i in seq_along(stats_distributions)) {
         check_rng <- validate_range(d)
         expect_true(check_rng || is.na(check_rng))
       }
-    }
-  )
+    )
 
-  test_that(
-    paste(
-      "Defined representations correspond to a distribution: Distribution ",
-      i, "."
-    ),
-    {
-      # For the representations built in to the distribution, make sure that
-      # they correspond to a valid distribution. This doesn't check
-      # whether the representations point to the *same* distribution,
-      # but that they are each valid (e.g., density integrates to 1).
-      for (paramset in item$valid) {
-        d <- rlang::exec(item$distribution, !!!paramset)
-        v <- vtype(d)
+    # For the representations built in to the distribution, make sure that
+    # they correspond to a valid distribution. This doesn't check
+    # whether the representations point to the *same* distribution,
+    # but that they are each valid (e.g., density integrates to 1).
+    test_that(
+      paste(
+        "Defined representations correspond to a distribution: ",
+        prettynm, "."
+      ),
+      {
         p <- 0:50 / 50
         x <- eval_quantile(d, at = p)
         ## CDF
@@ -161,6 +144,8 @@ for (i in seq_along(stats_distributions)) {
           if (v == "continuous") expect_equal(eval_cdf(d, at = x), p)
         }
       }
-    }
-  )
+    )
+    # --- End parameter set ---
+  }
+  # --- End distribution ---
 }
