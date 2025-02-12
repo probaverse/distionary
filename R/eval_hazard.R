@@ -13,7 +13,7 @@
 #' @rdname hazard
 #' @export
 eval_hazard <- function(distribution, at) {
-  eval_representation(distribution, "odds", at)
+  eval_representation(distribution, "hazard", at)
 }
 
 eval_hazard_from_network <- function(distribution, at) {
