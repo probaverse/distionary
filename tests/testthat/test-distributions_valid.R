@@ -145,6 +145,104 @@ stats_distributions <- list(
       c(m = 8, n = 5, k = 3),
       c(m = 2, n = 5, k = 3)
     )
+  ),
+  list(
+    distribution = dst_lnorm,
+    invalid = list(
+      c(sdlog = -1.2)
+    ),
+    valid = list(
+      c(meanlog = -1, sdlog = 1.2),
+      c(meanlog = 0, sdlog = 1.1)
+    )
+  ),
+  list(
+    distribution = dst_lp3,
+    invalid = list(
+      c(meanlog = 0, sdlog = -1, skew = 1)
+    ),
+    valid = list(
+      c(meanlog = 0, sdlog = 1.1, skew = 0.7),
+      c(meanlog = -1, sdlog = 0.7, skew = -0.7)
+    )
+  ),
+  list(
+    distribution = dst_nbinom,
+    invalid = list(
+      c(size = -3, prob = 0.4),
+      c(size = 3, prob = -1),
+      c(size = 3, prob = 2)
+    ),
+    valid = list(
+      c(size = 3, prob = 0.4),
+      c(size = 5, prob = 0.8)
+    )
+  ),
+  list(
+    distribution = dst_norm,
+    invalid = list(
+      c(mean = 0, sd = -1)
+    ),
+    valid = list(
+      c(mean = 1.1, sd = 2.2),
+      c(mean = -1.5, sd = 3.7)
+    )
+  ),
+  list(
+    distribution = dst_pearson3,
+    invalid = list(
+      c(location = 0, scale = -1, shape = 1),
+      c(location = 0, scale = 1, shape = -1)
+    ),
+    valid = list(
+      c(location = 1.1, scale = 2.2, shape = 3.3),
+      c(location = 0, scale = 1, shape = 1)
+    )
+  ),
+  list(
+    distribution = dst_pois,
+    invalid = list(
+      c(lambda = -1)
+    ),
+    valid = list(
+      c(lambda = 1),
+      c(lambda = 2.2)
+    )
+  ),
+  list(
+    distribution = dst_t,
+    invalid = list(
+      c(df = 0),
+      c(df = -1)
+    ),
+    valid = list(
+      c(df = 1),
+      c(df = 2),
+      c(df = 3),
+      c(df = 4),
+      c(df = 5)
+    )
+  ),
+  list(
+    distribution = dst_unif,
+    invalid = list(
+      c(min = 9, max = 0)
+    ),
+    valid = list(
+      c(min = 0, max = 1),
+      c(min = -2, max = 1)
+    )
+  ),
+  list(
+    distribution = dst_weibull,
+    invalid = list(
+      c(shape = -1, scale = 1),
+      c(shape = 1, scale = -1)
+    ),
+    valid = list(
+      c(shape = 0.8, scale = 1.5),
+      c(shape = 3.3, scale = 2.4)
+    )
   )
 )
 
@@ -254,39 +352,30 @@ for (i in seq_along(stats_distributions)) {
         expect_true(check_rng || is.na(check_rng))
         ## Moments
         if (!attr(d, "name") %in% c("Cauchy", "Degenerate")) {
-          if (attr(d, "name") %in% c("Geometric")) {
-            set.seed(1)
-            x <- realise(d, n = 100000)
-            mu_x <- mean(x)
-            sd_x <- sd(x)
-            var_x <- var(x)
-            expect_lt(abs(mean(d) - mu_x) / mean(d), 0.01)
-            expect_lt(abs(stdev(d) - sd_x) / stdev(d), 0.01)
-            expect_lt(abs(variance(d) - var_x) / variance(d), 0.01)
-          } else {
-            ## Mean
+          ## Mean
+          if (!(attr(d, "name") == "Student t" && parameters(d)$df == 1)) {
             check_mean <- validate_mean(d)
             expect_true(check_mean || is.na(check_mean))
-            ## Variance
-            check_var <- validate_variance(d)
-            expect_true(check_var || is.na(check_var))
-            ## Standard Deviation
-            check_sd <- validate_stdev(d)
-            expect_true(check_sd || is.na(check_sd))
-            ## Skewness
-            if (v == "discrete") {
-              check_sk <- validate_skewness(d, tol = 1e-3)
-            } else {
-              check_sk <- validate_skewness(d)
-            }
-            expect_true(check_sk || is.na(check_sk))
-            ## Kurtosis
-            check_kur <- validate_kurtosis(d)
-            expect_true(check_kur || is.na(check_kur))
-            ## Excess Kurtosis
-            check_exc <- validate_kurtosis_exc(d)
-            expect_true(check_exc || is.na(check_exc))
           }
+          ## Variance
+          check_var <- validate_variance(d)
+          expect_true(check_var || is.na(check_var))
+          ## Standard Deviation
+          check_sd <- validate_stdev(d)
+          expect_true(check_sd || is.na(check_sd))
+          ## Skewness
+          if (v == "discrete") {
+            check_sk <- validate_skewness(d, tol = 1e-3)
+          } else {
+            check_sk <- validate_skewness(d)
+          }
+          expect_true(check_sk || is.na(check_sk))
+          ## Kurtosis
+          check_kur <- validate_kurtosis(d)
+          expect_true(check_kur || is.na(check_kur))
+          ## Excess Kurtosis
+          check_exc <- validate_kurtosis_exc(d)
+          expect_true(check_exc || is.na(check_exc))
         }
       }
     )
@@ -294,3 +383,5 @@ for (i in seq_along(stats_distributions)) {
   }
   # --- End distribution ---
 }
+
+rm(c("stats_distributions", "d", "item", "i", "paramset", "prettynm", "v"))

@@ -27,6 +27,20 @@ eval_skewness_from_network <- function(distribution) {
     p <- eval_pmf(distribution, at = x)
     return(sum(p * x3))
   }
+  if (attr(distribution, "name") %in% c(
+    "Negative Binomial", "Poisson", "Geometric"
+  )) {
+    to_add <- Inf
+    i <- 0
+    skew <- 0
+    while (to_add > 1e-9) {
+      x <- 0:99 + 100 * i
+      to_add <- sum(eval_pmf(distribution, x) * ((x - mu) / sigma)^3)
+      skew <- skew + to_add
+      i <- i + 1
+    }
+    return(skew)
+  }
   sf <- distribution[["survival"]]
   cdf <- distribution[["cdf"]]
   rng <- range(distribution)

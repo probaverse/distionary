@@ -44,6 +44,20 @@ eval_mean_from_network <- function(distribution, ...) {
     p <- eval_pmf(distribution, at = x)
     return(sum(p * x))
   }
+  if (attr(distribution, "name") %in% c(
+    "Negative Binomial", "Poisson", "Geometric"
+  )) {
+    to_add <- Inf
+    i <- 0
+    mean <- 0
+    while (to_add > 1e-9) {
+      x <- 1:100 + 100 * i
+      to_add <- sum(eval_pmf(distribution, x) * x)
+      mean <- mean + to_add
+      i <- i + 1
+    }
+    return(mean)
+  }
   qf <- distribution[["quantile"]]
   if (is.null(qf)) {
     qf <- \(x) eval_quantile_from_network(distribution, x)

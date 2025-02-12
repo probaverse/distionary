@@ -18,6 +18,20 @@ eval_variance_from_network <- function(distribution) {
     p <- eval_pmf(distribution, at = x)
     return(sum(p * x2))
   }
+  if (attr(distribution, "name") %in% c(
+    "Negative Binomial", "Poisson", "Geometric"
+  )) {
+    to_add <- Inf
+    i <- 0
+    variance <- 0
+    while (to_add > 1e-9) {
+      x <- 0:99 + 100 * i
+      to_add <- sum(eval_pmf(distribution, x) * (x - mu)^2)
+      variance <- variance + to_add
+      i <- i + 1
+    }
+    return(variance)
+  }
   # P((X - mu)^2 < x) = P(mu-sqrt(x) < X < mu+sqrt(x))
   # = F(mu + sqrt(x)) - F(mu - sqrt(x))
   sf2 <- function(x) eval_survival(distribution, at = mu + sqrt(x)) +

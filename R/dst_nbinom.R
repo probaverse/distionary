@@ -17,7 +17,7 @@ dst_nbinom <- function(size, prob) {
   }
   distribution(
     parameters = list(size = size, prob = prob),
-    density = \(x) stats::dnbinom(x, size = size, prob = prob),
+    pmf = \(x) stats::dnbinom(x, size = size, prob = prob),
     cdf = \(x) stats::pnbinom(x, size = size, prob = prob),
     quantile = \(p) stats::qnbinom(p, size = size, prob = prob),
     realise = \(n) stats::rnbinom(n, size = size, prob = prob),
