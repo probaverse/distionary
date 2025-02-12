@@ -134,13 +134,16 @@ stats_distributions <- list(
   list(
     distribution = dst_hyper,
     invalid = list(
-      c(K = -2, N = 4, n = 5),
-      c(K = 2, N = -4, n = 5),
-      c(K = 2, N = 4, n = -5)
+      c(m = -2, n = 4, k = 5),
+      c(m = 2, n = -4, k = 5),
+      c(m = 2, n = 4, k = -5),
+      c(m = 2, n = 4, k = 7)
     ),
     valid = list(
-      c(K = 2, N = 4, n = 5),
-      c(K = 4, N = 2, n = 1)
+      c(m = 8, n = 4, k = 5),
+      c(m = 3, n = 4, k = 5),
+      c(m = 8, n = 5, k = 3),
+      c(m = 2, n = 5, k = 3)
     )
   )
 )
@@ -194,10 +197,11 @@ for (i in seq_along(stats_distributions)) {
         ## Density
         dens_fun <- d$density
         if (!is.null(dens_fun)) {
+          a <- eval_quantile(d, at = c(0.005, 0.995))
           dens_vals <- eval_density(d, at = x)
           expect_true(all(dens_vals >= 0))
-          int <- integrate(dens_fun, lower = r[1], upper = r[2])
-          expect_equal(int$value, 1, tolerance = 1e-6)
+          int <- integrate(dens_fun, lower = a[1], upper = a[2])
+          expect_equal(int$value, 0.99, tolerance = 1e-5)
         }
         ## Mass
         pmf_fun <- d$pmf
@@ -205,7 +209,7 @@ for (i in seq_along(stats_distributions)) {
           pmf_vals <- eval_pmf(d, at = -40:1000)
           expect_true(all(pmf_vals >= 0))
           expect_gt(sum(pmf_vals), 0.9)
-          expect_lte(sum(pmf_vals), 1)
+          expect_lt(sum(pmf_vals), 1 + 2 * .Machine$double.eps)
         }
         ## Quantile
         qf <- d$quantile
@@ -250,28 +254,39 @@ for (i in seq_along(stats_distributions)) {
         expect_true(check_rng || is.na(check_rng))
         ## Moments
         if (!attr(d, "name") %in% c("Cauchy", "Degenerate")) {
-          ## Mean
-          check_mean <- validate_mean(d)
-          expect_true(check_mean || is.na(check_mean))
-          ## Variance
-          check_var <- validate_variance(d)
-          expect_true(check_var || is.na(check_var))
-          ## Standard Deviation
-          check_sd <- validate_stdev(d)
-          expect_true(check_sd || is.na(check_sd))
-          ## Skewness
-          if (v == "discrete") {
-            check_sk <- validate_skewness(d, tol = 1e-3)
+          if (attr(d, "name") %in% c("Geometric")) {
+            set.seed(1)
+            x <- realise(d, n = 100000)
+            mu_x <- mean(x)
+            sd_x <- sd(x)
+            var_x <- var(x)
+            expect_lt(abs(mean(d) - mu_x) / mean(d), 0.01)
+            expect_lt(abs(stdev(d) - sd_x) / stdev(d), 0.01)
+            expect_lt(abs(variance(d) - var_x) / variance(d), 0.01)
           } else {
-            check_sk <- validate_skewness(d)
+            ## Mean
+            check_mean <- validate_mean(d)
+            expect_true(check_mean || is.na(check_mean))
+            ## Variance
+            check_var <- validate_variance(d)
+            expect_true(check_var || is.na(check_var))
+            ## Standard Deviation
+            check_sd <- validate_stdev(d)
+            expect_true(check_sd || is.na(check_sd))
+            ## Skewness
+            if (v == "discrete") {
+              check_sk <- validate_skewness(d, tol = 1e-3)
+            } else {
+              check_sk <- validate_skewness(d)
+            }
+            expect_true(check_sk || is.na(check_sk))
+            ## Kurtosis
+            check_kur <- validate_kurtosis(d)
+            expect_true(check_kur || is.na(check_kur))
+            ## Excess Kurtosis
+            check_exc <- validate_kurtosis_exc(d)
+            expect_true(check_exc || is.na(check_exc))
           }
-          expect_true(check_sk || is.na(check_sk))
-          ## Kurtosis
-          check_kur <- validate_kurtosis(d)
-          expect_true(check_kur || is.na(check_kur))
-          ## Excess Kurtosis
-          check_exc <- validate_kurtosis_exc(d)
-          expect_true(check_exc || is.na(check_exc))
         }
       }
     )

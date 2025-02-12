@@ -6,8 +6,18 @@ variance <- function(distribution) {
 
 eval_variance_from_network <- function(distribution) {
   mu <- mean(distribution)
-  # sf <- representation_as_function(distribution, "survival")
-  # sf2 <- function(t) 1 + sf(mu + sqrt(t)) - sf(mu - sqrt(t))
+  if (attr(distribution, "name") %in% c(
+    "Hypergeometric", "Bernoulli", "Binomial"
+  )) {
+    # This case is for double-checking the moments supplied for these
+    # distributions, and will be included until discretes handling is
+    # implemented.
+    r <- range(distribution)
+    x <- seq(r[1], r[2], by = 1L)
+    x2 <- (x - mu)^2
+    p <- eval_pmf(distribution, at = x)
+    return(sum(p * x2))
+  }
   # P((X - mu)^2 < x) = P(mu-sqrt(x) < X < mu+sqrt(x))
   # = F(mu + sqrt(x)) - F(mu - sqrt(x))
   sf2 <- function(x) eval_survival(distribution, at = mu + sqrt(x)) +

@@ -1,47 +1,49 @@
 #' Hypergeometric Distribution
 #'
 #' Makes a distribution belonging to the family of
-#' hypergeometric distributions.
+#' hypergeometric distributions. This distribution represents the
+#' number of red balls drawn from an urn of balls.
 #'
-#' @param N the population size
-#' @param K the number of success states in the population
-#' @param n the number of draws
+#' @param m The number of red balls in the urn.
+#' @param n The number of non-red balls in the urn.
+#' @param k the number of balls drawn from the urn (between 0 and `m + n`).
 #' @returns A Hypergeometric distribution.
 #' @examples
 #' dst_hyper(1, 5, 10)
 #'
 #' @export
-dst_hyper <- function(K, N, n) {
-  if (N < 0){
-    stop('N must be non-negative')
-  }
-  if (K < 0){
-    stop('K must be non-negative')
+dst_hyper <- function(m, n, k) {
+  if (m < 0){
+    stop('m must be non-negative')
   }
   if (n < 0){
     stop('n must be non-negative')
   }
+  if (k < 0 || k > m + n){
+    stop('k must be between 0 and m+n.')
+  }
+  N <- m + n
   distribution(
-    parameters = list(K = K, N = N, n = n),
-    density = \(x) stats::dhyper(x, K = K, N = N, n = n),
-    cdf = \(x) stats::phyper(x, K = K, N = N, n = n),
-    quantile = \(p) stats::qhyper(p, K = K, N = N, n = n),
-    realise = \(n) stats::rhyper(n, K = K, N = N, n = n),
+    parameters = list(m = m, n = n, k = k),
+    pmf = \(x) stats::dhyper(x, m = m, n = n, k = k),
+    cdf = \(x) stats::phyper(x, m = m, n = n, k = k),
+    quantile = \(p) stats::qhyper(p, m = m, n = n, k = k),
+    realise = \(n) stats::rhyper(n, m = m, n = n, k = k),
     survival = \(x) stats::phyper(
-      x, K = K, N = N, n = n, lower.tail = FALSE
+      x, m = m, n = n, k = k, lower.tail = FALSE
     ),
-    mean = (N - K) * K / N,
-    variance = (N - K) * K / N * (N - K) / N * K / (N - 1),
-    skewness = (N - 2 * K) * sqrt(N - 1) * (N - 2 * (N - K)) /
-      (sqrt((N - K) * K * (N - K) * K) * (N - 2)),
+    mean = k * m / N,
+    variance = k * (m / N) * (n / N) * ((N - k) / (N - 1)),
+    skewness = (N - 2 * m) * sqrt(N - 1) * (N - 2 * k) /
+      (sqrt(k * m * n * (N - k)) * (N - 2)),
     kurtosis_exc = (
       (N - 1) * N^2 *
-        (N * (N + 1) - 6 * K * (N - K) - 6 * (N - K) * K) +
-        6 * (N - K) * K * (N - K) * K * (5 * N - 6)
+        (N * (N + 1) - 6 * m * n - 6 * k * (N - k)) +
+        6 * k * m * n * (N - k) * (5 * N - 6)
     ) / (
-      (N - K) * K * (N - K) * K * (N - 2) * (N - 3)
+      k * m * n * (N - k) * (N - 2) * (N - 3)
     ),
-    range = c(0, n),
+    range = c(max(0, k - n), min(m, k)),
     .name = "Hypergeometric",
     .vtype = "discrete"
   )

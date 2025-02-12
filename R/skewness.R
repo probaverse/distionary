@@ -15,6 +15,18 @@ eval_skewness_from_network <- function(distribution) {
   # so look at positive and negative part of the CDF.
   mu <- mean(distribution)
   sigma <- stdev(distribution)
+  if (attr(distribution, "name") %in% c(
+    "Hypergeometric", "Bernoulli", "Binomial"
+  )) {
+    # This case is for double-checking the moments supplied for these
+    # distributions, and will be included until discretes handling is
+    # implemented.
+    r <- range(distribution)
+    x <- seq(r[1], r[2], by = 1L)
+    x3 <- ((x - mu) / sigma)^3
+    p <- eval_pmf(distribution, at = x)
+    return(sum(p * x3))
+  }
   sf <- distribution[["survival"]]
   cdf <- distribution[["cdf"]]
   rng <- range(distribution)

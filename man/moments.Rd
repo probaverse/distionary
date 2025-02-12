@@ -37,8 +37,9 @@ A single numeric.
 }
 \description{
 Get common moment-related quantities of a
-distribution: mean, variance, standard deviation (sd),
-skewness, and kurtosis.
+distribution: mean, variance, standard deviation (stdev),
+skewness, and kurtosis. If these quantities are not supplied in the
+distribution's definition, they will be calculated numerically.
 }
 \details{
 If there is no method associated with a subclass of
@@ -48,6 +49,12 @@ If there is no method associated with a subclass of
 Median is calculated as the 0.5-quantile when not found in the
 distribution. So, when the median is
 non-unique, the smallest of the possibilities is taken.
+}
+\note{
+Beware that if a quantity is being calculated numerically
+for a non-continuous (e.g., discrete) distribution, the calculation
+could be highly approximate. An upcoming version of distionary will
+resolve this issue.
 }
 \examples{
 a <- dst_gpd(1, 0.5)

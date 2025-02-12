@@ -33,6 +33,17 @@ mean.dst <- function(x, ...) {
 }
 
 eval_mean_from_network <- function(distribution, ...) {
+  if (attr(distribution, "name") %in% c(
+    "Hypergeometric", "Bernoulli", "Binomial"
+  )) {
+    # This case is for double-checking the moments supplied for these
+    # distributions, and will be included until discretes handling is
+    # implemented.
+    r <- range(distribution)
+    x <- seq(r[1], r[2], by = 1L)
+    p <- eval_pmf(distribution, at = x)
+    return(sum(p * x))
+  }
   qf <- distribution[["quantile"]]
   if (is.null(qf)) {
     qf <- \(x) eval_quantile_from_network(distribution, x)
