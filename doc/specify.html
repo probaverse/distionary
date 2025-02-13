@@ -12,31 +12,44 @@
 
 
 
-<title>Specify a distribution</title>
+<title>Specify a Distribution</title>
 
-<script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
 
 
 <style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -47,58 +60,57 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
-  { counter-reset: source-line 0; }
+{ counter-reset: source-line 0; }
 pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
+{ position: relative; left: -4em; counter-increment: source-line; }
 pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
 div.sourceCode
-  {   }
+{ }
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
 </style>
 <script>
 // apply pandoc div.sourceCode style to pre.sourceCode instead
@@ -107,13 +119,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -125,7 +144,187 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -137,73 +336,254 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<h1 class="title toc-ignore">Specify a distribution</h1>
+<h1 class="title toc-ignore">Specify a Distribution</h1>
 
 
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(distionary)</span></code></pre></div>
-<p>You’re able to make a wide range of probability distributions using distplyr’s manipulation functions, but you’ll need to start with more standard, basic distributions first. There are typically three use cases for building a basic distribution:</p>
-<ol style="list-style-type: decimal">
-<li>Parametric families</li>
-<li>Empirical distributions</li>
-<li>Manually specified distributions</li>
-</ol>
-<div id="parametric-families" class="section level2">
-<h2>1. Parametric Families</h2>
-<p>These include distributions like Normal, Exponential, Poisson, etc.</p>
-<p>distplyr includes distributions present in base R’s <code>r*</code>/<code>p*</code>/<code>d*</code>/<code>q*</code> selection of distributions. For example, a Normal distribution in base R has associated functions <code>rnorm()</code> etc. In distplyr:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dst_norm</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; norm parametric dst</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  name :</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;norm&quot;</span></span></code></pre></div>
-<p>distplyr also includes other common distributions not present in base R, such as a generalized Pareto distribution:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dst_gpd</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">1</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; gpd parametric dst</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  name :</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] &quot;gpd&quot;</span></span></code></pre></div>
-<p><strong>November 2020</strong>: Until this package gains some stability in its structure, there will be a limited number of these distributions – but there will be plenty available in the not-too-distant future.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(distionary)</span></code></pre></div>
+<div id="built-in-distribution-families" class="section level2">
+<h2>Built-In Distribution Families</h2>
+<p>Here are the distributions and the corresponding
+<code>distionary</code> functions:</p>
+<table>
+<colgroup>
+<col width="39%" />
+<col width="27%" />
+<col width="33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Distribution</th>
+<th><code>distionary</code> Function</th>
+<th>Has counterpart in <code>stats</code></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Bernoulli</td>
+<td><code>dst_bern()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>Beta</td>
+<td><code>dst_beta()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>Binomial</td>
+<td><code>dst_binom()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>Cauchy</td>
+<td><code>dst_cauchy()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>Chi Squared</td>
+<td><code>dst_chisq()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>Degenerate</td>
+<td><code>dst_degenerate()</code></td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>Exponential</td>
+<td><code>dst_exp()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td><code>dst_f()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>Gamma</td>
+<td><code>dst_gamma()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>Geometric</td>
+<td><code>dst_geom()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>Generalised Extreme Value (GEV)</td>
+<td><code>dst_gev()</code></td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>Generalised Pareto (GPD)</td>
+<td><code>dst_gpd()</code></td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>Hypergeometric</td>
+<td><code>dst_hyper()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>Log Normal</td>
+<td><code>dst_lnorm()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>Log Pearson Type III</td>
+<td><code>dst_lp3()</code></td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td>Negative Binomial</td>
+<td><code>dst_nbinom()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>Normal</td>
+<td><code>dst_norm()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>Pearson Type III</td>
+<td><code>dst_pearson3()</code></td>
+<td>No</td>
+</tr>
+<tr class="odd">
+<td>Poisson</td>
+<td><code>dst_pois()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>Student <em>t</em></td>
+<td><code>dst_t()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="odd">
+<td>Uniform</td>
+<td><code>dst_unif()</code></td>
+<td>Yes</td>
+</tr>
+<tr class="even">
+<td>Weibull</td>
+<td><code>dst_weibull()</code></td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>In addition, there is a special “Null” distribution object akin to a
+missing or unknown distribution. This is useful, for example, if an
+algorithm fails to return a distribution: instead of throwing an error,
+a Null distribution can be returned.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Make a Null distribution.</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>null <span class="ot">&lt;-</span> <span class="fu">dst_null</span>()</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Inspect</span></span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>null</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; Null distribution</span></span></code></pre></div>
+<p>A Null distribution always evaluates to NA:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">mean</span>(null)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="fu">eval_pmf</span>(null, <span class="at">at =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt; [1] NA NA NA NA</span></span></code></pre></div>
+<p>Distributions with a counterpart in the <code>stats</code> package
+use the same functions from the package and the same parameterisation.
+For instance, take a look at the source code defining the Normal
+distribution to see that the representations wrap the
+<code>stats::*norm()</code> family of functions.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>dst_norm</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; function (mean, sd) </span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; {</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;     if (sd == 0) {</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;         return(dst_degenerate(mean))</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;     }</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;     if (sd &lt; 0) {</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;         stop(&quot;&#39;sd&#39; parameter must be non-negative.&quot;)</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;     }</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;     distribution(parameters = list(mean = mean, sd = sd), density = function(x) stats::dnorm(x, </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), cdf = function(x) stats::pnorm(x, </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), quantile = function(p) stats::qnorm(p, </span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), realise = function(n) stats::rnorm(n, </span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), survival = function(x) stats::pnorm(x, </span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd, lower.tail = FALSE), mean = mean, </span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt;         median = mean, variance = sd^2, stdev = sd, skewness = 0, </span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = &quot;Normal&quot;, </span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt;         .vtype = &quot;continuous&quot;)</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; }</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x106181e78&gt;</span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
+<p><code>distionary</code> also makes other distribution families
+available that are not found in the <code>stats</code> package.</p>
 </div>
-<div id="empirical-distributions" class="section level2">
-<h2>2. Empirical Distributions</h2>
-<p>Whereas base R only has the <code>ecdf()</code> function to handle empirical distributions, distplyr provides full functionality with <code>dst_empirical()</code>. Empirical distribution of <code>hp</code> values in the <code>mtcars</code> dataset:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>(hp <span class="ot">&lt;-</span> <span class="fu">dst_empirical</span>(hp, <span class="at">data =</span> mtcars))</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; finite dst</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  probabilities :</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 22 × 2</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;    location   size</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  1       52 0.0312</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  2       62 0.0312</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  3       65 0.0312</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  4       66 0.0625</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  5       91 0.0312</span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  6       93 0.0312</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  7       95 0.0312</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  8       97 0.0312</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;  9      105 0.0312</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 10      109 0.0312</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # … with 12 more rows</span></span></code></pre></div>
-<p>The “step” in the name comes from the cdf:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hp, <span class="st">&quot;cdf&quot;</span>, <span class="at">n =</span> <span class="dv">501</span>)</span></code></pre></div>
-<p><img src="data:image/png;base64,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azKluZzPIwA55O7UqVOtU6dOaT/5B279+vU2evRo69ChgzVp0sSOPfZYW7NmTXC64Fv90x911FF2xhlnpMWVjW2vv/66DR061Bo3bmzt2rWzP//5z2nh5NPjzjvvtJ133jktyG+//dZ++tOfprE+/fTTE9dmk57ExTnsPPjgg9a5c2fbbrvtHJdf//rX9vHHH1cIMRtu9957rx188MFWv35923///W3u3LkVwsjHwTvvvGOHH3647bjjji6e7t2729NPP10h6GzKcTbpqRBoDQ6+//57u+GGG6xnz57WsGFD6927t7388stpIWXiVqxykGZYFD18FcXVkMCFF17o+TNoen/6058q/BYsWJAIceTIkV779u29OXPmeP/5z388fzprr0uXLp7/YE5cU6idjRs3ev4DUp8d3rBhw9KiyWSb/9D1/Ie+56/B4PkPAO+ee+7x/IeVd8UVV6SFlQ8P/0Hk1a1b16tXr15acC+99JJLx6hRoyqwnjhxYuLaTOlJXJjDzr/+9S9nx29+8xvv3//+t3fHHXd4e+yxh7fPPvt4mzZtciFnw+25555zab311ls9f5U77+yzz/a23357t5+DeRVu9V80vBYtWnj+Q9/zRcvzH/ye/zLg1a5d23v11VcT12Yqx9mkJxFYDjt///vfvUaNGnnjx4/3lN8nnniiK2++iCVCzYZbMcpBwqCI71jE7S+p+X369PGGDx9epQ0LFy70tt12W+/xxx9PXPPf//7XPUCeeuqphF8hdvQP7r8xezvttJPXtGnTNAHIxrbLLrvM898cPb9KJmGiHv7+G7onccmX86ejdiIjodpzzz0rFYDbbrvN898KqxTObNKTD3v79evntW3btkJQkydPdnmqh5NcNtyUN/6XVYVw/K8K79RTT63gl8uB/zXl7HrllVcSwXz99deO47nnnpvwy1SOs0lPIrAa7nz33Xde8+bNvYsvvjgRgmxt0KCBd+WVVyb8MnErVjlIGBTxHaqAcvhs8wub7bfffi4EvxykheS/9Zv/RmsDBgxInFOVUceOHW369OkJv0Ls+G+m1rJlS/O/RlzVTWoc2dg2a9Ys69+/v/lvponbjz76aFu9erXNnz8/4Zfrjmx8/vnn7bHHHrMRI0ZUOr/7okWLzP9ycudKyVpVTv4baoUk+4Lgjr/66iu3zcRN1UX+i4ANHDiwQjjH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" /><!-- --></p>
-<p>You can also weigh the outcomes differently. This is useful for explicitly specifying a probability mass function, as well as for other applications such as using kernel smoothing to find a conditional distribution. Here is an estimate of the conditional distribution of <code>hp</code> given <code>disp = 150</code>, with cdf depicted as the dashed line compared o the marginal with the solid line:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="cf">function</span>(x) <span class="fu">dnorm</span>(x, <span class="at">sd =</span> <span class="dv">25</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>hp2 <span class="ot">&lt;-</span> <span class="fu">dst_empirical</span>(hp, <span class="at">data =</span> mtcars, <span class="at">weights =</span> <span class="fu">K</span>(disp <span class="sc">-</span> <span class="dv">150</span>))</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hp, <span class="st">&quot;cdf&quot;</span>, <span class="at">n =</span> <span class="dv">1001</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hp2, <span class="st">&quot;cdf&quot;</span>, <span class="at">n =</span> <span class="dv">1001</span>, <span class="at">lty =</span> <span class="dv">2</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
-<p>The weighting provides us with a far more informative prediction of <code>hp</code> when <code>disp = 150</code> compared to the loess, which just gives us the mean:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(hp2)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 109.961</span></span></code></pre></div>
-<p>With a distribution, you can get much more, such as this 90% prediction interval:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">eval_quantile</span>(hp2, <span class="at">at =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.95</span>))</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1]  62 175</span></span></code></pre></div>
-<p>Here’s the proportion of variance that’s reduced compared to the marginal:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span> <span class="sc">-</span> <span class="fu">variance</span>(hp2) <span class="sc">/</span> <span class="fu">variance</span>(hp)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; [1] 0.8031741</span></span></code></pre></div>
+<div id="user-defined-distributions" class="section level2">
+<h2>User-Defined Distributions</h2>
+<p>You can make your own distribution object using the
+<code>distribution()</code> function. Provide it with name-value pairs
+that can be stored with the object. Some names have a special
+interpretation in <code>distionary</code> in that they can be used in
+the calculation of other non-specified properties. These are:</p>
+<ul>
+<li>Any representation <code>*</code> invoked by <code>eval_*()</code>
+(e.g., <code>quantile</code> for <code>eval_quantile()</code>).</li>
+<li>Any property (e.g., <code>mean</code> for <code>mean()</code>)</li>
+</ul>
+<p>See the [Evaluate a Distribution] vignette for more details on these
+evaluation functions.</p>
+<p>For this version of <code>distionary</code>, it is mandatory to
+specify at least <code>cdf</code>. For continuous distributions,
+<code>density</code> is also mandatory, and for discrete,
+<code>pmf</code>.</p>
+<p>Optionally, you can also specify a <code>parameters</code> object,
+which should be a named list of parameters that define the distribution.
+These parameters are never referred to by the distribution for its
+calculations, but are sometimes useful to keep track of for
+analysis.</p>
+<p>Here is an example.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Make a continuous distribution</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>linear <span class="ot">&lt;-</span> <span class="fu">distribution</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">parameters =</span> <span class="fu">list</span>(<span class="at">a =</span> <span class="dv">1</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">density =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>    d <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> x)</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>    d[x <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">|</span> x <span class="sc">&gt;</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>    d</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  },</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="at">cdf =</span> <span class="cf">function</span>(x) {</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="dv">2</span> <span class="sc">*</span> x <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> x <span class="sc">/</span> <span class="dv">2</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>    p[x <span class="sc">&lt;</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a>    p[x <span class="sc">&gt;</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a>    p</span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a>  },</span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a>  <span class="at">g =</span> <span class="fl">9.81</span>,</span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a>  <span class="at">another_representation =</span> <span class="cf">function</span>(x) x<span class="sc">^</span><span class="dv">2</span>,</span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a>  <span class="at">.vtype =</span> <span class="st">&quot;continuous&quot;</span>,</span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a>  <span class="at">.name =</span> <span class="st">&quot;My Linear&quot;</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a>)</span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co"># Inspect</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a>linear</span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; My Linear distribution (continuous)</span></span>
+<span id="cb5-23"><a href="#cb5-23" tabindex="-1"></a><span class="co">#&gt; --Parameters--</span></span>
+<span id="cb5-24"><a href="#cb5-24" tabindex="-1"></a><span class="co">#&gt; a </span></span>
+<span id="cb5-25"><a href="#cb5-25" tabindex="-1"></a><span class="co">#&gt; 1</span></span></code></pre></div>
+<p>The usual evaluation framework can now be accessed. For example, the
+CDF and mean can be evaluated, even though the mean has not been
+specified.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">eval_cdf</span>(linear, <span class="at">at =</span> <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>))</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.36 0.75 0.91</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">mean</span>(linear)</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.3333333</span></span></code></pre></div>
+<p>These quantities can be invoked by the more general function
+<code>eval_representation()</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">eval_representation</span>(linear, <span class="st">&quot;cdf&quot;</span>, <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>))</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.36 0.75 0.91</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">eval_representation</span>(linear, <span class="st">&quot;mean&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.3333333</span></span></code></pre></div>
+<p><code>eval_representaton()</code> is a useful function for accessing
+quantities that are not built-in to <code>distionary</code>, like
+<code>g</code> and <code>another_representation</code> in this
+example.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">eval_representation</span>(linear, <span class="st">&quot;another_representation&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; [1]  1  4  9 16</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">eval_representation</span>(linear, <span class="st">&quot;g&quot;</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; [1] 9.81</span></span></code></pre></div>
 </div>
 
 

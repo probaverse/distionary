@@ -1,5 +1,5 @@
 ---
-title: "Specify a distribution"
+title: "Specify a Distribution"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Specify a distribution}
@@ -18,152 +18,121 @@ knitr::opts_chunk$set(
 library(distionary)
 ```
 
-You're able to make a wide range of probability distributions using distplyr's manipulation functions, but you'll need to start with more standard, basic distributions first. There are typically three use cases for building a basic distribution:
 
-1. Parametric families
-2. Empirical distributions
-3. Manually specified distributions
+## Built-In Distribution Families
 
-## 1\. Parametric Families
+Here are the distributions and the corresponding `distionary` functions:  
 
-These include distributions like Normal, Exponential, Poisson, etc.
+| Distribution                     | `distionary` Function  |  Has counterpart in `stats` |
+|----------------------------------|------------------------|-----------------------------|
+| Bernoulli | `dst_bern()` | Yes |
+| Beta | `dst_beta()` | Yes |
+| Binomial | `dst_binom()` | Yes |
+| Cauchy | `dst_cauchy()` | Yes |
+| Chi Squared | `dst_chisq()` | Yes |
+| Degenerate | `dst_degenerate()` | No |
+| Exponential | `dst_exp()` | Yes |
+| F | `dst_f()` | Yes |
+| Gamma | `dst_gamma()` | Yes |
+| Geometric | `dst_geom()` | Yes |
+| Generalised Extreme Value (GEV) | `dst_gev()` | No |
+| Generalised Pareto (GPD) | `dst_gpd()` | No |
+| Hypergeometric | `dst_hyper()` | Yes |
+| Log Normal | `dst_lnorm()` | Yes |
+| Log Pearson Type III | `dst_lp3()` | No |
+| Negative Binomial | `dst_nbinom()` | Yes |
+| Normal | `dst_norm()` | Yes |
+| Pearson Type III | `dst_pearson3()` | No |
+| Poisson | `dst_pois()` | Yes |
+| Student _t_ | `dst_t()` | Yes |
+| Uniform | `dst_unif()` | Yes |
+| Weibull | `dst_weibull()` | Yes |
 
-distplyr includes distributions present in base R's `r*`/`p*`/`d*`/`q*` selection of distributions. For example, a Normal distribution in base R has associated functions `rnorm()` etc. In distplyr:
-
-```{r}
-dst_norm(0, 1)
-```
-
-distplyr also includes other common distributions not present in base R, such as a generalized Pareto distribution:
-
-```{r}
-dst_gpd(1, 1)
-```
-
-**November 2020**: Until this package gains some stability in its structure, there will be a limited number of these distributions -- but there will be plenty available in the not-too-distant future. 
-
-
-One purpose of `distplyr` is to handle the menial distribution-related calculations for you. Just specify a distribution once, and there is no need to manage its components anymore. 
-
-**Example**: want to compute the variance of a Uniform(-1, 1) distribution, get the 0.25- and 0.75-quantiles, and generate a sample of size 10? 
-
-Without `distplyr`:
-
-```{r}
-a <- -1
-b <- 1
-# Look up formula for variance:
-(b - a) ^ 2 / 12
-# Get quantiles:
-qunif(c(0.25, 0.75), min = a, max = b)
-# Get sample of size 10:
-runif(10, min = a, max = b)
-```
-
-With `distplyr`:
+In addition, there is a special "Null" distribution object akin to a missing or unknown distribution. This is useful, for example, if an algorithm fails to return a distribution: instead of throwing an error, a Null distribution can be returned.
 
 ```{r}
-d <- dst_unif(-1, 1)
-variance(d)
-eval_quantile(d, at = c(0.25, 0.75))
-realise(d, 10)
+# Make a Null distribution.
+null <- dst_null()
+# Inspect
+null
 ```
 
-
-## Functional Representations of a Distribution
-
-A distribution can be represented by different functions, such as a density function, a cumulative distribution function, and others. In `distplyr`, you can: 
-
-- evaluate the function directly by calling `eval_*`;
-- evaluate the function and enframe results together with the function arguments with `enframe_*`; or 
-- get the function itself using `get_*`. 
-
-Here are the representations and the corresponding `distplyr` functions:  
-
-| Quantity                         | `distplyr` Functions              |
-|----------------------------------|-----------------------------------|
-| Cumulative Distribution Function | `eval_cdf()`,      `get_cdf()`,      `enframe_cdf()`      |
-| Survival Function                | `eval_survival()`, `get_survival()`, `enframe_survival()` |
-| Quantile Function                | `eval_quantile()`, `get_quantile()`, `enframe_quantile()` |
-| Hazard Function                  | `eval_hazard()`,   `get_hazard()`,   `enframe_hazard()`   |
-| Cumulative Hazard Function       | `eval_chf()`,      `get_chf()`,      `enframe_chf()`      |
-| Probability density function     | `eval_density()`,  `get_density()`,  `enframe_density()`  |
-| Probability mass function        | `eval_pmf()`,      `get_pmf()`,      `enframe_pmf()`      |
-
-These functions all take a distribution object as their first argument, and `eval_*` and `enframe_*` have a second argument named `at` indicating where to evaluate the function. The `at` argument is vectorized.
-
-
-
-Here is an example of evaluating the hazard function and the random sample generator of a Uniform(-1,1) distribution, and enframing the density:
+A Null distribution always evaluates to NA:
 
 ```{r}
-eval_hazard(d, at = 0:10)
-enframe_density(d, at = 0:10)
-set.seed(10)
+mean(null)
+eval_pmf(null, at = 1:4)
 ```
 
-`enframe()` works particularly well with tibbles and `tidyr::unnest()`:
+Distributions with a counterpart in the `stats` package use the same functions from the package and the same parameterisation. For instance, take a look at the source code defining the Normal distribution to see that the representations wrap the `stats::*norm()` family of functions.
 
 ```{r}
-# half_marathon <- tribble(
-# 	~ person, ~ race_time_min,
-# 	"Vincenzo", dst_norm(130, 25),
-# 	"Colleen", dst_norm(110, 13),
-# 	"Regina", dst_norm(115, 20)
-# ) 
-# half_marathon %>% 
-# 	mutate(quartiles = map(race_time_min, enframe_quantile, at = 1:3 / 4)) %>% 
-# 	unnest(quartiles)
+dst_norm
 ```
 
+`distionary` also makes other distribution families available that are not found in the `stats` package.
 
-## Drawing a random sample
+## User-Defined Distributions
 
-To draw a random sample from a distribution, use the `realise()` or `realize()` function:
+You can make your own distribution object using the `distribution()` function. Provide it with name-value pairs that can be stored with the object. Some names have a special interpretation in `distionary` in that they can be used in the calculation of other non-specified properties. These are:
+
+- Any representation `*` invoked by `eval_*()` (e.g., `quantile` for `eval_quantile()`).
+- Any property (e.g., `mean` for `mean()`)
+
+See the [Evaluate a Distribution] vignette for more details on these evaluation functions.
+
+For this version of `distionary`, it is mandatory to specify at least `cdf`. For continuous distributions, `density` is also mandatory, and for discrete, `pmf`.
+
+Optionally, you can also specify a `parameters` object, which should be a named list of parameters that define the distribution. These parameters are never referred to by the distribution for its calculations, but are sometimes useful to keep track of for analysis.
+
+Here is an example.
 
 ```{r}
-realise(d, n = 5)
+# Make a continuous distribution
+linear <- distribution(
+  parameters = list(a = 1),
+  density = function(x) {
+    d <- 2 * (1 - x)
+    d[x < 0 | x > 1] <- 0
+    d
+  },
+  cdf = function(x) {
+    p <- 2 * x * (1 - x / 2)
+    p[x < 0] <- 0
+    p[x > 1] <- 1
+    p
+  },
+  g = 9.81,
+  another_representation = function(x) x^2,
+  .vtype = "continuous",
+  .name = "My Linear"
+)
+# Inspect
+linear
 ```
 
-You can read this call as "realise distribution `d` five times". By default, `n` is set to 1, so that realizing a distribution converts it to a numeric draw:
+The usual evaluation framework can now be accessed. For example, the CDF and mean can be evaluated, even though the mean has not been specified.
 
 ```{r}
-realise(d)
+eval_cdf(linear, at = c(0.2, 0.5, 0.7))
+mean(linear)
 ```
 
-This default is especially useful when working with distributions in a tibble:
+These quantities can be invoked by the more general function `eval_representation()`.
 
 ```{r}
-# half_marathon %>% 
-# 	mutate(actual_time_min = map_dbl(race_time_min, realise))
+eval_representation(linear, "cdf", c(0.2, 0.5, 0.7))
+eval_representation(linear, "mean")
 ```
 
-Perhaps surprisingly, distplyr does not consider `realise()` as a functional representation of a distribution, even though random sampling falls into the same family as the `stats::p*/d*/q*/r*` functions. This is because it's impossible to perfectly describe a distribution based on a sample. 
-
-
-## Properties of Distributions
-
-Distributions have various numeric properties. Common examples are the mean and variance, but there are many others as well. 
-
-Below is a table of the properties incorporated in `distplyr`:
-
-| Property | `distplyr` Function |
-|----------|---------------------|
-| Mean                       | `mean()` |
-| Median                     | `median()` |
-| Variance                   | `variance()` |
-| Standard Deviation         | `sd()` |
-| Skewness                   | `skewness()` |
-| Excess Kurtosis            | `kurtosis_exc()` |
-| Kurtosis                   | `kurtosis_raw()` |
-| Extreme Value (Tail) Index | `evi()` |
-
-Here are some properties of our original Uniform(-1, 1) distribution:
+`eval_representaton()` is a useful function for accessing quantities that are not built-in to `distionary`, like `g` and `another_representation` in this example.
 
 ```{r}
-mean(d)
-stdev(d)
+eval_representation(linear, "another_representation", 1:4)
+eval_representation(linear, "g")
 ```
+
+
 
 
 

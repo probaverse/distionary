@@ -1,5 +1,5 @@
 ---
-title: "Specify a distribution"
+title: "Specify a Distribution"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Specify a distribution}
@@ -18,68 +18,122 @@ knitr::opts_chunk$set(
 library(distionary)
 ```
 
-You're able to make a wide range of probability distributions using distplyr's manipulation functions, but you'll need to start with more standard, basic distributions first. There are typically three use cases for building a basic distribution:
 
-1. Parametric families
-2. Empirical distributions
-3. Manually specified distributions
+## Built-In Distribution Families
 
-## 1\. Parametric Families
+Here are the distributions and the corresponding `distionary` functions:  
 
-These include distributions like Normal, Exponential, Poisson, etc.
+| Distribution                     | `distionary` Function  |  Has counterpart in `stats` |
+|----------------------------------|------------------------|-----------------------------|
+| Bernoulli | `dst_bern()` | Yes |
+| Beta | `dst_beta()` | Yes |
+| Binomial | `dst_binom()` | Yes |
+| Cauchy | `dst_cauchy()` | Yes |
+| Chi Squared | `dst_chisq()` | Yes |
+| Degenerate | `dst_degenerate()` | No |
+| Exponential | `dst_exp()` | Yes |
+| F | `dst_f()` | Yes |
+| Gamma | `dst_gamma()` | Yes |
+| Geometric | `dst_geom()` | Yes |
+| Generalised Extreme Value (GEV) | `dst_gev()` | No |
+| Generalised Pareto (GPD) | `dst_gpd()` | No |
+| Hypergeometric | `dst_hyper()` | Yes |
+| Log Normal | `dst_lnorm()` | Yes |
+| Log Pearson Type III | `dst_lp3()` | No |
+| Negative Binomial | `dst_nbinom()` | Yes |
+| Normal | `dst_norm()` | Yes |
+| Pearson Type III | `dst_pearson3()` | No |
+| Poisson | `dst_pois()` | Yes |
+| Student _t_ | `dst_t()` | Yes |
+| Uniform | `dst_unif()` | Yes |
+| Weibull | `dst_weibull()` | Yes |
 
-distplyr includes distributions present in base R's `r*`/`p*`/`d*`/`q*` selection of distributions. For example, a Normal distribution in base R has associated functions `rnorm()` etc. In distplyr:
-
-```{r}
-dst_norm(0, 1)
-```
-
-distplyr also includes other common distributions not present in base R, such as a generalized Pareto distribution:
-
-```{r}
-dst_gpd(0, 1, 1)
-```
-
-**November 2020**: Until this package gains some stability in its structure, there will be a limited number of these distributions -- but there will be plenty available in the not-too-distant future. 
-
-## 2\. Empirical Distributions
-
-Whereas base R only has the `ecdf()` function to handle empirical distributions, distplyr provides full functionality with `dst_empirical()`. Empirical distribution of `hp` values in the `mtcars` dataset:
-
-```{r}
-(hp <- dst_empirical(hp, data = mtcars))
-```
-
-The "step" in the name comes from the cdf:
-
-```{r, fig.width = 4, fig.height = 3}
-plot(hp, "cdf", n = 501)
-```
-
-You can also weigh the outcomes differently. This is useful for explicitly specifying a probability mass function, as well as for other applications such as using kernel smoothing to find a conditional distribution. Here is an estimate of the conditional distribution of `hp` given `disp = 150`, with cdf depicted as the dashed line compared o the marginal with the solid line:
+In addition, there is a special "Null" distribution object akin to a missing or unknown distribution. This is useful, for example, if an algorithm fails to return a distribution: instead of throwing an error, a Null distribution can be returned.
 
 ```{r}
-K <- function(x) dnorm(x, sd = 25)
-hp2 <- dst_empirical(hp, data = mtcars, weights = K(disp - 150))
-plot(hp, "cdf", n = 1001)
-plot(hp2, "cdf", n = 1001, lty = 2, add = TRUE)
+# Make a Null distribution.
+null <- dst_null()
+# Inspect
+null
 ```
 
-The weighting provides us with a far more informative prediction of `hp` when `disp = 150` compared to the loess, which just gives us the mean:
+A Null distribution always evaluates to NA:
 
 ```{r}
-mean(hp2)
+mean(null)
+eval_pmf(null, at = 1:4)
 ```
 
-With a distribution, you can get much more, such as this 90% prediction interval:
+Distributions with a counterpart in the `stats` package use the same functions from the package and the same parameterisation. For instance, take a look at the source code defining the Normal distribution to see that the representations wrap the `stats::*norm()` family of functions.
 
 ```{r}
-eval_quantile(hp2, at = c(0.05, 0.95))
+dst_norm
 ```
 
-Here's the proportion of variance that's reduced compared to the marginal:
+`distionary` also makes other distribution families available that are not found in the `stats` package.
+
+## User-Defined Distributions
+
+You can make your own distribution object using the `distribution()` function. Provide it with name-value pairs that can be stored with the object. Some names have a special interpretation in `distionary` in that they can be used in the calculation of other non-specified properties. These are:
+
+- Any representation `*` invoked by `eval_*()` (e.g., `quantile` for `eval_quantile()`).
+- Any property (e.g., `mean` for `mean()`)
+
+See the [Evaluate a Distribution] vignette for more details on these evaluation functions.
+
+For this version of `distionary`, it is mandatory to specify at least `cdf`. For continuous distributions, `density` is also mandatory, and for discrete, `pmf`.
+
+Optionally, you can also specify a `parameters` object, which should be a named list of parameters that define the distribution. These parameters are never referred to by the distribution for its calculations, but are sometimes useful to keep track of for analysis.
+
+Here is an example.
 
 ```{r}
-1 - variance(hp2) / variance(hp)
+# Make a continuous distribution
+linear <- distribution(
+  parameters = list(a = 1),
+  density = function(x) {
+    d <- 2 * (1 - x)
+    d[x < 0 | x > 1] <- 0
+    d
+  },
+  cdf = function(x) {
+    p <- 2 * x * (1 - x / 2)
+    p[x < 0] <- 0
+    p[x > 1] <- 1
+    p
+  },
+  g = 9.81,
+  another_representation = function(x) x^2,
+  .vtype = "continuous",
+  .name = "My Linear"
+)
+# Inspect
+linear
 ```
+
+The usual evaluation framework can now be accessed. For example, the CDF and mean can be evaluated, even though the mean has not been specified.
+
+```{r}
+eval_cdf(linear, at = c(0.2, 0.5, 0.7))
+mean(linear)
+```
+
+These quantities can be invoked by the more general function `eval_representation()`.
+
+```{r}
+eval_representation(linear, "cdf", c(0.2, 0.5, 0.7))
+eval_representation(linear, "mean")
+```
+
+`eval_representaton()` is a useful function for accessing quantities that are not built-in to `distionary`, like `g` and `another_representation` in this example.
+
+```{r}
+eval_representation(linear, "another_representation", 1:4)
+eval_representation(linear, "g")
+```
+
+
+
+
+
 

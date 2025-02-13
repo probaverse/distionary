@@ -16,13 +16,13 @@ coverage](https://codecov.io/gh/probaverse/distionary/graph/badge.svg)](https://
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
-distionary:
+With `distionary`, you can:
 
-1.  Makes standard probability distributions available, like Normal,
-    Poisson, and empirical distributions.
-2.  Provides a framework for you to construct your own distributions.
-3.  Evaluates probability distributions, even when not explicitly
-    defined in the distribution object.
+1.  Specify a probability distribution, and
+2.  Evaluate the probability distribution.
+
+The main purpose of `distionary` is to make distribution calculations
+available, even if they are not specified in the distribution.
 
 ## Installation
 
@@ -40,9 +40,9 @@ devtools::install_github("vincenzocoia/distionary")
 library(distionary)
 ```
 
-You can make distributions from standard families found in the `stats`
-package, like the Poisson distribution, along with a few others, like
-the Generalised Extreme Value (GEV) distribution.
+**Specify** a distribution like a Poisson distribution and a Generalised
+Extreme Value (GEV) distribution using the `dst_*()` family of
+functions.
 
 ``` r
 # Create a Poisson distribution
@@ -66,42 +66,40 @@ gev
 #>     -1.0      1.0      0.2
 ```
 
-Distributional representations can be viewed using the `plot()`
-function. Here is the GEV density function, for example.
+Here is what the distributions look like, via their probability mass
+(PMF) and density functions.
+
+``` r
+plot(poisson)
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
 
 ``` r
 plot(gev)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-2.png" width="100%" />
 
-Evaluate various distributional representations, such as the density or
-quantiles:
-
-``` r
-eval_density(gev, at = -4:4)
-#> [1] 9.463887e-41 5.572239e-05 1.803427e-01 3.678794e-01 2.240677e-01
-#> [6] 1.102761e-01 5.418294e-02 2.788568e-02 1.514427e-02
-eval_quantile(poisson, at = c(0.2, 0.5, 0.9))
-#> [1] 0 1 3
-```
-
-Or, we can enframe the results in a tibble, keeping the input alongside
-the output.
+**Evaluate** various distributional representations (functions that
+fully describe the distribution), such as the PMF or quantiles. The
+`eval_*()` functions simply evaluate the representation, whereas the
+`enframe_*()` functions place the output alongside the input in a data
+frame or tibble.
 
 ``` r
-enframe_pmf(poisson, at = 0:4)
-#> # A tibble: 5 × 2
-#>    .arg    pmf
-#>   <int>  <dbl>
-#> 1     0 0.223 
-#> 2     1 0.335 
-#> 3     2 0.251 
-#> 4     3 0.126 
-#> 5     4 0.0471
+eval_pmf(poisson, at = 0:4)
+#> [1] 0.22313016 0.33469524 0.25102143 0.12551072 0.04706652
+enframe_quantile(gev, at = c(0.2, 0.5, 0.9))
+#> # A tibble: 3 × 2
+#>    .arg quantile
+#>   <dbl>    <dbl>
+#> 1   0.2   -1.45 
+#> 2   0.5   -0.620
+#> 3   0.9    1.84
 ```
 
-Evaluate properties of the distributions.
+Evaluate properties such as mean, skewness, and range of valid values.
 
 ``` r
 mean(gev)
@@ -136,20 +134,20 @@ linear
 #> My Linear distribution (continuous)
 ```
 
+Here is what it looks like (density function).
+
+``` r
+plot(linear)
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+
 Even though only the density and CDF are defining the distribution,
-other properties can be evaluated, like its mean and variance.
+other properties can be evaluated, like its mean and quantiles
 
 ``` r
 mean(linear)
 #> [1] 0.3333333
-variance(linear)
-#> [1] 0.05555556
-```
-
-Even other representations can be evaluated, such as quantiles or the
-hazard function.
-
-``` r
 enframe_quantile(linear, at = c(0.2, 0.5, 0.9))
 #> # A tibble: 3 × 2
 #>    .arg quantile
@@ -157,9 +155,14 @@ enframe_quantile(linear, at = c(0.2, 0.5, 0.9))
 #> 1   0.2    0.106
 #> 2   0.5    0.293
 #> 3   0.9    0.684
-eval_hazard(linear, at = c(0.1, 0.2, 0.3))
-#> [1] 2.222222 2.500000 2.857143
 ```
+
+## Acknowledgements
+
+The creation of `distionary` would not have been possible without the
+support of the R Consortium, The Natural Science and Engineering
+Research Council of Canada (NSERC), The University of British Columbia,
+and BGC Engineering Inc.
 
 ## Code of Conduct
 

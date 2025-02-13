@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -8,29 +8,50 @@ knitr::opts_chunk$set(
 library(distionary)
 
 ## -----------------------------------------------------------------------------
-dst_norm(0, 1)
+# Make a Null distribution.
+null <- dst_null()
+# Inspect
+null
 
 ## -----------------------------------------------------------------------------
-dst_gpd(0, 1, 1)
+mean(null)
+eval_pmf(null, at = 1:4)
 
 ## -----------------------------------------------------------------------------
-(hp <- dst_empirical(hp, data = mtcars))
-
-## ---- fig.width = 4, fig.height = 3-------------------------------------------
-plot(hp, "cdf", n = 501)
+dst_norm
 
 ## -----------------------------------------------------------------------------
-K <- function(x) dnorm(x, sd = 25)
-hp2 <- dst_empirical(hp, data = mtcars, weights = K(disp - 150))
-plot(hp, "cdf", n = 1001)
-plot(hp2, "cdf", n = 1001, lty = 2, add = TRUE)
+# Make a continuous distribution
+linear <- distribution(
+  parameters = list(a = 1),
+  density = function(x) {
+    d <- 2 * (1 - x)
+    d[x < 0 | x > 1] <- 0
+    d
+  },
+  cdf = function(x) {
+    p <- 2 * x * (1 - x / 2)
+    p[x < 0] <- 0
+    p[x > 1] <- 1
+    p
+  },
+  g = 9.81,
+  another_representation = function(x) x^2,
+  .vtype = "continuous",
+  .name = "My Linear"
+)
+# Inspect
+linear
 
 ## -----------------------------------------------------------------------------
-mean(hp2)
+eval_cdf(linear, at = c(0.2, 0.5, 0.7))
+mean(linear)
 
 ## -----------------------------------------------------------------------------
-eval_quantile(hp2, at = c(0.05, 0.95))
+eval_representation(linear, "cdf", c(0.2, 0.5, 0.7))
+eval_representation(linear, "mean")
 
 ## -----------------------------------------------------------------------------
-1 - variance(hp2) / variance(hp)
+eval_representation(linear, "another_representation", 1:4)
+eval_representation(linear, "g")
 

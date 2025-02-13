@@ -23,11 +23,12 @@ knitr::opts_chunk$set(
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
-distionary:
+With `distionary`, you can:
 
-1. Makes standard probability distributions available, like Normal, Poisson, and empirical distributions.
-2. Provides a framework for you to construct your own distributions.
-3. Evaluates probability distributions, even when not explicitly defined in the distribution object.
+1. Specify a probability distribution, and
+2. Evaluate the probability distribution.
+
+The main purpose of `distionary` is to make distribution calculations available, even if they are not specified in the distribution.
 
 ## Installation
 
@@ -44,7 +45,7 @@ devtools::install_github("vincenzocoia/distionary")
 library(distionary)
 ```
 
-You can make distributions from standard families found in the `stats` package, like the Poisson distribution, along with a few others, like the Generalised Extreme Value (GEV) distribution.
+**Specify** a distribution like a Poisson distribution and a Generalised Extreme Value (GEV) distribution using the `dst_*()` family of functions.
 
 ```{r}
 # Create a Poisson distribution
@@ -60,26 +61,21 @@ gev <- dst_gev(-1, 1, 0.2)
 gev
 ```
 
-Distributional representations can be viewed using the `plot()` function. Here is the GEV density function, for example.
+Here is what the distributions look like, via their probability mass (PMF) and density functions.
 
 ```{r}
+plot(poisson)
 plot(gev)
 ```
 
-Evaluate various distributional representations, such as the density or quantiles:
+**Evaluate** various distributional representations (functions that fully describe the distribution), such as the PMF or quantiles. The `eval_*()` functions simply evaluate the representation, whereas the `enframe_*()` functions place the output alongside the input in a data frame or tibble.
 
 ```{r}
-eval_density(gev, at = -4:4)
-eval_quantile(poisson, at = c(0.2, 0.5, 0.9))
+eval_pmf(poisson, at = 0:4)
+enframe_quantile(gev, at = c(0.2, 0.5, 0.9))
 ```
 
-Or, we can enframe the results in a tibble, keeping the input alongside the output.
-
-```{r}
-enframe_pmf(poisson, at = 0:4)
-```
-
-Evaluate properties of the distributions.
+Evaluate properties such as mean, skewness, and range of valid values.
 
 ```{r}
 mean(gev)
@@ -110,20 +106,23 @@ linear <- distribution(
 linear
 ```
 
-Even though only the density and CDF are defining the distribution, other properties can be evaluated, like its mean and variance.
+Here is what it looks like (density function).
+
+```{r}
+plot(linear)
+```
+
+Even though only the density and CDF are defining the distribution, other properties can be evaluated, like its mean and quantiles
 
 ```{r}
 mean(linear)
-variance(linear)
-```
-
-Even other representations can be evaluated, such as quantiles or the hazard function.
-
-```{r}
 enframe_quantile(linear, at = c(0.2, 0.5, 0.9))
-eval_hazard(linear, at = c(0.1, 0.2, 0.3))
 ```
 
+
+## Acknowledgements
+
+The creation of `distionary` would not have been possible without the support of the R Consortium, The Natural Science and Engineering Research Council of Canada (NSERC), The University of British Columbia, and BGC Engineering Inc.
 
 ## Code of Conduct
 
