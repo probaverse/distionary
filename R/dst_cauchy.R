@@ -1,14 +1,16 @@
 #' Cauchy Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' cauchy distributions.
+#' Makes a Cauchy distribution.
 #'
 #' @param location Location parameter
 #' @param scale positive
-#'
+#' @returns A Cauchy distribution.
 #' @examples
-#' dst_cauchy(0, 1)
+#' d <- dst_cauchy(0, 1)
 #'
+#' # Moments do not exist for the Cauchy distribution.
+#' mean(d)
+#' variance(d)
 #'@export
 dst_cauchy <- function(location, scale){
   if (scale <= 0){

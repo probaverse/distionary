@@ -1,8 +1,8 @@
 #' Hypergeometric Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' hypergeometric distributions. This distribution represents the
-#' number of red balls drawn from an urn of balls.
+#' Creates a Hypergeometric distribution, representing the
+#' number of red balls drawn from an urn containing multiple colours,
+#' using a scoop that holds a fixed number of balls.
 #'
 #' @param m The number of red balls in the urn.
 #' @param n The number of non-red balls in the urn.

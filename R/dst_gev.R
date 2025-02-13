@@ -1,13 +1,28 @@
-#' Generalized Extreme Value Distribution
+#' Generalised Extreme Value Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' Generalized Extreme Value (GEV) distributions.
+#' Makes a Generalised Extreme Value (GEV) distribution, which is the
+#' limiting distribution of the maximum.
 #'
 #' @param location Location parameter; numeric.
 #' @param scale Scale parameter; positive numeric.
-#' @param shape Shape parameter; numeric.
+#' @param shape Shape parameter; numeric. Also the extreme value index,
+#' so that `shape > 0` is heavy tailed, and `shape < 0` is short-tailed.
+#' @returns A GEV distribution.
 #' @examples
-#' dst_gev(0, 1, 1)
+#' # Short-tailed example
+#' short <- dst_gev(0, 1, -1)
+#' range(short)
+#' mean(short)
+#'
+#' # Heavy-tailed example
+#' heavy <- dst_gev(0, 1, 1)
+#' range(heavy)
+#' mean(heavy)
+#'
+#' # Light-tailed example (a Gumbel distribution)
+#' light <- dst_gev(0, 1, 0)
+#' range(light)
+#' mean(light)
 #' @export
 dst_gev <- function(location, scale, shape) {
   if (scale <= 0) {

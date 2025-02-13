@@ -1,11 +1,11 @@
 #' Binomial Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' binomial distributions.
+#' Makes a Binomial distribution, representing the number of successes
+#' in a fixed number of independent trials.
 #'
 #' @param size Number of trials.
-#' @param prob Success probability for each trial.
-#'
+#' @param prob Success probability of each trial.
+#' @returns A binomial distribution.
 #' @examples
 #' dst_binom(10, 0.6)
 #' @export

@@ -1,9 +1,9 @@
 #' Uniform Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' Uniform distributions.
+#' Makes a Uniform distribution.
 #'
 #' @param min,max Minimum and maximum of the distribution.
+#' @returns A Uniform distribution.
 #' @examples
 #' dst_unif(0, 1)
 #' @export

@@ -1,10 +1,9 @@
-#' Chi-squared Distribution
+#' Chi-Squared Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' Chi-squared distributions.
+#' Makes a Chi-Squared distribution.
 #'
-#' @param df degrees of freedom
-#'
+#' @param df degrees of freedom parameter.
+#' @returns A Chi-Squared distribution
 #' @examples
 #' dst_chisq(3)
 #'
@@ -26,7 +25,7 @@ dst_chisq <- function(df) {
     skewness = sqrt(8 / df),
     kurtosis_exc = 12 / df,
     range = c(0, Inf),
-    .name = "Chi Squared",
+    .name = "Chi-Squared",
     .vtype = "continuous"
   )
 }

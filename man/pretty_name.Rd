@@ -2,7 +2,7 @@
 % Please edit documentation in R/pretty_name.R
 \name{pretty_name}
 \alias{pretty_name}
-\title{Print the name of a distribution, possibly with parameters}
+\title{Distribution name}
 \usage{
 pretty_name(distribution, param_digits = 0)
 }
@@ -17,5 +17,11 @@ A character containing the distribution's name, possibly
 followed by parameters in brackets.
 }
 \description{
-Print the name of a distribution, possibly with parameters
+Print the name of a distribution, possibly with parameters.
+}
+\examples{
+d <- dst_norm(0.3552, 1.1453)
+pretty_name(d)
+pretty_name(d, 2)
+
 }

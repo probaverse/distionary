@@ -1,9 +1,8 @@
 #' Beta Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' beta distributions.
-#' @param shape1,shape2 Parameters, greater than 0. Also known as alpha
-#' and beta.
+#' Makes a Beta distribution.
+#' @param shape1,shape2 Non-negative parameters of the distribution.
+#' @returns A beta distribution.
 #' @examples
 #' dst_beta(2, 3)
 #' @export

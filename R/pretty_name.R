@@ -1,10 +1,17 @@
-#' Print the name of a distribution, possibly with parameters
+#' Distribution name
+#'
+#' Print the name of a distribution, possibly with parameters.
 #'
 #' @param distribution Distribution object.
 #' @param param_digits How many significant digits to include when displaying
 #' the parameters? `0` if you don't want to display parameters.
-#' @return A character containing the distribution's name, possibly
+#' @returns A character containing the distribution's name, possibly
 #' followed by parameters in brackets.
+#' @examples
+#' d <- dst_norm(0.3552, 1.1453)
+#' pretty_name(d)
+#' pretty_name(d, 2)
+#'
 #' @export
 pretty_name <- function(distribution, param_digits = 0) {
   name <- attributes(distribution)$name

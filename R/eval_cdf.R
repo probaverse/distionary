@@ -12,7 +12,7 @@
 #' appear in the column(s).
 #' @param sep When `enframe`'ing more than one distribution, the
 #' character that will be separating the `fn_name` and the distribution name.
-#' @return The evaluated cdf in vector form (for `eval_`) and data frame
+#' @returns The evaluated cdf in vector form (for `eval_`) and data frame
 #' or tibble form (for `enframe_`).
 #' @family distributional representations
 #' @examples

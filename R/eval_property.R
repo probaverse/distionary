@@ -1,7 +1,7 @@
 #' Evaluate a distribution
 #'
-#' Evaluate a distributional. The distribution itself
-#' is first searched for the property, and if can't
+#' Evaluate a distribution property. The distribution itself
+#' is first searched for the property, and if it can't
 #' be found, will attempt to calculate the property
 #' from other entries.
 #'
@@ -9,7 +9,8 @@
 #' @param entry Name of the property, such as "cdf" or
 #' "mean".
 #' @param ... If the property is a function, arguments to the
-#' function go here. Need not be named.
+#' function go here. Need not be named; inserted in the order they
+#' appear.
 #' @returns The distribution's property, evaluated. If cannot be
 #' evaluated, returns `NULL`.
 #' @examples

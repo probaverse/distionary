@@ -1,11 +1,10 @@
 #' F Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' F distributions.
+#' Makes an F distribution.
 #'
-#' @param df1 degree of freedom, positive.
-#' @param df2 degree of freedom, positive.
-#'
+#' @param df1,df2 Degrees of freedom of the numerator and denominator,
+#' both positive.
+#' @returns An F distribution.
 #' @examples
 #' dst_f(2, 3)
 #' @export

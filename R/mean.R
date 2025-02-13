@@ -1,9 +1,10 @@
 #' Moments of a Distribution
 #'
 #' Get common moment-related quantities of a
-#' distribution: mean, variance, standard deviation (stdev),
-#' skewness, and kurtosis. If these quantities are not supplied in the
-#' distribution's definition, they will be calculated numerically.
+#' distribution: `mean`, `variance`, standard deviation (`stdev`),
+#' `skewness`, and `kurtosis` or excess kurtosis (`kurtosis_exc`).
+#' If these quantities are not supplied in the
+#' distribution's definition, a numerical algorithm may be used.
 #'
 #' @param x Distribution to evaluate.
 #' @param ... When calculating the mean via integration of the quantile
@@ -16,7 +17,7 @@
 #' \code{x}, then moments are calculated using
 #' \code{stats::integrate()} from the quantile function.
 #'
-#' @return A single numeric.
+#' @returns A single numeric.
 #' @examples
 #' a <- dst_gpd(1, 0.5)
 #' b <- dst_unif(0, 1)

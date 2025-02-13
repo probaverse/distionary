@@ -2,7 +2,7 @@
 % Please edit documentation in R/new_distribution.R
 \name{new_distribution}
 \alias{new_distribution}
-\title{Constructor Function for "dst" Objects}
+\title{Constructor Function for Distribution Objects}
 \usage{
 new_distribution(l, ..., class = character())
 }
@@ -13,6 +13,14 @@ new_distribution(l, ..., class = character())
 
 \item{class}{If making a subclass, specify its name here.}
 }
+\value{
+The original list \code{l} with the specified attributes.
+}
 \description{
-Constructor Function for "dst" Objects
+Low level constructor function for creating distribution objects.
+Consider the user-facing constructor function, \code{distribution()}.
+}
+\examples{
+new_distribution(list(mean = 3))
+
 }

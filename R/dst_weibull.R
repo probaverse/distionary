@@ -1,11 +1,10 @@
 #' Weibull Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' Weibull distributions.
+#' Makes a Weibull distribution.
 #'
 #' @param scale Scale parameter; positive.
 #' @param shape Shape parameter; positive.
-#'
+#' @returns A Weibull distribution.
 #' @examples
 #' dst_weibull(1, 1)
 #'

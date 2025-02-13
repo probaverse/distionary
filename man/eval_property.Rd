@@ -13,15 +13,16 @@ eval_property(distribution, entry, ...)
 "mean".}
 
 \item{...}{If the property is a function, arguments to the
-function go here. Need not be named.}
+function go here. Need not be named; inserted in the order they
+appear.}
 }
 \value{
 The distribution's property, evaluated. If cannot be
 evaluated, returns \code{NULL}.
 }
 \description{
-Evaluate a distributional. The distribution itself
-is first searched for the property, and if can't
+Evaluate a distribution property. The distribution itself
+is first searched for the property, and if it can't
 be found, will attempt to calculate the property
 from other entries.
 }

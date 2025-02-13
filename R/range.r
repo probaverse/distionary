@@ -1,14 +1,15 @@
 #' Range of Distribution
 #'
-#' Range returns a 2 index vector with the 0th index
-#' containing the minimum value, and the 1st index containing the maximum value
-#' for a given distribution.
+#' Range returns a vector of length two, with the minimum and maximum
+#' values of the (support of the) distribution.
 #'
-#' @param distribution Single distribution to compute range from.
+#' @param distribution Distribution to compute range from.
 #' @param ... Not used; vestige of the `base::range()` S3 generic.
 #' @details If there are no methods for the distribution's class,
 #' the range is calculated
 #' using `eval_quantile()` at 0 and at 1.
+#' @returns Vector of length two, containing the minimum and maximum
+#' values of a distribution.
 #' @examples
 #' a <- dst_gpd(1, 0.5)
 #' b <- dst_unif(0, 1)

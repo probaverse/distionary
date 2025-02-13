@@ -1,12 +1,12 @@
-#' Empty / NULL distribution
+#' Null Distribution
 #'
-#' Sometimes it's convenient to work with a distribution object that is empty,
-#' akin to a `NULL` value. This is especially true when programmatically
+#' Sometimes it's convenient to work with a distribution object that is
+#' akin to a missing value. This is especially true when programmatically
 #' outputting distributions, such as when a distribution fails to fit to
-#' data. This contructor makes such a distribution object. It always evaluates
+#' data. This function makes such a distribution object. It always evaluates
 #' to `NA`.
 #'
-#' @return Distribution object of class `"dst_null"`.
+#' @returns A Null distribution.
 #' @examples
 #' x <- dst_null()
 #' mean(x)

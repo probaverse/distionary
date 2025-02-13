@@ -2,6 +2,7 @@
 #'
 #' @param x,q Vector of quantiles.
 #' @param p Vector of probabilities.
+#' @returns Vector of evaluated GEV distribution.
 #' @examples
 #' pgev(1:10, 0, 1, 1)
 #' dgev(1:10, 0, 2, 0)

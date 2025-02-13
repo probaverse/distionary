@@ -1,13 +1,11 @@
 #' Exponential Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' exponential distributions.
+#' Makes an Exponential distribution.
 #'
-#' @param rate Rate.
-#'
+#' @param rate Rate parameter, positive.
+#' @returns An Exponential distribution.
 #' @examples
 #' dst_exp(1)
-#'
 #' @export
 dst_exp <- function(rate) {
   if (rate <= 0) {

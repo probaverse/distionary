@@ -1,10 +1,11 @@
 #' Log Normal Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' Log Normal distributions.
+#' Makes a Log Normal distribution, which is the distribution of
+#' the exponential of a Normally distributed random variable.
 #' @param meanlog,sdlog Mean and variance of the distribution
 #' on a log scale.
-#' @return A Log Normal distribution.
+#' @returns A Log Normal distribution.
+#' @examples
 #' dst_lnorm(0, 1)
 #' @export
 dst_lnorm <- function(meanlog, sdlog) {

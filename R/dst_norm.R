@@ -1,12 +1,11 @@
 #' Normal (Gaussian) Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' Normal (Gaussian) distributions.
+#' Makes a Normal (Gaussian) distribution.
 #'
 #' @param mean,sd Mean and standard deviation of the distribution.
+#' @returns A Normal distribution.
 #' @examples
 #' dst_norm(0, 1)
-#'
 #' @export
 dst_norm <- function(mean, sd) {
   if (sd == 0) {

@@ -12,9 +12,11 @@ on a log scale.}
 }
 \value{
 A Log Normal distribution.
-dst_lnorm(0, 1)
 }
 \description{
-Makes a distribution belonging to the family of
-Log Normal distributions.
+Makes a Log Normal distribution, which is the distribution of
+the exponential of a Normally distributed random variable.
+}
+\examples{
+dst_lnorm(0, 1)
 }

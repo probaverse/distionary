@@ -9,11 +9,14 @@ dst_binom(size, prob)
 \arguments{
 \item{size}{Number of trials.}
 
-\item{prob}{Success probability for each trial.}
+\item{prob}{Success probability of each trial.}
+}
+\value{
+A binomial distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-binomial distributions.
+Makes a Binomial distribution, representing the number of successes
+in a fixed number of independent trials.
 }
 \examples{
 dst_binom(10, 0.6)

@@ -7,14 +7,17 @@
 \method{range}{dst}(distribution, ...)
 }
 \arguments{
-\item{distribution}{Single distribution to compute range from.}
+\item{distribution}{Distribution to compute range from.}
 
 \item{...}{Not used; vestige of the \code{base::range()} S3 generic.}
 }
+\value{
+Vector of length two, containing the minimum and maximum
+values of a distribution.
+}
 \description{
-Range returns a 2 index vector with the 0th index
-containing the minimum value, and the 1st index containing the maximum value
-for a given distribution.
+Range returns a vector of length two, with the minimum and maximum
+values of the (support of the) distribution.
 }
 \details{
 If there are no methods for the distribution's class,

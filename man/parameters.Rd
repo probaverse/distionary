@@ -2,19 +2,23 @@
 % Please edit documentation in R/parameters.R
 \name{parameters}
 \alias{parameters}
+\alias{parameters<-}
 \title{Parameters of a Distribution}
 \usage{
 parameters(distribution)
+
+parameters(distribution) <- value
 }
 \arguments{
 \item{distribution}{Distribution.}
 }
 \value{
-The \code{"parameters"} entry of the list making up the
+A list of the distribution parameters. More specifically,
+returns the \code{"parameters"} entry of the list making up the
 probability distribution.
 }
 \description{
-Retrieve the parameters of a distribution, if applicable. See
+Get or set the parameters of a distribution, if applicable. See
 details.
 }
 \details{
@@ -27,5 +31,15 @@ to the list of objects defining the distribution; for instance,
 Note that no checks are made to ensure the parameters are valid.
 It's important to note that, in this version of distionary,
 manually changing the parameters after the distribution has been
-created will not change the functionality of the distribution.
+created will not change the functionality of the distribution,
+because the parameters are never referred to when making calculations.
+}
+\examples{
+a <- dst_beta(1, 2)
+parameters(a)
+
+b <- distribution(mean = 5)
+parameters(b)
+parameters(b) <- list(t = 7)
+parameters(b)
 }

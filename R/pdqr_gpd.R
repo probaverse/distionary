@@ -5,6 +5,7 @@
 #' @param location Location parameter to shift the GPD by.
 #' @param lower.tail Logical. If `TRUE`, cdf (default);
 #' if `FALSE`, survival function.
+#' @returns Vector of evaluated GPD distribution.
 #' @examples
 #' pgpd(1:10, 0, 1, 1)
 #' dgpd(1:10, 0, 2, 0)

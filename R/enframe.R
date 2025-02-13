@@ -1,4 +1,4 @@
-#' Enframe a distributional representation's evaluation
+#' Enframe a distributional representation
 #'
 #' This is the workhorse for the `enframe_` family of functions.
 #' `enframe_general()` evaluates a specified distributional representation
@@ -11,7 +11,7 @@
 #' representation, such as `eval_cdf` and `eval_density`.
 #' @param fn_args A named list of arguments to pass to the `eval_fn` function,
 #' besides the distribution and `at` argument.
-#' @return A data frame or tibble of the input argument (`at`), with the
+#' @returns A data frame or tibble of the input argument (`at`), with the
 #' evaluated distributional representation for each distribution in
 #' `...` in its own column.
 #' @details If only one distribution is specified in `...`, then the evaluation

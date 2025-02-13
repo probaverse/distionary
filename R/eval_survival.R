@@ -3,7 +3,7 @@
 #' Access a distribution's survival function.
 #'
 #' @inheritParams eval_cdf
-#' @return The evaluated survival function
+#' @returns The evaluated survival function
 #' in vector form (for `eval_`) and data frame
 #' or tibble form (for `enframe_`).
 #' @examples

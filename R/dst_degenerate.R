@@ -1,14 +1,12 @@
-#' Make a Degenerate Distribution
+#' Degenerate Distribution
 #'
-#' Makes a distribution belonging to the degenerate family of
-#' distributions. That is, distributions of fixed values.
-#' @param location Parameter of the distribution family.
-#' @return Object of class "dst".
+#' A degenerate distribution assigns a 100% probability to one outcome.
+#' @param location Single outcome of the distribution.
+#' @returns A degenerate distribution
 #' @examples
-#' require(graphics)
 #' d <- dst_degenerate(5)
-#' plot(d, "quantile")
-#' @rdname degenerate
+#' realise(d)
+#' variance(d)
 #' @export
 dst_degenerate <- function(location) {
   cant_coerce_numeric <- suppressWarnings(is.na(as.numeric(location)))

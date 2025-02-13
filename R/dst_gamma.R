@@ -1,11 +1,10 @@
 #' Gamma Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' Gamma distributions.
+#' Makes a Gamma distribution.
 #'
 #' @param shape Shape parameter; positive.
 #' @param rate Rate parameter; positive.
-#'
+#' @returns A Gamma distribution.
 #' @examples
 #' dst_gamma(2, 1)
 #' @export

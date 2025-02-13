@@ -1,12 +1,18 @@
 #' Negative binomial Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' negative binomial distributions.
+#' Makes a Negative Binomial distribution, corresponding to the number
+#' of failures in a sequence of independent trials until a given number
+#' of successes are observed.
 #'
-#' @param prob Probability parameter; between 0 and 1.
-#' @param size Target for number of successful trials; non-negative.
+#' @param prob Probability of a successful trial; between 0 and 1.
+#' @param size Number of successful trials; positive.
+#' @returns A Negative Binomial distribution.
 #' @examples
-#' dst_nbinom(10, 0.5)
+#' d <- dst_nbinom(10, 0.5)
+#'
+#' # This version of the Negative Binomial distribution does not count
+#' # the successes.
+#' range(d)
 #' @export
 dst_nbinom <- function(size, prob) {
   if (prob < 0 || prob > 1) {

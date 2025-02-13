@@ -7,16 +7,17 @@
 vtype(distribution)
 }
 \arguments{
-\item{distribution}{Distribution.}
+\item{distribution}{Distribution object.}
 }
 \value{
 Single character with the variable type.
 }
 \description{
-Retrieve the variable type of a distribution, such as "
-continuous" or "discrete".
+Retrieve the variable type of a distribution, such as
+"continuous" or "discrete".
 }
 \examples{
 vtype(dst_beta(1, 2))
 vtype(dst_bern(0.4))
+vtype(distribution())
 }

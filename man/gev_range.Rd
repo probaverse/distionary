@@ -11,7 +11,8 @@ gev_range(location, scale, shape)
 
 \item{scale}{Scale parameter; positive numeric.}
 
-\item{shape}{Shape parameter; numeric.}
+\item{shape}{Shape parameter; numeric. Also the extreme value index,
+so that \code{shape > 0} is heavy tailed, and \code{shape < 0} is short-tailed.}
 }
 \value{
 A vector of length 2 indicating the support of the distribution.

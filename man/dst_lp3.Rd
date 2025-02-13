@@ -13,5 +13,11 @@ dst_lp3(meanlog, sdlog, skew)
 A Log Pearson Type III distribution.
 }
 \description{
-Log Pearson Type III distribution
+Makes a Log Pearson Type III distribution, which is the
+distribution of the exponential of a random variable following
+a Pearson Type III distribution.
+}
+\examples{
+dst_lp3(0, 1, 1)
+
 }

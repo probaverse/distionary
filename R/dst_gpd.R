@@ -1,13 +1,26 @@
-#' Generalized Pareto Distribution
+#' Generalised Pareto Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' generalized Pareto distributions (GPD).
+#' Makes a Generalized Pareto distribution (GPD), corresponding to the
+#' limiting distribution of excesses over a threshold.
 #' @param scale Scale parameter; positive numeric.
-#' @param shape Shape parameter; numeric.
-#' @return Object of class "dst" of a GPD.
+#' @param shape Shape parameter; numeric. Also the extreme value index,
+#' so that `shape > 0` is heavy tailed, and `shape < 0` is short-tailed.
+#' @return A Generalised Pareto Distribution.
 #' @examples
-#' d <- dst_gpd(1, 1)
-#' realise(d)
+#' # Short-tailed example
+#' short <- dst_gpd(1, -1)
+#' range(short)
+#' mean(short)
+#'
+#' # Heavy-tailed example
+#' heavy <- dst_gpd(1, 1)
+#' range(heavy)
+#' mean(heavy)
+#'
+#' # Light-tailed example (a Gumbel distribution)
+#' light <- dst_gpd(1, 0)
+#' range(light)
+#' mean(light)
 #' @export
 dst_gpd <- function(scale, shape) {
 	if (scale <= 0) {

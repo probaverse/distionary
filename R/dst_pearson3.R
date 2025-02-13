@@ -1,10 +1,15 @@
 #' Pearson Type III distribution
 #'
-#' @param location,scale,shape Distribution parameters. Need scale > 0
-#' and shape > 0.
+#' Makes a Pearson Type III distribution, which is a Gamma distribution,
+#' but shifted.
+#'
+#' @param location Location parameter, specifying how to shift the
+#' Gamma distribution.
+#' @param scale Scale parameter of the Gamma distribution; positive.
+#' @param shape Shape parameter of the Gamma distribution; positive.
 #' @returns A Pearson Type III distribution.
-#' @details This is the equivalent of the Gamma distribution in the
-#' stats package with parameters `scale` and `shape`,
+#' @examples
+#' dst_pearson3(1, 1, 1)
 #' @export
 dst_pearson3 <- function(location, scale, shape) {
   if (scale < 0) {

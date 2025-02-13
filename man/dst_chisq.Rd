@@ -2,16 +2,18 @@
 % Please edit documentation in R/dst_chisq.R
 \name{dst_chisq}
 \alias{dst_chisq}
-\title{Chi-squared Distribution}
+\title{Chi-Squared Distribution}
 \usage{
 dst_chisq(df)
 }
 \arguments{
-\item{df}{degrees of freedom}
+\item{df}{degrees of freedom parameter.}
+}
+\value{
+A Chi-Squared distribution
 }
 \description{
-Makes a distribution belonging to the family of
-Chi-squared distributions.
+Makes a Chi-Squared distribution.
 }
 \examples{
 dst_chisq(3)

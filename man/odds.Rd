@@ -35,6 +35,7 @@ probability \code{p} is \code{p / (1 - p)}.
 }
 \examples{
 d <- dst_pois(1)
+eval_pmf(d, at = c(1, 2, 2.5))
 eval_odds(d, at = c(1, 2, 2.5))
 enframe_odds(d, at = 0:4)
 }

@@ -3,7 +3,7 @@
 #' Access a distribution's hazard function.
 #'
 #' @inheritParams eval_cdf
-#' @return The evaluated hazard in vector form (for `eval_`) and data frame
+#' @returns The evaluated hazard in vector form (for `eval_`) and data frame
 #' or tibble form (for `enframe_`).
 #' @examples
 #' d <- dst_unif(0, 4)

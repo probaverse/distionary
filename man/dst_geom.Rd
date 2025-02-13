@@ -10,9 +10,12 @@ dst_geom(prob)
 \item{prob}{Probability of success in each trial; 0 < \code{p} <= 1.}
 }
 \description{
-Makes a distribution belonging to the family of
-geometric distributions.
+Makes a Geometric distribution, corresponding to the number of failures
+in a sequence of independent trials before observing a success.
 }
 \examples{
-dst_geom(0.4)
+d <- dst_geom(0.4)
+
+# This version of the Geometric distribution does not count the success.
+range(d)
 }

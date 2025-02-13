@@ -17,7 +17,8 @@ dgpd(x, location, scale, shape)
 
 \item{scale}{Scale parameter; positive numeric.}
 
-\item{shape}{Shape parameter; numeric.}
+\item{shape}{Shape parameter; numeric. Also the extreme value index,
+so that \code{shape > 0} is heavy tailed, and \code{shape < 0} is short-tailed.}
 
 \item{lower.tail}{Logical. If \code{TRUE}, cdf (default);
 if \code{FALSE}, survival function.}
@@ -25,6 +26,9 @@ if \code{FALSE}, survival function.}
 \item{p}{Vector of probabilities.}
 
 \item{x, q}{Vector of quantiles.}
+}
+\value{
+Vector of evaluated GPD distribution.
 }
 \description{
 Representations of the Generalized Pareto Distribution

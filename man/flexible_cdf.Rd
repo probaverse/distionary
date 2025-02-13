@@ -18,6 +18,9 @@ Could be a vector.}
 \item{inclusive}{Should \code{of} be included in the probability calculation?
 Logical.}
 }
+\value{
+A vector of probabilities.
+}
 \description{
 Probability to the left or right of a number, inclusive or not.
 \code{prob_left()} is a more general cdf defined using either \code{<} or \code{<=}, and

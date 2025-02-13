@@ -1,14 +1,13 @@
-#' The Student t Distribution
+#' Student t Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' t distributions.
+#' Makes a Student t distribution.
 #'
-#'@param df Degrees of freedom; positive.
-#'
-#'@examples
+#' @param df Degrees of freedom; positive.
+#' @returns A Student t distribution.
+#' @examples
 #' dst_t(3)
 #'
-#'@export
+#' @export
 dst_t <- function(df){
   if (df <= 0) {
     stop('df must be positive.')

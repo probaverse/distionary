@@ -10,6 +10,7 @@
 #' Could be a vector.
 #' @param inclusive Should `of` be included in the probability calculation?
 #' Logical.
+#' @returns A vector of probabilities.
 #' @rdname flexible_cdf
 #' @export
 prob_left <- function(distribution, of, inclusive) {

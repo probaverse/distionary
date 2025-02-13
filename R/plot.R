@@ -1,11 +1,13 @@
 #' Plot a Distribution
 #'
-#' Plot a functional representation of a distribution.
-#' Wrapper around the \code{graphics::curve} function.
+#' Plot a distributional representation of a distribution.
 #'
 #' @param x Distribution object
 #' @param what Name of the representation to plot.
-#' @param ... Other arguments to pass to the \code{graphics::curve} function.
+#' @param ... Other arguments to pass to the `graphics::curve` function,
+#' or `graphics::plot` in the case of the PMF.
+#' @returns This function is run for its graphics byproduct, and therefore
+#' returns the original distribution, invisibly.
 #' @examples
 #' d <- dst_norm(0, 1)
 #' plot(d, from = -4, to = 4)
@@ -14,6 +16,9 @@
 #' plot(d, "quantile")
 #' plot(d, "hazard")
 #' plot(d, "chf")
+#'
+#' p <- dst_pois(4)
+#' plot(p)
 #' @export
 plot.dst <- function(
     x,

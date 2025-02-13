@@ -1,7 +1,14 @@
 #' Log Pearson Type III distribution
 #'
+#' Makes a Log Pearson Type III distribution, which is the
+#' distribution of the exponential of a random variable following
+#' a Pearson Type III distribution.
+#'
 #' @param meanlog,sdlog,skew Parameters.
 #' @returns A Log Pearson Type III distribution.
+#' @examples
+#' dst_lp3(0, 1, 1)
+#'
 #' @export
 dst_lp3 <- function(meanlog, sdlog, skew) {
   if (sdlog < 0) {

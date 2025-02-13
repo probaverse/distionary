@@ -3,7 +3,7 @@
 #' Access a distribution's cumulative hazard function (chf).
 #'
 #' @inheritParams eval_cdf
-#' @return The evaluated cumulative hazard
+#' @returns The evaluated cumulative hazard
 #' in vector form (for `eval_`) and data frame
 #' or tibble form (for `enframe_`).
 #' @examples

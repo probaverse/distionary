@@ -4,7 +4,7 @@
 \alias{distribution}
 \alias{is_distribution}
 \alias{is.distribution}
-\title{Make a distribution}
+\title{Build a Distribution Object}
 \usage{
 distribution(..., .vtype = NULL, .name = NULL)
 
@@ -13,15 +13,11 @@ is_distribution(object)
 is.distribution(object)
 }
 \arguments{
-\item{...}{Name-value pairs to add to the distribution list.}
+\item{...}{Name-value pairs for defining the distribution.}
 
-\item{.vtype}{The variable type, indicating the values for which
-the distribuion provides probabilities for. For example,.
-\code{"continuous"} implies that the distribution acts on real numbers;
-\code{"discrete"} implies discrete values.}
+\item{.vtype}{The variable type, typically "discrete" or "continuous".}
 
-\item{.name}{If this distribution has a name (e.g., "Normal"),
-optionally specify it here.}
+\item{.name}{A name to give to the distribution.}
 
 \item{object}{Object to be tested}
 }
@@ -29,23 +25,22 @@ optionally specify it here.}
 A distribution object.
 }
 \description{
-Make a distribution object by specifying its representations
+Make a distribution object by specifying properties
 (e.g., cdf, density, mean, etc.).
-Some representations, if not included, will be calculated based
-on other representations that are included (e.g., quantile from cdf).
+Some properties, if not included, will be calculated based
+on other properties that are included (e.g., quantile from cdf;
+variance from standard deviation).
 A list of these representations can be found in the details.
-Note that any object can be added to the distribution.
 }
 \details{
-Currently, at least two representations are required to be specified if
-you want to be able to retrieve other properties without specifying them:
-\itemize{
-\item \code{cdf}: the cumulative distribution function.
-\item \code{density}, the probability density function for continuous variables,
-or \code{pmf}, the probability mass function for discrete variables.
-}
+Currently, the CDF (\code{cdf}) is required to be specified, along with the PMF
+(\code{pmf}) for discrete distributions and density (\code{density}) for continuous
+distributions. Otherwise, the full extent of distribution properties will
+not be accessible.
 
-Other representations that will be retrieved if missing include:
+A distributional representation is a function that fully describes the
+distribution. Besides \code{cdf}, \code{density}, and \code{pmf}, other options
+understood by \code{distionary} include:
 \itemize{
 \item \code{survival}: the survival function, or one minus the cdf.
 \item \code{hazard}: the hazard function, for continuous variables only.
@@ -61,7 +56,7 @@ where events are exceedances.
 
 All functions should be vectorized.
 
-Properties that can be retrieved if not specified include the following:
+Other properties that are understood by \code{distionary} include:
 \itemize{
 \item \code{mean}, \code{stdev}, \code{variance}, \code{skewness}, \code{median} are self-explanatory.
 \item \code{kurtosis_exc} and \code{kurtosis} are the distribution's excess
@@ -69,7 +64,4 @@ kurtosis and regular kurtosis.
 \item \code{range}: A vector of the minimum and maximum value of a distribution's
 support.
 }
-
-A later version of distionary will allow for the specification of
-custom representations / properties.
 }

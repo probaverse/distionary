@@ -2,7 +2,7 @@
 % Please edit documentation in R/enframe.R
 \name{enframe_general}
 \alias{enframe_general}
-\title{Enframe a distributional representation's evaluation}
+\title{Enframe a distributional representation}
 \usage{
 enframe_general(..., at, arg_name, fn_prefix, sep, eval_fn, fn_args = list())
 }

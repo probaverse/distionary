@@ -7,13 +7,14 @@
 dst_f(df1, df2)
 }
 \arguments{
-\item{df1}{degree of freedom, positive.}
-
-\item{df2}{degree of freedom, positive.}
+\item{df1, df2}{Degrees of freedom of the numerator and denominator,
+both positive.}
+}
+\value{
+An F distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-F distributions.
+Makes an F distribution.
 }
 \examples{
 dst_f(2, 3)

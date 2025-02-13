@@ -1,6 +1,6 @@
 #' Parameters of a Distribution
 #'
-#' Retrieve the parameters of a distribution, if applicable. See
+#' Get or set the parameters of a distribution, if applicable. See
 #' details.
 #'
 #' @param distribution Distribution.
@@ -13,14 +13,27 @@
 #' Note that no checks are made to ensure the parameters are valid.
 #' It's important to note that, in this version of distionary,
 #' manually changing the parameters after the distribution has been
-#' created will not change the functionality of the distribution.
-#' @returns The `"parameters"` entry of the list making up the
+#' created will not change the functionality of the distribution,
+#' because the parameters are never referred to when making calculations.
+#' @returns A list of the distribution parameters. More specifically,
+#' returns the `"parameters"` entry of the list making up the
 #' probability distribution.
+#' @examples
+#' a <- dst_beta(1, 2)
+#' parameters(a)
+#'
+#' b <- distribution(mean = 5)
+#' parameters(b)
+#' parameters(b) <- list(t = 7)
+#' parameters(b)
+#' @rdname parameters
 #' @export
 parameters <- function(distribution) {
   distribution[["parameters"]]
 }
 
+#' @export
+#' @rdname parameters
 `parameters<-` <- function(distribution, value) {
   distribution[["parameters"]] <- value
   distribution

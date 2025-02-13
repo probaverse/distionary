@@ -1,11 +1,14 @@
 #' Geometric Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' geometric distributions.
+#' Makes a Geometric distribution, corresponding to the number of failures
+#' in a sequence of independent trials before observing a success.
 #'
 #' @param prob Probability of success in each trial; 0 < `p` <= 1.
 #' @examples
-#' dst_geom(0.4)
+#' d <- dst_geom(0.4)
+#'
+#' # This version of the Geometric distribution does not count the success.
+#' range(d)
 #' @export
 dst_geom <- function(prob) {
   if (prob <= 0 || prob > 1) {
