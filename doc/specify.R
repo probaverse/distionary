@@ -48,10 +48,10 @@ eval_cdf(linear, at = c(0.2, 0.5, 0.7))
 mean(linear)
 
 ## -----------------------------------------------------------------------------
-eval_representation(linear, "cdf", c(0.2, 0.5, 0.7))
-eval_representation(linear, "mean")
+eval_property(linear, "cdf", c(0.2, 0.5, 0.7))
+eval_property(linear, "mean")
 
 ## -----------------------------------------------------------------------------
-eval_representation(linear, "another_representation", 1:4)
-eval_representation(linear, "g")
+eval_property(linear, "another_representation", 1:4)
+eval_property(linear, "g")
 

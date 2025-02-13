@@ -19,5 +19,6 @@ Makes a distribution belonging to the family of
 generalized Pareto distributions (GPD).
 }
 \examples{
-dst_gpd(1, 1)
+d <- dst_gpd(1, 1)
+realise(d)
 }

@@ -118,18 +118,18 @@ eval_cdf(linear, at = c(0.2, 0.5, 0.7))
 mean(linear)
 ```
 
-These quantities can be invoked by the more general function `eval_representation()`.
+These quantities can be invoked by the more general function `eval_property()`.
 
 ```{r}
-eval_representation(linear, "cdf", c(0.2, 0.5, 0.7))
-eval_representation(linear, "mean")
+eval_property(linear, "cdf", c(0.2, 0.5, 0.7))
+eval_property(linear, "mean")
 ```
 
-`eval_representaton()` is a useful function for accessing quantities that are not built-in to `distionary`, like `g` and `another_representation` in this example.
+`eval_property()` is a useful function for accessing quantities that are not built-in to `distionary`, like `g` and `another_representation` in this example.
 
 ```{r}
-eval_representation(linear, "another_representation", 1:4)
-eval_representation(linear, "g")
+eval_property(linear, "another_representation", 1:4)
+eval_property(linear, "g")
 ```
 
 

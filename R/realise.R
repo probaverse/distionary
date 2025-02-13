@@ -11,7 +11,7 @@
 #' @rdname realise
 #' @export
 realise <- function(distribution, n = 1) {
-  eval_representation(distribution, "realise", n)
+  eval_property(distribution, "realise", n)
 }
 
 eval_realise_from_network <- function(distribution, n) {
@@ -22,5 +22,5 @@ eval_realise_from_network <- function(distribution, n) {
 #' @rdname realise
 #' @export
 realize <- function(distribution, n = 1) {
-  eval_representation(distribution, "realize", n)
+  eval_property(distribution, "realize", n)
 }

@@ -14,7 +14,7 @@
 #' @rdname survival
 #' @export
 eval_survival <- function(distribution, at) {
-  eval_representation(distribution, "survival", at)
+  eval_property(distribution, "survival", at)
 }
 
 eval_survival_from_network <- function(distribution, at) {

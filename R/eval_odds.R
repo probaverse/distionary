@@ -14,7 +14,7 @@
 #' @rdname odds
 #' @export
 eval_odds <- function(distribution, at) {
-  eval_representation(distribution, "odds", at)
+  eval_property(distribution, "odds", at)
 }
 
 eval_odds_from_network <- function(distribution, at) {

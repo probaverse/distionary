@@ -13,7 +13,7 @@
 #' @rdname quantile
 #' @export
 eval_quantile <- function(distribution, at) {
-  eval_representation(distribution, "quantile", at)
+  eval_property(distribution, "quantile", at)
 }
 
 #' @rdname quantile

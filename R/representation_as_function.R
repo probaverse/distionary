@@ -7,7 +7,7 @@
 representation_as_function <- function(distribution, representation) {
   f <- distribution[[representation]]
   if (is.null(f)) {
-    f <- \(x) eval_representation(distribution, representation, x)
+    f <- \(x) eval_property(distribution, representation, x)
   }
 	f
 }

@@ -14,7 +14,7 @@
 #' @rdname chf
 #' @export
 eval_chf <- function(distribution, at) {
-  eval_representation(distribution, "chf", at)
+  eval_property(distribution, "chf", at)
 }
 
 eval_chf_from_network <- function(distribution, at) {

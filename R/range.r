@@ -27,7 +27,7 @@ range.dst <- function(distribution, ...) {
       "Did you accidentally misspell 'distribution'?"
     )
   }
-  eval_representation(distribution, "range")
+  eval_property(distribution, "range")
 }
 
 eval_range_from_network <- function(distribution) {

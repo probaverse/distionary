@@ -17,7 +17,7 @@
 #' @rdname return
 #' @export
 eval_return <- function(distribution, at) {
-  eval_representation(distribution, "return", at)
+  eval_property(distribution, "return", at)
 }
 
 eval_return_from_network <- function(distribution, at) {

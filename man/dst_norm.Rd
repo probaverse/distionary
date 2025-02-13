@@ -15,4 +15,5 @@ Normal (Gaussian) distributions.
 }
 \examples{
 dst_norm(0, 1)
+
 }

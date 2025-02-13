@@ -509,7 +509,7 @@ distribution to see that the representations wrap the
 <span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = &quot;Normal&quot;, </span></span>
 <span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt;         .vtype = &quot;continuous&quot;)</span></span>
 <span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; }</span></span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x106181e78&gt;</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x1068b8070&gt;</span></span>
 <span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
 <p><code>distionary</code> also makes other distribution families
 available that are not found in the <code>stats</code> package.</p>
@@ -571,18 +571,18 @@ specified.</p>
 <span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">mean</span>(linear)</span>
 <span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.3333333</span></span></code></pre></div>
 <p>These quantities can be invoked by the more general function
-<code>eval_representation()</code>.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">eval_representation</span>(linear, <span class="st">&quot;cdf&quot;</span>, <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>))</span>
+<code>eval_property()</code>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">eval_property</span>(linear, <span class="st">&quot;cdf&quot;</span>, <span class="fu">c</span>(<span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.7</span>))</span>
 <span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.36 0.75 0.91</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">eval_representation</span>(linear, <span class="st">&quot;mean&quot;</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">eval_property</span>(linear, <span class="st">&quot;mean&quot;</span>)</span>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; [1] 0.3333333</span></span></code></pre></div>
-<p><code>eval_representaton()</code> is a useful function for accessing
+<p><code>eval_property()</code> is a useful function for accessing
 quantities that are not built-in to <code>distionary</code>, like
 <code>g</code> and <code>another_representation</code> in this
 example.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">eval_representation</span>(linear, <span class="st">&quot;another_representation&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">eval_property</span>(linear, <span class="st">&quot;another_representation&quot;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; [1]  1  4  9 16</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">eval_representation</span>(linear, <span class="st">&quot;g&quot;</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">eval_property</span>(linear, <span class="st">&quot;g&quot;</span>)</span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; [1] 9.81</span></span></code></pre></div>
 </div>
 

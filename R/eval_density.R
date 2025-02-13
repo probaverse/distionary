@@ -13,7 +13,7 @@
 #' @rdname density
 #' @export
 eval_density <- function(distribution, at) {
-  eval_representation(distribution, "density", at)
+  eval_property(distribution, "density", at)
 }
 
 eval_density_from_network <- function(distribution, at) {

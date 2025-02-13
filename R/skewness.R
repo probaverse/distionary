@@ -5,5 +5,5 @@
 #' @rdname moments
 #' @export
 skewness <- function(distribution) {
-  eval_representation(distribution, "skewness")
+  eval_property(distribution, "skewness")
 }

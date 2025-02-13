@@ -25,7 +25,7 @@
 #' @rdname cdf
 #' @export
 eval_cdf <- function(distribution, at) {
-  eval_representation(distribution, "cdf", at)
+  eval_property(distribution, "cdf", at)
 }
 
 #' @rdname cdf

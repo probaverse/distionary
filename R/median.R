@@ -10,7 +10,7 @@
 #' @export
 median.dst <- function(x, ...) {
   ellipsis::check_dots_empty()
-  eval_representation(x, "median")
+  eval_property(x, "median")
 }
 
 eval_median_from_network <- function(distribution) {

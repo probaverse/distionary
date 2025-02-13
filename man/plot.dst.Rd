@@ -6,7 +6,7 @@
 \usage{
 \method{plot}{dst}(
   x,
-  what = c("density", "cdf", "survival", "quantile", "hazard", "chf"),
+  what = c("density", "pmf", "cdf", "survival", "quantile", "hazard", "chf"),
   ...
 )
 }
@@ -15,11 +15,18 @@
 
 \item{what}{Name of the representation to plot.}
 
-\item{...}{Other arguments to pass to the \code{graphics::curve} function.
-plot(dst_norm(5, 5))
-plot(dst_empirical(-5:2), "cdf", n = 1001)}
+\item{...}{Other arguments to pass to the \code{graphics::curve} function.}
 }
 \description{
 Plot a functional representation of a distribution.
 Wrapper around the \code{graphics::curve} function.
+}
+\examples{
+d <- dst_norm(0, 1)
+plot(d, from = -4, to = 4)
+plot(d, "cdf", n = 1000)
+plot(d, "survival")
+plot(d, "quantile")
+plot(d, "hazard")
+plot(d, "chf")
 }

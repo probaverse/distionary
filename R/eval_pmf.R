@@ -15,7 +15,7 @@
 #' @rdname pmf
 #' @export
 eval_pmf <- function(distribution, at) {
-  eval_representation(distribution, "pmf", at)
+  eval_property(distribution, "pmf", at)
 }
 
 eval_pmf_from_network <- function(distribution, at) {

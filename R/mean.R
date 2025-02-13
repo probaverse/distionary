@@ -29,5 +29,5 @@
 #' @export
 mean.dst <- function(x, ...) {
   ellipsis::check_dots_empty()
-  eval_representation(x, "mean")
+  eval_property(x, "mean")
 }
