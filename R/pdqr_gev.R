@@ -48,6 +48,10 @@ dgev <- function(x, location, scale, shape) {
 #' 't()' function for calculating GEV quantities
 #'
 #' @param x Argument of the function; vectorized.
+#' @returns A vector of the t function evaluated.
+#' @examples
+#' gev_t_function(1:10, 0, 1, 1)
+#'
 #' @inheritParams dst_gev
 #' @seealso See the Wikipedia entry for the GEV distribution,
 #' https://en.wikipedia.org/wiki/Generalized_extreme_value_distribution
@@ -66,6 +70,8 @@ gev_t_function <- function(x, location, scale, shape) {
 #'
 #' @inheritParams dst_gev
 #' @returns A vector of length 2 indicating the support of the distribution.
+#' @examples
+#' distionary:::gev_range(0, 1, 1)
 gev_range <- function(location, scale, shape) {
   if (shape > 0) {
     c(location - scale / shape, Inf)

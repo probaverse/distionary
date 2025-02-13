@@ -53,3 +53,11 @@ because names are anticipated to be syntactic with the \code{eval_fn} prefix;
 "minimal" is not sufficient because it may result in columns having the
 same names.
 }
+\examples{
+d <- dst_norm(0, 1)
+distionary:::enframe_general(
+  d, at = 1:9 / 10, arg_name = "tau", fn_prefix = "quantile", sep = "",
+  eval_fn = eval_quantile
+)
+
+}

@@ -23,3 +23,8 @@ of the CDF. Intended for internal use only. Calls the
 \code{encapsulate_p()} function to figure out where to start looking for
 solutions, then \code{directional_inverse()} to run the algorithm.
 }
+\examples{
+d <- distribution(cdf = \(x) pmin(pmax(x, 0), 1))
+distionary:::eval_quantile_from_network(d, at = 1:9 / 10)
+
+}

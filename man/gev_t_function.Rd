@@ -16,12 +16,19 @@ gev_t_function(x, location, scale, shape)
 \item{shape}{Shape parameter; numeric. Also the extreme value index,
 so that \code{shape > 0} is heavy tailed, and \code{shape < 0} is short-tailed.}
 }
+\value{
+A vector of the t function evaluated.
+}
 \description{
 't()' function for calculating GEV quantities
 }
 \note{
 The shape parameter is not vectorized. This function is only
 intended to be used when location, scale, and shape are scalars.
+}
+\examples{
+gev_t_function(1:10, 0, 1, 1)
+
 }
 \seealso{
 See the Wikipedia entry for the GEV distribution,

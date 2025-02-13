@@ -29,3 +29,8 @@ before the inversion algorithm begins.
 If 0 or 1 are included in the vector \code{p}, one of the endpoints might
 be infinite.
 }
+\examples{
+d <- distribution(cdf = \(x) pmin(pmax(x, 0), 1))
+distionary:::encapsulate_p(d, p = 1:9 / 10, direction = "left")
+
+}

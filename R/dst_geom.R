@@ -4,6 +4,7 @@
 #' in a sequence of independent trials before observing a success.
 #'
 #' @param prob Probability of success in each trial; 0 < `p` <= 1.
+#' @returns A Geometric distribution.
 #' @examples
 #' d <- dst_geom(0.4)
 #'

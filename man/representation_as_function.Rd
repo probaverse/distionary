@@ -18,3 +18,8 @@ A function of the representation.
 \description{
 Get a distribution's representation as a function
 }
+\examples{
+d <- dst_nbinom(10, 0.4)
+cdf <- distionary:::representation_as_function(d, "cdf")
+cdf(0:10)
+}

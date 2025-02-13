@@ -9,6 +9,10 @@
 #' @param at A vector of values for which to evaluate the quantile function.
 #' @param tol,maxiter Tolerance (a small positive number) and maximum number
 #' of iterations
+#' @examples
+#' d <- distribution(cdf = \(x) pmin(pmax(x, 0), 1))
+#' distionary:::eval_quantile_from_network(d, at = 1:9 / 10)
+#'
 #' @returns The `at`-quantiles of the distribution.
 eval_quantile_from_network <- function(
     distribution, at, tol = 1e-9, maxiter = 200
@@ -69,6 +73,10 @@ eval_quantile_from_network <- function(
 #' be infinite.
 #' @returns A range of values containing the solutions to the left
 #' inverse of the CDF at `p`.
+#' @examples
+#' d <- distribution(cdf = \(x) pmin(pmax(x, 0), 1))
+#' distionary:::encapsulate_p(d, p = 1:9 / 10, direction = "left")
+#'
 #' @inheritParams eval_quantile_from_network
 encapsulate_p <- function(distribution, p, direction) {
   if (length(p) == 0) return(c(NA, NA))
@@ -131,6 +139,12 @@ encapsulate_p <- function(distribution, p, direction) {
 #' @details This algorithm works by progressively
 #' cutting the specified range in half, moving into the left or right
 #' half depending on where the solution is.
+#' @examples
+#' d <- distribution(cdf = \(x) pmin(pmax(x, 0), 1))
+#' distionary:::directional_inverse(
+#'   d, p = 0.2, low = 0, high = 1, tol = 1e-9, maxiter = 200L,
+#'   direction = "left"
+#' )
 #' @returns The left inverse of the CDF evaluated at `p`.
 #' @inheritParams encapsulate_p
 directional_inverse <- function(distribution, p, low, high, tol, maxiter,

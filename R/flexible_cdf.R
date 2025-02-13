@@ -12,6 +12,11 @@
 #' Logical.
 #' @returns A vector of probabilities.
 #' @rdname flexible_cdf
+#' @examples
+#' d <- dst_pois(5)
+#' prob_left(d, of = 3, inclusive = TRUE)
+#' prob_left(d, of = 3, inclusive = FALSE)
+#' prob_right(d, of = 0:3, inclusive = TRUE)
 #' @export
 prob_left <- function(distribution, of, inclusive) {
 	p_left <- eval_cdf(distribution, at = of)
@@ -32,3 +37,4 @@ prob_right <- function(distribution, of, inclusive) {
 	}
 	p_right
 }
+

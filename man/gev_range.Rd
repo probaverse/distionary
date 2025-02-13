@@ -20,3 +20,6 @@ A vector of length 2 indicating the support of the distribution.
 \description{
 Range of a GEV distribution
 }
+\examples{
+distionary:::gev_range(0, 1, 1)
+}

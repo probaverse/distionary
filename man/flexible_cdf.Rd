@@ -27,3 +27,9 @@ Probability to the left or right of a number, inclusive or not.
 \code{prob_right()} is a more general survival function defined using either
 \code{>} or \code{>=}.
 }
+\examples{
+d <- dst_pois(5)
+prob_left(d, of = 3, inclusive = TRUE)
+prob_left(d, of = 3, inclusive = FALSE)
+prob_right(d, of = 0:3, inclusive = TRUE)
+}

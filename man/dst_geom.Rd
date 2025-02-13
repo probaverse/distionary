@@ -9,6 +9,9 @@ dst_geom(prob)
 \arguments{
 \item{prob}{Probability of success in each trial; 0 < \code{p} <= 1.}
 }
+\value{
+A Geometric distribution.
+}
 \description{
 Makes a Geometric distribution, corresponding to the number of failures
 in a sequence of independent trials before observing a success.

@@ -41,6 +41,28 @@
 #'   kurtosis and regular kurtosis.
 #' - `range`: A vector of the minimum and maximum value of a distribution's
 #'   support.
+#' @examples
+#' linear <- distribution(
+#'   density = function(x) {
+#'     d <- 2 * (1 - x)
+#'     d[x < 0 | x > 1] <- 0
+#'     d
+#'   },
+#'   cdf = function(x) {
+#'     p <- 2 * x * (1 - x / 2)
+#'     p[x < 0] <- 0
+#'     p[x > 1] <- 1
+#'     p
+#'   },
+#'   .vtype = "continuous",
+#'   .name = "My Linear"
+#' )
+#'
+#' # Inspect
+#' linear
+#'
+#' # Plot
+#' plot(linear)
 #' @export
 distribution <- function(..., .vtype = NULL, .name = NULL) {
   dots <- rlang::enquos(...)
