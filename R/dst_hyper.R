@@ -9,7 +9,7 @@
 #' @param k the number of balls drawn from the urn (between 0 and `m + n`).
 #' @returns A Hypergeometric distribution.
 #' @examples
-#' dst_hyper(1, 5, 10)
+#' dst_hyper(15, 50, 10)
 #'
 #' @export
 dst_hyper <- function(m, n, k) {
