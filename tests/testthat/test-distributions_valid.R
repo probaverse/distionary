@@ -425,6 +425,11 @@ test_that("Representations that are never specified work.", {
   l1 <- eval_return(d, at = rp)
   l2 <- eval_quantile(d, at = 1 - 1 / rp)
   expect_equal(l1, l2)
+  ## Median, discrete
+  d <- dst_binom(10, 0.3)
+  m1 <- median(d)
+  m2 <- eval_quantile(d, 0.5)
+  expect_equal(m1, m2)
 })
 
 rm(list = c(

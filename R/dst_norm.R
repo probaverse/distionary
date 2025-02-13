@@ -6,6 +6,7 @@
 #' @param mean,sd Mean and standard deviation of the distribution.
 #' @examples
 #' dst_norm(0, 1)
+#'
 #' @export
 dst_norm <- function(mean, sd) {
   if (sd == 0) {

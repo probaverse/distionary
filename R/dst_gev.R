@@ -38,20 +38,6 @@ dst_gev <- function(location, scale, shape) {
         scale^2 * (gamma(1 - 2 * shape) - gamma(1 - shape)^2) / shape^2
       }
     },
-    kurtosis_exc = {
-      if (shape == 0) {
-        12 / 5
-      } else if (shape < 1 / 4) {
-        g1 <- gamma(1 - shape)
-        g2 <- gamma(1 - 2 * shape)
-        g3 <- gamma(1 - 3 * shape)
-        g4 <- gamma(1 - 4 * shape)
-        (g4 - 4 * g4 * g1 - 3 * g2^2 + 12 * g2 * g1^2 - 6 * g1^4) /
-          (g2 - g1^2)^2
-      } else {
-        NaN
-      }
-    },
     range = gev_range(location, scale, shape),
     .name = "Generalised Extreme Value",
     .vtype = "continuous"

@@ -6,7 +6,8 @@
 #' @param shape Shape parameter; numeric.
 #' @return Object of class "dst" of a GPD.
 #' @examples
-#' dst_gpd(1, 1)
+#' d <- dst_gpd(1, 1)
+#' realise(d)
 #' @export
 dst_gpd <- function(scale, shape) {
 	if (scale <= 0) {
@@ -16,6 +17,9 @@ dst_gpd <- function(scale, shape) {
     parameters = list(scale = scale, shape = shape),
     cdf = \(x) pgpd(
       x, location = 0, scale = scale, shape = shape
+    ),
+    survival = \(x) pgpd(
+      x, location = 0, scale = scale, shape = shape, lower.tail = FALSE
     ),
     quantile = \(p) qgpd(p, location = 0, scale = scale, shape = shape),
     density = \(x) dgpd(x, location = 0, scale = scale, shape = shape),

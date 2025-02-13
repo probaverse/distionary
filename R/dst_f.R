@@ -37,7 +37,7 @@ dst_f <- function(df1, df2){
     ),
     kurtosis_exc = ifelse(
       df2 > 8,
-      12 * df1 * (5 * df2 - 22) * (df1 + df2 - 2) + (df2 - 4) * (df2 - 2)^2 /
+      12 * (df1 * (5 * df2 - 22) * (df1 + df2 - 2) + (df2 - 4) * (df2 - 2)^2) /
         (df1 * (df2 - 6) * (df2 - 8) * (df1 + df2 - 2)),
       NaN
     ),

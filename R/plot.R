@@ -6,8 +6,14 @@
 #' @param x Distribution object
 #' @param what Name of the representation to plot.
 #' @param ... Other arguments to pass to the \code{graphics::curve} function.
-#' plot(dst_norm(5, 5))
-#' plot(dst_empirical(-5:2), "cdf", n = 1001)
+#' @examples
+#' d <- dst_norm(0, 1)
+#' plot(d, from = -4, to = 4)
+#' plot(d, "cdf", n = 1000)
+#' plot(d, "survival")
+#' plot(d, "quantile")
+#' plot(d, "hazard")
+#' plot(d, "chf")
 #' @export
 plot.dst <- function(x,
                      what = c("density", "cdf", "survival", "quantile", "hazard", "chf"),
@@ -62,3 +68,4 @@ plot.dst <- function(x,
   ellipsis[["expr"]] <- as.name("f")
   do.call("curve", args = ellipsis)
 }
+

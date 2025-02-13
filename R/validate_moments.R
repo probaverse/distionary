@@ -106,8 +106,8 @@ validate_kurtosis <- function(
     distribution, verbose = FALSE, tol = 1e-04
 ) {
   if (is.null(distribution[["kurtosis"]])) return(NA)
-  kurtosis_builtin <- distribution$kurtosis
-  distribution$kurtosis <- NULL
+  kurtosis_builtin <- distribution[["kurtosis"]]
+  distribution[["kurtosis"]] <- NULL
   kurtosis_derived <- kurtosis(distribution)
   if (identical(kurtosis_builtin, kurtosis_derived) ||
       (is.infinite(kurtosis_builtin) && is.nan(kurtosis_derived))) {
@@ -131,10 +131,10 @@ validate_kurtosis <- function(
 validate_kurtosis_exc <- function(
     distribution, verbose = FALSE, tol = 1e-04
 ) {
-  if (is.null(distribution$kurtexc)) return(NA)
-  kurtexc_builtin <- distribution$kurtosis_exc
-  distribution$kurtosis_exc <- NULL
-  kurtexc_derived <- kurtexc(distribution)
+  if (is.null(distribution[["kurtosis_exc"]])) return(NA)
+  kurtexc_builtin <- distribution[["kurtosis_exc"]]
+  distribution[["kurtosis_exc"]] <- NULL
+  kurtexc_derived <- kurtosis_exc(distribution)
   if (identical(kurtexc_builtin, kurtexc_derived) ||
       (is.infinite(kurtexc_builtin) && is.nan(kurtexc_derived))) {
     diff_ <- 0

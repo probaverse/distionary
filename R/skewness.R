@@ -15,6 +15,9 @@ eval_skewness_from_network <- function(distribution) {
   # so look at positive and negative part of the CDF.
   mu <- mean(distribution)
   sigma <- stdev(distribution)
+  if (is.nan(mu) || is.infinite(mu) || is.nan(sigma) || is.infinite(sigma)) {
+    return(NaN)
+  }
   if (attr(distribution, "name") %in% c(
     "Hypergeometric", "Bernoulli", "Binomial"
   )) {

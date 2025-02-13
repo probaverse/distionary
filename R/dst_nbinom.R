@@ -27,7 +27,7 @@ dst_nbinom <- function(size, prob) {
     mean = (1 - prob) * size / prob,
     variance = (1 - prob) * size / prob^2,
     skewness = (2 - prob) / sqrt((1 - prob) * size),
-    kurtosis_exc = 6 / size + (1 - prob)^2 / (prob * size),
+    kurtosis_exc = 6 / size + prob^2 / ((1 - prob) * size),
     range = c(0, Inf),
     .name = "Negative Binomial",
     .vtype = "discrete"
