@@ -18,11 +18,11 @@ knitr::opts_chunk$set(
 library(distionary)
 ```
 
-
+This vignette covers the second goal of `distionary`: to evaluate probability distributions, even when that property is not specified in the distribution's definition.
 
 ## Distributional Representations
 
-A _distributional representation_ is a function that fully defines the distribution, such that any property can be calculated from it. Here is a list of representations recognised by `distionary`, and the functions for accessing them. 
+A _distributional representation_ is a function that fully describes the distribution, such that any property can be calculated from it. Here is a list of representations recognised by `distionary`, and the functions for accessing them. 
 
 | Representation                   | `distionary` Functions                  |
 |----------------------------------|-----------------------------------------|
@@ -36,25 +36,29 @@ A _distributional representation_ is a function that fully defines the distribut
 | Odds Function                    | `eval_odds()`,     `enframe_odds()`     |
 | Return Level Function            | `eval_return()`,   `enframe_return()`   |
 
-All representations can either be accessed by the `eval_*()` family of functions, or `enframe_*()`. While `eval_*()` returns a vector of the evaluated representation, `enframe_*()` returns the results in a tibble or data frame paired with the inputs. 
-
-The `enframe_*()` functions allow for insertion of multiple distributions, placing a column for each distribution. For example, here is the evaluated PMF.
+All representations can either be accessed by the `eval_*()` family of functions, providing a vector of the evaluated representation.
 
 ```{r}
 d1 <- dst_geom(0.6)
-d2 <- dst_geom(0.4)
-enframe_pmf(d1, d2, at = 0:5)
+eval_pmf(d1, at = 0:5)
 ```
 
-The column names can be changed in three ways:
+Alternatively, the `enframe_*()` family of functions provides the results in a tibble or data frame paired with the inputs, useful in a data wrangling workflow.
+
+```{r}
+enframe_pmf(d1, at = 0:5)
+```
+
+The `enframe_*()` functions allow for insertion of multiple distributions, placing a column for each distribution. The column names can be changed in three ways:
 
 1. The input column `.arg` can be renamed with the `arg_name` argument.
 2. The `pmf` prefix on the evaluation columns can be changed with the `fn_prefix` argument.
 3. The distribution names can be changed by assigning name-value pairs for the input distributions.
 
-Let's practice these.
+Let's practice this with the addition of a second distribution.
 
 ```{r}
+d2 <- dst_geom(0.4)
 enframe_pmf(
   model1 = d1, model2 = d2, at = 0:5, 
   arg_name = "num_failures", fn_prefix = "probability"
@@ -94,11 +98,11 @@ Below is a table of the properties incorporated in `distionary`, and the corresp
 | Excess Kurtosis            | `kurtosis_exc()` |
 | Kurtosis                   | `kurtosis()` |
 
-Here are some properties of our original Uniform(-1, 1) distribution:
+Here's the mean and variance of our original distribution.
 
 ```{r}
 mean(d1)
-stdev(d1)
+variance(d1)
 ```
 
 Some properties are easy to make yourself. Here is an example of a function that calculates interquartile range.
@@ -116,6 +120,5 @@ Apply the function.
 ```{r}
 iqr(d2)
 ```
-
 
 For properties that are not handled by `distionary` (e.g., extreme value index, or moment generating function), one option is to build these properties into your own distribution. A future version of `distionary` will make user-defined properties easier to work with.

@@ -341,11 +341,14 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(distionary)</span></code></pre></div>
+<p>This vignette covers the second goal of <code>distionary</code>: to
+evaluate probability distributions, even when that property is not
+specified in the distribution’s definition.</p>
 <div id="distributional-representations" class="section level2">
 <h2>Distributional Representations</h2>
 <p>A <em>distributional representation</em> is a function that fully
-defines the distribution, such that any property can be calculated from
-it. Here is a list of representations recognised by
+describes the distribution, such that any property can be calculated
+from it. Here is a list of representations recognised by
 <code>distionary</code>, and the functions for accessing them.</p>
 <table>
 <colgroup>
@@ -398,26 +401,27 @@ it. Here is a list of representations recognised by
 </tbody>
 </table>
 <p>All representations can either be accessed by the
-<code>eval_*()</code> family of functions, or <code>enframe_*()</code>.
-While <code>eval_*()</code> returns a vector of the evaluated
-representation, <code>enframe_*()</code> returns the results in a tibble
-or data frame paired with the inputs.</p>
-<p>The <code>enframe_*()</code> functions allow for insertion of
-multiple distributions, placing a column for each distribution. For
-example, here is the evaluated PMF.</p>
+<code>eval_*()</code> family of functions, providing a vector of the
+evaluated representation.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>d1 <span class="ot">&lt;-</span> <span class="fu">dst_geom</span>(<span class="fl">0.6</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">dst_geom</span>(<span class="fl">0.4</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">enframe_pmf</span>(d1, d2, <span class="at">at =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>)</span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt;    .arg  pmf_d1 pmf_d2</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt;   &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 1     0 0.6     0.4   </span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 2     1 0.24    0.24  </span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 3     2 0.096   0.144 </span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 4     3 0.0384  0.0864</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 5     4 0.0154  0.0518</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; 6     5 0.00614 0.0311</span></span></code></pre></div>
-<p>The column names can be changed in three ways:</p>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">eval_pmf</span>(d1, <span class="at">at =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt; [1] 0.600000 0.240000 0.096000 0.038400 0.015360 0.006144</span></span></code></pre></div>
+<p>Alternatively, the <code>enframe_*()</code> family of functions
+provides the results in a tibble or data frame paired with the inputs,
+useful in a data wrangling workflow.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">enframe_pmf</span>(d1, <span class="at">at =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 2</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;    .arg     pmf</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co">#&gt;   &lt;int&gt;   &lt;dbl&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; 1     0 0.6    </span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt; 2     1 0.24   </span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt; 3     2 0.096  </span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 4     3 0.0384 </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 5     4 0.0154 </span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 6     5 0.00614</span></span></code></pre></div>
+<p>The <code>enframe_*()</code> functions allow for insertion of
+multiple distributions, placing a column for each distribution. The
+column names can be changed in three ways:</p>
 <ol style="list-style-type: decimal">
 <li>The input column <code>.arg</code> can be renamed with the
 <code>arg_name</code> argument.</li>
@@ -426,33 +430,34 @@ with the <code>fn_prefix</code> argument.</li>
 <li>The distribution names can be changed by assigning name-value pairs
 for the input distributions.</li>
 </ol>
-<p>Let’s practice these.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">enframe_pmf</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">model1 =</span> d1, <span class="at">model2 =</span> d2, <span class="at">at =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, </span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">arg_name =</span> <span class="st">&quot;num_failures&quot;</span>, <span class="at">fn_prefix =</span> <span class="st">&quot;probability&quot;</span></span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>)</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
-<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#&gt;   num_failures probability_model1 probability_model2</span></span>
-<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co">#&gt;          &lt;int&gt;              &lt;dbl&gt;              &lt;dbl&gt;</span></span>
-<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#&gt; 1            0            0.6                 0.4   </span></span>
-<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co">#&gt; 2            1            0.24                0.24  </span></span>
-<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a><span class="co">#&gt; 3            2            0.096               0.144 </span></span>
-<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a><span class="co">#&gt; 4            3            0.0384              0.0864</span></span>
-<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="co">#&gt; 5            4            0.0154              0.0518</span></span>
-<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; 6            5            0.00614             0.0311</span></span></code></pre></div>
+<p>Let’s practice this with the addition of a second distribution.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>d2 <span class="ot">&lt;-</span> <span class="fu">dst_geom</span>(<span class="fl">0.4</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">enframe_pmf</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">model1 =</span> d1, <span class="at">model2 =</span> d2, <span class="at">at =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">5</span>, </span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">arg_name =</span> <span class="st">&quot;num_failures&quot;</span>, <span class="at">fn_prefix =</span> <span class="st">&quot;probability&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;   num_failures probability_model1 probability_model2</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;          &lt;int&gt;              &lt;dbl&gt;              &lt;dbl&gt;</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 1            0            0.6                 0.4   </span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 2            1            0.24                0.24  </span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; 3            2            0.096               0.144 </span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 4            3            0.0384              0.0864</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; 5            4            0.0154              0.0518</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 6            5            0.00614             0.0311</span></span></code></pre></div>
 </div>
 <div id="drawing-a-random-sample" class="section level2">
 <h2>Drawing a random sample</h2>
 <p>To draw a random sample from a distribution, use the
 <code>realise()</code> or <code>realize()</code> function:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">realise</span>(d1, <span class="at">n =</span> <span class="dv">5</span>)</span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; [1] 0 0 0 0 0</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">realise</span>(d1, <span class="at">n =</span> <span class="dv">5</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="co">#&gt; [1] 0 0 0 0 0</span></span></code></pre></div>
 <p>You can read this call as “realise distribution <code>d</code> five
 times”. By default, <code>n</code> is set to 1, so that realising
 converts a distribution to a numeric draw:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">realise</span>(d1)</span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">realise</span>(d1)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; [1] 0</span></span></code></pre></div>
 <p>While random sampling falls into the same family as the
 <code>p*/d*/q*/r*</code> functions from the <code>stats</code> package
 (e.g., <code>rnorm()</code>), this function is not a distributional
@@ -507,22 +512,21 @@ them.</p>
 </tr>
 </tbody>
 </table>
-<p>Here are some properties of our original Uniform(-1, 1)
-distribution:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">mean</span>(d1)</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.6666667</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">stdev</span>(d1)</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co">#&gt; [1] 1.054093</span></span></code></pre></div>
+<p>Here’s the mean and variance of our original distribution.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">mean</span>(d1)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#&gt; [1] 0.6666667</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="fu">variance</span>(d1)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#&gt; [1] 1.111111</span></span></code></pre></div>
 <p>Some properties are easy to make yourself. Here is an example of a
 function that calculates interquartile range.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Make a function that takes a distribution as input, and returns the</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co"># interquartile range.</span></span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>iqr <span class="ot">&lt;-</span> <span class="cf">function</span>(distribution) {</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="fu">diff</span>(<span class="fu">eval_quantile</span>(distribution, <span class="at">at =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>)))</span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Make a function that takes a distribution as input, and returns the</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co"># interquartile range.</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>iqr <span class="ot">&lt;-</span> <span class="cf">function</span>(distribution) {</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">diff</span>(<span class="fu">eval_quantile</span>(distribution, <span class="at">at =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.75</span>)))</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>}</span></code></pre></div>
 <p>Apply the function.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">iqr</span>(d2)</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">iqr</span>(d2)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co">#&gt; [1] 2</span></span></code></pre></div>
 <p>For properties that are not handled by <code>distionary</code> (e.g.,
 extreme value index, or moment generating function), one option is to
 build these properties into your own distribution. A future version of
