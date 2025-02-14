@@ -4,6 +4,7 @@
 #' details.
 #'
 #' @param distribution Distribution.
+#' @param value A list of named parameter values, or `NULL`.
 #' @details If a distribution is made by specifying parameter values
 #' (e.g., mean and variance for a Normal distribution; shape parameters
 #' for a Beta distribution), it is useful to keep track of what

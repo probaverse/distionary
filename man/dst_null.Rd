@@ -20,5 +20,4 @@ to \code{NA}.
 x <- dst_null()
 mean(x)
 eval_pmf(x, at = 1:10)
-enframe_hazard(x, at = 1:10)
 }

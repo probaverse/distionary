@@ -6,7 +6,7 @@
 #' If these quantities are not supplied in the
 #' distribution's definition, a numerical algorithm may be used.
 #'
-#' @param x Distribution to evaluate.
+#' @param x,distribution Distribution to evaluate.
 #' @param ... When calculating the mean via integration of the quantile
 #' function, arguments passed to `stats::integrate()`.
 #' @note Beware that if a quantity is being calculated numerically

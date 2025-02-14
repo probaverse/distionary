@@ -47,8 +47,11 @@ pretty_name <- function(distribution, param_digits = 0) {
 #' `parameters()` function can be applied.
 #' @param param_digits Number of significant digits to include in the
 #' output.
-#' @return a single character with the parameters separated by commas and
+#' @returns a single character with the parameters separated by commas and
 #' sandwiched by brackets.
+#' @examples
+#' d <- dst_norm(0, 1)
+#' distionary:::bracket_parameters(d)
 bracket_parameters <- function(distribution, param_digits = 2) {
   p <- signif(unlist(parameters(distribution)), digits = param_digits)
   paste0("(", paste0(p, collapse = ", "), ")")

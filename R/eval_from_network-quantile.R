@@ -192,5 +192,3 @@ directional_inverse <- function(distribution, p, low, high, tol, maxiter,
   }
   mid
 }
-
-

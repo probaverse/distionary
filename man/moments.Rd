@@ -23,7 +23,7 @@ stdev(distribution)
 variance(distribution)
 }
 \arguments{
-\item{x}{Distribution to evaluate.}
+\item{x, distribution}{Distribution to evaluate.}
 
 \item{...}{When calculating the mean via integration of the quantile
 function, arguments passed to \code{stats::integrate()}.}

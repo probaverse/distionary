@@ -11,6 +11,8 @@ parameters(distribution) <- value
 }
 \arguments{
 \item{distribution}{Distribution.}
+
+\item{value}{A list of named parameter values, or \code{NULL}.}
 }
 \value{
 A list of the distribution parameters. More specifically,
