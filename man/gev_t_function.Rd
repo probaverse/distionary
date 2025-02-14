@@ -27,7 +27,7 @@ The shape parameter is not vectorized. This function is only
 intended to be used when location, scale, and shape are scalars.
 }
 \examples{
-gev_t_function(1:10, 0, 1, 1)
+distionary:::gev_t_function(1:10, 0, 1, 1)
 
 }
 \seealso{

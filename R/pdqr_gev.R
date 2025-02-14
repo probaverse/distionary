@@ -50,7 +50,7 @@ dgev <- function(x, location, scale, shape) {
 #' @param x Argument of the function; vectorized.
 #' @returns A vector of the t function evaluated.
 #' @examples
-#' gev_t_function(1:10, 0, 1, 1)
+#' distionary:::gev_t_function(1:10, 0, 1, 1)
 #'
 #' @inheritParams dst_gev
 #' @seealso See the Wikipedia entry for the GEV distribution,
