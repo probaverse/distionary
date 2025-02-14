@@ -30,5 +30,5 @@ Imports:
     stats,
     vctrs
 VignetteBuilder: knitr
-URL: https://distionary.netlify.app/, https://github.com/probaverse/distionary
+URL: https://distionary.probaverse.com/, https://github.com/probaverse/distionary
 BugReports: https://github.com/probaverse/distionary/issues
