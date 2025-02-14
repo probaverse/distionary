@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 library(distionary)
 ```
 
+One goal of `distionary` is to provide a framework for _creating_ a distribution. This vignette covers distributions 
 
 ## Built-In Distribution Families
 

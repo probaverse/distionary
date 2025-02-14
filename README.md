@@ -24,14 +24,19 @@ With `distionary`, you can:
 The main purpose of `distionary` is to make distribution calculations
 available, even if they are not specified in the distribution.
 
+The name “distionary” is a portmanteau of “distribution” and
+“dictionary”. While a dictionary lists and defines words, `distionary`
+makes a list of common distribution families available, and defines
+distributions.
+
 ## Installation
 
-distionary is not on CRAN yet. You can download the development version
-from GitHub with:
+`distionary` is not on CRAN yet. You can download the development
+version from GitHub with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("vincenzocoia/distionary")
+devtools::install_github("probaverse/distionary")
 ```
 
 ## Example
