@@ -38,6 +38,7 @@ d2 <- dst_pois(1.1)
 eval_cdf(d1, at = 0:4)
 enframe_cdf(d1, at = 0:4)
 enframe_cdf(d1, d2, at = 0:4)
+enframe_cdf(model1 = d1, model2 = d2, at = 0:4)
 }
 \seealso{
 Other distributional representations: 

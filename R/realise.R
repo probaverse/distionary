@@ -2,30 +2,27 @@
 #'
 #' Draw `n` independent observations from a distribution.
 #'
-#' @param distribution Distribution.
-#' @param n Number of observations to generate
-#' @return Vector of independent values drawn from the inputted distribution
-#' @note `realise()`, `realize()`, and `observe()` all do the same thing.
-#' Although the language `observe()` is more common, it's only an alias here,
-#' because this function name is common amongst other packages.
+#' @param distribution Distribution object.
+#' @param n Number of observations to generate.
+#' @returns Vector of independent values drawn from the inputted distribution.
+#' @note `realise()` and `realize()` are aliases and do the same thing.
 #' @rdname realise
+#' @examples
+#' d <- dst_pois(5)
+#' set.seed(2)
+#' realise(d, n = 10)
 #' @export
-realise <- function(distribution, n = 1) UseMethod("realise")
+realise <- function(distribution, n = 1) {
+  eval_property(distribution, "realise", n)
+}
 
-#' @export
-realise.dst <- function(distribution, n = 1) {
+eval_realise_from_network <- function(distribution, n) {
   u <- stats::runif(n)
-  return(eval_quantile(distribution, at = u))
+  eval_quantile(distribution, at = u)
 }
 
 #' @rdname realise
 #' @export
 realize <- function(distribution, n = 1) {
-	realise(distribution, n = n)
-}
-
-#' @rdname realise
-#' @export
-observe <- function(distribution, n = 1) {
-	realise(distribution, n = n)
+  eval_property(distribution, "realize", n)
 }

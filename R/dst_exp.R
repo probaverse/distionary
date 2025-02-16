@@ -1,20 +1,31 @@
 #' Exponential Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' exponential distributions.
+#' Makes an Exponential distribution.
 #'
-#' @param rate Rate.
-#'
+#' @param rate Rate parameter, positive.
+#' @returns An Exponential distribution.
 #' @examples
 #' dst_exp(1)
-#'
 #' @export
 dst_exp <- function(rate) {
   if (rate <= 0) {
     stop('rate must be greater than 0.')
   }
-  dst_parametric(
-    "exp", rate = rate, .variable = "continuous", .env = "package:stats"
+  distribution(
+    parameters = list(rate = rate),
+    density = \(x) stats::dexp(x, rate = rate),
+    cdf = \(x) stats::pexp(x, rate = rate),
+    quantile = \(p) stats::qexp(p, rate = rate),
+    realise = \(n) stats::rexp(n, rate = rate),
+    survival = \(x) stats::pexp(x, rate = rate, lower.tail = FALSE),
+    mean = 1 / rate,
+    median = log(2) / rate,
+    variance = 1 / rate^2,
+    skewness = 2,
+    kurtosis_exc = 6,
+    range = c(0, Inf),
+    .name = "Exponential",
+    .vtype = "continuous"
   )
 }
 

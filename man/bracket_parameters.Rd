@@ -22,3 +22,7 @@ For distributions that have parameters, this function places those
 parameters in bracket notation, such as (0, 1) for a Normal distribution
 with a mean of 0 and variance of 1.
 }
+\examples{
+d <- dst_norm(0, 1)
+distionary:::bracket_parameters(d)
+}

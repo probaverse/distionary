@@ -1,6 +1,10 @@
-# d <- mix(dst_unif(0, 5), dst_empirical(c(2, 3, 3, 4, 6)))
+# # d <- mix(dst_unif(0, 5), dst_empirical(c(2, 3, 3, 4, 6)))
 # # plot(d, "cdf", from = -1, to = 7, n = 1001)
-# cdf <- get_cdf(d)
+# cdf <- \(x) (punif(x, 0, 5) + stats::ecdf(c(2, 3, 3, 4, 6))) / 2
+# d <- distribution(
+#   cdf = cdf,
+#   .vtype = "continuous"
+# )
 # tau <- c(0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.5, NA, NaN, 0.55, 0.6, 0.9, 1)
 # ans <- c(1, 1.5, 2, 2, 2, 2.5, 3, 3, NA, NaN, 3, 3, 5, 6)
 # tau_left <- c(-Inf, -100, 0)
@@ -13,9 +17,9 @@
 # test_that("quantiles by inversion of cdf works", {
 #   expect_equal(
 #     sapply(tau, function(x) {
-#       left_inverse(cdf,
+#       directional_inverse(cdf,
 #         at = x, low = -1, high = 7,
-#         tol = 1e-6, maxiter = 1000
+#         tol = 1e-6, maxiter = 1000, direction = "left"
 #       )
 #     }),
 #     ans
@@ -38,7 +42,10 @@
 #   )
 # })
 #
-# d2 <- mix(dst_norm(0, 1), dst_norm(4, 1))
+# d2 <- distribution(
+#   cdf = \(x) (pnorm(x, 0, 1) + pnorm(x, 4, 1)) / 2,
+#   .vtype = "continuous"
+# )
 #
 # test_that("Quantile algorithm works with no discontinuities", {
 #   expect_equal(eval_quantile(d2, at = 0.5), 2)

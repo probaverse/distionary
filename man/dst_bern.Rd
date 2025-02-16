@@ -9,11 +9,13 @@ dst_bern(prob)
 \arguments{
 \item{prob}{Probability of success.}
 }
+\value{
+A Bernoulli distribution.
+}
 \description{
-Makes a distribution belonging to the family of
-bernoulli distributions.
+Makes a Bernoulli distribution, representing the outcome of a
+single trial with a given success probability.
 }
 \examples{
 dst_bern(0.3)
-
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dst_gev.R
 \name{dst_gev}
 \alias{dst_gev}
-\title{Generalized Extreme Value Distribution}
+\title{Generalised Extreme Value Distribution}
 \usage{
 dst_gev(location, scale, shape)
 }
@@ -11,12 +11,29 @@ dst_gev(location, scale, shape)
 
 \item{scale}{Scale parameter; positive numeric.}
 
-\item{shape}{Shape parameter; numeric.}
+\item{shape}{Shape parameter; numeric. Also the extreme value index,
+so that \code{shape > 0} is heavy tailed, and \code{shape < 0} is short-tailed.}
+}
+\value{
+A GEV distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-Generalized Extreme Value (GEV) distributions.
+Makes a Generalised Extreme Value (GEV) distribution, which is the
+limiting distribution of the maximum.
 }
 \examples{
-dst_gev(0, 1, 1)
+# Short-tailed example
+short <- dst_gev(0, 1, -1)
+range(short)
+mean(short)
+
+# Heavy-tailed example
+heavy <- dst_gev(0, 1, 1)
+range(heavy)
+mean(heavy)
+
+# Light-tailed example (a Gumbel distribution)
+light <- dst_gev(0, 1, 0)
+range(light)
+mean(light)
 }

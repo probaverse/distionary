@@ -1,26 +1,20 @@
 #' Gamma Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' Gamma distributions.
+#' Makes a Gamma distribution.
 #'
 #' @param shape Shape parameter; positive.
 #' @param rate Rate parameter; positive.
-#'
+#' @returns A Gamma distribution.
 #' @examples
 #' dst_gamma(2, 1)
 #' @export
 dst_gamma <- function(shape, rate) {
-  if (shape <= 0) {
-    stop("shape paramter must be positive.")
-  }
   if (rate <= 0) {
     stop("rate parameter must be positive.")
   }
-  dst_parametric(
-    "gamma", shape = shape, rate = rate,
-    .variable = "continuous", .env = "package:stats"
-  )
+  d <- dst_pearson3(location = 0, scale = 1 / rate, shape = shape)
+  attributes(d)[["name"]] <- "Gamma"
+  parameters(d) <- list(shape = shape, rate = rate)
+  d
 }
-
-
 

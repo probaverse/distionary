@@ -2,24 +2,36 @@
 % Please edit documentation in R/dst_gpd.R
 \name{dst_gpd}
 \alias{dst_gpd}
-\title{Generalized Pareto Distribution}
+\title{Generalised Pareto Distribution}
 \usage{
-dst_gpd(location, scale, shape)
+dst_gpd(scale, shape)
 }
 \arguments{
-\item{location}{Location parameter; numeric.}
-
 \item{scale}{Scale parameter; positive numeric.}
 
-\item{shape}{Shape parameter; numeric.}
+\item{shape}{Shape parameter; numeric. Also the extreme value index,
+so that \code{shape > 0} is heavy tailed, and \code{shape < 0} is short-tailed.}
 }
 \value{
-Object of class "dst" of a GPD.
+A Generalised Pareto Distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-generalized Pareto distributions (GPD).
+Makes a Generalized Pareto distribution (GPD), corresponding to the
+limiting distribution of excesses over a threshold.
 }
 \examples{
-dst_gpd(0, 1, 1)
+# Short-tailed example
+short <- dst_gpd(1, -1)
+range(short)
+mean(short)
+
+# Heavy-tailed example
+heavy <- dst_gpd(1, 1)
+range(heavy)
+mean(heavy)
+
+# Light-tailed example (a Gumbel distribution)
+light <- dst_gpd(1, 0)
+range(light)
+mean(light)
 }

@@ -2,16 +2,18 @@
 % Please edit documentation in R/dst_t.R
 \name{dst_t}
 \alias{dst_t}
-\title{The Student t Distribution}
+\title{Student t Distribution}
 \usage{
 dst_t(df)
 }
 \arguments{
 \item{df}{Degrees of freedom; positive.}
 }
+\value{
+A Student t distribution.
+}
 \description{
-Makes a distribution belonging to the family of
-t distributions.
+Makes a Student t distribution.
 }
 \examples{
 dst_t(3)

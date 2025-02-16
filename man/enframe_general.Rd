@@ -2,11 +2,13 @@
 % Please edit documentation in R/enframe.R
 \name{enframe_general}
 \alias{enframe_general}
-\title{Enframe a distributional representation's evaluation}
+\title{Enframe a distributional representation}
 \usage{
 enframe_general(..., at, arg_name, fn_prefix, sep, eval_fn, fn_args = list())
 }
 \arguments{
+\item{...}{Distributions to enframe; optionally, named.}
+
 \item{at}{Vector of values to evaluate the cdf at. Must be named when using
 in \code{enframe_}.}
 
@@ -23,8 +25,7 @@ character that will be separating the \code{fn_name} and the distribution name.}
 representation, such as \code{eval_cdf} and \code{eval_density}.}
 
 \item{fn_args}{A named list of arguments to pass to the \code{eval_fn} function,
-besides the distribution and \code{at} argument (the \code{strict} argument
-being the most common, and perhaps the only use case).}
+besides the distribution and \code{at} argument.}
 }
 \value{
 A data frame or tibble of the input argument (\code{at}), with the
@@ -51,4 +52,12 @@ with the "unique" names repair. "Unique" is chosen instead of "universal"
 because names are anticipated to be syntactic with the \code{eval_fn} prefix;
 "minimal" is not sufficient because it may result in columns having the
 same names.
+}
+\examples{
+d <- dst_norm(0, 1)
+distionary:::enframe_general(
+  d, at = 1:9 / 10, arg_name = "tau", fn_prefix = "quantile", sep = "",
+  eval_fn = eval_quantile
+)
+
 }

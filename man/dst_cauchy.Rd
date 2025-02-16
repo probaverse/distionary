@@ -11,11 +11,16 @@ dst_cauchy(location, scale)
 
 \item{scale}{positive}
 }
+\value{
+A Cauchy distribution.
+}
 \description{
-Makes a distribution belonging to the family of
-cauchy distributions.
+Makes a Cauchy distribution.
 }
 \examples{
-dst_cauchy(0, 1)
+d <- dst_cauchy(0, 1)
 
+# Moments do not exist for the Cauchy distribution.
+mean(d)
+variance(d)
 }

@@ -7,13 +7,14 @@
 dst_exp(rate)
 }
 \arguments{
-\item{rate}{Rate.}
+\item{rate}{Rate parameter, positive.}
+}
+\value{
+An Exponential distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-exponential distributions.
+Makes an Exponential distribution.
 }
 \examples{
 dst_exp(1)
-
 }

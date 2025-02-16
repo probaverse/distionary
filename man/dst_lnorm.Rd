@@ -4,17 +4,19 @@
 \alias{dst_lnorm}
 \title{Log Normal Distribution}
 \usage{
-dst_lnorm(meanlog, variancelog)
+dst_lnorm(meanlog, sdlog)
 }
 \arguments{
-\item{meanlog, variancelog}{Mean and variance of the distribution
+\item{meanlog, sdlog}{Mean and variance of the distribution
 on a log scale.}
 }
 \value{
-Object of class \code{c("lnorm", "dst")}.
-dst_lnorm(0, 1)
+A Log Normal distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-Log Normal distributions.
+Makes a Log Normal distribution, which is the distribution of
+the exponential of a Normally distributed random variable.
+}
+\examples{
+dst_lnorm(0, 1)
 }

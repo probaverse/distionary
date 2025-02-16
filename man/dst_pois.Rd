@@ -7,13 +7,14 @@
 dst_pois(lambda)
 }
 \arguments{
-\item{lambda}{Mean of the Poisson distribution.}
+\item{lambda}{Mean of the Poisson distribution; positive.}
 }
 \value{
-Object of class "dst".
-dst_pois(1)
+A Poisson distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-Poisson distributions.
+Makes a Poisson distribution.
+}
+\examples{
+dst_pois(1)
 }

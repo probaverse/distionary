@@ -9,9 +9,11 @@ dst_unif(min, max)
 \arguments{
 \item{min, max}{Minimum and maximum of the distribution.}
 }
+\value{
+A Uniform distribution.
+}
 \description{
-Makes a distribution belonging to the family of
-Uniform distributions.
+Makes a Uniform distribution.
 }
 \examples{
 dst_unif(0, 1)

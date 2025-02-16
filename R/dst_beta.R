@@ -1,9 +1,8 @@
 #' Beta Distribution
 #'
-#' Makes a distribution belonging to the family of
-#' beta distributions.
-#' @param shape1,shape2 Parameters, greater than 0. Also known as alpha
-#' and beta.
+#' Makes a Beta distribution.
+#' @param shape1,shape2 Non-negative parameters of the distribution.
+#' @returns A beta distribution.
 #' @examples
 #' dst_beta(2, 3)
 #' @export
@@ -14,8 +13,20 @@ dst_beta <- function(shape1, shape2) {
 	if (shape2 <= 0) {
 		stop("shape2 must be positive.")
 	}
-	dst_parametric(
-	  "beta", shape1 = shape1, shape2 = shape2,
-	  .variable = "continuous", .env = "package:stats"
-	)
+  distribution(
+    parameters = list(shape1 = shape1, shape2 = shape2),
+    density = \(x) stats::dbeta(x, shape1, shape2),
+    cdf = \(x) stats::pbeta(x, shape1, shape2),
+    quantile = \(p) stats::qbeta(p, shape1, shape2),
+    realise = \(n) stats::rbeta(n, shape1, shape2),
+    survival = \(x) stats::pbeta(x, shape1, shape2, lower.tail = FALSE),
+    mean = shape1 / (shape1 + shape2),
+    variance = shape1 * shape2 / (shape1 + shape2)^2 /
+      (shape1 + shape2 + 1),
+    skewness = 2 * (shape2 - shape1) * sqrt(shape1 + shape2 + 1) /
+      (shape1 + shape2 + 2) / sqrt(shape1 * shape2),
+    range = c(0, 1),
+    .vtype = "continuous",
+    .name = "Beta"
+  )
 }

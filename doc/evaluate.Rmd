@@ -1,8 +1,8 @@
 ---
-title: "Evaluating distributions"
+title: "Evaluate a Distribution"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Evaluating distributions}
+  %\VignetteIndexEntry{Evaluate a Distribution}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -18,111 +18,77 @@ knitr::opts_chunk$set(
 library(distionary)
 ```
 
-One purpose of `distplyr` is to handle the menial distribution-related calculations for you. Just specify a distribution once, and there is no need to manage its components anymore. 
+This vignette covers the second goal of `distionary`: to evaluate probability distributions, even when that property is not specified in the distribution's definition.
 
-**Example**: want to compute the variance of a Uniform(-1, 1) distribution, get the 0.25- and 0.75-quantiles, and generate a sample of size 10? 
+## Distributional Representations
 
-Without `distplyr`:
+A _distributional representation_ is a function that fully describes the distribution, such that any property can be calculated from it. Here is a list of representations recognised by `distionary`, and the functions for accessing them. 
 
-```{r}
-a <- -1
-b <- 1
-# Look up formula for variance:
-(b - a) ^ 2 / 12
-# Get quantiles:
-qunif(c(0.25, 0.75), min = a, max = b)
-# Get sample of size 10:
-runif(10, min = a, max = b)
-```
+| Representation                   | `distionary` Functions                  |
+|----------------------------------|-----------------------------------------|
+| Cumulative Distribution Function | `eval_cdf()`,      `enframe_cdf()`      |
+| Survival Function                | `eval_survival()`, `enframe_survival()` |
+| Quantile Function                | `eval_quantile()`, `enframe_quantile()` |
+| Hazard Function                  | `eval_hazard()`,   `enframe_hazard()`   |
+| Cumulative Hazard Function       | `eval_chf()`,      `enframe_chf()`      |
+| Probability density Function     | `eval_density()`,  `enframe_density()`  |
+| Probability mass Function (PMF)  | `eval_pmf()`,      `enframe_pmf()`      |
+| Odds Function                    | `eval_odds()`,     `enframe_odds()`     |
+| Return Level Function            | `eval_return()`,   `enframe_return()`   |
 
-With `distplyr`:
-
-```{r}
-d <- dst_unif(-1, 1)
-variance(d)
-eval_quantile(d, at = c(0.25, 0.75))
-realise(d, 10)
-```
-
-
-## Functional Representations of a Distribution
-
-A distribution can be represented by different functions, such as a density function, a cumulative distribution function, and others. In `distplyr`, you can: 
-
-- evaluate the function directly by calling `eval_*`;
-- evaluate the function and enframe results together with the function arguments with `enframe_*`; or 
-- get the function itself using `get_*`. 
-
-Here are the representations and the corresponding `distplyr` functions:  
-
-| Quantity                         | `distplyr` Functions              |
-|----------------------------------|-----------------------------------|
-| Cumulative Distribution Function | `eval_cdf()`,      `get_cdf()`,      `enframe_cdf()`      |
-| Survival Function                | `eval_survival()`, `get_survival()`, `enframe_survival()` |
-| Quantile Function                | `eval_quantile()`, `get_quantile()`, `enframe_quantile()` |
-| Hazard Function                  | `eval_hazard()`,   `get_hazard()`,   `enframe_hazard()`   |
-| Cumulative Hazard Function       | `eval_chf()`,      `get_chf()`,      `enframe_chf()`      |
-| Probability density function     | `eval_density()`,  `get_density()`,  `enframe_density()`  |
-| Probability mass function        | `eval_pmf()`,      `get_pmf()`,      `enframe_pmf()`      |
-
-These functions all take a distribution object as their first argument, and `eval_*` and `enframe_*` have a second argument named `at` indicating where to evaluate the function. The `at` argument is vectorized.
-
-
-
-Here is an example of evaluating the hazard function and the random sample generator of a Uniform(-1,1) distribution, and enframing the density:
+All representations can either be accessed by the `eval_*()` family of functions, providing a vector of the evaluated representation.
 
 ```{r}
-eval_hazard(d, at = 0:10)
-enframe_density(d, at = 0:10)
-set.seed(10)
+d1 <- dst_geom(0.6)
+eval_pmf(d1, at = 0:5)
 ```
 
-`enframe()` works particularly well with tibbles and `tidyr::unnest()`:
+Alternatively, the `enframe_*()` family of functions provides the results in a tibble or data frame paired with the inputs, useful in a data wrangling workflow.
 
 ```{r}
-# half_marathon <- tribble(
-# 	~ person, ~ race_time_min,
-# 	"Vincenzo", dst_norm(130, 25),
-# 	"Colleen", dst_norm(110, 13),
-# 	"Regina", dst_norm(115, 20)
-# ) 
-# half_marathon %>% 
-# 	mutate(quartiles = map(race_time_min, enframe_quantile, at = 1:3 / 4)) %>% 
-# 	unnest(quartiles)
+enframe_pmf(d1, at = 0:5)
 ```
 
+The `enframe_*()` functions allow for insertion of multiple distributions, placing a column for each distribution. The column names can be changed in three ways:
+
+1. The input column `.arg` can be renamed with the `arg_name` argument.
+2. The `pmf` prefix on the evaluation columns can be changed with the `fn_prefix` argument.
+3. The distribution names can be changed by assigning name-value pairs for the input distributions.
+
+Let's practice this with the addition of a second distribution.
+
+```{r}
+d2 <- dst_geom(0.4)
+enframe_pmf(
+  model1 = d1, model2 = d2, at = 0:5, 
+  arg_name = "num_failures", fn_prefix = "probability"
+)
+```
 
 ## Drawing a random sample
 
 To draw a random sample from a distribution, use the `realise()` or `realize()` function:
 
 ```{r}
-realise(d, n = 5)
+set.seed(42)
+realise(d1, n = 5)
 ```
 
-You can read this call as "realise distribution `d` five times". By default, `n` is set to 1, so that realizing a distribution converts it to a numeric draw:
+You can read this call as "realise distribution `d` five times". By default, `n` is set to 1, so that realising converts a distribution to a numeric draw:
 
 ```{r}
-realise(d)
+realise(d1)
 ```
 
-This default is especially useful when working with distributions in a tibble:
-
-```{r}
-# half_marathon %>% 
-# 	mutate(actual_time_min = map_dbl(race_time_min, realise))
-```
-
-Perhaps surprisingly, distplyr does not consider `realise()` as a functional representation of a distribution, even though random sampling falls into the same family as the `stats::p*/d*/q*/r*` functions. This is because it's impossible to perfectly describe a distribution based on a sample. 
-
+While random sampling falls into the same family as the `p*/d*/q*/r*` functions from the `stats` package (e.g., `rnorm()`), this function is not a distributional representation, hence does not have a `eval_*()` or `enframe_*()` counterpart. This is because it's impossible to perfectly describe a distribution based on a sample. 
 
 ## Properties of Distributions
 
-Distributions have various numeric properties. Common examples are the mean and variance, but there are many others as well. 
+`distionary` refers to a distribution _property_ as any value that can be calculated from a distribution, such as the mean and variance. Whereas a distributional representation must fully define a distribution, a property need not.
 
-Below is a table of the properties incorporated in `distplyr`:
+Below is a table of the properties incorporated in `distionary`, and the corresponding functions for accessing them.
 
-| Property | `distplyr` Function |
+| Property | `distionary` Function |
 |----------|---------------------|
 | Mean                       | `mean()` |
 | Median                     | `median()` |
@@ -130,15 +96,29 @@ Below is a table of the properties incorporated in `distplyr`:
 | Standard Deviation         | `sd()` |
 | Skewness                   | `skewness()` |
 | Excess Kurtosis            | `kurtosis_exc()` |
-| Kurtosis                   | `kurtosis_raw()` |
-| Extreme Value (Tail) Index | `evi()` |
+| Kurtosis                   | `kurtosis()` |
 
-Here are some properties of our original Uniform(-1, 1) distribution:
+Here's the mean and variance of our original distribution.
 
 ```{r}
-mean(d)
-stdev(d)
-evi(d)
+mean(d1)
+variance(d1)
 ```
 
+Some properties are easy to make yourself. Here is an example of a function that calculates interquartile range.
 
+```{r}
+# Make a function that takes a distribution as input, and returns the
+# interquartile range.
+iqr <- function(distribution) {
+  diff(eval_quantile(distribution, at = c(0.25, 0.75)))
+}
+```
+
+Apply the function.
+
+```{r}
+iqr(d2)
+```
+
+For properties that are not handled by `distionary` (e.g., extreme value index, or moment generating function), one option is to build these properties into your own distribution. A future version of `distionary` will make user-defined properties easier to work with.

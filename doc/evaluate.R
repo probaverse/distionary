@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -8,49 +8,37 @@ knitr::opts_chunk$set(
 library(distionary)
 
 ## -----------------------------------------------------------------------------
-a <- -1
-b <- 1
-# Look up formula for variance:
-(b - a) ^ 2 / 12
-# Get quantiles:
-qunif(c(0.25, 0.75), min = a, max = b)
-# Get sample of size 10:
-runif(10, min = a, max = b)
+d1 <- dst_geom(0.6)
+eval_pmf(d1, at = 0:5)
 
 ## -----------------------------------------------------------------------------
-d <- dst_unif(-1, 1)
-variance(d)
-eval_quantile(d, at = c(0.25, 0.75))
-realise(d, 10)
+enframe_pmf(d1, at = 0:5)
 
 ## -----------------------------------------------------------------------------
-eval_hazard(d, at = 0:10)
-enframe_density(d, at = 0:10)
-set.seed(10)
+d2 <- dst_geom(0.4)
+enframe_pmf(
+  model1 = d1, model2 = d2, at = 0:5, 
+  arg_name = "num_failures", fn_prefix = "probability"
+)
 
 ## -----------------------------------------------------------------------------
-# half_marathon <- tribble(
-# 	~ person, ~ race_time_min,
-# 	"Vincenzo", dst_norm(130, 25),
-# 	"Colleen", dst_norm(110, 13),
-# 	"Regina", dst_norm(115, 20)
-# ) 
-# half_marathon %>% 
-# 	mutate(quartiles = map(race_time_min, enframe_quantile, at = 1:3 / 4)) %>% 
-# 	unnest(quartiles)
+set.seed(42)
+realise(d1, n = 5)
 
 ## -----------------------------------------------------------------------------
-realise(d, n = 5)
+realise(d1)
 
 ## -----------------------------------------------------------------------------
-realise(d)
+mean(d1)
+variance(d1)
 
 ## -----------------------------------------------------------------------------
-# half_marathon %>% 
-# 	mutate(actual_time_min = map_dbl(race_time_min, realise))
+# Make a function that takes a distribution as input, and returns the
+# interquartile range.
+iqr <- function(distribution) {
+  diff(eval_quantile(distribution, at = c(0.25, 0.75)))
+}
 
 ## -----------------------------------------------------------------------------
-mean(d)
-stdev(d)
-evi(d)
+iqr(d2)
 
