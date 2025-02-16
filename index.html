@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Create and Evaluate Univariate Probability Distributions • distionary</title>
+<title>Create and Evaluate Probability Distributions • distionary</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -14,11 +14,11 @@
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Create and Evaluate Univariate Probability Distributions">
-<meta name="description" content='Make univariate probability distribution objects (of class "dst"). Evaluate their properties, such as density, cdf, mass, mean, variance, etc., and generate random observations.'>
-<meta property="og:description" content='Make univariate probability distribution objects (of class "dst"). Evaluate their properties, such as density, cdf, mass, mean, variance, etc., and generate random observations.'>
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Create and Evaluate Probability Distributions">
+<meta name="description" content="Create probability distribution objects from a list of common distribution families, or make your own distribution. Evaluate distribution properties, even if it is not specified in the distribution's definition.">
+<meta property="og:description" content="Create probability distribution objects from a list of common distribution families, or make your own distribution. Evaluate distribution properties, even if it is not specified in the distribution's definition.">
 <meta property="og:image" content="https://distionary.netlify.app/logo.png">
 <!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-73DKMR0WHY"></script><script>
   window.dataLayer = window.dataLayer || [];
@@ -36,7 +36,7 @@
 
     <a class="navbar-brand me-2" href="index.html">distionary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.2</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,15 +49,17 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/evaluate.html">Evaluating distributions</a></li>
-    <li><a class="dropdown-item" href="articles/specify.html">Specify a distribution</a></li>
+<li><a class="dropdown-item" href="articles/evaluate.html">Evaluate a Distribution</a></li>
+    <li><a class="dropdown-item" href="articles/specify.html">Specify a Distribution</a></li>
   </ul>
 </li>
+<li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/probaverse/distionary/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -72,90 +74,112 @@
 </div>
 <!-- badges: start -->
 
-<p>distionary:</p>
+<p>With <code>distionary</code>, you can:</p>
 <ol style="list-style-type: decimal">
-<li>makes standard probability distributions available, like Normal, Poisson, and empirical distributions – and even your own distribution, and</li>
-<li>provides a framework for evaluating probability distributions.</li>
+<li>Specify a probability distribution, and</li>
+<li>Evaluate the probability distribution.</li>
 </ol>
-<p>The distionary package is more useful when augmented with the <a href="https://distplyr.netlify.app" class="external-link">distplyr</a> package, which provides a grammar for distribution manipulation.</p>
+<p>The main purpose of <code>distionary</code> is to make distribution calculations available, even if they are not specified in the distribution.</p>
+<p>The name “distionary” is a portmanteau of “distribution” and “dictionary”. While a dictionary lists and defines words, <code>distionary</code> makes a list of common distribution families available, and defines distributions.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>distionary is not on CRAN yet. You can download the development version from GitHub with:</p>
+<p><code>distionary</code> is not on CRAN yet. You can download the development version from GitHub with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("devtools")</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"vincenzocoia/distionary"</span><span class="op">)</span></span></code></pre></div>
-<p>Or, install <a href="https://distplyr.netlify.app" class="external-link">distplyr</a>, and distionary will come along with it.</p>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"probaverse/distionary"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://distionary.netlify.app/">distionary</a></span><span class="op">)</span></span></code></pre></div>
-<p>We can make distributions from standard families, like beta and Poisson:</p>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://distionary.probaverse.com/" class="external-link">distionary</a></span><span class="op">)</span></span></code></pre></div>
+<p><strong>Specify</strong> a distribution like a Poisson distribution and a Generalised Extreme Value (GEV) distribution using the <code>dst_*()</code> family of functions.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="op">(</span><span class="va">d_beta</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dst_beta.html">dst_beta</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "beta"       "parametric" "dst"       </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  name :</span></span>
-<span><span class="co">#&gt; [1] "beta"</span></span>
-<span><span class="op">(</span><span class="va">d_pois</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dst_pois.html">dst_pois</a></span><span class="op">(</span><span class="fl">1.2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "pois"       "parametric" "dst"       </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  name :</span></span>
-<span><span class="co">#&gt; [1] "pois"</span></span></code></pre></div>
-<p>We can also make empirical distributions from data:</p>
+<code class="sourceCode R"><span><span class="co"># Create a Poisson distribution</span></span>
+<span><span class="va">poisson</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dst_pois.html">dst_pois</a></span><span class="op">(</span><span class="fl">1.5</span><span class="op">)</span></span>
+<span><span class="co"># Inspect</span></span>
+<span><span class="va">poisson</span></span>
+<span><span class="co">#&gt; Poisson distribution (discrete)</span></span>
+<span><span class="co">#&gt; --Parameters--</span></span>
+<span><span class="co">#&gt; lambda </span></span>
+<span><span class="co">#&gt;    1.5</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">4.1</span>, <span class="fl">2.3</span>, <span class="fl">3.4</span>, <span class="fl">5.5</span>, <span class="fl">1.0</span>, <span class="fl">6.8</span><span class="op">)</span></span>
-<span><span class="op">(</span><span class="va">d_emp</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dst_empirical.html">dst_empirical</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "finite" "dst"   </span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  probabilities :</span></span>
-<span><span class="co">#&gt; # A tibble: 6 × 2</span></span>
-<span><span class="co">#&gt;   location  size</span></span>
-<span><span class="co">#&gt;      &lt;dbl&gt; &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1      1   0.167</span></span>
-<span><span class="co">#&gt; 2      2.3 0.167</span></span>
-<span><span class="co">#&gt; 3      3.4 0.167</span></span>
-<span><span class="co">#&gt; 4      4.1 0.167</span></span>
-<span><span class="co">#&gt; 5      5.5 0.167</span></span>
-<span><span class="co">#&gt; 6      6.8 0.167</span></span></code></pre></div>
-<p>We can evaluate different distributional forms, such as the density or pmf:</p>
+<code class="sourceCode R"><span><span class="co"># Create a GEV distribution</span></span>
+<span><span class="va">gev</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dst_gev.html">dst_gev</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0.2</span><span class="op">)</span></span>
+<span><span class="co"># Inspect</span></span>
+<span><span class="va">gev</span></span>
+<span><span class="co">#&gt; Generalised Extreme Value distribution (continuous)</span></span>
+<span><span class="co">#&gt; --Parameters--</span></span>
+<span><span class="co">#&gt; location    scale    shape </span></span>
+<span><span class="co">#&gt;     -1.0      1.0      0.2</span></span></code></pre></div>
+<p>Here is what the distributions look like, via their probability mass (PMF) and density functions.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/density.html">eval_density</a></span><span class="op">(</span><span class="va">d_beta</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.458 2.048</span></span>
-<span><span class="fu"><a href="reference/pmf.html">eval_pmf</a></span><span class="op">(</span><span class="va">d_pois</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1.5</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.36143305 0.00000000 0.08674393</span></span></code></pre></div>
-<p>Or, we can enframe the results in a tibble:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">poisson</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/cdf.html">enframe_cdf</a></span><span class="op">(</span><span class="va">d_beta</span>, <span class="va">d_pois</span>, <span class="va">d_emp</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.1</span>, <span class="fl">0.6</span>, <span class="fl">1.5</span>, <span class="fl">3</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 4 × 4</span></span>
-<span><span class="co">#&gt;    .arg cdf_d_beta cdf_d_pois cdf_d_emp</span></span>
-<span><span class="co">#&gt;   &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;</span></span>
-<span><span class="co">#&gt; 1   0.1     0.0815      0.301     0    </span></span>
-<span><span class="co">#&gt; 2   0.6     0.913       0.301     0    </span></span>
-<span><span class="co">#&gt; 3   1.5     1           0.663     0.167</span></span>
-<span><span class="co">#&gt; 4   3       1           0.966     0.333</span></span></code></pre></div>
-<p>Evaluate properties of the distributions:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gev</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-5-2.png" width="100%"></p>
+<p><strong>Evaluate</strong> various distributional representations (functions that fully describe the distribution), such as the PMF or quantiles. The <code>eval_*()</code> functions simply evaluate the representation, whereas the <code>enframe_*()</code> functions place the output alongside the input in a data frame or tibble.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">d_beta</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.3333333</span></span>
-<span><span class="fu"><a href="reference/moments.html">skewness</a></span><span class="op">(</span><span class="va">d_pois</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.9128709</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">d_emp</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 1.0 6.8</span></span></code></pre></div>
-<p>You can make your own distributions, too. Want to make a distribution whose density decays linearly from 0 to <code>a</code>? Just ensure the <code>p</code>/<code>d</code>/<code>q</code> functions are available:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/pmf.html">eval_pmf</a></span><span class="op">(</span><span class="va">poisson</span>, at <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.22313016 0.33469524 0.25102143 0.12551072 0.04706652</span></span>
+<span><span class="fu"><a href="reference/quantile.html">enframe_quantile</a></span><span class="op">(</span><span class="va">gev</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span><span class="co">#&gt;    .arg quantile</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1   0.2   -1.45 </span></span>
+<span><span class="co">#&gt; 2   0.5   -0.620</span></span>
+<span><span class="co">#&gt; 3   0.9    1.84</span></span></code></pre></div>
+<p>Evaluate properties such as mean, skewness, and range of valid values.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># dlinear &lt;- function(x, a) (a - x) / (a^2 / 2)</span></span>
-<span><span class="co"># plinear &lt;- function(x, a) x * (a - x / 2) / (a^2 / 2)</span></span>
-<span><span class="co"># qlinear &lt;- function(p, a) a * (1 - sqrt(1 - p))</span></span>
-<span><span class="co"># (my_dst &lt;- dst_parametric("linear", a = 3, .variable = "continuous"))</span></span></code></pre></div>
-<p>Hazard function:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">gev</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] -0.1788514</span></span>
+<span><span class="fu"><a href="reference/moments.html">skewness</a></span><span class="op">(</span><span class="va">poisson</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.8164966</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">gev</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]  -6 Inf</span></span></code></pre></div>
+<p>You can make your own distribution, too.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># plot(my_dst, "hazard", from = 0, to = 3)</span></span></code></pre></div>
-<p>Mean:</p>
+<code class="sourceCode R"><span><span class="co"># Make a distribution.</span></span>
+<span><span class="va">linear</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/distribution.html">distribution</a></span><span class="op">(</span></span>
+<span>  density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">d</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">x</span><span class="op">)</span></span>
+<span>    <span class="va">d</span><span class="op">[</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">0</span> <span class="op">|</span> <span class="va">x</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>    <span class="va">d</span></span>
+<span>  <span class="op">}</span>,</span>
+<span>  cdf <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">p</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="va">x</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">x</span> <span class="op">/</span> <span class="fl">2</span><span class="op">)</span></span>
+<span>    <span class="va">p</span><span class="op">[</span><span class="va">x</span> <span class="op">&lt;</span> <span class="fl">0</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">0</span></span>
+<span>    <span class="va">p</span><span class="op">[</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span>
+<span>    <span class="va">p</span></span>
+<span>  <span class="op">}</span>,</span>
+<span>  .vtype <span class="op">=</span> <span class="st">"continuous"</span>,</span>
+<span>  .name <span class="op">=</span> <span class="st">"My Linear"</span></span>
+<span><span class="op">)</span></span>
+<span><span class="co"># Inspect</span></span>
+<span><span class="va">linear</span></span>
+<span><span class="co">#&gt; My Linear distribution (continuous)</span></span></code></pre></div>
+<p>Here is what it looks like (density function).</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># mean(my_dst)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">linear</span><span class="op">)</span></span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-9-1.png" width="100%"></p>
+<p>Even though only the density and CDF are defining the distribution, other properties can be evaluated, like its mean and quantiles</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">linear</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.3333333</span></span>
+<span><span class="fu"><a href="reference/quantile.html">enframe_quantile</a></span><span class="op">(</span><span class="va">linear</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 3 × 2</span></span>
+<span><span class="co">#&gt;    .arg quantile</span></span>
+<span><span class="co">#&gt;   &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1   0.2    0.106</span></span>
+<span><span class="co">#&gt; 2   0.5    0.293</span></span>
+<span><span class="co">#&gt; 3   0.9    0.684</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
+</h2>
+<p>The creation of <code>distionary</code> would not have been possible without the support of the R Consortium, The Natural Science and Engineering Research Council of Canada (NSERC), The University of British Columbia, and BGC Engineering Inc.</p>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
@@ -163,7 +187,15 @@
 <p>Please note that the distionary project is released with a <a href="https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html" class="external-link">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/probaverse/distionary/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/probaverse/distionary/issues" class="external-link">Report a bug</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
@@ -200,12 +232,11 @@
 <div class="dev-status">
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://CRAN.R-project.org/package=distionary" class="external-link"><img src="https://www.r-pkg.org/badges/version/distionary" alt="CRAN status"></a></li>
-<li><a href="https://codecov.io/gh/vincenzocoia/distionary?branch=main" class="external-link"><img src="https://codecov.io/gh/vincenzocoia/distionary/branch/main/graph/badge.svg" alt="Codecov test coverage"></a></li>
-<li><a href="https://github.com/vincenzocoia/distionary/actions" class="external-link"><img src="https://github.com/vincenzocoia/distionary/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 <li><a href="https://cran.r-project.org/web/licenses/MIT" class="external-link"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a></li>
 <li><a href="https://github.com/probaverse/distionary/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/probaverse/distionary/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/probaverse/distionary" class="external-link"><img src="https://codecov.io/gh/probaverse/distionary/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-brightgreen.svg" alt="Lifecycle: stable"></a></li>
 </ul>
 </div>
 
