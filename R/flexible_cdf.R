@@ -10,17 +10,18 @@
 #' Could be a vector.
 #' @param inclusive Should `of` be included in the probability calculation?
 #' Logical.
+#' @returns A vector of probabilities.
 #' @rdname flexible_cdf
+#' @examples
+#' d <- dst_pois(5)
+#' prob_left(d, of = 3, inclusive = TRUE)
+#' prob_left(d, of = 3, inclusive = FALSE)
+#' prob_right(d, of = 0:3, inclusive = TRUE)
 #' @export
 prob_left <- function(distribution, of, inclusive) {
-  UseMethod("prob_left")
-}
-
-#' @export
-prob_left.dst <- function(distribution, of, inclusive) {
 	p_left <- eval_cdf(distribution, at = of)
 	if (!inclusive) {
-		p_break <- eval_pmf(distribution, at = of, strict = FALSE)
+		p_break <- eval_pmf(distribution, at = of)
 		p_left <- p_left - p_break
 	}
 	p_left
@@ -29,15 +30,11 @@ prob_left.dst <- function(distribution, of, inclusive) {
 #' @rdname flexible_cdf
 #' @export
 prob_right <- function(distribution, of, inclusive) {
-  UseMethod("prob_right")
-}
-
-#' @export
-prob_right.dst <- function(distribution, of, inclusive) {
 	p_right <- eval_survival(distribution, at = of)
 	if (inclusive) {
-		p_break <- eval_pmf(distribution, at = of, strict = FALSE)
+		p_break <- eval_pmf(distribution, at = of)
 		p_right <- p_right + p_break
 	}
 	p_right
 }
+

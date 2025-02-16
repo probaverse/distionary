@@ -12,7 +12,7 @@
 #' appear in the column(s).
 #' @param sep When `enframe`'ing more than one distribution, the
 #' character that will be separating the `fn_name` and the distribution name.
-#' @return The evaluated cdf in vector form (for `eval_`) and data frame
+#' @returns The evaluated cdf in vector form (for `eval_`) and data frame
 #' or tibble form (for `enframe_`).
 #' @family distributional representations
 #' @examples
@@ -21,13 +21,11 @@
 #' eval_cdf(d1, at = 0:4)
 #' enframe_cdf(d1, at = 0:4)
 #' enframe_cdf(d1, d2, at = 0:4)
+#' enframe_cdf(model1 = d1, model2 = d2, at = 0:4)
 #' @rdname cdf
 #' @export
-eval_cdf <- function(distribution, at) UseMethod("eval_cdf")
-
-#' @export
-eval_cdf.dst <- function(distribution, at) {
-  stop("Can't find a cdf for this distribution.")
+eval_cdf <- function(distribution, at) {
+  eval_property(distribution, "cdf", at)
 }
 
 #' @rdname cdf

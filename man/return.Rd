@@ -32,12 +32,12 @@ function evaluated at \code{1 - 1 / at}.
 }
 \description{
 Compute return levels (quantiles) from a distribution by inputting
-return periods.
+return periods. The return periods correspond to events that are
+\emph{exceedances} of a quantile, not non-exceedances.
 }
 \examples{
-d <- dst_unif(0, 4)
+d <- dst_gpd(0, 1)
 eval_return(d, at = c(2, 25, 100, 200))
-enframe_chf(d, at = c(2, 25, 100, 200))
 }
 \seealso{
 Other distributional representations: 

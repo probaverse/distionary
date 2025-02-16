@@ -1,4 +1,4 @@
-#' Enframe a distributional representation's evaluation
+#' Enframe a distributional representation
 #'
 #' This is the workhorse for the `enframe_` family of functions.
 #' `enframe_general()` evaluates a specified distributional representation
@@ -6,12 +6,12 @@
 #' or tibble.
 #'
 #' @inheritParams eval_cdf
+#' @param ... Distributions to enframe; optionally, named.
 #' @param eval_fn Name of the `eval_` function for the desired distributional
 #' representation, such as `eval_cdf` and `eval_density`.
 #' @param fn_args A named list of arguments to pass to the `eval_fn` function,
-#' besides the distribution and `at` argument (the `strict` argument
-#' being the most common, and perhaps the only use case).
-#' @return A data frame or tibble of the input argument (`at`), with the
+#' besides the distribution and `at` argument.
+#' @returns A data frame or tibble of the input argument (`at`), with the
 #' evaluated distributional representation for each distribution in
 #' `...` in its own column.
 #' @details If only one distribution is specified in `...`, then the evaluation
@@ -27,6 +27,13 @@
 #' because names are anticipated to be syntactic with the `eval_fn` prefix;
 #' "minimal" is not sufficient because it may result in columns having the
 #' same names.
+#' @examples
+#' d <- dst_norm(0, 1)
+#' distionary:::enframe_general(
+#'   d, at = 1:9 / 10, arg_name = "tau", fn_prefix = "quantile", sep = "",
+#'   eval_fn = eval_quantile
+#' )
+#'
 enframe_general <- function(..., at, arg_name, fn_prefix, sep,
                             eval_fn, fn_args = list()) {
   ellipsis <- rlang::quos(...)

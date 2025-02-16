@@ -3,7 +3,7 @@
 #' Access a distribution's cumulative hazard function (chf).
 #'
 #' @inheritParams eval_cdf
-#' @return The evaluated cumulative hazard
+#' @returns The evaluated cumulative hazard
 #' in vector form (for `eval_`) and data frame
 #' or tibble form (for `enframe_`).
 #' @examples
@@ -13,15 +13,16 @@
 #' @family distributional representations
 #' @rdname chf
 #' @export
-eval_chf <- function(distribution, at) UseMethod("eval_chf")
+eval_chf <- function(distribution, at) {
+  eval_property(distribution, "chf", at)
+}
 
-#' @export
-eval_chf.dst <- function(distribution, at) {
-  if (variable(distribution) == "continuous") {
+eval_chf_from_network <- function(distribution, at) {
+  if (vtype(distribution) == "continuous") {
     sf <- eval_survival(distribution, at = at)
     -log(sf)
   } else {
-    stop("Not programmed yet")
+    stop("Not valid for non-continuous distributions.")
   }
 }
 

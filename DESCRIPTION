@@ -1,6 +1,6 @@
 Package: distionary
-Title: Create and Evaluate Univariate Probability Distributions
-Version: 0.0.2.9000
+Title: Create and Evaluate Probability Distributions
+Version: 0.1.0
 Authors@R: c(
     person("Vincenzo", "Coia", , "vincenzo.coia@gmail.com", 
            role = c("aut", "cre")),
@@ -8,10 +8,10 @@ Authors@R: c(
     person("Shuyi", "Tan", role = "aut"),
     person("Zhipeng", "Zhu", role = "aut")
     )
-Description: Make univariate probability distribution objects 
-    (of class "dst"). Evaluate their properties, such as density,
-    cdf, mass, mean, variance, etc., and generate random
-    observations.
+Description: Create probability distribution objects from a list of
+    common distribution families, or make your own distribution.
+    Evaluate distribution properties, even if it is not specified
+    in the distribution's definition.
 License: MIT + file LICENSE
 Suggests: 
     covr,
@@ -27,6 +27,8 @@ RoxygenNote: 7.3.2
 Imports: 
     ellipsis,
     rlang,
+    stats,
     vctrs
 VignetteBuilder: knitr
-URL: https://distionary.netlify.app/
+URL: https://distionary.probaverse.com/, https://github.com/probaverse/distionary
+BugReports: https://github.com/probaverse/distionary/issues

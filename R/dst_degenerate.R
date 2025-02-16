@@ -1,18 +1,16 @@
-#' Make a Degenerate Distribution
+#' Degenerate Distribution
 #'
-#' Makes a distribution belonging to the degenerate family of
-#' distributions. That is, distributions of fixed values.
-#' @param location Parameter of the distribution family.
-#' @return Object of class "dst".
+#' A degenerate distribution assigns a 100% probability to one outcome.
+#' @param location Single outcome of the distribution.
+#' @returns A degenerate distribution
 #' @examples
-#' require(graphics)
 #' d <- dst_degenerate(5)
-#' plot(d, "quantile")
-#' @rdname degenerate
+#' realise(d)
+#' variance(d)
 #' @export
 dst_degenerate <- function(location) {
-  cant_be_numeric <- suppressWarnings(is.na(as.numeric(location)))
-  if (cant_be_numeric) {
+  cant_coerce_numeric <- suppressWarnings(is.na(as.numeric(location)))
+  if (cant_coerce_numeric) {
     stop("'location' parameter must be numeric.")
   }
   if (length(location) != 1L) {
@@ -21,23 +19,23 @@ dst_degenerate <- function(location) {
       "Received ", length(location)
     )
   }
-  if (is.infinite(location)) {
-    stop("Possible outcomes of a distribution cannot be infinite.")
-  }
-  as_table <- aggregate_weights(location, 1, sum_to_one = FALSE)
-  res <- list(probabilities = as_table)
-  new_finite(res, variable = "discrete", class = "degenerate")
-}
-
-#' @param object Object to test
-#' @rdname degenerate
-#' @export
-is_degenerate <- function(object) {
-  inherits(object, "degenerate")
-}
-
-#' @rdname degenerate
-#' @export
-is.degenerate <- function(object) {
-  inherits(object, "degenerate")
+  distribution(
+    parameters = list(location = location),
+    cdf = \(x) as.numeric(x >= location),
+    quantile = function(p) {
+      res <- rep(location, length(p))
+      res[p < 0 | p > 1] <- NaN
+      res
+    },
+    pmf = \(x) as.numeric(x == location),
+    realise = \(n) rep(location, n),
+    survival = \(x) as.numeric(x < location),
+    mean = location,
+    stdev = 0,
+    variance = 0,
+    skewness = NaN,
+    kurtosis_exc = NaN,
+    .name = "Degenerate",
+    .vtype = "discrete"
+  )
 }

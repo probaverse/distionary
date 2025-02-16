@@ -3,7 +3,7 @@
 #' Access a distribution's survival function.
 #'
 #' @inheritParams eval_cdf
-#' @return The evaluated survival function
+#' @returns The evaluated survival function
 #' in vector form (for `eval_`) and data frame
 #' or tibble form (for `enframe_`).
 #' @examples
@@ -13,10 +13,11 @@
 #' @family distributional representations
 #' @rdname survival
 #' @export
-eval_survival <- function(distribution, at) UseMethod("eval_survival")
+eval_survival <- function(distribution, at) {
+  eval_property(distribution, "survival", at)
+}
 
-#' @export
-eval_survival.dst <- function(distribution, at) {
+eval_survival_from_network <- function(distribution, at) {
   1 - eval_cdf(distribution, at = at)
 }
 

@@ -5,16 +5,9 @@
 \alias{enframe_density}
 \title{Probability Density Function}
 \usage{
-eval_density(distribution, at, strict = TRUE)
+eval_density(distribution, at)
 
-enframe_density(
-  ...,
-  at,
-  arg_name = ".arg",
-  fn_prefix = "density",
-  sep = "_",
-  strict = TRUE
-)
+enframe_density(..., at, arg_name = ".arg", fn_prefix = "density", sep = "_")
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
@@ -22,9 +15,6 @@ distributions in the case of \code{...}.}
 
 \item{at}{Vector of values to evaluate the cdf at. Must be named when using
 in \code{enframe_}.}
-
-\item{strict}{Only evaluate when the density exists? \code{TRUE} if so;
-if \code{FALSE}, evaluates the derivative of the cdf.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments.}
@@ -46,7 +36,6 @@ Access a distribution's probability density function (pdf).
 d <- dst_unif(0, 4)
 eval_density(d, at = 0:4)
 enframe_density(d, at = 0:4)
-eval_density(dst_pois(1), at = 0:4, strict = FALSE)
 }
 \seealso{
 Other distributional representations: 

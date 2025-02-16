@@ -4,14 +4,16 @@
 \alias{dst_norm}
 \title{Normal (Gaussian) Distribution}
 \usage{
-dst_norm(mean, variance)
+dst_norm(mean, sd)
 }
 \arguments{
-\item{mean, variance}{Mean and variance of the distribution.}
+\item{mean, sd}{Mean and standard deviation of the distribution.}
+}
+\value{
+A Normal distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-Normal (Gaussian) distributions.
+Makes a Normal (Gaussian) distribution.
 }
 \examples{
 dst_norm(0, 1)

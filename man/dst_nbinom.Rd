@@ -7,14 +7,22 @@
 dst_nbinom(size, prob)
 }
 \arguments{
-\item{size}{Target for number of successful trials; non-negative.}
+\item{size}{Number of successful trials; positive.}
 
-\item{prob}{Probability parameter; between 0 and 1.}
+\item{prob}{Probability of a successful trial; between 0 and 1.}
+}
+\value{
+A Negative Binomial distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-negative binomial distributions.
+Makes a Negative Binomial distribution, corresponding to the number
+of failures in a sequence of independent trials until a given number
+of successes are observed.
 }
 \examples{
-dst_nbinom(10, 0.5)
+d <- dst_nbinom(10, 0.5)
+
+# This version of the Negative Binomial distribution does not count
+# the successes.
+range(d)
 }

@@ -16,32 +16,30 @@ knitr::opts_chunk$set(
 # distionary <img src='man/figures/logo.png' align="right" height="139" />
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN status](https://www.r-pkg.org/badges/version/distionary)](https://CRAN.R-project.org/package=distionary)
-[![Codecov test coverage](https://codecov.io/gh/vincenzocoia/distionary/branch/main/graph/badge.svg)](https://codecov.io/gh/vincenzocoia/distionary?branch=main)
-[![R-CMD-check](https://github.com/vincenzocoia/distionary/workflows/R-CMD-check/badge.svg)](https://github.com/vincenzocoia/distionary/actions)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
 [![R-CMD-check](https://github.com/probaverse/distionary/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/probaverse/distionary/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/probaverse/distionary/graph/badge.svg)](https://app.codecov.io/gh/probaverse/distionary)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
 <!-- badges: end -->
 
-distionary:
+With `distionary`, you can:
 
-1. makes standard probability distributions available, like Normal, Poisson, and empirical distributions -- and even your own distribution, and
-2. provides a framework for evaluating probability distributions.
+1. Specify a probability distribution, and
+2. Evaluate the probability distribution.
 
-The distionary package is more useful when augmented with the [distplyr](https://distplyr.netlify.app) package, which provides a grammar for distribution manipulation. 
+The main purpose of `distionary` is to make distribution calculations available, even if they are not specified in the distribution.
 
+The name "distionary" is a portmanteau of "distribution" and "dictionary". While a dictionary lists and defines words, `distionary` makes a list of common distribution families available, and defines distributions.
 
 ## Installation
 
-distionary is not on CRAN yet. You can download the development version from GitHub with:
+`distionary` is not on CRAN yet. You can download the development version from GitHub with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("vincenzocoia/distionary")
+devtools::install_github("probaverse/distionary")
 ```
-
-Or, install [distplyr](https://distplyr.netlify.app), and distionary will come along with it. 
 
 ## Example
 
@@ -49,62 +47,84 @@ Or, install [distplyr](https://distplyr.netlify.app), and distionary will come a
 library(distionary)
 ```
 
-We can make distributions from standard families, like beta and Poisson:
+**Specify** a distribution like a Poisson distribution and a Generalised Extreme Value (GEV) distribution using the `dst_*()` family of functions.
 
 ```{r}
-(d_beta <- dst_beta(2, 4))
-(d_pois <- dst_pois(1.2))
+# Create a Poisson distribution
+poisson <- dst_pois(1.5)
+# Inspect
+poisson
 ```
-
-We can also make empirical distributions from data:
 
 ```{r}
-x <- c(4.1, 2.3, 3.4, 5.5, 1.0, 6.8)
-(d_emp <- dst_empirical(x))
+# Create a GEV distribution
+gev <- dst_gev(-1, 1, 0.2)
+# Inspect
+gev
 ```
 
-We can evaluate different distributional forms, such as the density or pmf:
+Here is what the distributions look like, via their probability mass (PMF) and density functions.
 
 ```{r}
-eval_density(d_beta, at = c(0.1, 0.2))
-eval_pmf(d_pois, at = c(1, 1.5, 3))
+plot(poisson)
+plot(gev)
 ```
 
-Or, we can enframe the results in a tibble:
+**Evaluate** various distributional representations (functions that fully describe the distribution), such as the PMF or quantiles. The `eval_*()` functions simply evaluate the representation, whereas the `enframe_*()` functions place the output alongside the input in a data frame or tibble.
 
 ```{r}
-enframe_cdf(d_beta, d_pois, d_emp, at = c(0.1, 0.6, 1.5, 3))
+eval_pmf(poisson, at = 0:4)
+enframe_quantile(gev, at = c(0.2, 0.5, 0.9))
 ```
 
-Evaluate properties of the distributions:
+Evaluate properties such as mean, skewness, and range of valid values.
 
 ```{r}
-mean(d_beta)
-skewness(d_pois)
-range(d_emp)
+mean(gev)
+skewness(poisson)
+range(gev)
 ```
 
-You can make your own distributions, too. Want to make a distribution whose density decays linearly from 0 to `a`? Just ensure the `p`/`d`/`q` functions are available:
+You can make your own distribution, too. 
 
 ```{r}
-# dlinear <- function(x, a) (a - x) / (a^2 / 2)
-# plinear <- function(x, a) x * (a - x / 2) / (a^2 / 2)
-# qlinear <- function(p, a) a * (1 - sqrt(1 - p))
-# (my_dst <- dst_parametric("linear", a = 3, .variable = "continuous"))
+# Make a distribution.
+linear <- distribution(
+  density = function(x) {
+    d <- 2 * (1 - x)
+    d[x < 0 | x > 1] <- 0
+    d
+  },
+  cdf = function(x) {
+    p <- 2 * x * (1 - x / 2)
+    p[x < 0] <- 0
+    p[x > 1] <- 1
+    p
+  },
+  .vtype = "continuous",
+  .name = "My Linear"
+)
+# Inspect
+linear
 ```
 
-Hazard function:
+Here is what it looks like (density function).
 
 ```{r}
-# plot(my_dst, "hazard", from = 0, to = 3)
+plot(linear)
 ```
 
-Mean:
+Even though only the density and CDF are defining the distribution, other properties can be evaluated, like its mean and quantiles
 
 ```{r}
-# mean(my_dst)
+mean(linear)
+enframe_quantile(linear, at = c(0.2, 0.5, 0.9))
 ```
 
+
+## Acknowledgements
+
+The creation of `distionary` would not have been possible without the support of the R Consortium, The Natural Science and Engineering Research Council of Canada (NSERC), The University of British Columbia, and BGC Engineering Inc.
 
 ## Code of Conduct
 

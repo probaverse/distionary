@@ -3,7 +3,7 @@
 #' Access a distribution's hazard function.
 #'
 #' @inheritParams eval_cdf
-#' @return The evaluated hazard in vector form (for `eval_`) and data frame
+#' @returns The evaluated hazard in vector form (for `eval_`) and data frame
 #' or tibble form (for `enframe_`).
 #' @examples
 #' d <- dst_unif(0, 4)
@@ -12,11 +12,12 @@
 #' @family distributional representations
 #' @rdname hazard
 #' @export
-eval_hazard <- function(distribution, at) UseMethod("eval_hazard")
+eval_hazard <- function(distribution, at) {
+  eval_property(distribution, "hazard", at)
+}
 
-#' @export
-eval_hazard.dst <- function(distribution, at) {
-  if (variable(distribution) != "continuous") {
+eval_hazard_from_network <- function(distribution, at) {
+  if (vtype(distribution) != "continuous") {
     stop("Hazard function requires a continuous distribution.")
   }
   sf <- eval_survival(distribution, at)

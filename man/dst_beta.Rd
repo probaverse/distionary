@@ -7,12 +7,13 @@
 dst_beta(shape1, shape2)
 }
 \arguments{
-\item{shape1, shape2}{Parameters, greater than 0. Also known as alpha
-and beta.}
+\item{shape1, shape2}{Non-negative parameters of the distribution.}
+}
+\value{
+A beta distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-beta distributions.
+Makes a Beta distribution.
 }
 \examples{
 dst_beta(2, 3)

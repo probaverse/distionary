@@ -4,20 +4,24 @@
 \alias{dst_hyper}
 \title{Hypergeometric Distribution}
 \usage{
-dst_hyper(K, N, n)
+dst_hyper(m, n, k)
 }
 \arguments{
-\item{K}{the number of success states in the population}
+\item{m}{The number of red balls in the urn.}
 
-\item{N}{the population size}
+\item{n}{The number of non-red balls in the urn.}
 
-\item{n}{the number of draws}
+\item{k}{the number of balls drawn from the urn (between 0 and \code{m + n}).}
+}
+\value{
+A Hypergeometric distribution.
 }
 \description{
-Makes a distribution belonging to the family of
-hypergeometric distributions.
+Creates a Hypergeometric distribution, representing the
+number of red balls drawn from an urn containing multiple colours,
+using a scoop that holds a fixed number of balls.
 }
 \examples{
-dst_hyper(1, 5, 10)
+dst_hyper(15, 50, 10)
 
 }
