@@ -36,7 +36,7 @@ return periods. The return periods correspond to events that are
 \emph{exceedances} of a quantile, not non-exceedances.
 }
 \examples{
-d <- dst_gpd(0, 1)
+d <- dst_gpd(24, 0.3)
 eval_return(d, at = c(2, 25, 100, 200))
 }
 \seealso{
