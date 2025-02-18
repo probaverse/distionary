@@ -1,3 +1,5 @@
+#' @family validate_properties
+#' @noRd
 validate_survival <- function(
     distribution, verbose = FALSE, tol = 1e-9) {
   if (is.null(distribution$survival)) {

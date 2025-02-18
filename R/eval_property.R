@@ -23,6 +23,9 @@
 #' eval_property(d, "foofy", 1:10)
 #' @export
 eval_property <- function(distribution, entry, ...) {
+  if (length(entry) != 1) {
+    stop("Only one property can be evaluated at a time.")
+  }
   repres <- distribution[[entry]]
   if (is.null(repres)) {
     if (entry == "realize") {

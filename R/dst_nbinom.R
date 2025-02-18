@@ -15,6 +15,12 @@
 #' range(d)
 #' @export
 dst_nbinom <- function(size, prob) {
+  if (is.na(size) || is.na(prob)) {
+    return(dst_null())
+  }
+  if (length(size) != 1 || length(prob) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (prob < 0 || prob > 1) {
     stop("prob must be within 0 and 1.")
   }

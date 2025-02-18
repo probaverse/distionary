@@ -16,6 +16,7 @@ eval_hazard <- function(distribution, at) {
   eval_property(distribution, "hazard", at)
 }
 
+#' @noRd
 eval_hazard_from_network <- function(distribution, at) {
   if (vtype(distribution) != "continuous") {
     stop("Hazard function requires a continuous distribution.")

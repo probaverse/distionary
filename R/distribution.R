@@ -9,7 +9,11 @@
 #'
 #' @param ... Name-value pairs for defining the distribution.
 #' @param .vtype The variable type, typically "discrete" or "continuous".
+#' Can be any character vector of length 1; if not a character, is
+#' converted to one with `as.character()`.
 #' @param .name A name to give to the distribution.
+#' Can be any character vector of length 1; if not a character, is
+#' converted to one with `as.character()`.
 #' @return A distribution object.
 #' @details
 #' Currently, the CDF (`cdf`) is required to be specified, along with the PMF
@@ -66,6 +70,14 @@
 #' @export
 distribution <- function(..., .vtype = NULL, .name = NULL) {
   dots <- rlang::enquos(...)
+  .vtype <- as.character(.vtype)
+  .name <- as.character(.name)
+  if (length(.vtype) != 1) {
+    stop("Only one variable type allowed.")
+  }
+  if (length(.name) != 1) {
+    stop("Only one distribution name allowed.")
+  }
   representations <- lapply(dots, rlang::eval_tidy)
   if (is.null(.name)) .name <- "Unnamed"
   new_distribution(representations, vtype = .vtype, name = .name)

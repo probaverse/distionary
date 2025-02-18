@@ -1,3 +1,4 @@
+#' @noRd
 eval_kurtosis_from_network <- function(distribution) {
   k_exc <- distribution[["kurtosis_exc"]]
   if (!is.null(k_exc)) {
@@ -83,6 +84,7 @@ eval_kurtosis_from_network <- function(distribution) {
   numerator / var^2
 }
 
+#' @noRd
 eval_kurtosis_exc_from_network <- function(distribution) {
   kurtosis(distribution) - 3
 }

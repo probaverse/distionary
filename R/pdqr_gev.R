@@ -49,14 +49,12 @@ dgev <- function(x, location, scale, shape) {
 #'
 #' @param x Argument of the function; vectorized.
 #' @returns A vector of the t function evaluated.
-#' @examples
-#' distionary:::gev_t_function(1:10, 0, 1, 1)
-#'
 #' @inheritParams dst_gev
 #' @seealso See the Wikipedia entry for the GEV distribution,
 #' https://en.wikipedia.org/wiki/Generalized_extreme_value_distribution
 #' @note The shape parameter is not vectorized. This function is only
 #' intended to be used when location, scale, and shape are scalars.
+#' @noRd
 gev_t_function <- function(x, location, scale, shape) {
   z <- (x - location) / scale
   if (shape == 0) {
@@ -70,8 +68,7 @@ gev_t_function <- function(x, location, scale, shape) {
 #'
 #' @inheritParams dst_gev
 #' @returns A vector of length 2 indicating the support of the distribution.
-#' @examples
-#' distionary:::gev_range(0, 1, 1)
+#' @noRd
 gev_range <- function(location, scale, shape) {
   if (shape > 0) {
     c(location - scale / shape, Inf)

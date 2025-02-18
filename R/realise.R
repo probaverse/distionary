@@ -16,11 +16,6 @@ realise <- function(distribution, n = 1) {
   eval_property(distribution, "realise", n)
 }
 
-eval_realise_from_network <- function(distribution, n) {
-  u <- stats::runif(n)
-  eval_quantile(distribution, at = u)
-}
-
 #' @rdname realise
 #' @export
 realize <- function(distribution, n = 1) {

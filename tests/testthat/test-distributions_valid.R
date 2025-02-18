@@ -2,246 +2,246 @@ stats_distributions <- list(
   list(
     distribution = dst_bern,
     invalid = list(
-      c(prob = -1),
-      c(prob = 2)
+      list(prob = -1),
+      list(prob = 2)
     ),
     valid = list(
-      c(prob = 0.5),
-      c(prob = 0.7)
+      list(prob = 0.5),
+      list(prob = 0.7)
     )
   ),
   list(
     distribution = dst_beta,
     invalid = list(
-      c(shape1 = -1, shape2 = 1),
-      c(shape1 = 1, shape2 = -1)
+      list(shape1 = -1, shape2 = 1),
+      list(shape1 = 1, shape2 = -1)
     ),
     valid = list(
-      c(shape1 = 2, shape2 = 0.5),
-      c(shape1 = 0.5, shape2 = 0.5)
+      list(shape1 = 2, shape2 = 0.5),
+      list(shape1 = 0.5, shape2 = 0.5)
     )
   ),
   list(
     distribution = dst_binom,
     invalid = list(
-      c(size = -1, prob = 0.5),
-      c(size = 4, prob = -1),
-      c(size = 4, prob = 2)
+      list(size = -1, prob = 0.5),
+      list(size = 4, prob = -1),
+      list(size = 4, prob = 2)
     ),
     valid = list(
-      c(size = 3, prob = 0.3)
+      list(size = 3, prob = 0.3)
     )
   ),
   list(
     distribution = dst_cauchy,
     invalid = list(
-      c(location = 0, scale = -1)
+      list(location = 0, scale = -1)
     ),
     valid = list(
-      c(location = 0, scale = 1),
-      c(location = 2, scale = 0.5)
+      list(location = 0, scale = 1),
+      list(location = 2, scale = 0.5)
     )
   ),
   list(
     distribution = dst_chisq,
     invalid = list(
-      c(df = -1)
+      list(df = -1)
     ),
     valid = list(
-      c(df = 1),
-      c(df = 10)
+      list(df = 1),
+      list(df = 10)
     )
   ),
   list(
     distribution = dst_degenerate,
     invalid = list(
-      c(location = "a")
+      list(location = "a")
     ),
     valid = list(
-      c(location = 1),
-      c(location = -4)
+      list(location = 1),
+      list(location = -4)
     )
   ),
   list(
     distribution = dst_exp,
     invalid = list(
-      c(rate = -1)
+      list(rate = -1)
     ),
     valid = list(
-      c(rate = 1),
-      c(rate = 2.5)
+      list(rate = 1),
+      list(rate = 2.5)
     )
   ),
   list(
     distribution = dst_f,
     invalid = list(
-      c(df1 = -1, df2 = 2),
-      c(df1 = 3, df2 = -2)
+      list(df1 = -1, df2 = 2),
+      list(df1 = 3, df2 = -2)
     ),
     valid = list(
-      c(df1 = 2, df2 = 1),
-      c(df1 = 3, df2 = 3),
-      c(df1 = 1.5, df2 = 5),
-      c(df1 = 3.5, df2 = 7),
-      c(df1 = 2.2, df2 = 9)
+      list(df1 = 2, df2 = 1),
+      list(df1 = 3, df2 = 3),
+      list(df1 = 1.5, df2 = 5),
+      list(df1 = 3.5, df2 = 7),
+      list(df1 = 2.2, df2 = 9)
     )
   ),
   list(
     distribution = dst_gamma,
     invalid = list(
-      c(shape = -1, rate = 1),
-      c(shape = 1, rate = -1)
+      list(shape = -1, rate = 1),
+      list(shape = 1, rate = -1)
     ),
     valid = list(
-      c(shape = 2, rate = 3),
-      c(shape = 4, rate = 1.5)
+      list(shape = 2, rate = 3),
+      list(shape = 4, rate = 1.5)
     )
   ),
   list(
     distribution = dst_geom,
     invalid = list(
-      c(prob = -1),
-      c(prob = 2)
+      list(prob = -1),
+      list(prob = 2)
     ),
     valid = list(
-      c(prob = 0.3),
-      c(prob = 0.5),
-      c(prob = 0.8)
+      list(prob = 0.3),
+      list(prob = 0.5),
+      list(prob = 0.8)
     )
   ),
   list(
     distribution = dst_gev,
     invalid = list(
-      c(location = 0, scale = -1, shape = 1)
+      list(location = 0, scale = -1, shape = 1)
     ),
     valid = list(
-      c(location = 0, scale = 1, shape = 1.2),
-      c(location = 0, scale = 1, shape = 0),
-      c(location = 0, scale = 1, shape = -1.2)
+      list(location = 0, scale = 1, shape = 1.2),
+      list(location = 0, scale = 1, shape = 0),
+      list(location = 0, scale = 1, shape = -1.2)
     )
   ),
   list(
     distribution = dst_gpd,
     invalid = list(
-      c(scale = -1, shape = 1)
+      list(scale = -1, shape = 1)
     ),
     valid = list(
-      c(scale = 1, shape = 1.2),
-      c(scale = 1, shape = 0),
-      c(scale = 1, shape = -1.2)
+      list(scale = 1, shape = 1.2),
+      list(scale = 1, shape = 0),
+      list(scale = 1, shape = -1.2)
     )
   ),
   list(
     distribution = dst_hyper,
     invalid = list(
-      c(m = -2, n = 4, k = 5),
-      c(m = 2, n = -4, k = 5),
-      c(m = 2, n = 4, k = -5),
-      c(m = 2, n = 4, k = 7)
+      list(m = -2, n = 4, k = 5),
+      list(m = 2, n = -4, k = 5),
+      list(m = 2, n = 4, k = -5),
+      list(m = 2, n = 4, k = 7)
     ),
     valid = list(
-      c(m = 8, n = 4, k = 5),
-      c(m = 3, n = 4, k = 5),
-      c(m = 8, n = 5, k = 3),
-      c(m = 2, n = 5, k = 3)
+      list(m = 8, n = 4, k = 5),
+      list(m = 3, n = 4, k = 5),
+      list(m = 8, n = 5, k = 3),
+      list(m = 2, n = 5, k = 3)
     )
   ),
   list(
     distribution = dst_lnorm,
     invalid = list(
-      c(sdlog = -1.2)
+      list(sdlog = -1.2)
     ),
     valid = list(
-      c(meanlog = -1, sdlog = 1.2),
-      c(meanlog = 0, sdlog = 1.1)
+      list(meanlog = -1, sdlog = 1.2),
+      list(meanlog = 0, sdlog = 1.1)
     )
   ),
   list(
     distribution = dst_lp3,
     invalid = list(
-      c(meanlog = 0, sdlog = -1, skew = 1)
+      list(meanlog = 0, sdlog = -1, skew = 1)
     ),
     valid = list(
-      c(meanlog = 0, sdlog = 1.1, skew = 0.7),
-      c(meanlog = -1, sdlog = 0.7, skew = -0.7)
+      list(meanlog = 0, sdlog = 1.1, skew = 0.7),
+      list(meanlog = -1, sdlog = 0.7, skew = -0.7)
     )
   ),
   list(
     distribution = dst_nbinom,
     invalid = list(
-      c(size = -3, prob = 0.4),
-      c(size = 3, prob = -1),
-      c(size = 3, prob = 2)
+      list(size = -3, prob = 0.4),
+      list(size = 3, prob = -1),
+      list(size = 3, prob = 2)
     ),
     valid = list(
-      c(size = 3, prob = 0.4),
-      c(size = 5, prob = 0.8)
+      list(size = 3, prob = 0.4),
+      list(size = 5, prob = 0.8)
     )
   ),
   list(
     distribution = dst_norm,
     invalid = list(
-      c(mean = 0, sd = -1)
+      list(mean = 0, sd = -1)
     ),
     valid = list(
-      c(mean = 1.1, sd = 2.2),
-      c(mean = -1.5, sd = 3.7)
+      list(mean = 1.1, sd = 2.2),
+      list(mean = -1.5, sd = 3.7)
     )
   ),
   list(
     distribution = dst_pearson3,
     invalid = list(
-      c(location = 0, scale = -1, shape = 1),
-      c(location = 0, scale = 1, shape = -1)
+      list(location = 0, scale = -1, shape = 1),
+      list(location = 0, scale = 1, shape = -1)
     ),
     valid = list(
-      c(location = 1.1, scale = 2.2, shape = 3.3),
-      c(location = 0, scale = 1, shape = 1)
+      list(location = 1.1, scale = 2.2, shape = 3.3),
+      list(location = 0, scale = 1, shape = 1)
     )
   ),
   list(
     distribution = dst_pois,
     invalid = list(
-      c(lambda = -1)
+      list(lambda = -1)
     ),
     valid = list(
-      c(lambda = 1),
-      c(lambda = 2.2)
+      list(lambda = 1),
+      list(lambda = 2.2)
     )
   ),
   list(
     distribution = dst_t,
     invalid = list(
-      c(df = 0),
-      c(df = -1)
+      list(df = 0),
+      list(df = -1)
     ),
     valid = list(
-      c(df = 1),
-      c(df = 2),
-      c(df = 3),
-      c(df = 4),
-      c(df = 5)
+      list(df = 1),
+      list(df = 2),
+      list(df = 3),
+      list(df = 4),
+      list(df = 5)
     )
   ),
   list(
     distribution = dst_unif,
     invalid = list(
-      c(min = 9, max = 0)
+      list(min = 9, max = 0)
     ),
     valid = list(
-      c(min = 0, max = 1),
-      c(min = -2, max = 1)
+      list(min = 0, max = 1),
+      list(min = -2, max = 1)
     )
   ),
   list(
     distribution = dst_weibull,
     invalid = list(
-      c(shape = -1, scale = 1),
-      c(shape = 1, scale = -1)
+      list(shape = -1, scale = 1),
+      list(shape = 1, scale = -1)
     ),
     valid = list(
-      c(shape = 0.8, scale = 1.5),
-      c(shape = 3.3, scale = 2.4)
+      list(shape = 0.8, scale = 1.5),
+      list(shape = 3.3, scale = 2.4)
     )
   )
 )
@@ -254,6 +254,63 @@ for (i in seq_along(stats_distributions)) {
       expect_error(rlang::exec(item$distribution, !!!paramset))
     }
   })
+
+  test_that(paste("Distribution", i, "parameters have length 1."), {
+    paramset <- item$valid[[1]]
+    for (i in seq_along(paramset)) {
+      this_paramset <- paramset
+      this_paramset[[i]] <- rep(paramset[[i]], 2)
+      expect_error(rlang::exec(item$distribution, !!!this_paramset))
+      this_paramset[[i]] <- numeric(0L)
+      expect_error(rlang::exec(item$distribution, !!!this_paramset))
+    }
+  })
+
+  test_that(paste("Distribution", i, "resolves to Null dist with NA param"), {
+    paramset <- item$valid[[1]]
+    for (i in seq_along(paramset)) {
+      this_paramset <- paramset
+      this_paramset[[i]] <- NA
+      expect_equal(
+        rlang::exec(item$distribution, !!!this_paramset),
+        dst_null()
+      )
+    }
+  })
+
+  # Make sure that defined distributions evaluate NA inputs properly.
+  test_that(
+    paste(
+      "Defined distributions evaluate NA inputs properly: Distribution ", i
+    ),
+    {
+      d <- rlang::exec(item$distribution, !!!item$valid[[1]])
+      r <- range(d)
+      p <- c(0.4, NA_real_)
+      ## Quantile. Also use x for downstream tests.
+      x <- eval_quantile(d, at = p)
+      expect_true(is.numeric(x[1]))
+      expect_true(is.na(x[2]))
+      ## CDF
+      y <- eval_cdf(d, at = x)
+      expect_true(is.numeric(y[1]))
+      expect_true(is.na(y[2]))
+      ## Survival
+      y <- eval_survival(d, at = x)
+      expect_true(is.numeric(y[1]))
+      expect_true(is.na(y[2]))
+      ## Density
+      y <- eval_pmf(d, at = x)
+      expect_true(is.numeric(y[1]))
+      expect_true(is.na(y[2]))
+      ## Mass
+      if (vtype(d) == "continuous") {
+        y <- eval_density(d, at = x)
+        expect_true(is.numeric(y[1]))
+        expect_true(is.na(y[2]))
+      }
+    }
+  )
 
   # Make sure there's no density for discrete variables, and no
   # PMF for continuous variables.
@@ -384,7 +441,7 @@ for (i in seq_along(stats_distributions)) {
   # --- End distribution ---
 }
 
-test_that("Representations that are never specified work.", {
+test_that("Representations that are never specified in distionary work.", {
   ## Hazard
   d <- dst_norm(0, 1)
   x <- seq(-4, 4, length.out = 100)

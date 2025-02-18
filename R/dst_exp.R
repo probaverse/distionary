@@ -8,6 +8,12 @@
 #' dst_exp(1)
 #' @export
 dst_exp <- function(rate) {
+  if (is.na(rate)) {
+    return(dst_null())
+  }
+  if (length(rate) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (rate <= 0) {
     stop("rate must be greater than 0.")
   }

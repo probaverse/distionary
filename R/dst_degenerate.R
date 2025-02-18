@@ -9,6 +9,12 @@
 #' variance(d)
 #' @export
 dst_degenerate <- function(location) {
+  if (is.na(location)) {
+    return(dst_null())
+  }
+  if (length(location) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   cant_coerce_numeric <- suppressWarnings(is.na(as.numeric(location)))
   if (cant_coerce_numeric) {
     stop("'location' parameter must be numeric.")
@@ -25,6 +31,7 @@ dst_degenerate <- function(location) {
     quantile = function(p) {
       res <- rep(location, length(p))
       res[p < 0 | p > 1] <- NaN
+      res[is.na(p)] <- NA_real_
       res
     },
     pmf = \(x) as.numeric(x == location),

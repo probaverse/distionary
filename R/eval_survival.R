@@ -17,6 +17,7 @@ eval_survival <- function(distribution, at) {
   eval_property(distribution, "survival", at)
 }
 
+#' @noRd
 eval_survival_from_network <- function(distribution, at) {
   1 - eval_cdf(distribution, at = at)
 }

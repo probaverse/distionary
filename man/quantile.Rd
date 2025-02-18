@@ -32,6 +32,16 @@ or tibble form (for \code{enframe_}).
 \description{
 Access a distribution's quantiles.
 }
+\details{
+When a quantile function does not exist, an algorithm is
+deployed that calculates the left inverse of the CDF. This algorithm
+works by progressively cutting the specified range in half, moving
+into the left or right half depending on where the solution is.
+The algorithm is not currently fast and is subject to improvement,
+and is a simple idea that has been passed around on the internet
+here and there. Tolerance is less than 1e-9, unless the maximum
+number of iterations (200) is reached.
+}
 \examples{
 d <- dst_unif(0, 4)
 eval_quantile(d, at = 1:9 / 10)

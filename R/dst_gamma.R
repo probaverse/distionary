@@ -9,6 +9,12 @@
 #' dst_gamma(2, 1)
 #' @export
 dst_gamma <- function(shape, rate) {
+  if (is.na(shape) || is.na(rate)) {
+    return(dst_null())
+  }
+  if (length(shape) != 1 || length(rate) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (rate <= 0) {
     stop("rate parameter must be positive.")
   }

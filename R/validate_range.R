@@ -1,3 +1,5 @@
+#' @noRd
+#' @family validate_properties
 validate_range <- function(
     distribution, verbose = FALSE, tol = 1e-05) {
   if (is.null(distribution[["range"]])) {

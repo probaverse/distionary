@@ -1,3 +1,4 @@
+#' @noRd
 eval_variance_from_network <- function(distribution) {
   mu <- mean(distribution)
   if (attr(distribution, "name") %in% c(

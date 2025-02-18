@@ -17,6 +17,7 @@ eval_chf <- function(distribution, at) {
   eval_property(distribution, "chf", at)
 }
 
+#' @noRd
 eval_chf_from_network <- function(distribution, at) {
   if (vtype(distribution) == "continuous") {
     sf <- eval_survival(distribution, at = at)

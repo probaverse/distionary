@@ -8,6 +8,12 @@
 #' dst_unif(0, 1)
 #' @export
 dst_unif <- function(min, max) {
+  if (is.na(min) || is.na(max)) {
+    return(dst_null())
+  }
+  if (length(min) != 1 || length(max) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (max < min) {
     stop("Parameter 'min' must be less than 'max'.")
   }

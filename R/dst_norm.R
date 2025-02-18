@@ -8,6 +8,12 @@
 #' dst_norm(0, 1)
 #' @export
 dst_norm <- function(mean, sd) {
+  if (is.na(mean) || is.na(sd)) {
+    return(dst_null())
+  }
+  if (length(mean) != 1 || length(sd) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (sd == 0) {
     return(dst_degenerate(mean))
   }

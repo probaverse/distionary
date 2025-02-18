@@ -1,3 +1,5 @@
+#' @family validate_properties
+#' @noRd
 validate_mean <- function(
     distribution, verbose = FALSE, tol = 1e-05) {
   if (is.null(distribution$mean)) {

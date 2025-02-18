@@ -9,6 +9,12 @@
 #' dst_lnorm(0, 1)
 #' @export
 dst_lnorm <- function(meanlog, sdlog) {
+  if (is.na(meanlog) || is.na(sdlog)) {
+    return(dst_null())
+  }
+  if (length(meanlog) != 1 || length(sdlog) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (sdlog < 0) {
     stop("'sdlog' parameter must be non-negative.")
   }

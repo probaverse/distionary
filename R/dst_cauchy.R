@@ -13,6 +13,12 @@
 #' variance(d)
 #' @export
 dst_cauchy <- function(location, scale) {
+  if (is.na(location) || is.na(scale)) {
+    return(dst_null())
+  }
+  if (length(location) != 1 || length(scale) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (scale <= 0) {
     stop("Scale must be positive")
   }

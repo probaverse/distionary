@@ -11,6 +11,12 @@
 #'
 #' @export
 dst_lp3 <- function(meanlog, sdlog, skew) {
+  if (is.na(meanlog) || is.na(sdlog) || is.na(skew)) {
+    return(dst_null())
+  }
+  if (length(meanlog) != 1 || length(sdlog) != 1 || length(skew) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (sdlog < 0) {
     stop("sdlog cannot be less than 0.")
   }

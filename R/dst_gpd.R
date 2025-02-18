@@ -23,6 +23,12 @@
 #' mean(light)
 #' @export
 dst_gpd <- function(scale, shape) {
+  if (is.na(scale) || is.na(shape)) {
+    return(dst_null())
+  }
+  if (length(scale) != 1 || length(shape) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (scale <= 0) {
     stop("'scale' parameter must be positive.")
   }

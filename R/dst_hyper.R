@@ -13,6 +13,12 @@
 #'
 #' @export
 dst_hyper <- function(m, n, k) {
+  if (is.na(m) || is.na(n) || is.na(k)) {
+    return(dst_null())
+  }
+  if (length(m) != 1 || length(n) != 1 || length(k) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (m < 0) {
     stop("m must be non-negative")
   }

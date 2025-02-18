@@ -16,6 +16,7 @@ eval_density <- function(distribution, at) {
   eval_property(distribution, "density", at)
 }
 
+#' @noRd
 eval_density_from_network <- function(distribution, at) {
   stop(
     "Cannot find density function. Density must be specified ",

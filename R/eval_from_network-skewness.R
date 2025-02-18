@@ -1,3 +1,4 @@
+#' @noRd
 eval_skewness_from_network <- function(distribution) {
   # skewness = E[(X - mu)^3] / sigma^3
   # (X - mu)^3 has cdf F(mu + x^(1 / 3)), but note R evaluates (-1)^(1 / 3)

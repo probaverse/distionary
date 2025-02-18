@@ -26,6 +26,12 @@
 #' variance(b)
 #' kurtosis(c)
 #' kurtosis_exc(c)
+#' @srrstats {PD3.4} *Use of routines to integrate probability
+#' distributions should explicitly document conditions under which
+#' integrals are expected to remain stable, and ideally include
+#' pre-processing checks for potentially unstable behaviour.*
+#' - Noted that the integration is generally intended for continuous
+#'   distributions and does not work so well with discrete components yet.
 #' @rdname moments
 #' @export
 mean.dst <- function(x, ...) {

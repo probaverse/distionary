@@ -1,3 +1,18 @@
+#' Validate Distribution Properties
+#'
+#' If a distribution property is included in a distribution's definition,
+#' this function compares its calculation using the embedded
+#' definition with the calculation obtained from other properties.
+#' @param distribution Probability distribution to validate.
+#' @param verbose Print a message if the distribution property is deemed invalid?
+#' Single logical; defaults to `FALSE`.
+#' @param tol Tolerance; if two calculated properties differ by less than
+#' this amount, they are deemed "equal". Single numeric.
+#' @returns Single logical indicating whether the property is deemed
+#' valid (`TRUE`) or not (`FALSE`). If not applicable (e.g., no such
+#' property has been specified for the distribution), `NA` is returned.
+#' @family validate_properties
+#' @noRd
 validate_density <- function(distribution, verbose = FALSE, tol = 1e-05) {
   dens_fun <- distribution$density
   cdf_fun <- distribution$cdf

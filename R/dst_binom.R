@@ -10,6 +10,12 @@
 #' dst_binom(10, 0.6)
 #' @export
 dst_binom <- function(size, prob) {
+  if (is.na(size) || is.na(prob)) {
+    return(dst_null())
+  }
+  if (length(size) != 1 || length(prob) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (size < 0) {
     stop("Size must be non-negative")
   }

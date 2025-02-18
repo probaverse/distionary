@@ -7,6 +7,12 @@
 #' dst_beta(2, 3)
 #' @export
 dst_beta <- function(shape1, shape2) {
+  if (is.na(shape1) || is.na(shape2)) {
+    return(dst_null())
+  }
+  if (length(shape1) != 1 || length(shape2) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (shape1 <= 0) {
     stop("shape1 must be positive.")
   }

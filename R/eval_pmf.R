@@ -18,6 +18,7 @@ eval_pmf <- function(distribution, at) {
   eval_property(distribution, "pmf", at)
 }
 
+#' @noRd
 eval_pmf_from_network <- function(distribution, at) {
   if (vtype(distribution) == "continuous") {
     at[!is.na(at)] <- 0

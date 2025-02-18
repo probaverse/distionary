@@ -20,6 +20,7 @@ eval_return <- function(distribution, at) {
   eval_property(distribution, "return", at)
 }
 
+#' @noRd
 eval_return_from_network <- function(distribution, at) {
   eval_quantile(distribution, at = 1 - 1 / at)
 }

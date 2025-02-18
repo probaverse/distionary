@@ -1,3 +1,5 @@
+#' @family validate_properties
+#' @noRd
 validate_quantile <- function(
     distribution, verbose = FALSE, tol = 1e-06) {
   if (is.null(distribution$quantile)) {

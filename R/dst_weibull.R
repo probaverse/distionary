@@ -10,6 +10,12 @@
 #'
 #' @export
 dst_weibull <- function(shape, scale) {
+  if (is.na(shape) || is.na(scale)) {
+    return(dst_null())
+  }
+  if (length(shape) != 1 || length(scale) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (scale <= 0) {
     stop("scale parameter must be positive.")
   }

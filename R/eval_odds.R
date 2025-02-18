@@ -18,6 +18,7 @@ eval_odds <- function(distribution, at) {
   eval_property(distribution, "odds", at)
 }
 
+#' @noRd
 eval_odds_from_network <- function(distribution, at) {
   p <- eval_pmf(distribution, at = at)
   p / (1 - p)

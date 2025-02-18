@@ -30,7 +30,3 @@ range.dst <- function(distribution, ...) {
   }
   eval_property(distribution, "range")
 }
-
-eval_range_from_network <- function(distribution) {
-  eval_quantile(distribution, at = 0:1)
-}

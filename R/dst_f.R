@@ -9,6 +9,12 @@
 #' dst_f(2, 3)
 #' @export
 dst_f <- function(df1, df2) {
+  if (is.na(df1) || is.na(df2)) {
+    return(dst_null())
+  }
+  if (length(df1) != 1 || length(df2) != 1) {
+    stop("Input parameters must have length 1.")
+  }
   if (df1 <= 0) {
     stop("df1 must be positive")
   }

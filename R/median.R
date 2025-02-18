@@ -20,6 +20,3 @@ median.dst <- function(x, ...) {
   eval_property(x, "median")
 }
 
-eval_median_from_network <- function(distribution) {
-  eval_quantile(distribution, at = 0.5)
-}
