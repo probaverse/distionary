@@ -14,20 +14,30 @@ MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.
 coverage](https://codecov.io/gh/probaverse/distionary/graph/badge.svg)](https://app.codecov.io/gh/probaverse/distionary)
 [![Lifecycle:
 stable](https://img.shields.io/badge/lifecycle-stable-brightgreen.svg)](https://lifecycle.r-lib.org/articles/stages.html#stable)
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 <!-- badges: end -->
 
 With `distionary`, you can:
 
-1.  Specify a probability distribution, and
-2.  Evaluate the probability distribution.
+1.  [Specify](https://distionary.probaverse.com/articles/specify) a
+    probability distribution, and
+2.  [Evaluate](https://distionary.probaverse.com/articles/evaluate) the
+    probability distribution.
 
-The main purpose of `distionary` is to make distribution calculations
-available, even if they are not specified in the distribution.
+The main purpose of `distionary` is to implement a distribution object,
+and to make distribution calculations available even if they are not
+specified in the distribution. `distionary` powers the wider
+[`probaverse` ecosystem](https://probaverse.com) for making probability
+distributions that are representative of your data, not just
+out-of-the-bag distributions like the Normal, Poisson, etc.
 
 The name “distionary” is a portmanteau of “distribution” and
 “dictionary”. While a dictionary lists and defines words, `distionary`
-makes a list of common distribution families available, and defines
-distributions.
+defines distributions and makes a list of common distribution families
+available. These distributions act as building blocks for the wider
+probaverse.
 
 ## Installation
 
@@ -162,12 +172,30 @@ enframe_quantile(linear, at = c(0.2, 0.5, 0.9))
 #> 3   0.9    0.684
 ```
 
+## `distionary` in the context of other packages
+
+Other R packages exist that turn probability distributions into objects
+and allow their evaluation. `distionary` is unique in that provides the
+distribution framework needed to power the wider [`probaverse`
+ecosystem](https://probaverse.com), which provides a natural API for
+making probability distributions that are representative of the system
+being modelled.
+
 ## Acknowledgements
 
 The creation of `distionary` would not have been possible without the
 support of the R Consortium, The Natural Science and Engineering
 Research Council of Canada (NSERC), The University of British Columbia,
 and BGC Engineering Inc.
+
+## Citation
+
+To cite package `distionary` in publications use:
+
+Coia V (2025). *distionary: Create and Evaluate Probability
+Distributions*. R package version 0.1.0,
+<https://github.com/probaverse/distionary>,
+<https://distionary.probaverse.com/>.
 
 ## Code of Conduct
 

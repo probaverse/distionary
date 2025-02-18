@@ -56,7 +56,8 @@ same names.
 \examples{
 d <- dst_norm(0, 1)
 distionary:::enframe_general(
-  d, at = 1:9 / 10, arg_name = "tau", fn_prefix = "quantile", sep = "",
+  d,
+  at = 1:9 / 10, arg_name = "tau", fn_prefix = "quantile", sep = "",
   eval_fn = eval_quantile
 )
 

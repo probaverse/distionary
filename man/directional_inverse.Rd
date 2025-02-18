@@ -36,7 +36,8 @@ half depending on where the solution is.
 \examples{
 d <- distribution(cdf = \(x) pmin(pmax(x, 0), 1))
 distionary:::directional_inverse(
-  d, p = 0.2, low = 0, high = 1, tol = 1e-9, maxiter = 200L,
+  d,
+  p = 0.2, low = 0, high = 1, tol = 1e-9, maxiter = 200L,
   direction = "left"
 )
 }
