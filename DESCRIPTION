@@ -4,9 +4,9 @@ Version: 0.1.0
 Authors@R: c(
     person("Vincenzo", "Coia", , "vincenzo.coia@gmail.com", 
            role = c("aut", "cre")),
-    person("Amogh", "Joshi", role = "aut"),
-    person("Shuyi", "Tan", role = "aut"),
-    person("Zhipeng", "Zhu", role = "aut")
+    person("Amogh", "Joshi", role = "ctb"),
+    person("Shuyi", "Tan", role = "ctb"),
+    person("Zhipeng", "Zhu", role = "ctb")
     )
 Description: Create probability distribution objects from a list of
     common distribution families, or make your own distribution.
