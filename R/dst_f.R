@@ -3,7 +3,7 @@
 #' Makes an F distribution.
 #'
 #' @param df1,df2 Degrees of freedom of the numerator and denominator,
-#' both positive.
+#' both single positive numerics.
 #' @returns An F distribution.
 #' @examples
 #' dst_f(2, 3)

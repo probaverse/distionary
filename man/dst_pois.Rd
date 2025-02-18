@@ -7,7 +7,7 @@
 dst_pois(lambda)
 }
 \arguments{
-\item{lambda}{Mean of the Poisson distribution; positive.}
+\item{lambda}{Mean of the Poisson distribution; single positive numeric.}
 }
 \value{
 A Poisson distribution.

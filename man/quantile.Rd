@@ -13,21 +13,31 @@ enframe_quantile(..., at, arg_name = ".arg", fn_prefix = "quantile", sep = "_")
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
-\item{at}{Vector of values to evaluate the cdf at. Must be named when using
-in \code{enframe_}.}
+\item{at}{Vector of values to evaluate the representation at.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
-the function arguments.}
+the function arguments. Length 1 character vector.}
 
 \item{fn_prefix}{For \code{enframe_}, name of the function to
-appear in the column(s).}
+appear in the column(s). Length 1 character vector.}
 
 \item{sep}{When \code{enframe}'ing more than one distribution, the
-character that will be separating the \code{fn_name} and the distribution name.}
+character that will be separating the \code{fn_name} and the distribution name.
+Length 1 character vector.}
 }
 \value{
-The evaluated quantiles in vector form (for \code{eval_}) and data frame
-or tibble form (for \code{enframe_}).
+The evaluated representation in vector form (for \code{eval_})
+with length matching the length of \code{at}, and data frame
+or tibble form (for \code{enframe_}) with number of rows matching the
+length of \code{at}. The \code{at} input occupies the first column,
+named \code{.arg} by default, or the specification in \code{arg_name};
+the evaluated representations for each distribution in \code{...}
+go in the subsequent columns (one column per distribution). For a
+single distribution, this column is named according to the
+representation by default (cdf, survival, quantile, etc.),
+or the value in \code{fn_prefix}. For multiple distributions, unnamed
+distributions are auto-named, and columns are named
+\verb{<fn_prefix><sep><distribution_name>} (e.g., \code{cdf_distribution1}).
 }
 \description{
 Access a distribution's quantiles.

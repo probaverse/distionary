@@ -8,11 +8,13 @@ dst_pearson3(location, scale, shape)
 }
 \arguments{
 \item{location}{Location parameter, specifying how to shift the
-Gamma distribution.}
+Gamma distribution; single numeric.}
 
-\item{scale}{Scale parameter of the Gamma distribution; positive.}
+\item{scale}{Scale parameter of the Gamma distribution;
+single positive numeric.}
 
-\item{shape}{Shape parameter of the Gamma distribution; positive.}
+\item{shape}{Shape parameter of the Gamma distribution;
+single positive numeric.}
 }
 \value{
 A Pearson Type III distribution.

@@ -10,7 +10,7 @@ eval_property(distribution, entry, ...)
 \item{distribution}{Distribution object.}
 
 \item{entry}{Name of the property, such as "cdf" or
-"mean".}
+"mean". Length 1 character vector.}
 
 \item{...}{If the property is a function, arguments to the
 function go here. Need not be named; inserted in the order they

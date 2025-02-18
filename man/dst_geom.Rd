@@ -7,7 +7,8 @@
 dst_geom(prob)
 }
 \arguments{
-\item{prob}{Probability of success in each trial; 0 < \code{p} <= 1.}
+\item{prob}{Probability of success in each trial; single numeric
+between 0 and 1.}
 }
 \value{
 A Geometric distribution.

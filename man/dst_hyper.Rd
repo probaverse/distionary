@@ -7,11 +7,12 @@
 dst_hyper(m, n, k)
 }
 \arguments{
-\item{m}{The number of red balls in the urn.}
+\item{m}{The number of red balls in the urn; single positive integer.}
 
-\item{n}{The number of non-red balls in the urn.}
+\item{n}{The number of non-red balls in the urn; single positive integer.}
 
-\item{k}{the number of balls drawn from the urn (between 0 and \code{m + n}).}
+\item{k}{the number of balls drawn from the urn (between 0 and \code{m + n});
+single positive integer.}
 }
 \value{
 A Hypergeometric distribution.

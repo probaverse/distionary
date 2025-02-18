@@ -15,10 +15,11 @@ dgpd(x, location, scale, shape)
 \arguments{
 \item{location}{Location parameter to shift the GPD by.}
 
-\item{scale}{Scale parameter; positive numeric.}
+\item{scale}{Scale parameter; single positive numeric.}
 
-\item{shape}{Shape parameter; numeric. Also the extreme value index,
-so that \code{shape > 0} is heavy tailed, and \code{shape < 0} is short-tailed.}
+\item{shape}{Shape parameter; single positive numeric.
+This is also the extreme value index, so that \code{shape > 0} is heavy
+tailed, and \code{shape < 0} is short-tailed.}
 
 \item{lower.tail}{Logical. If \code{TRUE}, cdf (default);
 if \code{FALSE}, survival function.}

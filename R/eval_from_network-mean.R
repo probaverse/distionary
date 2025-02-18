@@ -1,8 +1,5 @@
-#' @srrstats {PD3.5} *Integration routines should only rely on
-#' discrete summation where such use can be justified (for example,
-#' through providing a literature reference), in which case the
-#' following applies:*
-#' - Discrete summation is only used for specific distributions.
+#' @srrstats {PD3.5} *Integration routines only rely on
+#' discrete summation for specific distributions.
 #' @noRd
 eval_mean_from_network <- function(distribution, ...) {
   if (attr(distribution, "name") %in% c(

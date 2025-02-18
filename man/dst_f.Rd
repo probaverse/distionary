@@ -8,7 +8,7 @@ dst_f(df1, df2)
 }
 \arguments{
 \item{df1, df2}{Degrees of freedom of the numerator and denominator,
-both positive.}
+both single positive numerics.}
 }
 \value{
 An F distribution.

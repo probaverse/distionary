@@ -4,8 +4,9 @@
 #' of failures in a sequence of independent trials until a given number
 #' of successes are observed.
 #'
-#' @param prob Probability of a successful trial; between 0 and 1.
-#' @param size Number of successful trials; positive.
+#' @param prob Probability of a successful trial; single numeric
+#' between 0 and 1.
+#' @param size Number of successful trials; single positive numeric.
 #' @returns A Negative Binomial distribution.
 #' @examples
 #' d <- dst_nbinom(10, 0.5)

@@ -2,8 +2,8 @@
 #'
 #' Makes a Gamma distribution.
 #'
-#' @param shape Shape parameter; positive.
-#' @param rate Rate parameter; positive.
+#' @param shape Shape parameter; single positive numeric.
+#' @param rate Rate parameter; single positive numeric.
 #' @returns A Gamma distribution.
 #' @examples
 #' dst_gamma(2, 1)

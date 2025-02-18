@@ -7,7 +7,7 @@
 #'
 #' @param distribution Distribution object.
 #' @param entry Name of the property, such as "cdf" or
-#' "mean".
+#' "mean". Length 1 character vector.
 #' @param ... If the property is a function, arguments to the
 #' function go here. Need not be named; inserted in the order they
 #' appear.

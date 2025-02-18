@@ -4,9 +4,11 @@
 #' but shifted.
 #'
 #' @param location Location parameter, specifying how to shift the
-#' Gamma distribution.
-#' @param scale Scale parameter of the Gamma distribution; positive.
-#' @param shape Shape parameter of the Gamma distribution; positive.
+#' Gamma distribution; single numeric.
+#' @param scale Scale parameter of the Gamma distribution;
+#' single positive numeric.
+#' @param shape Shape parameter of the Gamma distribution;
+#' single positive numeric.
 #' @returns A Pearson Type III distribution.
 #' @srrstats {PD3.0} *Manipulation of probability distributions should
 #' very generally be analytic, with numeric manipulations only

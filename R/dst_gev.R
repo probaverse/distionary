@@ -3,9 +3,10 @@
 #' Makes a Generalised Extreme Value (GEV) distribution, which is the
 #' limiting distribution of the maximum.
 #'
-#' @param location Location parameter; numeric.
-#' @param scale Scale parameter; positive numeric.
-#' @param shape Shape parameter; numeric. Also the extreme value index,
+#' @param location Location parameter; single numeric.
+#' @param scale Scale parameter; single positive numeric.
+#' @param shape Shape parameter; single numeric.
+#' This is also the extreme value index,
 #' so that `shape > 0` is heavy tailed, and `shape < 0` is short-tailed.
 #' @returns A GEV distribution.
 #' @examples

@@ -7,7 +7,7 @@
 #'
 #' @inheritParams eval_cdf
 #' @param ... Distributions to enframe; optionally, named.
-#' @param eval_fn Name of the `eval_` function for the desired distributional
+#' @param eval_fn The `eval_` function for the desired distributional
 #' representation, such as `eval_cdf` and `eval_density`.
 #' @param fn_args A named list of arguments to pass to the `eval_fn` function,
 #' besides the distribution and `at` argument.

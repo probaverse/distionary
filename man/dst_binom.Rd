@@ -7,9 +7,10 @@
 dst_binom(size, prob)
 }
 \arguments{
-\item{size}{Number of trials.}
+\item{size}{Number of trials; single positive integer.}
 
-\item{prob}{Success probability of each trial.}
+\item{prob}{Success probability of each trial; single numeric
+between 0 and 1.}
 }
 \value{
 A binomial distribution.

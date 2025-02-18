@@ -1,7 +1,7 @@
 #' Poisson Distribution
 #'
 #' Makes a Poisson distribution.
-#' @param lambda Mean of the Poisson distribution; positive.
+#' @param lambda Mean of the Poisson distribution; single positive numeric.
 #' @returns A Poisson distribution.
 #' @examples
 #' dst_pois(1)

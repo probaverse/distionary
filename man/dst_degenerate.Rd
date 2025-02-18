@@ -7,7 +7,7 @@
 dst_degenerate(location)
 }
 \arguments{
-\item{location}{Single outcome of the distribution.}
+\item{location}{Outcome of the distribution; single positive numeric.}
 }
 \value{
 A degenerate distribution

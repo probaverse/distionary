@@ -3,6 +3,7 @@
 #' Makes a Uniform distribution.
 #'
 #' @param min,max Minimum and maximum of the distribution.
+#' Single numerics.
 #' @returns A Uniform distribution.
 #' @examples
 #' dst_unif(0, 1)

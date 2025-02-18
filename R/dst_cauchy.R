@@ -2,8 +2,8 @@
 #'
 #' Makes a Cauchy distribution.
 #'
-#' @param location Location parameter
-#' @param scale positive
+#' @param location Location parameter; single numeric.
+#' @param scale Scale parameter; single positive numeric.
 #' @returns A Cauchy distribution.
 #' @examples
 #' d <- dst_cauchy(0, 1)

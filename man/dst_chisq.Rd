@@ -7,7 +7,7 @@
 dst_chisq(df)
 }
 \arguments{
-\item{df}{degrees of freedom parameter.}
+\item{df}{degrees of freedom parameter; single positive numeric.}
 }
 \value{
 A Chi-Squared distribution

@@ -4,9 +4,10 @@
 #' number of red balls drawn from an urn containing multiple colours,
 #' using a scoop that holds a fixed number of balls.
 #'
-#' @param m The number of red balls in the urn.
-#' @param n The number of non-red balls in the urn.
-#' @param k the number of balls drawn from the urn (between 0 and `m + n`).
+#' @param m The number of red balls in the urn; single positive integer.
+#' @param n The number of non-red balls in the urn; single positive integer.
+#' @param k the number of balls drawn from the urn (between 0 and `m + n`);
+#' single positive integer.
 #' @returns A Hypergeometric distribution.
 #' @examples
 #' dst_hyper(15, 50, 10)

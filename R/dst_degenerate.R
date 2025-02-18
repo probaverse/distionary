@@ -1,7 +1,7 @@
 #' Degenerate Distribution
 #'
 #' A degenerate distribution assigns a 100% probability to one outcome.
-#' @param location Single outcome of the distribution.
+#' @param location Outcome of the distribution; single positive numeric.
 #' @returns A degenerate distribution
 #' @examples
 #' d <- dst_degenerate(5)

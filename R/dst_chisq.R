@@ -2,7 +2,7 @@
 #'
 #' Makes a Chi-Squared distribution.
 #'
-#' @param df degrees of freedom parameter.
+#' @param df degrees of freedom parameter; single positive numeric.
 #' @returns A Chi-Squared distribution
 #' @examples
 #' dst_chisq(3)

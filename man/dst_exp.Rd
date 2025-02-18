@@ -7,7 +7,7 @@
 dst_exp(rate)
 }
 \arguments{
-\item{rate}{Rate parameter, positive.}
+\item{rate}{Rate parameter; single positive numeric.}
 }
 \value{
 An Exponential distribution.

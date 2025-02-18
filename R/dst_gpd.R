@@ -2,9 +2,10 @@
 #'
 #' Makes a Generalized Pareto distribution (GPD), corresponding to the
 #' limiting distribution of excesses over a threshold.
-#' @param scale Scale parameter; positive numeric.
-#' @param shape Shape parameter; numeric. Also the extreme value index,
-#' so that `shape > 0` is heavy tailed, and `shape < 0` is short-tailed.
+#' @param scale Scale parameter; single positive numeric.
+#' @param shape Shape parameter; single positive numeric.
+#' This is also the extreme value index, so that `shape > 0` is heavy
+#' tailed, and `shape < 0` is short-tailed.
 #' @return A Generalised Pareto Distribution.
 #' @examples
 #' # Short-tailed example

@@ -7,9 +7,9 @@
 dst_gamma(shape, rate)
 }
 \arguments{
-\item{shape}{Shape parameter; positive.}
+\item{shape}{Shape parameter; single positive numeric.}
 
-\item{rate}{Rate parameter; positive.}
+\item{rate}{Rate parameter; single positive numeric.}
 }
 \value{
 A Gamma distribution.

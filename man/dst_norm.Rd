@@ -7,7 +7,10 @@
 dst_norm(mean, sd)
 }
 \arguments{
-\item{mean, sd}{Mean and standard deviation of the distribution.}
+\item{mean}{Mean of the distribution. Single numeric.}
+
+\item{sd}{Standard deviation of the distribution.
+Single positive numeric.}
 }
 \value{
 A Normal distribution.

@@ -3,9 +3,7 @@
 #' Access a distribution's probability mass function (pmf).
 #'
 #' @inheritParams eval_cdf
-#' @returns The evaluated probabilities
-#' in vector form (for `eval_`) and data frame
-#' or tibble form (for `enframe_`).
+#' @inherit eval_cdf return
 #' @examples
 #' d <- dst_pois(5)
 #' eval_pmf(d, at = c(1, 2, 2.5))

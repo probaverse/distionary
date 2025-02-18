@@ -2,8 +2,8 @@
 #'
 #' Makes a Weibull distribution.
 #'
-#' @param scale Scale parameter; positive.
-#' @param shape Shape parameter; positive.
+#' @param scale Scale parameter; single positive numeric.
+#' @param shape Shape parameter; single positive numeric.
 #' @returns A Weibull distribution.
 #' @examples
 #' dst_weibull(1, 1)

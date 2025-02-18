@@ -7,8 +7,11 @@
 dst_lnorm(meanlog, sdlog)
 }
 \arguments{
-\item{meanlog, sdlog}{Mean and variance of the distribution
-on a log scale.}
+\item{meanlog}{Mean of the log of the random variable;
+single numeric.}
+
+\item{sdlog}{Standard deviation of the log of the random variable;
+single positive numeric.}
 }
 \value{
 A Log Normal distribution.

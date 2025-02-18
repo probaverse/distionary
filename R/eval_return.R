@@ -6,9 +6,8 @@
 #'
 #' @param at Vector of return periods >=1.
 #' @inheritParams eval_cdf
-#' @returns The return levels associated with the specified return periods
-#' in vector form (for `eval_`) and data frame
-#' or tibble form (for `enframe_`). This function is simply the quantile
+#' @inherit eval_cdf return
+#' @details This function is simply the quantile
 #' function evaluated at `1 - 1 / at`.
 #' @examples
 #' d <- dst_gpd(24, 0.3)

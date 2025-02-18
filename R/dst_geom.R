@@ -3,7 +3,8 @@
 #' Makes a Geometric distribution, corresponding to the number of failures
 #' in a sequence of independent trials before observing a success.
 #'
-#' @param prob Probability of success in each trial; 0 < `p` <= 1.
+#' @param prob Probability of success in each trial; single numeric
+#' between 0 and 1.
 #' @returns A Geometric distribution.
 #' @examples
 #' d <- dst_geom(0.4)

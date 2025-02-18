@@ -7,9 +7,9 @@
 dst_cauchy(location, scale)
 }
 \arguments{
-\item{location}{Location parameter}
+\item{location}{Location parameter; single numeric.}
 
-\item{scale}{positive}
+\item{scale}{Scale parameter; single positive numeric.}
 }
 \value{
 A Cauchy distribution.

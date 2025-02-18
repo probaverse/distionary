@@ -4,8 +4,7 @@
 #' probability `p` is `p / (1 - p)`.
 #'
 #' @inheritParams eval_cdf
-#' @returns The evaluated odds in vector form (for `eval_`) and data frame
-#' or tibble form (for `enframe_`).
+#' @inherit eval_cdf return
 #' @examples
 #' d <- dst_pois(1)
 #' eval_pmf(d, at = c(1, 2, 2.5))

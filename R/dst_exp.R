@@ -2,7 +2,7 @@
 #'
 #' Makes an Exponential distribution.
 #'
-#' @param rate Rate parameter, positive.
+#' @param rate Rate parameter; single positive numeric.
 #' @returns An Exponential distribution.
 #' @examples
 #' dst_exp(1)

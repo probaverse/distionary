@@ -7,7 +7,7 @@
 dst_t(df)
 }
 \arguments{
-\item{df}{Degrees of freedom; positive.}
+\item{df}{Degrees of freedom; single positive numeric.}
 }
 \value{
 A Student t distribution.

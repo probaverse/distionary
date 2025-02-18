@@ -7,11 +7,12 @@
 dst_gev(location, scale, shape)
 }
 \arguments{
-\item{location}{Location parameter; numeric.}
+\item{location}{Location parameter; single numeric.}
 
-\item{scale}{Scale parameter; positive numeric.}
+\item{scale}{Scale parameter; single positive numeric.}
 
-\item{shape}{Shape parameter; numeric. Also the extreme value index,
+\item{shape}{Shape parameter; single numeric.
+This is also the extreme value index,
 so that \code{shape > 0} is heavy tailed, and \code{shape < 0} is short-tailed.}
 }
 \value{

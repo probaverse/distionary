@@ -4,11 +4,14 @@
 #' distribution of the exponential of a random variable following
 #' a Pearson Type III distribution.
 #'
-#' @param meanlog,sdlog,skew Parameters.
+#' @param meanlog Mean of the log of the random variable; single numeric.
+#' @param sdlog Standard deviation of the log of the random variable;
+#' single positive numeric.
+#' @param skew Skewness of the log of the random variable;
+#' single numeric.
 #' @returns A Log Pearson Type III distribution.
 #' @examples
 #' dst_lp3(0, 1, 1)
-#'
 #' @export
 dst_lp3 <- function(meanlog, sdlog, skew) {
   if (is.na(meanlog) || is.na(sdlog) || is.na(skew)) {

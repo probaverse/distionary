@@ -7,10 +7,11 @@
 dst_beta(shape1, shape2)
 }
 \arguments{
-\item{shape1, shape2}{Non-negative parameters of the distribution.}
+\item{shape1, shape2}{Shape parameters of the distribution;
+single positive numerics.}
 }
 \value{
-A beta distribution.
+A Beta distribution.
 }
 \description{
 Makes a Beta distribution.

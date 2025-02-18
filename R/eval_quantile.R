@@ -3,8 +3,7 @@
 #' Access a distribution's quantiles.
 #'
 #' @inheritParams eval_cdf
-#' @returns The evaluated quantiles in vector form (for `eval_`) and data frame
-#' or tibble form (for `enframe_`).
+#' @inherit eval_cdf return
 #' @examples
 #' d <- dst_unif(0, 4)
 #' eval_quantile(d, at = 1:9 / 10)

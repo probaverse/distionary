@@ -7,7 +7,13 @@
 dst_lp3(meanlog, sdlog, skew)
 }
 \arguments{
-\item{meanlog, sdlog, skew}{Parameters.}
+\item{meanlog}{Mean of the log of the random variable; single numeric.}
+
+\item{sdlog}{Standard deviation of the log of the random variable;
+single positive numeric.}
+
+\item{skew}{Skewness of the log of the random variable;
+single numeric.}
 }
 \value{
 A Log Pearson Type III distribution.
@@ -19,5 +25,4 @@ a Pearson Type III distribution.
 }
 \examples{
 dst_lp3(0, 1, 1)
-
 }

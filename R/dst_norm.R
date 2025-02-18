@@ -2,7 +2,9 @@
 #'
 #' Makes a Normal (Gaussian) distribution.
 #'
-#' @param mean,sd Mean and standard deviation of the distribution.
+#' @param mean Mean of the distribution. Single numeric.
+#' @param sd Standard deviation of the distribution.
+#' Single positive numeric.
 #' @returns A Normal distribution.
 #' @examples
 #' dst_norm(0, 1)

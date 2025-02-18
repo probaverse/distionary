@@ -7,7 +7,7 @@
 dst_bern(prob)
 }
 \arguments{
-\item{prob}{Probability of success.}
+\item{prob}{Probability of success; single numeric between 0 and 1.}
 }
 \value{
 A Bernoulli distribution.

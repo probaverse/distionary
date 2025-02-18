@@ -1,8 +1,9 @@
 #' Beta Distribution
 #'
 #' Makes a Beta distribution.
-#' @param shape1,shape2 Non-negative parameters of the distribution.
-#' @returns A beta distribution.
+#' @param shape1,shape2 Shape parameters of the distribution;
+#' single positive numerics.
+#' @returns A Beta distribution.
 #' @examples
 #' dst_beta(2, 3)
 #' @export

@@ -7,9 +7,9 @@
 dst_weibull(shape, scale)
 }
 \arguments{
-\item{shape}{Shape parameter; positive.}
+\item{shape}{Shape parameter; single positive numeric.}
 
-\item{scale}{Scale parameter; positive.}
+\item{scale}{Scale parameter; single positive numeric.}
 }
 \value{
 A Weibull distribution.

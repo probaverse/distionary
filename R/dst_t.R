@@ -2,7 +2,7 @@
 #'
 #' Makes a Student t distribution.
 #'
-#' @param df Degrees of freedom; positive.
+#' @param df Degrees of freedom; single positive numeric.
 #' @returns A Student t distribution.
 #' @examples
 #' dst_t(3)

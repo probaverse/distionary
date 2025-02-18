@@ -7,7 +7,8 @@
 dst_unif(min, max)
 }
 \arguments{
-\item{min, max}{Minimum and maximum of the distribution.}
+\item{min, max}{Minimum and maximum of the distribution.
+Single numerics.}
 }
 \value{
 A Uniform distribution.

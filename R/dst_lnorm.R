@@ -2,8 +2,10 @@
 #'
 #' Makes a Log Normal distribution, which is the distribution of
 #' the exponential of a Normally distributed random variable.
-#' @param meanlog,sdlog Mean and variance of the distribution
-#' on a log scale.
+#' @param meanlog Mean of the log of the random variable;
+#' single numeric.
+#' @param sdlog Standard deviation of the log of the random variable;
+#' single positive numeric.
 #' @returns A Log Normal distribution.
 #' @examples
 #' dst_lnorm(0, 1)

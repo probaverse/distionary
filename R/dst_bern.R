@@ -3,7 +3,7 @@
 #' Makes a Bernoulli distribution, representing the outcome of a
 #' single trial with a given success probability.
 #'
-#' @param prob Probability of success.
+#' @param prob Probability of success; single numeric between 0 and 1.
 #' @returns A Bernoulli distribution.
 #' @examples
 #' dst_bern(0.3)

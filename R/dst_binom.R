@@ -3,8 +3,9 @@
 #' Makes a Binomial distribution, representing the number of successes
 #' in a fixed number of independent trials.
 #'
-#' @param size Number of trials.
-#' @param prob Success probability of each trial.
+#' @param size Number of trials; single positive integer.
+#' @param prob Success probability of each trial; single numeric
+#' between 0 and 1.
 #' @returns A binomial distribution.
 #' @examples
 #' dst_binom(10, 0.6)

@@ -16,24 +16,37 @@ distributions in the case of \code{...}.}
 \item{at}{Vector of return periods >=1.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
-the function arguments.}
+the function arguments. Length 1 character vector.}
 
 \item{fn_prefix}{For \code{enframe_}, name of the function to
-appear in the column(s).}
+appear in the column(s). Length 1 character vector.}
 
 \item{sep}{When \code{enframe}'ing more than one distribution, the
-character that will be separating the \code{fn_name} and the distribution name.}
+character that will be separating the \code{fn_name} and the distribution name.
+Length 1 character vector.}
 }
 \value{
-The return levels associated with the specified return periods
-in vector form (for \code{eval_}) and data frame
-or tibble form (for \code{enframe_}). This function is simply the quantile
-function evaluated at \code{1 - 1 / at}.
+The evaluated representation in vector form (for \code{eval_})
+with length matching the length of \code{at}, and data frame
+or tibble form (for \code{enframe_}) with number of rows matching the
+length of \code{at}. The \code{at} input occupies the first column,
+named \code{.arg} by default, or the specification in \code{arg_name};
+the evaluated representations for each distribution in \code{...}
+go in the subsequent columns (one column per distribution). For a
+single distribution, this column is named according to the
+representation by default (cdf, survival, quantile, etc.),
+or the value in \code{fn_prefix}. For multiple distributions, unnamed
+distributions are auto-named, and columns are named
+\verb{<fn_prefix><sep><distribution_name>} (e.g., \code{cdf_distribution1}).
 }
 \description{
 Compute return levels (quantiles) from a distribution by inputting
 return periods. The return periods correspond to events that are
 \emph{exceedances} of a quantile, not non-exceedances.
+}
+\details{
+This function is simply the quantile
+function evaluated at \code{1 - 1 / at}.
 }
 \examples{
 d <- dst_gpd(24, 0.3)

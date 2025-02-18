@@ -7,9 +7,10 @@
 dst_nbinom(size, prob)
 }
 \arguments{
-\item{size}{Number of successful trials; positive.}
+\item{size}{Number of successful trials; single positive numeric.}
 
-\item{prob}{Probability of a successful trial; between 0 and 1.}
+\item{prob}{Probability of a successful trial; single numeric
+between 0 and 1.}
 }
 \value{
 A Negative Binomial distribution.
