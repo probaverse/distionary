@@ -23,7 +23,8 @@ dst_binom <- function(size, prob) {
     quantile = \(p) stats::qbinom(p, size = size, prob = prob),
     realise = \(n) stats::rbinom(n, size = size, prob = prob),
     survival = \(x) stats::pbinom(
-      x, size = size, prob = prob, lower.tail = FALSE
+      x,
+      size = size, prob = prob, lower.tail = FALSE
     ),
     mean = size * prob,
     variance = size * prob * (1 - prob),

@@ -21,7 +21,7 @@ test_that("cdf and qf of GEV align.", {
     dst_gev(0, 1, 0),
     dst_gev(0, 1, -1)
   )
-  p <- 1:9/10
+  p <- 1:9 / 10
   for (i in seq_along(d)) {
     qf <- eval_quantile(d[[i]], at = p)
     cdf <- eval_cdf(d[[i]], at = qf)
@@ -35,7 +35,7 @@ test_that("quantile function of GEV is valid, validating the distribution.", {
     dst_gev(0, 1, 0),
     dst_gev(0, 1, -1)
   )
-  p <- 0:100/100
+  p <- 0:100 / 100
   for (i in seq_along(d)) {
     r <- range(d[[i]])
     qf <- eval_quantile(d[[i]], at = p)

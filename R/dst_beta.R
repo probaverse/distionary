@@ -7,12 +7,12 @@
 #' dst_beta(2, 3)
 #' @export
 dst_beta <- function(shape1, shape2) {
-	if (shape1 <= 0) {
-		stop("shape1 must be positive.")
-	}
-	if (shape2 <= 0) {
-		stop("shape2 must be positive.")
-	}
+  if (shape1 <= 0) {
+    stop("shape1 must be positive.")
+  }
+  if (shape2 <= 0) {
+    stop("shape2 must be positive.")
+  }
   distribution(
     parameters = list(shape1 = shape1, shape2 = shape2),
     density = \(x) stats::dbeta(x, shape1, shape2),

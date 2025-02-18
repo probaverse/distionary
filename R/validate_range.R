@@ -1,7 +1,8 @@
 validate_range <- function(
-    distribution, verbose = FALSE, tol = 1e-05
-) {
-  if (is.null(distribution[["range"]])) return(NA)
+    distribution, verbose = FALSE, tol = 1e-05) {
+  if (is.null(distribution[["range"]])) {
+    return(NA)
+  }
   range_builtin <- distribution$range
   distribution$range <- NULL
   range_derived <- range(distribution)

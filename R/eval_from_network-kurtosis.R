@@ -1,6 +1,8 @@
 eval_kurtosis_from_network <- function(distribution) {
   k_exc <- distribution[["kurtosis_exc"]]
-  if (!is.null(k_exc)) return(k_exc + 3)
+  if (!is.null(k_exc)) {
+    return(k_exc + 3)
+  }
   mu <- mean(distribution)
   sigma <- stdev(distribution)
   r <- range(distribution)
@@ -36,7 +38,8 @@ eval_kurtosis_from_network <- function(distribution) {
     integrand <- \(x) ((x - mu) / sigma)^4 * eval_density(distribution, at = x)
     int <- try(
       stats::integrate(
-        integrand, lower = r[1], upper = r[2], rel.tol = 1e-9,
+        integrand,
+        lower = r[1], upper = r[2], rel.tol = 1e-9,
         subdivisions = 200L
       ),
       silent = TRUE

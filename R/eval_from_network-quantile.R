@@ -15,10 +15,11 @@
 #'
 #' @returns The `at`-quantiles of the distribution.
 eval_quantile_from_network <- function(
-    distribution, at, tol = 1e-9, maxiter = 200
-) {
+    distribution, at, tol = 1e-9, maxiter = 200) {
   n <- length(at)
-  if (n == 0) return(numeric(0L))
+  if (n == 0) {
+    return(numeric(0L))
+  }
   ord <- order(at)
   at <- at[ord]
   x <- at
@@ -35,7 +36,8 @@ eval_quantile_from_network <- function(
       x[i_zero] <- r[1L]
     } else {
       x[i_zero] <- directional_inverse(
-        distribution, p = 0, low = r[1L], high = r[2L], tol = tol,
+        distribution,
+        p = 0, low = r[1L], high = r[2L], tol = tol,
         maxiter = maxiter, direction = "right"
       )
     }
@@ -49,7 +51,8 @@ eval_quantile_from_network <- function(
       x[i] <- low[i + 1L] <- x[i - 1L]
     } else {
       x[i] <- low[i + 1L] <- directional_inverse(
-        distribution, p = p, low = low[i], high = r[2L], tol = tol,
+        distribution,
+        p = p, low = low[i], high = r[2L], tol = tol,
         maxiter = maxiter, direction = "left"
       )
     }
@@ -79,7 +82,9 @@ eval_quantile_from_network <- function(
 #'
 #' @inheritParams eval_quantile_from_network
 encapsulate_p <- function(distribution, p, direction) {
-  if (length(p) == 0) return(c(NA, NA))
+  if (length(p) == 0) {
+    return(c(NA, NA))
+  }
   p_min <- min(p)
   p_max <- max(p)
   if (direction == "left") {
@@ -91,8 +96,10 @@ encapsulate_p <- function(distribution, p, direction) {
     cdf_lt <- `<=`
     survival_gt <- `>=`
   } else {
-    stop("`direction` must be one of 'left' or 'right'. Received '",
-         direction, "'.")
+    stop(
+      "`direction` must be one of 'left' or 'right'. Received '",
+      direction, "'."
+    )
   }
   left <- -1
   right <- 1
@@ -142,7 +149,8 @@ encapsulate_p <- function(distribution, p, direction) {
 #' @examples
 #' d <- distribution(cdf = \(x) pmin(pmax(x, 0), 1))
 #' distionary:::directional_inverse(
-#'   d, p = 0.2, low = 0, high = 1, tol = 1e-9, maxiter = 200L,
+#'   d,
+#'   p = 0.2, low = 0, high = 1, tol = 1e-9, maxiter = 200L,
 #'   direction = "left"
 #' )
 #' @returns The left inverse of the CDF evaluated at `p`.
@@ -150,14 +158,18 @@ encapsulate_p <- function(distribution, p, direction) {
 directional_inverse <- function(distribution, p, low, high, tol, maxiter,
                                 direction) {
   stopifnot(low <= high)
-  if (is.na(p)) return(p)
+  if (is.na(p)) {
+    return(p)
+  }
   if (direction == "left") {
     ineq <- `<=`
   } else if (direction == "right") {
     ineq <- `<`
   } else {
-    stop("`direction` must be one of 'left' or 'right'. Received '",
-         direction, "'.")
+    stop(
+      "`direction` must be one of 'left' or 'right'. Received '",
+      direction, "'."
+    )
   }
   max_tol <- tol
   w <- .Machine$double.xmax
@@ -172,14 +184,17 @@ directional_inverse <- function(distribution, p, low, high, tol, maxiter,
     slope_left <- (cdf_mid - cdf_low) / w * 2
     slope_right <- (cdf_high - cdf_mid) / w * 2
     slope <- max(slope, min(slope_left, slope_right, na.rm = TRUE),
-                 na.rm = TRUE)
+      na.rm = TRUE
+    )
     tol <- min(max_tol / slope, tol, na.rm = TRUE)
     if (ineq(p, cdf_mid)) {
       high <- mid
     } else {
       low <- mid
     }
-    if (low == high) return(low)
+    if (low == high) {
+      return(low)
+    }
     w <- high - low
     mid <- (high + low) / 2
   }

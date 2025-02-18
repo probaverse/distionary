@@ -32,6 +32,9 @@ eval_cdf <- function(distribution, at) {
 #' @export
 enframe_cdf <- function(..., at, arg_name = ".arg", fn_prefix = "cdf",
                         sep = "_") {
-  enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-                  sep = sep, eval_fn = eval_cdf)
+  enframe_general(
+    ...,
+    at = at, arg_name = arg_name, fn_prefix = fn_prefix,
+    sep = sep, eval_fn = eval_cdf
+  )
 }

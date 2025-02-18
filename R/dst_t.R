@@ -8,9 +8,9 @@
 #' dst_t(3)
 #'
 #' @export
-dst_t <- function(df){
+dst_t <- function(df) {
   if (df <= 0) {
-    stop('df must be positive.')
+    stop("df must be positive.")
   }
   distribution(
     parameters = list(df = df),

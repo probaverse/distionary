@@ -19,22 +19,21 @@
 #' prob_right(d, of = 0:3, inclusive = TRUE)
 #' @export
 prob_left <- function(distribution, of, inclusive) {
-	p_left <- eval_cdf(distribution, at = of)
-	if (!inclusive) {
-		p_break <- eval_pmf(distribution, at = of)
-		p_left <- p_left - p_break
-	}
-	p_left
+  p_left <- eval_cdf(distribution, at = of)
+  if (!inclusive) {
+    p_break <- eval_pmf(distribution, at = of)
+    p_left <- p_left - p_break
+  }
+  p_left
 }
 
 #' @rdname flexible_cdf
 #' @export
 prob_right <- function(distribution, of, inclusive) {
-	p_right <- eval_survival(distribution, at = of)
-	if (inclusive) {
-		p_break <- eval_pmf(distribution, at = of)
-		p_right <- p_right + p_break
-	}
-	p_right
+  p_right <- eval_survival(distribution, at = of)
+  if (inclusive) {
+    p_break <- eval_pmf(distribution, at = of)
+    p_right <- p_right + p_break
+  }
+  p_right
 }
-

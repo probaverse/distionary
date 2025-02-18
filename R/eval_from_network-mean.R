@@ -30,7 +30,8 @@ eval_mean_from_network <- function(distribution, ...) {
   }
   int <- try(
     stats::integrate(
-      qf, lower = 0, upper = 1, rel.tol = 1e-09, subdivisions = 200L, ...
+      qf,
+      lower = 0, upper = 1, rel.tol = 1e-09, subdivisions = 200L, ...
     ),
     silent = TRUE
   )

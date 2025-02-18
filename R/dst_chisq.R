@@ -10,7 +10,7 @@
 #' @export
 dst_chisq <- function(df) {
   if (df < 0) {
-    stop('df must be non-negative')
+    stop("df must be non-negative")
   }
   distribution(
     parameters = list(df = df),

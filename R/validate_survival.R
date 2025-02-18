@@ -1,7 +1,8 @@
 validate_survival <- function(
-    distribution, verbose = FALSE, tol = 1e-9
-) {
-  if (is.null(distribution$survival)) return(NA)
+    distribution, verbose = FALSE, tol = 1e-9) {
+  if (is.null(distribution$survival)) {
+    return(NA)
+  }
   sf <- distribution$survival
   distribution$survival <- NULL
   x <- eval_quantile(distribution, at = 1:49 / 50)

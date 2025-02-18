@@ -20,10 +20,10 @@ eval_quantile <- function(distribution, at) {
 #' @export
 enframe_quantile <- function(
     ..., at, arg_name = ".arg", fn_prefix = "quantile",
-    sep = "_"
-) {
+    sep = "_") {
   enframe_general(
-    ..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
+    ...,
+    at = at, arg_name = arg_name, fn_prefix = fn_prefix,
     sep = sep, eval_fn = eval_quantile
   )
 }

@@ -8,9 +8,9 @@
 #' @examples
 #' dst_bern(0.3)
 #' @export
-dst_bern <- function(prob){
+dst_bern <- function(prob) {
   if (prob < 0 || prob > 1) {
-    stop('prob must be within 0 and 1.')
+    stop("prob must be within 0 and 1.")
   }
   d <- dst_binom(size = 1, prob = prob)
   parameters(d)$size <- NULL

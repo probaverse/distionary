@@ -17,4 +17,3 @@ dst_gamma <- function(shape, rate) {
   parameters(d) <- list(shape = shape, rate = rate)
   d
 }
-

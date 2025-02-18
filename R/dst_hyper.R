@@ -13,14 +13,14 @@
 #'
 #' @export
 dst_hyper <- function(m, n, k) {
-  if (m < 0){
-    stop('m must be non-negative')
+  if (m < 0) {
+    stop("m must be non-negative")
   }
-  if (n < 0){
-    stop('n must be non-negative')
+  if (n < 0) {
+    stop("n must be non-negative")
   }
-  if (k < 0 || k > m + n){
-    stop('k must be between 0 and m+n.')
+  if (k < 0 || k > m + n) {
+    stop("k must be between 0 and m+n.")
   }
   N <- m + n
   distribution(
@@ -30,7 +30,8 @@ dst_hyper <- function(m, n, k) {
     quantile = \(p) stats::qhyper(p, m = m, n = n, k = k),
     realise = \(n) stats::rhyper(n, m = m, n = n, k = k),
     survival = \(x) stats::phyper(
-      x, m = m, n = n, k = k, lower.tail = FALSE
+      x,
+      m = m, n = n, k = k, lower.tail = FALSE
     ),
     mean = k * m / N,
     variance = k * (m / N) * (n / N) * ((N - k) / (N - 1)),

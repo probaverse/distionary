@@ -3,4 +3,3 @@
 variance <- function(distribution) {
   eval_property(distribution, "variance")
 }
-

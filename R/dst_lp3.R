@@ -21,26 +21,29 @@ dst_lp3 <- function(meanlog, sdlog, skew) {
   # mean = scale * shape
   shift <- meanlog - scale * shape
   cdf_gamma <-
-  distribution(
-    parameters = list(meanlog = meanlog, sdlog = sdlog, skew = skew),
-    cdf = \(x) stats::pgamma(
-      log(pmax(0, x)) - shift, shape = shape, scale = scale
-    ),
-    survival = \(x) stats::pgamma(
-      log(pmax(0, x)) - shift, shape = shape, scale = scale, lower.tail = FALSE
-    ),
-    density = \(x) {
-      res <- stats::dgamma(
-        log(pmax(0, x)) - shift, shape = shape, scale = scale
-      ) / x
-      res[x == 0] <- 0
-      res
-    },
-    quantile = \(p) exp(
-      stats::qgamma(p, shape = shape, scale = scale) + shift
-    ),
-    realise = \(n) exp(stats::rgamma(n, shape = shape, scale = scale) + shift),
-    .name = "Log Pearson Type III",
-    .vtype = "continuous"
-  )
+    distribution(
+      parameters = list(meanlog = meanlog, sdlog = sdlog, skew = skew),
+      cdf = \(x) stats::pgamma(
+        log(pmax(0, x)) - shift,
+        shape = shape, scale = scale
+      ),
+      survival = \(x) stats::pgamma(
+        log(pmax(0, x)) - shift,
+        shape = shape, scale = scale, lower.tail = FALSE
+      ),
+      density = \(x) {
+        res <- stats::dgamma(
+          log(pmax(0, x)) - shift,
+          shape = shape, scale = scale
+        ) / x
+        res[x == 0] <- 0
+        res
+      },
+      quantile = \(p) exp(
+        stats::qgamma(p, shape = shape, scale = scale) + shift
+      ),
+      realise = \(n) exp(stats::rgamma(n, shape = shape, scale = scale) + shift),
+      .name = "Log Pearson Type III",
+      .vtype = "continuous"
+    )
 }

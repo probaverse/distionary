@@ -1,7 +1,9 @@
 validate_density <- function(distribution, verbose = FALSE, tol = 1e-05) {
   dens_fun <- distribution$density
   cdf_fun <- distribution$cdf
-  if (is.null(dens_fun)) return(NA)
+  if (is.null(dens_fun)) {
+    return(NA)
+  }
   if (vtype(distribution) != "continuous") {
     warning("Found a density function for a non-continuous distribution.")
     return(FALSE)
@@ -10,7 +12,8 @@ validate_density <- function(distribution, verbose = FALSE, tol = 1e-05) {
   rng <- range(distribution)
   cdf_evald <- eval_cdf(distribution, at = x)
   cdf_derived1 <- stats::integrate(
-    dens_fun, lower = rng[1], upper = x[1]
+    dens_fun,
+    lower = rng[1], upper = x[1]
   )$value
   cdf_derived2 <- vapply(
     x[-1], function(x_) {
@@ -34,4 +37,3 @@ validate_density <- function(distribution, verbose = FALSE, tol = 1e-05) {
     return(FALSE)
   }
 }
-

@@ -67,6 +67,6 @@
 distribution <- function(..., .vtype = NULL, .name = NULL) {
   dots <- rlang::enquos(...)
   representations <- lapply(dots, rlang::eval_tidy)
-  if (is.null(.name)) .name = "Unnamed"
+  if (is.null(.name)) .name <- "Unnamed"
   new_distribution(representations, vtype = .vtype, name = .name)
 }

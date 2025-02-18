@@ -25,6 +25,9 @@ eval_survival_from_network <- function(distribution, at) {
 #' @export
 enframe_survival <- function(..., at, arg_name = ".arg", fn_prefix = "survival",
                              sep = "_") {
-  enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-                  sep = sep, eval_fn = eval_survival)
+  enframe_general(
+    ...,
+    at = at, arg_name = arg_name, fn_prefix = fn_prefix,
+    sep = sep, eval_fn = eval_survival
+  )
 }

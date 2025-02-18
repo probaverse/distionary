@@ -49,7 +49,8 @@ eval_skewness_from_network <- function(distribution) {
   # positive_part <- stats::integrate(sf2, 0, Inf, ...)
   positive_part <- try(
     stats::integrate(
-      sf_upper, 0, rng2[2], rel.tol = 1e-9, subdivisions = 200L
+      sf_upper, 0, rng2[2],
+      rel.tol = 1e-9, subdivisions = 200L
     ),
     silent = TRUE
   )
@@ -58,7 +59,8 @@ eval_skewness_from_network <- function(distribution) {
   }
   negative_part <- try(
     stats::integrate(
-      cdf_lower, 0, abs(rng2[1]), rel.tol = 1e-9, subdivisions = 200L
+      cdf_lower, 0, abs(rng2[1]),
+      rel.tol = 1e-9, subdivisions = 200L
     ),
     silent = TRUE
   )

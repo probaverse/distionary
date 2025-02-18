@@ -92,4 +92,3 @@ dgpd <- function(x, location, scale, shape) {
     res
   }
 }
-

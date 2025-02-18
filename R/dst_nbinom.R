@@ -16,10 +16,10 @@
 #' @export
 dst_nbinom <- function(size, prob) {
   if (prob < 0 || prob > 1) {
-    stop('prob must be within 0 and 1.')
+    stop("prob must be within 0 and 1.")
   }
   if (size <= 0) {
-    stop('size must be positive.')
+    stop("size must be positive.")
   }
   distribution(
     parameters = list(size = size, prob = prob),
@@ -28,7 +28,8 @@ dst_nbinom <- function(size, prob) {
     quantile = \(p) stats::qnbinom(p, size = size, prob = prob),
     realise = \(n) stats::rnbinom(n, size = size, prob = prob),
     survival = \(x) stats::pnbinom(
-      x, size = size, prob = prob, lower.tail = FALSE
+      x,
+      size = size, prob = prob, lower.tail = FALSE
     ),
     mean = (1 - prob) * size / prob,
     variance = (1 - prob) * size / prob^2,

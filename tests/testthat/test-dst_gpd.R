@@ -3,7 +3,7 @@ test_that("GPD quantities work out, shape > 0", {
   shape <- 1
   d <- dst_gpd(scale = scale, shape = shape)
   med <- scale * (2^shape - 1) / shape
-  expect_equal(eval_cdf(d, c(- 1, 0, med)), c(0, 0, 0.5))
+  expect_equal(eval_cdf(d, c(-1, 0, med)), c(0, 0, 0.5))
   expect_equal(eval_quantile(d, c(0, 0.5, 1)), c(0, med, Inf))
   expect_equal(eval_density(d, c(-1, Inf)), c(0, 0))
   expect_true(all(diff(eval_density(d, 1:10)) < 0))

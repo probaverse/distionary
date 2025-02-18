@@ -27,6 +27,9 @@ eval_odds_from_network <- function(distribution, at) {
 #' @export
 enframe_odds <- function(..., at, arg_name = ".arg", fn_prefix = "odds",
                          sep = "_") {
-  enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-                  sep = sep, eval_fn = eval_odds)
+  enframe_general(
+    ...,
+    at = at, arg_name = arg_name, fn_prefix = fn_prefix,
+    sep = sep, eval_fn = eval_odds
+  )
 }

@@ -29,7 +29,10 @@ eval_chf_from_network <- function(distribution, at) {
 #' @rdname chf
 #' @export
 enframe_chf <- function(..., at, arg_name = ".arg", fn_prefix = "chf",
-						sep = "_") {
-	enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-					sep = sep, eval_fn = eval_chf)
+                        sep = "_") {
+  enframe_general(
+    ...,
+    at = at, arg_name = arg_name, fn_prefix = fn_prefix,
+    sep = sep, eval_fn = eval_chf
+  )
 }

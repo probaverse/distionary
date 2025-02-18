@@ -7,11 +7,11 @@
 #' dst_pois(1)
 #' @export
 dst_pois <- function(lambda) {
-	if (lambda < 0) {
-		stop("'lambda' parameter must be greater than 0")
-	} else if (lambda == 0) {
-		return(dst_degenerate(lambda))
-	}
+  if (lambda < 0) {
+    stop("'lambda' parameter must be greater than 0")
+  } else if (lambda == 0) {
+    return(dst_degenerate(lambda))
+  }
   distribution(
     parameters = list(lambda = lambda),
     pmf = \(x) stats::dpois(x, lambda = lambda),

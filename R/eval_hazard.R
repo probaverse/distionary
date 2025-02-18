@@ -28,7 +28,10 @@ eval_hazard_from_network <- function(distribution, at) {
 #' @rdname hazard
 #' @export
 enframe_hazard <- function(..., at, arg_name = ".arg", fn_prefix = "hazard",
-						   sep = "_") {
-	enframe_general(..., at = at, arg_name = arg_name, fn_prefix = fn_prefix,
-					sep = sep, eval_fn = eval_hazard)
+                           sep = "_") {
+  enframe_general(
+    ...,
+    at = at, arg_name = arg_name, fn_prefix = fn_prefix,
+    sep = sep, eval_fn = eval_hazard
+  )
 }

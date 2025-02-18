@@ -30,7 +30,8 @@
 #' @examples
 #' d <- dst_norm(0, 1)
 #' distionary:::enframe_general(
-#'   d, at = 1:9 / 10, arg_name = "tau", fn_prefix = "quantile", sep = "",
+#'   d,
+#'   at = 1:9 / 10, arg_name = "tau", fn_prefix = "quantile", sep = "",
 #'   eval_fn = eval_quantile
 #' )
 #'
@@ -39,12 +40,16 @@ enframe_general <- function(..., at, arg_name, fn_prefix, sep,
   ellipsis <- rlang::quos(...)
   ellipsis <- rlang::quos_auto_name(ellipsis)
   distributions <- lapply(ellipsis, rlang::eval_tidy)
-  is_distributions <- vapply(distributions, is_distribution,
-                             FUN.VALUE = logical(1L))
+  is_distributions <- vapply(
+    distributions, is_distribution,
+    FUN.VALUE = logical(1L)
+  )
   if (!all(is_distributions)) {
-    stop("`enframe_*()` functions only accept distributions. ",
-         "Entries that are not distributions: ",
-         paste(which(!is_distributions), collapse = ", "))
+    stop(
+      "`enframe_*()` functions only accept distributions. ",
+      "Entries that are not distributions: ",
+      paste(which(!is_distributions), collapse = ", ")
+    )
   }
 
   n <- length(distributions)
@@ -54,7 +59,8 @@ enframe_general <- function(..., at, arg_name, fn_prefix, sep,
   f <- list()
   for (i in seq_len(n)) {
     f[[i]] <- rlang::exec(
-      eval_fn, distribution = distributions[[i]], at = at, !!!fn_args
+      eval_fn,
+      distribution = distributions[[i]], at = at, !!!fn_args
     )
   }
   if (n == 1L) {

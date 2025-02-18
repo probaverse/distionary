@@ -19,7 +19,8 @@ dst_lnorm <- function(meanlog, sdlog) {
     quantile = \(p) stats::qlnorm(p, meanlog = meanlog, sdlog = sdlog),
     realise = \(n) stats::rlnorm(n, meanlog = meanlog, sdlog = sdlog),
     survival = \(x) stats::plnorm(
-      x, meanlog = meanlog, sdlog = sdlog, lower.tail = FALSE
+      x,
+      meanlog = meanlog, sdlog = sdlog, lower.tail = FALSE
     ),
     mean = exp(meanlog + sdlog^2 / 2),
     median = exp(meanlog),

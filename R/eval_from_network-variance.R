@@ -28,8 +28,10 @@ eval_variance_from_network <- function(distribution) {
   }
   # P((X - mu)^2 < x) = P(mu-sqrt(x) < X < mu+sqrt(x))
   # = F(mu + sqrt(x)) - F(mu - sqrt(x))
-  sf2 <- function(x) eval_survival(distribution, at = mu + sqrt(x)) +
-    eval_cdf(distribution, mu - sqrt(x))
+  sf2 <- function(x) {
+    eval_survival(distribution, at = mu + sqrt(x)) +
+      eval_cdf(distribution, mu - sqrt(x))
+  }
   int <- try(
     stats::integrate(sf2, 0, Inf, rel.tol = 1e-9, subdivisions = 200L),
     silent = TRUE

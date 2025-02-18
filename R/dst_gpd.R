@@ -23,16 +23,18 @@
 #' mean(light)
 #' @export
 dst_gpd <- function(scale, shape) {
-	if (scale <= 0) {
-		stop("'scale' parameter must be positive.")
-	}
+  if (scale <= 0) {
+    stop("'scale' parameter must be positive.")
+  }
   distribution(
     parameters = list(scale = scale, shape = shape),
     cdf = \(x) pgpd(
-      x, location = 0, scale = scale, shape = shape
+      x,
+      location = 0, scale = scale, shape = shape
     ),
     survival = \(x) pgpd(
-      x, location = 0, scale = scale, shape = shape, lower.tail = FALSE
+      x,
+      location = 0, scale = scale, shape = shape, lower.tail = FALSE
     ),
     quantile = \(p) qgpd(p, location = 0, scale = scale, shape = shape),
     density = \(x) dgpd(x, location = 0, scale = scale, shape = shape),

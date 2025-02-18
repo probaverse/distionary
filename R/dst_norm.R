@@ -21,7 +21,8 @@ dst_norm <- function(mean, sd) {
     quantile = \(p) stats::qnorm(p, mean = mean, sd = sd),
     realise = \(n) stats::rnorm(n, mean = mean, sd = sd),
     survival = \(x) stats::pnorm(
-      x, mean = mean, sd = sd, lower.tail = FALSE
+      x,
+      mean = mean, sd = sd, lower.tail = FALSE
     ),
     mean = mean,
     median = mean,

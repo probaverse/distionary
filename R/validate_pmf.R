@@ -1,7 +1,9 @@
 validate_pmf <- function(distribution, verbose = FALSE, tol = 1e-8) {
   pmf_fun <- distribution$pmf
   cdf_fun <- distribution$cdf
-  if (is.null(pmf_fun)) return(NA)
+  if (is.null(pmf_fun)) {
+    return(NA)
+  }
   if (vtype(distribution) != "discrete") {
     warning("Found a PMF for a non-discrete distribution.")
     return(FALSE)

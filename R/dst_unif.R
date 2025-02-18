@@ -8,12 +8,12 @@
 #' dst_unif(0, 1)
 #' @export
 dst_unif <- function(min, max) {
-	if (max < min) {
-		stop("Parameter 'min' must be less than 'max'.")
-	}
-	if (max == min) {
-		return(dst_degenerate(min))
-	}
+  if (max < min) {
+    stop("Parameter 'min' must be less than 'max'.")
+  }
+  if (max == min) {
+    return(dst_degenerate(min))
+  }
   distribution(
     parameters = list(min = min, max = max),
     density = \(x) stats::dunif(x, min = min, max = max),

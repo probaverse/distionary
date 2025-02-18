@@ -24,10 +24,12 @@ dst_pearson3 <- function(location, scale, shape) {
     ),
     cdf = \(x) stats::pgamma(x - location, scale = scale, shape = shape),
     survival = \(x) stats::pgamma(
-      x - location, scale = scale, shape = shape, lower.tail = FALSE
+      x - location,
+      scale = scale, shape = shape, lower.tail = FALSE
     ),
     density = \(x) stats::dgamma(
-      x - location, scale = scale, shape = shape
+      x - location,
+      scale = scale, shape = shape
     ),
     quantile = \(p) location + stats::qgamma(p, shape = shape, scale = scale),
     realise = \(n) location + stats::rgamma(n, shape = shape, scale = scale),

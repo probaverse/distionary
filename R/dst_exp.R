@@ -9,7 +9,7 @@
 #' @export
 dst_exp <- function(rate) {
   if (rate <= 0) {
-    stop('rate must be greater than 0.')
+    stop("rate must be greater than 0.")
   }
   distribution(
     parameters = list(rate = rate),
@@ -28,6 +28,3 @@ dst_exp <- function(rate) {
     .vtype = "continuous"
   )
 }
-
-
-

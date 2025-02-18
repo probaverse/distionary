@@ -1,7 +1,8 @@
 validate_quantile <- function(
-    distribution, verbose = FALSE, tol = 1e-06
-) {
-  if (is.null(distribution$quantile)) return(NA)
+    distribution, verbose = FALSE, tol = 1e-06) {
+  if (is.null(distribution$quantile)) {
+    return(NA)
+  }
   qf <- distribution$quantile
   distribution$quantile <- NULL
   p <- 1:49 / 50

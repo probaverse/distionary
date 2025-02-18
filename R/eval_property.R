@@ -44,4 +44,3 @@ eval_property <- function(distribution, entry, ...) {
     }
   }
 }
-

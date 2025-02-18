@@ -11,10 +11,10 @@
 #' # Moments do not exist for the Cauchy distribution.
 #' mean(d)
 #' variance(d)
-#'@export
-dst_cauchy <- function(location, scale){
-  if (scale <= 0){
-    stop('Scale must be positive')
+#' @export
+dst_cauchy <- function(location, scale) {
+  if (scale <= 0) {
+    stop("Scale must be positive")
   }
   distribution(
     parameters = list(location = location, scale = scale),
@@ -23,7 +23,8 @@ dst_cauchy <- function(location, scale){
     quantile = \(p) stats::qcauchy(p, location = location, scale = scale),
     realise = \(n) stats::rcauchy(n, location = location, scale = scale),
     survival = \(x) stats::pcauchy(
-      x, location = location, scale = scale, lower.tail = FALSE
+      x,
+      location = location, scale = scale, lower.tail = FALSE
     ),
     mean = NaN,
     median = location,

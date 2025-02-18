@@ -11,10 +11,10 @@
 #' @export
 dst_weibull <- function(shape, scale) {
   if (scale <= 0) {
-    stop('scale parameter must be positive.')
+    stop("scale parameter must be positive.")
   }
   if (shape <= 0) {
-    stop('shape parameter must be positive.')
+    stop("shape parameter must be positive.")
   }
   distribution(
     parameters = list(shape = shape, scale = scale),
@@ -23,7 +23,8 @@ dst_weibull <- function(shape, scale) {
     quantile = \(p) stats::qweibull(p, shape = shape, scale = scale),
     realise = \(n) stats::rweibull(n, shape = shape, scale = scale),
     survival = \(x) stats::pweibull(
-      x, shape = shape, scale = scale, lower.tail = FALSE
+      x,
+      shape = shape, scale = scale, lower.tail = FALSE
     ),
     mean = scale * gamma(1 + 1 / shape),
     variance = scale^2 * (gamma(1 + 2 / shape) - gamma(1 + 1 / shape)^2),

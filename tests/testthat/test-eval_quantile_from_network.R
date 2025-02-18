@@ -1,5 +1,5 @@
 test_that("Quantile function algorithm works for several distributions", {
-  p <- 1:99/100
+  p <- 1:99 / 100
   d <- list(
     dst_beta(3, 5),
     dst_binom(15, 0.2),
@@ -50,4 +50,3 @@ test_that("Quantile algorithm handles NA appropriately.", {
   )
   expect_equal(eval_quantile(d_flat, at = 0.5), 0.5)
 })
-
