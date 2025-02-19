@@ -1,3 +1,38 @@
+#' @srrstats {G2.0} Assertions on lengths of inputs (asserting that
+#' inputs expected to be single- or multi-valued) are explicitly
+#' tested for distribution parameters; implicitly through evaluation
+#' functions.
+#' @srrstats {PD4.0} The numeric outputs of probability distribution
+#' functions are rigorously tested, not just output structures. These
+#' tests are for numeric equality.
+#' @srrstats {PD4.1} Tests for numeric equality compare the output of
+#' probability distribution functions with the output of code defined
+#' in the same location in test files.
+#' @srrstats {PD4.2} All distributions are tested using at least two
+#' valid parameter sets, and at least one invalid parameter set.
+#' @srrstats {PD4.3} Tests of optimisation or integration algorithms
+#' compare derived results from built-in results for permutations of
+#' every distribution parameter.
+#' @srrstats {PD4.4} Tests of optimisation or integration algorithms
+#' compare derived results with algorithms in the stats package.
+#' @srrstats {G3.0} Appropriate tolerances for approximate equality is
+#' adopted (stricter tolerances planned for future based on discretes
+#' tracking design).
+#' @srrstats {G5.2} Appropriate error behaviour is tested for all
+#' functions explicitly, but warnings are omitted and saved for a future
+#' version.
+#' @srrstats {G5.2b} Explicit tests trigger the `stop()` calls in this
+#' version of distionary.
+#' @srrstats {G5.4} Correctness tests are conducted to test that
+#' statistical algorithms (calculating properties from other distribution
+#' properties) produce expected results to test distributions with set
+#' parameters.
+#' @srrstats {G5.4b} New implementations of existing methods are compared
+#' against the stats package where possible. Implementations like the
+#' hazard function that are not found in the stats package are compared
+#' to known formulas rather than other implementations, to avoid unnecessary
+#' dependencies on other packages.
+
 stats_distributions <- list(
   list(
     distribution = dst_bern,
