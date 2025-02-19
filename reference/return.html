@@ -75,24 +75,38 @@ distributions in the case of <code>...</code>.</p></dd>
 
 <dt id="arg-arg-name">arg_name<a class="anchor" aria-label="anchor" href="#arg-arg-name"></a></dt>
 <dd><p>For <code>enframe_</code>, name of the column containing
-the function arguments.</p></dd>
+the function arguments. Length 1 character vector.</p></dd>
 
 
 <dt id="arg-fn-prefix">fn_prefix<a class="anchor" aria-label="anchor" href="#arg-fn-prefix"></a></dt>
 <dd><p>For <code>enframe_</code>, name of the function to
-appear in the column(s).</p></dd>
+appear in the column(s). Length 1 character vector.</p></dd>
 
 
 <dt id="arg-sep">sep<a class="anchor" aria-label="anchor" href="#arg-sep"></a></dt>
 <dd><p>When <code>enframe</code>'ing more than one distribution, the
-character that will be separating the <code>fn_name</code> and the distribution name.</p></dd>
+character that will be separating the <code>fn_name</code> and the distribution name.
+Length 1 character vector.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>The return levels associated with the specified return periods
-in vector form (for <code>eval_</code>) and data frame
-or tibble form (for <code>enframe_</code>). This function is simply the quantile
+    <p>The evaluated representation in vector form (for <code>eval_</code>)
+with length matching the length of <code>at</code>, and data frame
+or tibble form (for <code>enframe_</code>) with number of rows matching the
+length of <code>at</code>. The <code>at</code> input occupies the first column,
+named <code>.arg</code> by default, or the specification in <code>arg_name</code>;
+the evaluated representations for each distribution in <code>...</code>
+go in the subsequent columns (one column per distribution). For a
+single distribution, this column is named according to the
+representation by default (cdf, survival, quantile, etc.),
+or the value in <code>fn_prefix</code>. For multiple distributions, unnamed
+distributions are auto-named, and columns are named
+<code>&lt;fn_prefix&gt;&lt;sep&gt;&lt;distribution_name&gt;</code> (e.g., <code>cdf_distribution1</code>).</p>
+    </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>This function is simply the quantile
 function evaluated at <code>1 - 1 / at</code>.</p>
     </div>
     <div class="section level2">

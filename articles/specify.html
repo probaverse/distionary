@@ -241,6 +241,12 @@ distribution to see that the representations wrap the
 <code class="sourceCode R"><span><span class="va">dst_norm</span></span>
 <span><span class="co">#&gt; function (mean, sd) </span></span>
 <span><span class="co">#&gt; {</span></span>
+<span><span class="co">#&gt;     if (is.na(mean) || is.na(sd)) {</span></span>
+<span><span class="co">#&gt;         return(dst_null())</span></span>
+<span><span class="co">#&gt;     }</span></span>
+<span><span class="co">#&gt;     if (length(mean) != 1 || length(sd) != 1) {</span></span>
+<span><span class="co">#&gt;         stop("Input parameters must have length 1.")</span></span>
+<span><span class="co">#&gt;     }</span></span>
 <span><span class="co">#&gt;     if (sd == 0) {</span></span>
 <span><span class="co">#&gt;         return(dst_degenerate(mean))</span></span>
 <span><span class="co">#&gt;     }</span></span>
@@ -257,7 +263,7 @@ distribution to see that the representations wrap the
 <span><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = "Normal", </span></span>
 <span><span class="co">#&gt;         .vtype = "continuous")</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x5620f803caa0&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x56257eb4e6e8&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">

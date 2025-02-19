@@ -15,7 +15,6 @@
 <url><loc>https://distionary.netlify.app/reference/cdf.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/chf.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/density.html</loc></url>
-<url><loc>https://distionary.netlify.app/reference/directional_inverse.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/distionary-package.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/distribution.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/dst_bern.html</loc></url>
@@ -41,14 +40,9 @@
 <url><loc>https://distionary.netlify.app/reference/dst_t.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/dst_unif.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/dst_weibull.html</loc></url>
-<url><loc>https://distionary.netlify.app/reference/encapsulate_p.html</loc></url>
-<url><loc>https://distionary.netlify.app/reference/enframe_general.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/eval_property.html</loc></url>
-<url><loc>https://distionary.netlify.app/reference/eval_quantile_from_network.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/flexible_cdf.html</loc></url>
-<url><loc>https://distionary.netlify.app/reference/gev_range.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/gev_raw.html</loc></url>
-<url><loc>https://distionary.netlify.app/reference/gev_t_function.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/gpd_raw.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/hazard.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/index.html</loc></url>
@@ -63,7 +57,6 @@
 <url><loc>https://distionary.netlify.app/reference/quantile.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/range.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/realise.html</loc></url>
-<url><loc>https://distionary.netlify.app/reference/representation_as_function.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/return.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/survival.html</loc></url>
 <url><loc>https://distionary.netlify.app/reference/vtype.html</loc></url>
