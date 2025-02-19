@@ -76,9 +76,13 @@ distribution <- function(..., .vtype = NULL, .name = NULL) {
   if (!is.null(.name) && length(.name) != 1) {
     stop("Only one distribution name allowed.")
   }
-  .vtype <- as.character(.vtype)
+  if (is.null(.name)) {
+    .name <- "Unnamed"
+  }
+  if (!is.null(.vtype)) {
+    .vtype <- as.character(.vtype)
+  }
   .name <- as.character(.name)
   representations <- lapply(dots, rlang::eval_tidy)
-  if (is.null(.name)) .name <- "Unnamed"
   new_distribution(representations, vtype = .vtype, name = .name)
 }
