@@ -19,4 +19,3 @@ median.dst <- function(x, ...) {
   ellipsis::check_dots_empty()
   eval_property(x, "median")
 }
-
