@@ -1,8 +1,3 @@
-#' @srrstats {PD3.1} Operations on probability distributions are
-#' contained within separate functions which themselves accept the
-#' names of the distributions as one input parameter. Examples include
-#' the `eval_()` and `enframe_()` families of functions.
-
 #' Cumulative Distribution Function
 #'
 #' Access a distribution's cumulative distribution function (cdf).
@@ -40,6 +35,10 @@
 #' enframe_cdf(
 #'   model1 = d1, model2 = d2, at = 0:4, arg_name = "value"
 #' )
+#' @srrstats {PD3.1} Operations on probability distributions are
+#' contained within separate functions which themselves accept the
+#' names of the distributions as one input parameter. Examples include
+#' the `eval_()` and `enframe_()` families of functions.
 #' @rdname cdf
 #' @export
 eval_cdf <- function(distribution, at) {

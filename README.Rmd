@@ -31,6 +31,8 @@ With `distionary`, you can:
 
 The main purpose of `distionary` is to implement a distribution object, and to make distribution calculations available even if they are not specified in the distribution. `distionary` powers the wider [`probaverse` ecosystem](https://probaverse.com) for making probability distributions that are representative of your data, not just out-of-the-bag distributions like the Normal, Poisson, etc.
 
+`distionary` makes reference to common terms regarding probability distributions. If you're uneasy with these terms and concepts, most intro books in probability will be a good resource to learn from. As `distionary` develops, more documentation will be made available so that it's more self-contained.
+
 The name "distionary" is a portmanteau of "distribution" and "dictionary". While a dictionary lists and defines words, `distionary` defines distributions and makes a list of common distribution families available. These distributions act as building blocks for the wider probaverse.
 
 ## Installation

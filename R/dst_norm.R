@@ -1,3 +1,13 @@
+#' Normal (Gaussian) Distribution
+#'
+#' Makes a Normal (Gaussian) distribution.
+#'
+#' @param mean Mean of the distribution. Single numeric.
+#' @param sd Standard deviation of the distribution.
+#' Single positive numeric.
+#' @returns A Normal distribution.
+#' @examples
+#' dst_norm(0, 1)
 #' @srrstats {G2.0a} Explicit secondary documentation of expectations on
 #' lengths of inputs have been provided where relevant. See `dst_norm()`
 #' for an example.
@@ -16,17 +26,6 @@
 #' @srrstats {G2.15} Functions never assume non-missingness, and never
 #' passes arguments to another function with `na.rm = FALSE`-type parameters.
 #' This is most relevant for functions like `dst_norm()`.
-
-#' Normal (Gaussian) Distribution
-#'
-#' Makes a Normal (Gaussian) distribution.
-#'
-#' @param mean Mean of the distribution. Single numeric.
-#' @param sd Standard deviation of the distribution.
-#' Single positive numeric.
-#' @returns A Normal distribution.
-#' @examples
-#' dst_norm(0, 1)
 #' @export
 dst_norm <- function(mean, sd) {
   if (is.na(mean) || is.na(sd)) {

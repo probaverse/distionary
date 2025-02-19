@@ -33,6 +33,12 @@ specified in the distribution. `distionary` powers the wider
 distributions that are representative of your data, not just
 out-of-the-bag distributions like the Normal, Poisson, etc.
 
+`distionary` makes reference to common terms regarding probability
+distributions. If you’re uneasy with these terms and concepts, most
+intro books in probability will be a good resource to learn from. As
+`distionary` develops, more documentation will be made available so that
+it’s more self-contained.
+
 The name “distionary” is a portmanteau of “distribution” and
 “dictionary”. While a dictionary lists and defines words, `distionary`
 defines distributions and makes a list of common distribution families
@@ -201,5 +207,5 @@ Distributions*. R package version 0.1.0,
 
 Please note that the distionary project is released with a [Contributor
 Code of
-Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
-By contributing to this project, you agree to abide by its terms.
+Conduct](https://distionary.probaverse.com/CODE_OF_CONDUCT.html). By
+contributing to this project, you agree to abide by its terms.

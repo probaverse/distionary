@@ -17,7 +17,7 @@ enframe_pmf(d1, at = 0:5)
 ## -----------------------------------------------------------------------------
 d2 <- dst_geom(0.4)
 enframe_pmf(
-  model1 = d1, model2 = d2, at = 0:5, 
+  model1 = d1, model2 = d2, at = 0:5,
   arg_name = "num_failures", fn_prefix = "probability"
 )
 

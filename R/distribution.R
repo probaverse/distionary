@@ -70,14 +70,14 @@
 #' @export
 distribution <- function(..., .vtype = NULL, .name = NULL) {
   dots <- rlang::enquos(...)
-  .vtype <- as.character(.vtype)
-  .name <- as.character(.name)
-  if (length(.vtype) != 1) {
+  if (!is.null(.vtype) && length(.vtype) != 1) {
     stop("Only one variable type allowed.")
   }
-  if (length(.name) != 1) {
+  if (!is.null(.name) && length(.name) != 1) {
     stop("Only one distribution name allowed.")
   }
+  .vtype <- as.character(.vtype)
+  .name <- as.character(.name)
   representations <- lapply(dots, rlang::eval_tidy)
   if (is.null(.name)) .name <- "Unnamed"
   new_distribution(representations, vtype = .vtype, name = .name)

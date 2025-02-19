@@ -483,7 +483,7 @@ a Null distribution can be returned.</p>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>null <span class="ot">&lt;-</span> <span class="fu">dst_null</span>()</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co"># Inspect</span></span>
 <span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>null</span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; Null distribution</span></span></code></pre></div>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; Null distribution ()</span></span></code></pre></div>
 <p>A Null distribution always evaluates to NA:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">mean</span>(null)</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; [1] NA</span></span>
@@ -497,24 +497,30 @@ distribution to see that the representations wrap the
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>dst_norm</span>
 <span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; function (mean, sd) </span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt; {</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;     if (sd == 0) {</span></span>
-<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;         return(dst_degenerate(mean))</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co">#&gt;     if (is.na(mean) || is.na(sd)) {</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt;         return(dst_null())</span></span>
 <span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="co">#&gt;     }</span></span>
-<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;     if (sd &lt; 0) {</span></span>
-<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;         stop(&quot;&#39;sd&#39; parameter must be non-negative.&quot;)</span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;     if (length(mean) != 1 || length(sd) != 1) {</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt;         stop(&quot;Input parameters must have length 1.&quot;)</span></span>
 <span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt;     }</span></span>
-<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;     distribution(parameters = list(mean = mean, sd = sd), density = function(x) stats::dnorm(x, </span></span>
-<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), cdf = function(x) stats::pnorm(x, </span></span>
-<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), quantile = function(p) stats::qnorm(p, </span></span>
-<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), realise = function(n) stats::rnorm(n, </span></span>
-<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), survival = function(x) stats::pnorm(x, </span></span>
-<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd, lower.tail = FALSE), mean = mean, </span></span>
-<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt;         median = mean, variance = sd^2, stdev = sd, skewness = 0, </span></span>
-<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = &quot;Normal&quot;, </span></span>
-<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt;         .vtype = &quot;continuous&quot;)</span></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; }</span></span>
-<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x11749c8e0&gt;</span></span>
-<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt;     if (sd == 0) {</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt;         return(dst_degenerate(mean))</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt;     }</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;     if (sd &lt; 0) {</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt;         stop(&quot;&#39;sd&#39; parameter must be non-negative.&quot;)</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt;     }</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt;     distribution(parameters = list(mean = mean, sd = sd), density = function(x) stats::dnorm(x, </span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), cdf = function(x) stats::pnorm(x, </span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), quantile = function(p) stats::qnorm(p, </span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), realise = function(n) stats::rnorm(n, </span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd), survival = function(x) stats::pnorm(x, </span></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co">#&gt;         mean = mean, sd = sd, lower.tail = FALSE), mean = mean, </span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a><span class="co">#&gt;         median = mean, variance = sd^2, stdev = sd, skewness = 0, </span></span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = &quot;Normal&quot;, </span></span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt;         .vtype = &quot;continuous&quot;)</span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; }</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x11689c8b8&gt;</span></span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
 </div>
 <div id="user-defined-distributions" class="section level2">
 <h2>User-Defined Distributions</h2>
