@@ -17,9 +17,7 @@ dgpd(x, location, scale, shape)
 
 \item{scale}{Scale parameter; single positive numeric.}
 
-\item{shape}{Shape parameter; single positive numeric.
-This is also the extreme value index, so that \code{shape > 0} is heavy
-tailed, and \code{shape < 0} is short-tailed.}
+\item{shape}{Shape parameter; single positive numeric.}
 
 \item{lower.tail}{Logical. If \code{TRUE}, cdf (default);
 if \code{FALSE}, survival function.}

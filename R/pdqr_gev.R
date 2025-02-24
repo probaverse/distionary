@@ -2,13 +2,17 @@
 #'
 #' @param x,q Vector of quantiles.
 #' @param p Vector of probabilities.
+#' @param location Location parameter; single numeric.
+#' @param scale Scale parameter; single positive numeric.
+#' @param shape Shape parameter; single numeric.
+#' This is also the extreme value index,
+#' so that `shape > 0` is heavy tailed, and `shape < 0` is short-tailed.
 #' @returns Vector of evaluated GEV distribution.
 #' @examples
 #' pgev(1:10, 0, 1, 1)
 #' dgev(1:10, 0, 2, 0)
 #' qgev(1:9 / 10, 2, 10, -2)
 #' @rdname gev_raw
-#' @inheritParams dst_gev
 #' @export
 pgev <- function(q, location, scale, shape) {
   r <- gev_range(location, scale, shape)

@@ -67,6 +67,7 @@
 #'
 #' # Plot
 #' plot(linear)
+#' @family Distribution Construction
 #' @export
 distribution <- function(..., .vtype = NULL, .name = NULL) {
   dots <- rlang::enquos(...)

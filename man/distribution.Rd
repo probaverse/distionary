@@ -92,3 +92,4 @@ linear
 # Plot
 plot(linear)
 }
+\concept{Distribution Construction}

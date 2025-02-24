@@ -49,9 +49,7 @@ pretty_name <- function(distribution, param_digits = 0) {
 #' output.
 #' @returns a single character with the parameters separated by commas and
 #' sandwiched by brackets.
-#' @examples
-#' d <- dst_norm(0, 1)
-#' distionary:::bracket_parameters(d)
+#' @noRd
 bracket_parameters <- function(distribution, param_digits = 2) {
   p <- signif(unlist(parameters(distribution)), digits = param_digits)
   paste0("(", paste0(p, collapse = ", "), ")")

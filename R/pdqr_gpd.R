@@ -3,6 +3,8 @@
 #' @param x,q Vector of quantiles.
 #' @param p Vector of probabilities.
 #' @param location Location parameter to shift the GPD by.
+#' @param scale Scale parameter; single positive numeric.
+#' @param shape Shape parameter; single positive numeric.
 #' @param lower.tail Logical. If `TRUE`, cdf (default);
 #' if `FALSE`, survival function.
 #' @returns Vector of evaluated GPD distribution.
@@ -11,7 +13,6 @@
 #' dgpd(1:10, 0, 2, 0)
 #' qgpd(1:9 / 10, 2, 10, -2)
 #' @rdname gpd_raw
-#' @inheritParams dst_gpd
 #' @export
 pgpd <- function(q, location, scale, shape, lower.tail = TRUE) {
   if (shape == 0) {

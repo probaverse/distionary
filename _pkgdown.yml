@@ -1,4 +1,4 @@
-url: https://distionary.netlify.app/
+url: https://distionary.probaverse.com/
 template:
   bootstrap: 5
   includes:
@@ -12,3 +12,42 @@ template:
 
         gtag('config', 'G-73DKMR0WHY');
       </script>
+
+reference:
+- title: Specify
+- subtitle: Built-in Distribution Families
+  contents:
+  - starts_with("dst_")
+- subtitle: General Distribution Creation
+  contents:
+  - distribution
+  - new_distribution
+- subtitle: Distribution Characteristics
+  contents:
+  - parameters
+  - plot.dst
+  - pretty_name
+  - vtype
+- title: Evaluate
+- subtitle: Distributional Representations
+  contents:
+  - starts_with("enframe_")
+  - starts_with("eval_")
+  - starts_with("prob_")
+- subtitle: Distribution Properties
+  contents:
+  - starts_with("kurtosis")
+  - mean.dst
+  - median.dst
+  - range.dst
+  - skewness
+  - stdev
+  - variance
+- subtitle: Random Sampling
+  contents:
+  - realise
+- title: Built-in Distributional Representations
+  desc: Distributional representations not found in the `stats` package.
+  contents:
+  - ends_with("gev")
+  - ends_with("gpd")
