@@ -12,6 +12,8 @@
 #'
 #' @export
 new_distribution <- function(l, ..., class = character()) {
+  checkmate::assert_list(l)
+  checkmate::assert_character(class)
   structure(l, ..., class = append(class, "dst"))
 }
 

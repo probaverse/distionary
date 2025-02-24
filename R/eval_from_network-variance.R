@@ -1,5 +1,6 @@
 #' @noRd
 eval_variance_from_network <- function(distribution) {
+  checkmate::assert_class(distribution, "dst")
   mu <- mean(distribution)
   if (attr(distribution, "name") %in% c(
     "Hypergeometric", "Bernoulli", "Binomial"

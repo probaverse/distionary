@@ -8,11 +8,16 @@
 #' @param distribution A distribution having access to a cdf.
 #' @param at A vector of values for which to evaluate the quantile function.
 #' @param tol,maxiter Tolerance (a small positive number) and maximum number
-#' of iterations
-#' @returns The `at`-quantiles of the distribution.
+#' of iterations (at least 1); length 1 vectors.
+#' @returns The `at`-quantiles of the distribution. Numeric vector
+#' of values between 0 and 1.
 #' @noRd
 eval_quantile_from_network <- function(
     distribution, at, tol = 1e-9, maxiter = 200) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at, 0, 1)
+  checkmate::assert_numeric(tol, 0, len = 1)
+  checkmate::assert_integerish(maxiter, 1, len = 1)
   n <- length(at)
   if (n == 0) {
     return(numeric(0L))

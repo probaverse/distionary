@@ -6,20 +6,18 @@
 \alias{dgpd}
 \title{Representations of the Generalized Pareto Distribution}
 \usage{
-pgpd(q, location, scale, shape, lower.tail = TRUE)
+pgpd(q, scale, shape, lower.tail = TRUE)
 
-qgpd(p, location, scale, shape)
+qgpd(p, scale, shape)
 
-dgpd(x, location, scale, shape)
+dgpd(x, scale, shape)
 }
 \arguments{
-\item{location}{Location parameter to shift the GPD by.}
+\item{scale}{Vector of scale parameters; positive numeric.}
 
-\item{scale}{Scale parameter; single positive numeric.}
+\item{shape}{Vector of shape parameters; positive numeric.}
 
-\item{shape}{Shape parameter; single positive numeric.}
-
-\item{lower.tail}{Logical. If \code{TRUE}, cdf (default);
+\item{lower.tail}{Single logical. If \code{TRUE}, cdf (default);
 if \code{FALSE}, survival function.}
 
 \item{p}{Vector of probabilities.}
@@ -27,7 +25,8 @@ if \code{FALSE}, survival function.}
 \item{x, q}{Vector of quantiles.}
 }
 \value{
-Vector of evaluated GPD distribution.
+Vector of evaluated GPD distribution, with length
+equal to the recycled lengths of \code{q}/\code{x}/\code{p}, \code{scale}, and \code{shape}.
 }
 \description{
 Representations of the Generalized Pareto Distribution

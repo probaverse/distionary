@@ -12,6 +12,8 @@
 #' @rdname chf
 #' @export
 eval_chf <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   eval_property(distribution, "chf", at)
 }
 

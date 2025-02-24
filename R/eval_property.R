@@ -23,9 +23,8 @@
 #' eval_property(d, "foofy", 1:10)
 #' @export
 eval_property <- function(distribution, entry, ...) {
-  if (length(entry) != 1) {
-    stop("Only one property can be evaluated at a time.")
-  }
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_character(entry, len = 1)
   repres <- distribution[[entry]]
   if (is.null(repres)) {
     if (entry == "realize") {

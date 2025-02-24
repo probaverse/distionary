@@ -12,11 +12,15 @@
 #' @rdname survival
 #' @export
 eval_survival <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   eval_property(distribution, "survival", at)
 }
 
 #' @noRd
 eval_survival_from_network <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   1 - eval_cdf(distribution, at = at)
 }
 

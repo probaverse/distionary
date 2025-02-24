@@ -1,5 +1,6 @@
 #' @noRd
 eval_kurtosis_from_network <- function(distribution) {
+  checkmate::assert_class(distribution, "dst")
   k_exc <- distribution[["kurtosis_exc"]]
   if (!is.null(k_exc)) {
     return(k_exc + 3)
@@ -86,5 +87,6 @@ eval_kurtosis_from_network <- function(distribution) {
 
 #' @noRd
 eval_kurtosis_exc_from_network <- function(distribution) {
+  checkmate::assert_class(distribution, "dst")
   kurtosis(distribution) - 3
 }

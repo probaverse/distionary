@@ -150,9 +150,9 @@ distributions_list <- list(
       list(location = 0, scale = -1, shape = 1)
     ),
     valid = list(
-      list(location = 0, scale = 1, shape = 1.2),
-      list(location = 0, scale = 1, shape = 0),
-      list(location = 0, scale = 1, shape = -1.2)
+      list(location = 0, scale = 1.5, shape = 1.2),
+      list(location = 0, scale = 1.5, shape = 0),
+      list(location = 0, scale = 1.5, shape = -1.2)
     )
   ),
   list(
@@ -161,9 +161,9 @@ distributions_list <- list(
       list(scale = -1, shape = 1)
     ),
     valid = list(
-      list(scale = 1, shape = 1.2),
-      list(scale = 1, shape = 0),
-      list(scale = 1, shape = -1.2)
+      list(scale = 1.5, shape = 1.2),
+      list(scale = 1.5, shape = 0),
+      list(scale = 1.5, shape = -1.2)
     )
   ),
   list(

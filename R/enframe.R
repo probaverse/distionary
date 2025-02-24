@@ -30,9 +30,16 @@
 #' @noRd
 enframe_general <- function(..., at, arg_name, fn_prefix, sep,
                             eval_fn, fn_args = list()) {
+  checkmate::assert_numeric(at)
+  checkmate::assert_character(arg_name, len = 1)
+  checkmate::assert_character(fn_prefix, len = 1)
+  checkmate::assert_character(sep, len = 1)
+  checkmate::assert_function(eval_fn)
+  checkmate::assert_list(fn_args)
   ellipsis <- rlang::quos(...)
   ellipsis <- rlang::quos_auto_name(ellipsis)
   distributions <- lapply(ellipsis, rlang::eval_tidy)
+  checkmate::assert_list(distributions, types = "dst")
   is_distributions <- vapply(
     distributions, is_distribution,
     FUN.VALUE = logical(1L)

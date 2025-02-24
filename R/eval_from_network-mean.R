@@ -2,6 +2,7 @@
 #' discrete summation for specific distributions.
 #' @noRd
 eval_mean_from_network <- function(distribution, ...) {
+  checkmate::assert_class(distribution, "dst")
   if (attr(distribution, "name") %in% c(
     "Hypergeometric", "Bernoulli", "Binomial"
   )) {

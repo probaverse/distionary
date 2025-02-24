@@ -26,7 +26,9 @@ so that \code{shape > 0} is heavy tailed, and \code{shape < 0} is short-tailed.}
 \item{x, q}{Vector of quantiles.}
 }
 \value{
-Vector of evaluated GEV distribution.
+Vector of evaluated GEV distribution, with length
+equal to the recycled lengths of \code{q}/\code{x}/\code{p}, \code{location}, \code{scale}, and
+\code{shape}.
 }
 \description{
 Representations of the Generalized Extreme Value Distribution

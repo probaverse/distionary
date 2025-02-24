@@ -14,11 +14,15 @@
 #' @rdname odds
 #' @export
 eval_odds <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   eval_property(distribution, "odds", at)
 }
 
 #' @noRd
 eval_odds_from_network <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   p <- eval_pmf(distribution, at = at)
   p / (1 - p)
 }

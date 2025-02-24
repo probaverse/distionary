@@ -16,11 +16,15 @@
 #' @rdname return
 #' @export
 eval_return <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   eval_property(distribution, "return", at)
 }
 
 #' @noRd
 eval_return_from_network <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   eval_quantile(distribution, at = 1 - 1 / at)
 }
 

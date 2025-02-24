@@ -12,6 +12,8 @@
 #' @rdname hazard
 #' @export
 eval_hazard <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   eval_property(distribution, "hazard", at)
 }
 

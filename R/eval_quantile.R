@@ -33,6 +33,8 @@
 #' @rdname quantile
 #' @export
 eval_quantile <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   eval_property(distribution, "quantile", at)
 }
 

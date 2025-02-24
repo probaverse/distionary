@@ -30,12 +30,15 @@
 #' @rdname parameters
 #' @export
 parameters <- function(distribution) {
+  checkmate::assert_class(distribution, "dst")
   distribution[["parameters"]]
 }
 
 #' @export
 #' @rdname parameters
 `parameters<-` <- function(distribution, value) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_list(value, names = "named")
   distribution[["parameters"]] <- value
   distribution
 }

@@ -31,16 +31,13 @@ dst_gpd <- function(scale, shape) {
   }
   distribution(
     parameters = list(scale = scale, shape = shape),
-    cdf = \(x) pgpd(
-      x,
-      location = 0, scale = scale, shape = shape
-    ),
+    cdf = \(x) pgpd(x, scale = scale, shape = shape),
     survival = \(x) pgpd(
       x,
-      location = 0, scale = scale, shape = shape, lower.tail = FALSE
+      scale = scale, shape = shape, lower.tail = FALSE
     ),
-    quantile = \(p) qgpd(p, location = 0, scale = scale, shape = shape),
-    density = \(x) dgpd(x, location = 0, scale = scale, shape = shape),
+    quantile = \(p) qgpd(p, scale = scale, shape = shape),
+    density = \(x) dgpd(x, scale = scale, shape = shape),
     mean = ifelse(shape < 1, scale / (1 - shape), Inf),
     variance = ifelse(
       shape < 1 / 2,
@@ -59,7 +56,7 @@ dst_gpd <- function(scale, shape) {
         ((1 - 3 * shape) * (1 - 4 * shape)) - 3,
       Inf
     ),
-    range = c(0, ifelse(shape >= 0, Inf, -(scale / shape))),
+    range = c(0, gpd_upper(scale = scale, shape = shape)),
     .name = "Generalised Pareto",
     .vtype = "continuous"
   )

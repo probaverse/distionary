@@ -13,11 +13,15 @@
 #' @rdname pmf
 #' @export
 eval_pmf <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   eval_property(distribution, "pmf", at)
 }
 
 #' @noRd
 eval_pmf_from_network <- function(distribution, at) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(at)
   if (vtype(distribution) == "continuous") {
     at[!is.na(at)] <- 0
     return(at)

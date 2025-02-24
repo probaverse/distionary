@@ -19,6 +19,9 @@
 #' prob_right(d, of = 0:3, inclusive = TRUE)
 #' @export
 prob_left <- function(distribution, of, inclusive) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(of)
+  checkmate::assert_logical(inclusive, len = 1)
   p_left <- eval_cdf(distribution, at = of)
   if (!inclusive) {
     p_break <- eval_pmf(distribution, at = of)
@@ -30,6 +33,9 @@ prob_left <- function(distribution, of, inclusive) {
 #' @rdname flexible_cdf
 #' @export
 prob_right <- function(distribution, of, inclusive) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_numeric(of)
+  checkmate::assert_logical(inclusive, len = 1)
   p_right <- eval_survival(distribution, at = of)
   if (inclusive) {
     p_break <- eval_pmf(distribution, at = of)
