@@ -9,21 +9,9 @@
 #' variance(d)
 #' @export
 dst_degenerate <- function(location) {
+  checkmate::assert_numeric(location, len = 1)
   if (is.na(location)) {
     return(dst_null())
-  }
-  if (length(location) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  cant_coerce_numeric <- suppressWarnings(is.na(as.numeric(location)))
-  if (cant_coerce_numeric) {
-    stop("'location' parameter must be numeric.")
-  }
-  if (length(location) != 1L) {
-    stop(
-      "'location' parameter must contain exactly one number. ",
-      "Received ", length(location)
-    )
   }
   distribution(
     parameters = list(location = location),

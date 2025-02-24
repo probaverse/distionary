@@ -1,6 +1,8 @@
 #' @srrstatsVerbose TRUE
 #'
+#' @srrstats {G1.0} Distributions are generic enough to not need a specific reference (e.g., an intro probability book will cover most concepts in distionary), and it appears most other distribution packages on CRAN do not include references.
 #' @srrstats {G1.2} A Life Cycle Statement describing current and anticipated future states of development can be found in the CONTRIBUTING file.
+#' @srrstats {G1.3} Users are referred to general texts in probability to learn more about probability concepts and terminology. Terms specific to the package (like "distributional representation" are defined in vignettes).
 #' @srrstats {G1.4} Software uses [`roxygen2`](https://roxygen2.r-lib.org/) to document all functions.
 #' @srrstats {G1.4a} All internal (non-exported) functions are documented in standard [`roxygen2`](https://roxygen2.r-lib.org/) format, along with a final `@noRd` tag to suppress automatic generation of `.Rd` files.
 #' @srrstats {PD2.0} Representing probability distributions using a package for general representation is the main purpose of distionary.
@@ -13,8 +15,6 @@ NULL
 #' to `@srrstatsNA`, and placed together in this block, along with explanations
 #' for why each of these standards have been deemed not applicable.
 #' (These comments may also be deleted at any time.)
-#' @srrstatsNA {G1.0} Distributions are generic enough to not need a specific reference (e.g., an intro probability book will cover most concepts in distionary).
-#' @srrstatsNA {G1.3} Users are referred to general texts in probability to learn more about probability concepts and terminology. Terms specific to the package (like "distributional representation" are defined in vignettes).
 #' @srrstatsNA {G1.5} No performance claims.
 #' @srrstatsNA {G1.6} No performance claims.
 #' @srrstatsNA {G2.1} Assertions on types of inputs is not typically done in this version of distionary; right now the onus is on the user.

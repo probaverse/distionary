@@ -10,17 +10,10 @@
 #'
 #' @export
 dst_weibull <- function(shape, scale) {
+  checkmate::assert_numeric(shape, 0, len = 1)
+  checkmate::assert_numeric(scale, 0, len = 1)
   if (is.na(shape) || is.na(scale)) {
     return(dst_null())
-  }
-  if (length(shape) != 1 || length(scale) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (scale <= 0) {
-    stop("scale parameter must be positive.")
-  }
-  if (shape <= 0) {
-    stop("shape parameter must be positive.")
   }
   distribution(
     parameters = list(shape = shape, scale = scale),

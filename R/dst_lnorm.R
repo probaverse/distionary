@@ -11,14 +11,10 @@
 #' dst_lnorm(0, 1)
 #' @export
 dst_lnorm <- function(meanlog, sdlog) {
+  checkmate::assert_numeric(meanlog, len = 1)
+  checkmate::assert_numeric(sdlog, 0, len = 1)
   if (is.na(meanlog) || is.na(sdlog)) {
     return(dst_null())
-  }
-  if (length(meanlog) != 1 || length(sdlog) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (sdlog < 0) {
-    stop("'sdlog' parameter must be non-negative.")
   }
   distribution(
     parameters = list(meanlog = meanlog, sdlog = sdlog),

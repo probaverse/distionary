@@ -9,17 +9,10 @@
 #' dst_f(2, 3)
 #' @export
 dst_f <- function(df1, df2) {
+  checkmate::assert_numeric(df1, 0, len = 1)
+  checkmate::assert_numeric(df2, 0, len = 1)
   if (is.na(df1) || is.na(df2)) {
     return(dst_null())
-  }
-  if (length(df1) != 1 || length(df2) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (df1 <= 0) {
-    stop("df1 must be positive")
-  }
-  if (df2 <= 0) {
-    stop("df2 must be positive")
   }
   distribution(
     parameters = list(df1 = df1, df2 = df2),

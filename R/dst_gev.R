@@ -26,14 +26,11 @@
 #' mean(light)
 #' @export
 dst_gev <- function(location, scale, shape) {
+  checkmate::assert_numeric(location, len = 1)
+  checkmate::assert_numeric(scale, 0, len = 1)
+  checkmate::assert_numeric(shape, len = 1)
   if (is.na(location) || is.na(scale) || is.na(shape)) {
     return(dst_null())
-  }
-  if (length(location) != 1 || length(scale) != 1 || length(shape) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (scale <= 0) {
-    stop("'scale' parameter must be positive.")
   }
   distribution(
     parameters = list(location = location, scale = scale, shape = shape),

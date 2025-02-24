@@ -9,17 +9,13 @@
 #' dst_unif(0, 1)
 #' @export
 dst_unif <- function(min, max) {
-  if (is.na(min) || is.na(max)) {
+  checkmate::assert_numeric(min, len = 1)
+  if (is.na(min)) {
     return(dst_null())
   }
-  if (length(min) != 1 || length(max) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (max < min) {
-    stop("Parameter 'min' must be less than 'max'.")
-  }
-  if (max == min) {
-    return(dst_degenerate(min))
+  checkmate::assert_numeric(max, min, len = 1)
+  if (is.na(max)) {
+    return(dst_null())
   }
   distribution(
     parameters = list(min = min, max = max),

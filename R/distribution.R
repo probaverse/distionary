@@ -9,11 +9,9 @@
 #'
 #' @param ... Name-value pairs for defining the distribution.
 #' @param .vtype The variable type, typically "discrete" or "continuous".
-#' Can be any character vector of length 1; if not a character, is
-#' converted to one with `as.character()`.
+#' Can be any character vector of length 1.
 #' @param .name A name to give to the distribution.
-#' Can be any character vector of length 1; if not a character, is
-#' converted to one with `as.character()`.
+#' Can be any character vector of length 1.
 #' @return A distribution object.
 #' @details
 #' Currently, the CDF (`cdf`) is required to be specified, along with the PMF
@@ -70,20 +68,12 @@
 #' @family Distribution Construction
 #' @export
 distribution <- function(..., .vtype = NULL, .name = NULL) {
+  checkmate::assert_character(.vtype, len = 1, null.ok = TRUE)
+  checkmate::assert_character(.name, len = 1, null.ok = TRUE)
   dots <- rlang::enquos(...)
-  if (!is.null(.vtype) && length(.vtype) != 1) {
-    stop("Only one variable type allowed.")
-  }
-  if (!is.null(.name) && length(.name) != 1) {
-    stop("Only one distribution name allowed.")
-  }
   if (is.null(.name)) {
     .name <- "Unnamed"
   }
-  if (!is.null(.vtype)) {
-    .vtype <- as.character(.vtype)
-  }
-  .name <- as.character(.name)
   representations <- lapply(dots, rlang::eval_tidy)
   new_distribution(representations, vtype = .vtype, name = .name)
 }

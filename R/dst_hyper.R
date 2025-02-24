@@ -14,22 +14,16 @@
 #'
 #' @export
 dst_hyper <- function(m, n, k) {
-  if (is.na(m) || is.na(n) || is.na(k)) {
+  checkmate::assert_numeric(m, 0, len = 1)
+  checkmate::assert_numeric(n, 0, len = 1)
+  if (is.na(m) || is.na(n)) {
     return(dst_null())
   }
-  if (length(m) != 1 || length(n) != 1 || length(k) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (m < 0) {
-    stop("m must be non-negative")
-  }
-  if (n < 0) {
-    stop("n must be non-negative")
-  }
-  if (k < 0 || k > m + n) {
-    stop("k must be between 0 and m+n.")
-  }
   N <- m + n
+  checkmate::assert_numeric(k, 0, N, len = 1)
+  if (is.na(k)) {
+    return(dst_null())
+  }
   distribution(
     parameters = list(m = m, n = n, k = k),
     pmf = \(x) stats::dhyper(x, m = m, n = n, k = k),

@@ -11,17 +11,10 @@
 #' dst_binom(10, 0.6)
 #' @export
 dst_binom <- function(size, prob) {
+  checkmate::assert_numeric(size, 0, len = 1)
+  checkmate::assert_numeric(prob, 0, 1, len = 1)
   if (is.na(size) || is.na(prob)) {
     return(dst_null())
-  }
-  if (length(size) != 1 || length(prob) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (size < 0) {
-    stop("Size must be non-negative")
-  }
-  if (prob < 0 || prob > 1) {
-    stop("prob must be within 0 and 1")
   }
   distribution(
     parameters = list(size = size, prob = prob),

@@ -28,17 +28,10 @@
 #' This is most relevant for functions like `dst_norm()`.
 #' @export
 dst_norm <- function(mean, sd) {
+  checkmate::assert_numeric(mean, len = 1)
+  checkmate::assert_numeric(sd, 0, len = 1)
   if (is.na(mean) || is.na(sd)) {
     return(dst_null())
-  }
-  if (length(mean) != 1 || length(sd) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (sd == 0) {
-    return(dst_degenerate(mean))
-  }
-  if (sd < 0) {
-    stop("'sd' parameter must be non-negative.")
   }
   distribution(
     parameters = list(mean = mean, sd = sd),

@@ -16,12 +16,10 @@ is.distribution(object)
 \item{...}{Name-value pairs for defining the distribution.}
 
 \item{.vtype}{The variable type, typically "discrete" or "continuous".
-Can be any character vector of length 1; if not a character, is
-converted to one with \code{as.character()}.}
+Can be any character vector of length 1.}
 
 \item{.name}{A name to give to the distribution.
-Can be any character vector of length 1; if not a character, is
-converted to one with \code{as.character()}.}
+Can be any character vector of length 1.}
 
 \item{object}{Object to be tested}
 }

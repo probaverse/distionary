@@ -7,16 +7,9 @@
 #' dst_pois(1)
 #' @export
 dst_pois <- function(lambda) {
+  checkmate::assert_numeric(lambda, 0, len = 1)
   if (is.na(lambda)) {
     return(dst_null())
-  }
-  if (length(lambda) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (lambda < 0) {
-    stop("'lambda' parameter must be greater than 0")
-  } else if (lambda == 0) {
-    return(dst_degenerate(lambda))
   }
   distribution(
     parameters = list(lambda = lambda),

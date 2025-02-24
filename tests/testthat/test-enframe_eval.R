@@ -38,3 +38,23 @@ test_that("column names match the function, by default.", {
   expect_equal(names(enframe_hazard(d, at = 0))[2L], "hazard")
   expect_equal(names(enframe_survival(d, at = 0))[2L], "survival")
 })
+
+test_that("Manual column names work.", {
+  d <- dst_norm(0, 1)
+  x <- 1:3
+  df <- enframe_cdf(d, at = x, arg_name = "one", fn_prefix = "two")
+  expect_equal(sort(c("one", "two")), sort(names(df)))
+  df <- enframe_cdf(
+    mod1 = d, mod2 = d, at = x, arg_name = "one", fn_prefix = "two", sep = "."
+  )
+  expect_equal(sort(c("one", "two.mod1", "two.mod2")), sort(names(df)))
+})
+
+test_that("Tibble dimensions are proper.", {
+  d <- dst_norm(0, 1)
+  x <- -3:3
+  df <- enframe_cdf(d, at = x, arg_name = "one", fn_prefix = "two")
+  expect_equal(dim(df), c(7, 2))
+  df <- enframe_cdf(mod1 = d, mod2 = d, at = x)
+  expect_equal(dim(df), c(7, 3))
+})

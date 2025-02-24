@@ -9,14 +9,9 @@
 #'
 #' @export
 dst_chisq <- function(df) {
+  checkmate::assert_numeric(df, 0, len = 1)
   if (is.na(df)) {
     return(dst_null())
-  }
-  if (length(df) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (df < 0) {
-    stop("df must be non-negative")
   }
   distribution(
     parameters = list(df = df),

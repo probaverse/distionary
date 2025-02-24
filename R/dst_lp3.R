@@ -14,14 +14,11 @@
 #' dst_lp3(0, 1, 1)
 #' @export
 dst_lp3 <- function(meanlog, sdlog, skew) {
+  checkmate::assert_numeric(meanlog, len = 1)
+  checkmate::assert_numeric(sdlog, 0, len = 1)
+  checkmate::assert_numeric(skew, len = 1)
   if (is.na(meanlog) || is.na(sdlog) || is.na(skew)) {
     return(dst_null())
-  }
-  if (length(meanlog) != 1 || length(sdlog) != 1 || length(skew) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (sdlog < 0) {
-    stop("sdlog cannot be less than 0.")
   }
   # skewness = 2 / sqrt(shape), shape = 4 / skewness^2
   shape <- 4 / skew^2

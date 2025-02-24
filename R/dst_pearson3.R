@@ -20,17 +20,11 @@
 #' dst_pearson3(1, 1, 1)
 #' @export
 dst_pearson3 <- function(location, scale, shape) {
+  checkmate::assert_numeric(location, len = 1)
+  checkmate::assert_numeric(scale, 0, len = 1)
+  checkmate::assert_numeric(shape, 0, len = 1)
   if (is.na(location) || is.na(scale) || is.na(shape)) {
     return(dst_null())
-  }
-  if (length(location) != 1 || length(scale) != 1 || length(shape) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (scale < 0) {
-    stop("scale parameter cannot be less than 0.")
-  }
-  if (shape < 0) {
-    stop("shape parameter cannot be less than 0.")
   }
   distribution(
     parameters = list(

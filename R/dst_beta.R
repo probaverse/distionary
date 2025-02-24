@@ -8,17 +8,10 @@
 #' dst_beta(2, 3)
 #' @export
 dst_beta <- function(shape1, shape2) {
+  checkmate::assert_numeric(shape1, 0, len = 1)
+  checkmate::assert_numeric(shape2, 0, len = 1)
   if (is.na(shape1) || is.na(shape2)) {
     return(dst_null())
-  }
-  if (length(shape1) != 1 || length(shape2) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (shape1 <= 0) {
-    stop("shape1 must be positive.")
-  }
-  if (shape2 <= 0) {
-    stop("shape2 must be positive.")
   }
   distribution(
     parameters = list(shape1 = shape1, shape2 = shape2),

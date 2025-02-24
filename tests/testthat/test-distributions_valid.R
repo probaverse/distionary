@@ -33,7 +33,7 @@
 #' to known formulas rather than other implementations, to avoid unnecessary
 #' dependencies on other packages.
 
-stats_distributions <- list(
+distributions_list <- list(
   list(
     distribution = dst_bern,
     invalid = list(
@@ -247,7 +247,7 @@ stats_distributions <- list(
   list(
     distribution = dst_t,
     invalid = list(
-      list(df = 0),
+      list(df = -2),
       list(df = -1)
     ),
     valid = list(
@@ -281,8 +281,8 @@ stats_distributions <- list(
   )
 )
 
-for (i in seq_along(stats_distributions)) {
-  item <- stats_distributions[[i]]
+for (i in seq_along(distributions_list)) {
+  item <- distributions_list[[i]]
 
   test_that(paste("Distribution", i, "invalid parameters check."), {
     for (paramset in item$invalid) {
@@ -360,6 +360,10 @@ for (i in seq_along(stats_distributions)) {
     d <- rlang::exec(item$distribution, !!!paramset)
     v <- vtype(d)
     prettynm <- pretty_name(d, param_digits = 2)
+
+    test_that("Object is a distribution.", {
+      expect_true(is_distribution(d))
+    })
 
     # Check each representation individually, that it corresponds
     # to a valid distribution.
@@ -525,5 +529,5 @@ test_that("Representations that are never specified in distionary work.", {
 })
 
 rm(list = c(
-  "stats_distributions", "d", "item", "i", "paramset", "prettynm", "v"
+  "distributions_list", "d", "item", "i", "paramset", "prettynm", "v"
 ))

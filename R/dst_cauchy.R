@@ -13,14 +13,10 @@
 #' variance(d)
 #' @export
 dst_cauchy <- function(location, scale) {
+  checkmate::assert_numeric(location, len = 1)
+  checkmate::assert_numeric(scale, 0, len = 1)
   if (is.na(location) || is.na(scale)) {
     return(dst_null())
-  }
-  if (length(location) != 1 || length(scale) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (scale <= 0) {
-    stop("Scale must be positive")
   }
   distribution(
     parameters = list(location = location, scale = scale),

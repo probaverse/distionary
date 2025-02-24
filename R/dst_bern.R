@@ -9,14 +9,9 @@
 #' dst_bern(0.3)
 #' @export
 dst_bern <- function(prob) {
+  checkmate::assert_numeric(prob, 0, 1, len = 1)
   if (is.na(prob)) {
     return(dst_null())
-  }
-  if (length(prob) != 1) {
-    stop("Input parameters must have length 1.")
-  }
-  if (prob < 0 || prob > 1) {
-    stop("prob must be within 0 and 1.")
   }
   d <- dst_binom(size = 1, prob = prob)
   parameters(d)$size <- NULL
