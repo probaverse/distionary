@@ -49,31 +49,27 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pgpd</span><span class="op">(</span><span class="va">q</span>, <span class="va">location</span>, <span class="va">scale</span>, <span class="va">shape</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pgpd</span><span class="op">(</span><span class="va">q</span>, <span class="va">scale</span>, <span class="va">shape</span>, lower.tail <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">qgpd</span><span class="op">(</span><span class="va">p</span>, <span class="va">location</span>, <span class="va">scale</span>, <span class="va">shape</span><span class="op">)</span></span>
+<span><span class="fu">qgpd</span><span class="op">(</span><span class="va">p</span>, <span class="va">scale</span>, <span class="va">shape</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">dgpd</span><span class="op">(</span><span class="va">x</span>, <span class="va">location</span>, <span class="va">scale</span>, <span class="va">shape</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">dgpd</span><span class="op">(</span><span class="va">x</span>, <span class="va">scale</span>, <span class="va">shape</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-location">location<a class="anchor" aria-label="anchor" href="#arg-location"></a></dt>
-<dd><p>Location parameter to shift the GPD by.</p></dd>
-
-
-<dt id="arg-scale">scale<a class="anchor" aria-label="anchor" href="#arg-scale"></a></dt>
-<dd><p>Scale parameter; single positive numeric.</p></dd>
+<dl><dt id="arg-scale">scale<a class="anchor" aria-label="anchor" href="#arg-scale"></a></dt>
+<dd><p>Vector of scale parameters; positive numeric.</p></dd>
 
 
 <dt id="arg-shape">shape<a class="anchor" aria-label="anchor" href="#arg-shape"></a></dt>
-<dd><p>Shape parameter; single positive numeric.</p></dd>
+<dd><p>Vector of shape parameters; positive numeric.</p></dd>
 
 
 <dt id="arg-lower-tail">lower.tail<a class="anchor" aria-label="anchor" href="#arg-lower-tail"></a></dt>
-<dd><p>Logical. If <code>TRUE</code>, cdf (default);
+<dd><p>Single logical. If <code>TRUE</code>, cdf (default);
 if <code>FALSE</code>, survival function.</p></dd>
 
 
@@ -87,19 +83,20 @@ if <code>FALSE</code>, survival function.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Vector of evaluated GPD distribution.</p>
+    <p>Vector of evaluated GPD distribution, with length
+equal to the recycled lengths of <code>q</code>/<code>x</code>/<code>p</code>, <code>scale</code>, and <code>shape</code>.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">pgpd</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">pgpd</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.5000000 0.6666667 0.7500000 0.8000000 0.8333333 0.8571429 0.8750000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.8888889 0.9000000 0.9090909</span>
-<span class="r-in"><span><span class="fu">dgpd</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">0</span>, <span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">dgpd</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.303265330 0.183939721 0.111565080 0.067667642 0.041042499 0.024893534</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>  [7] 0.015098692 0.009157819 0.005554498 0.003368973</span>
-<span class="r-in"><span><span class="fu">qgpd</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span> <span class="op">/</span> <span class="fl">10</span>, <span class="fl">2</span>, <span class="fl">10</span>, <span class="op">-</span><span class="fl">2</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 2.95 3.80 4.55 5.20 5.75 6.20 6.55 6.80 6.95</span>
+<span class="r-in"><span><span class="fu">qgpd</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">9</span> <span class="op">/</span> <span class="fl">10</span>, <span class="fl">10</span>, <span class="op">-</span><span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.95 1.80 2.55 3.20 3.75 4.20 4.55 4.80 4.95</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

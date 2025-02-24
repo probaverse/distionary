@@ -241,17 +241,10 @@ distribution to see that the representations wrap the
 <code class="sourceCode R"><span><span class="va">dst_norm</span></span>
 <span><span class="co">#&gt; function (mean, sd) </span></span>
 <span><span class="co">#&gt; {</span></span>
+<span><span class="co">#&gt;     checkmate::assert_numeric(mean, len = 1)</span></span>
+<span><span class="co">#&gt;     checkmate::assert_numeric(sd, 0, len = 1)</span></span>
 <span><span class="co">#&gt;     if (is.na(mean) || is.na(sd)) {</span></span>
 <span><span class="co">#&gt;         return(dst_null())</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (length(mean) != 1 || length(sd) != 1) {</span></span>
-<span><span class="co">#&gt;         stop("Input parameters must have length 1.")</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (sd == 0) {</span></span>
-<span><span class="co">#&gt;         return(dst_degenerate(mean))</span></span>
-<span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     if (sd &lt; 0) {</span></span>
-<span><span class="co">#&gt;         stop("'sd' parameter must be non-negative.")</span></span>
 <span><span class="co">#&gt;     }</span></span>
 <span><span class="co">#&gt;     distribution(parameters = list(mean = mean, sd = sd), density = function(x) stats::dnorm(x, </span></span>
 <span><span class="co">#&gt;         mean = mean, sd = sd), cdf = function(x) stats::pnorm(x, </span></span>
@@ -263,7 +256,7 @@ distribution to see that the representations wrap the
 <span><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = "Normal", </span></span>
 <span><span class="co">#&gt;         .vtype = "continuous")</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x561a82797f18&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x563aeca725a8&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
