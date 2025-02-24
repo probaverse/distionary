@@ -13,11 +13,11 @@ qgev(p, location, scale, shape)
 dgev(x, location, scale, shape)
 }
 \arguments{
-\item{location}{Location parameter; single numeric.}
+\item{location}{Location parameter; numeric vector.}
 
-\item{scale}{Scale parameter; single positive numeric.}
+\item{scale}{Scale parameter; positive numeric vector.}
 
-\item{shape}{Shape parameter; single numeric.
+\item{shape}{Shape parameter; numeric vector.
 This is also the extreme value index,
 so that \code{shape > 0} is heavy tailed, and \code{shape < 0} is short-tailed.}
 
@@ -35,6 +35,6 @@ Representations of the Generalized Extreme Value Distribution
 }
 \examples{
 pgev(1:10, 0, 1, 1)
-dgev(1:10, 0, 2, 0)
+dgev(1:10, 1:10, 2, 0)
 qgev(1:9 / 10, 2, 10, -2)
 }

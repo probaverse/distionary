@@ -32,7 +32,7 @@ equal to the recycled lengths of \code{q}/\code{x}/\code{p}, \code{scale}, and \
 Representations of the Generalized Pareto Distribution
 }
 \examples{
-pgpd(1:10, 0, 1, 1)
-dgpd(1:10, 0, 2, 0)
-qgpd(1:9 / 10, 2, 10, -2)
+pgpd(1:10, 1, 1)
+dgpd(1:10, 2, 0)
+qgpd(1:9 / 10, 10, -2)
 }
