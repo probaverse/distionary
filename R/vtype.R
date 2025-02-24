@@ -11,5 +11,6 @@
 #' vtype(distribution())
 #' @export
 vtype <- function(distribution) {
+  checkmate::assert_class(distribution, "dst")
   attributes(distribution)[["vtype"]]
 }

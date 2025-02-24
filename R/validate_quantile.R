@@ -1,7 +1,10 @@
 #' @family validate_properties
+#' @inheritParams validate_density
 #' @noRd
-validate_quantile <- function(
-    distribution, verbose = FALSE, tol = 1e-06) {
+validate_quantile <- function(distribution, verbose = FALSE, tol = 1e-06) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_logical(verbose, len = 1, any.missing = FALSE)
+  checkmate::assert_numeric(tol, 0, len = 1, any.missing = FALSE)
   if (is.null(distribution$quantile)) {
     return(NA)
   }
@@ -24,4 +27,3 @@ validate_quantile <- function(
     return(FALSE)
   }
 }
-eval_quantile_from_network

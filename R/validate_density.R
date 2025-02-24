@@ -14,6 +14,9 @@
 #' @family validate_properties
 #' @noRd
 validate_density <- function(distribution, verbose = FALSE, tol = 1e-05) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_logical(verbose, len = 1, any.missing = FALSE)
+  checkmate::assert_numeric(tol, 0, len = 1, any.missing = FALSE)
   dens_fun <- distribution$density
   cdf_fun <- distribution$cdf
   if (is.null(dens_fun)) {

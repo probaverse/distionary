@@ -13,11 +13,15 @@
 #' realise(d, n = 10)
 #' @export
 realise <- function(distribution, n = 1) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_integerish(n, 0, len = 1)
   eval_property(distribution, "realise", n)
 }
 
 #' @rdname realise
 #' @export
 realize <- function(distribution, n = 1) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_integerish(n, 0, len = 1)
   eval_property(distribution, "realize", n)
 }

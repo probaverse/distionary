@@ -1,7 +1,10 @@
 #' @family validate_properties
+#' @inheritParams validate_density
 #' @noRd
-validate_survival <- function(
-    distribution, verbose = FALSE, tol = 1e-9) {
+validate_survival <- function(distribution, verbose = FALSE, tol = 1e-9) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_logical(verbose, len = 1, any.missing = FALSE)
+  checkmate::assert_numeric(tol, 0, len = 1, any.missing = FALSE)
   if (is.null(distribution$survival)) {
     return(NA)
   }

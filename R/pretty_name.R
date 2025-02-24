@@ -4,7 +4,8 @@
 #'
 #' @param distribution Distribution object.
 #' @param param_digits How many significant digits to include when displaying
-#' the parameters? `0` if you don't want to display parameters.
+#' the parameters? `0` if you don't want to display parameters. Length 1
+#' vector.
 #' @returns A character containing the distribution's name, possibly
 #' followed by parameters in brackets.
 #' @examples
@@ -14,6 +15,8 @@
 #'
 #' @export
 pretty_name <- function(distribution, param_digits = 0) {
+  checkmate::check_class(distribution, "dst")
+  checkmate::check_integerish(param_digits, 0, len = 1)
   name <- attributes(distribution)$name
   if (is.null(name)) {
     return("Unnamed distribution")

@@ -25,6 +25,7 @@ LazyData: true
 Roxygen: list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
 RoxygenNote: 7.3.2
 Imports: 
+    checkmate,
     ellipsis,
     rlang,
     stats,

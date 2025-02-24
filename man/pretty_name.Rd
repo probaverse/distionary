@@ -10,7 +10,8 @@ pretty_name(distribution, param_digits = 0)
 \item{distribution}{Distribution object.}
 
 \item{param_digits}{How many significant digits to include when displaying
-the parameters? \code{0} if you don't want to display parameters.}
+the parameters? \code{0} if you don't want to display parameters. Length 1
+vector.}
 }
 \value{
 A character containing the distribution's name, possibly

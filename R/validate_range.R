@@ -1,7 +1,10 @@
 #' @noRd
+#' @inheritParams validate_density
 #' @family validate_properties
-validate_range <- function(
-    distribution, verbose = FALSE, tol = 1e-05) {
+validate_range <- function(distribution, verbose = FALSE, tol = 1e-05) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_logical(verbose, len = 1, any.missing = FALSE)
+  checkmate::assert_numeric(tol, 0, len = 1, any.missing = FALSE)
   if (is.null(distribution[["range"]])) {
     return(NA)
   }

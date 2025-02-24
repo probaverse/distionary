@@ -1,6 +1,10 @@
 #' @family validate_properties
+#' @inheritParams validate_density
 #' @noRd
 validate_pmf <- function(distribution, verbose = FALSE, tol = 1e-8) {
+  checkmate::assert_class(distribution, "dst")
+  checkmate::assert_logical(verbose, len = 1, any.missing = FALSE)
+  checkmate::assert_numeric(tol, 0, len = 1, any.missing = FALSE)
   pmf_fun <- distribution$pmf
   cdf_fun <- distribution$cdf
   if (is.null(pmf_fun)) {
