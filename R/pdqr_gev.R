@@ -19,7 +19,7 @@
 pgev <- function(q, location, scale, shape) {
   checkmate::assert_numeric(q)
   checkmate::assert_numeric(location)
-  checkmate::assert_numeric(scale)
+  checkmate::assert_numeric(scale, 0)
   checkmate::assert_numeric(shape)
   l <- vctrs::vec_recycle_common(q, location, scale, shape)
   q <- l[[1]]
@@ -40,20 +40,19 @@ pgev <- function(q, location, scale, shape) {
 qgev <- function(p, location, scale, shape) {
   checkmate::assert_numeric(p)
   checkmate::assert_numeric(location)
-  checkmate::assert_numeric(scale)
+  checkmate::assert_numeric(scale, 0)
   checkmate::assert_numeric(shape)
   l <- vctrs::vec_recycle_common(p, location, scale, shape)
   p <- l[[1]]
   location <- l[[2]]
   scale <- l[[3]]
   shape <- l[[4]]
-  i_zero <- shape == 0
-  i_non0 <- shape != 0
-  res <- numeric(length(p))
   neglogp <- -log(p)
-  res[i_zero] <- -log(neglogp[i_zero])
-  res[i_non0] <- (neglogp[i_non0]^(-shape[i_non0]) - 1) / shape[i_non0]
-  res[p < 0 | p > 1] <- NaN
+  res <- ifelse(
+    p >= 0 & p <= 1,
+    ifelse(shape == 0, -log(neglogp), (neglogp^(-shape) - 1) / shape),
+    NaN
+  )
   location + scale * res
 }
 
@@ -62,7 +61,7 @@ qgev <- function(p, location, scale, shape) {
 dgev <- function(x, location, scale, shape) {
   checkmate::assert_numeric(x)
   checkmate::assert_numeric(location)
-  checkmate::assert_numeric(scale)
+  checkmate::assert_numeric(scale, 0)
   checkmate::assert_numeric(shape)
   l <- vctrs::vec_recycle_common(x, location, scale, shape)
   x <- l[[1]]
@@ -73,9 +72,10 @@ dgev <- function(x, location, scale, shape) {
   hi <- gev_upper(location, scale, shape)
   t <- gev_t_function(x, location = location, scale = scale, shape = shape)
   res <- t^(shape + 1) / scale * exp(-t)
-  res[x <= lo] <- 0
-  res[x > hi] <- 0
-  res
+  ifelse(x <= lo | x > hi, 0, res)
+  # res[x <= lo] <- 0
+  # res[x > hi] <- 0
+  # res
 }
 
 #' 't()' function for calculating GEV quantities
@@ -98,12 +98,10 @@ gev_t_function <- function(x, location, scale, shape) {
   scale <- l[[3]]
   shape <- l[[4]]
   z <- (x - location) / scale
-  res <- numeric(length(x))
-  i_zero <- shape == 0
-  i_non0 <- shape != 0
-  res[i_zero] <- exp(-z[i_zero])
-  res[i_non0] <- (1 + shape[i_non0] * z[i_non0])^(-1 / shape[i_non0])
-  res
+  # res <- numeric(length(x))
+  # i_zero <- shape == 0
+  # i_non0 <- shape != 0
+  ifelse(shape == 0, exp(-z), (1 + shape * z)^(-1 / shape))
 }
 
 #' Range of a GEV distribution
@@ -117,10 +115,12 @@ gev_lower <- function(location, scale, shape) {
   location <- l[[1]]
   scale <- l[[2]]
   shape <- l[[3]]
-  res <- rep(-Inf, length(location))
-  i_calc <- shape > 0
-  res[i_calc] <- location[i_calc] - scale[i_calc] / shape[i_calc]
-  res
+  ifelse(shape > 0, location - scale / shape, -Inf)
+  # res <- shape # For NA propagation
+  # i_calc <- shape > 0
+  # res[i_calc] <- location[i_calc] - scale[i_calc] / shape[i_calc]
+  # res[shape <= 0] <- -Inf
+  # res
 }
 
 #' @inheritParams gev_lower
@@ -130,8 +130,10 @@ gev_upper <- function(location, scale, shape) {
   location <- l[[1]]
   scale <- l[[2]]
   shape <- l[[3]]
-  res <- rep(Inf, length(location))
-  i_calc <- shape < 0
-  res[i_calc] <- location[i_calc] - scale[i_calc] / shape[i_calc]
-  res
+  ifelse(shape < 0, location - scale / shape, Inf)
+  # res <- shape # For NA propagation
+  # i_calc <- shape < 0
+  # res[i_calc] <- location[i_calc] - scale[i_calc] / shape[i_calc]
+  # res[shape >= 0] <- Inf
+  # res
 }

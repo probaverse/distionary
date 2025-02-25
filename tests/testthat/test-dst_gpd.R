@@ -1,58 +1,66 @@
-test_that("GPD quantities work out, shape > 0", {
+test_that("GPD quantities match known cases, shape > 0", {
   scale <- 1
   shape <- 1
-  d <- dst_gpd(scale = scale, shape = shape)
   med <- scale * (2^shape - 1) / shape
-  expect_equal(eval_cdf(d, c(-1, 0, med)), c(0, 0, 0.5))
-  expect_equal(eval_quantile(d, c(0, 0.5, 1)), c(0, med, Inf))
-  expect_equal(eval_density(d, c(-1, Inf)), c(0, 0))
-  expect_true(all(diff(eval_density(d, 1:10)) < 0))
-  pdf <- representation_as_function(d, "density")
+  expect_equal(
+    pgpd(c(-1, 0, med), scale = scale, shape = shape), c(0, 0, 0.5)
+  )
+  expect_equal(
+    qgpd(c(-1, 0, 0.5, 1, 2), scale = scale, shape = shape),
+    c(NaN, 0, med, Inf, NaN)
+  )
+  expect_equal(dgpd(c(-1, Inf), scale = scale, shape = shape), c(0, 0))
+  expect_true(all(diff(dgpd(1:10, scale = scale, shape = shape)) < 0))
+  pdf <- \(x) dgpd(x, scale = scale, shape = shape)
   expect_equal(integrate(pdf, 0, Inf)$value, 1, tolerance = 0.0001)
-  expect_true(all(realise(d, 10) >= 0))
 })
 
 
-test_that("GPD quantities work out, shape = 0", {
+test_that("GPD quantities match known cases, shape = 0", {
   scale <- 1
   shape <- 0
-  d <- dst_gpd(scale = scale, shape = shape)
   med <- log(2)
-  expect_equal(eval_cdf(d, c(-1, 0, med, Inf)), c(0, 0, 0.5, 1))
-  expect_equal(eval_quantile(d, c(0, 0.5, 1)), c(0, med, Inf))
-  expect_equal(eval_density(d, c(-1, Inf)), c(0, 0))
-  pdf <- representation_as_function(d, "density")
+  expect_equal(
+    pgpd(c(-1, 0, med, Inf), scale = scale, shape = shape), c(0, 0, 0.5, 1)
+  )
+  expect_equal(
+    suppressWarnings(qgpd(c(-1, 0, 0.5, 1, 2), scale = scale, shape = shape)),
+    c(NaN, 0, med, Inf, NaN)
+  )
+  expect_equal(dgpd(c(-1, Inf), scale = scale, shape = shape), c(0, 0))
+  pdf <- \(x) dgpd(x, scale = scale, shape = shape)
   expect_true(all(diff(pdf(1:10)) < 0))
   expect_equal(integrate(pdf, 0, Inf)$value, 1, tolerance = 0.0001)
-  expect_true(all(realise(d, 10) >= 0))
 })
 
-test_that("GPD quantities work out, shape < 0", {
+test_that("GPD quantities match known cases, shape < 0", {
   scale <- 2
   shape <- -1
   rightend <- -scale / shape
-  d <- dst_gpd(scale = scale, shape = shape)
   med <- scale * (2^shape - 1) / shape
   expect_equal(
-    eval_cdf(d, c(-1, 0, med, rightend, rightend + 1, Inf)),
+    pgpd(
+      c(-1, 0, med, rightend, rightend + 1, Inf),
+      scale = scale, shape = shape
+    ),
     c(0, 0, 0.5, 1, 1, 1)
   )
   expect_equal(
-    eval_quantile(d, c(-1, 0, 0.5, 1, 2)),
+    qgpd(c(-1, 0, 0.5, 1, 2), scale = scale, shape = shape),
     c(NaN, 0, med, rightend, NaN)
   )
   expect_equal(
-    eval_density(d, c(-1, rightend + 1, Inf)),
+    dgpd(c(-1, rightend + 1, Inf), scale = scale, shape = shape),
     c(0, 0, 0)
   )
-  pdf <- representation_as_function(d, "density")
+  pdf <- \(x) dgpd(x, scale = scale, shape = shape)
   expect_equal(integrate(pdf, 0, rightend)$value, 1, tolerance = 0.0001)
-  r <- realise(d, 10)
-  expect_true(all(r > 0 & r < rightend))
 })
 
-test_that("GPD parameter restrictions enforced", {
-  expect_error(dst_gpd(scale = -1, shape = 1))
+test_that("GPD negative scale not allowed.", {
+  expect_error(dgev(1:10, -4, 1))
+  expect_error(pgev(1:10, -4, 1))
+  expect_error(qgev(1:10 / 10, -4, 1))
 })
 
 test_that("cdf and pdf of GPD align via numerical derivative.", {
@@ -88,16 +96,66 @@ test_that("cdf and qf of GPD align.", {
 
 test_that("quantile function of GPD is valid, validating the distribution.", {
   d <- list(
-    dst_gpd(1, 1),
-    dst_gpd(1, 0),
-    dst_gpd(10, -1)
+    list(scale = 1.2, shape = 1),
+    list(scale = 1.2, shape = 0),
+    list(scale = 10, shape = -1)
   )
   p <- 0:100 / 100
   for (i in seq_along(d)) {
-    r <- range(d[[i]])
-    qf <- eval_quantile(d[[i]], at = p)
+    hi <- rlang::exec(distionary:::gpd_upper, !!!d[[i]])
+    qf <- rlang::exec(qgpd, p, !!!d[[i]])
     expect_true(all(diff(qf) > 0))
-    expect_equal(qf[c(1L, 101L)], r)
+    expect_equal(qf[c(1L, 101L)], c(0, hi))
   }
+})
+
+test_that("vectorisation of p/d/q GPD functions works.", {
+  y <- 1:10
+  x <- 1:10
+  x[4] <- NA_real_
+  x[2] <- NaN
+  p <- x / 11
+  v <- y / 11
+  # Mismatched lengths
+  expect_error(pgpd(x, 1:2, 1))
+  expect_error(pgpd(x, 1, 0:1))
+  expect_error(dgpd(x, 1:2, 1))
+  expect_error(dgpd(x, 1, 0:1))
+  expect_error(qgpd(p, 1:2, 1))
+  expect_error(qgpd(p, 1, 0:1))
+  expect_error(distionary:::gpd_lower(1:2, 1:4))
+  expect_error(distionary:::gpd_upper(1:2, 1:4))
+  # Lengths input correctly; should be length 10.
+  expect_length(pgpd(x, 1, 1), 10)
+  expect_length(dgpd(x, 1, 1), 10)
+  expect_length(qgpd(p, 1, 1), 10)
+  expect_length(pgpd(x, 1:10, 1), 10)
+  expect_length(dgpd(x, 1:10, 1), 10)
+  expect_length(qgpd(p, 1:10, 1), 10)
+  # NA and NaN gets projected forward. NaN may convert to NA.
+  # --> main argument
+  expect_true(is.na(pgpd(x, 1, 1)[4]))
+  expect_true(is.na(dgpd(x, 1, 1)[4]))
+  expect_true(is.na(qgpd(p, 1, 1)[4]))
+  expect_true(is.na(pgpd(x, 1, 1)[2]))
+  expect_true(is.na(dgpd(x, 1, 1)[2]))
+  expect_true(is.na(qgpd(p, 1, 1)[2]))
+  # --> scale
+  expect_true(is.na(pgpd(y, x, 1)[4]))
+  expect_true(is.na(dgpd(y, x, 1)[4]))
+  expect_true(is.na(qgpd(v, x, 1)[4]))
+  expect_true(is.na(pgpd(y, x, 1)[2]))
+  expect_true(is.na(dgpd(y, x, 1)[2]))
+  expect_true(is.na(qgpd(v, x, 1)[2]))
+  # --> shape
+  expect_true(is.na(pgpd(y, 1, x)[4]))
+  expect_true(is.na(dgpd(y, 1, x)[4]))
+  expect_true(is.na(qgpd(v, 1, x)[4]))
+  expect_true(is.na(pgpd(y, 1, x)[2]))
+  expect_true(is.na(dgpd(y, 1, x)[2]))
+  expect_true(is.na(qgpd(v, 1, x)[2]))
+  # Max
+  expect_length(distionary:::gpd_upper(x, 1), 10)
+  expect_length(distionary:::gpd_upper(1, x), 10)
 })
 

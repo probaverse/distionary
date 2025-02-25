@@ -16,7 +16,7 @@
 #' @export
 pgpd <- function(q, scale, shape, lower.tail = TRUE) {
   checkmate::assert_numeric(q)
-  checkmate::assert_numeric(scale)
+  checkmate::assert_numeric(scale, 0)
   checkmate::assert_numeric(shape)
   checkmate::assert_logical(lower.tail, len = 1, any.missing = FALSE)
   l <- vctrs::vec_recycle_common(q, scale, shape)
@@ -45,19 +45,18 @@ pgpd <- function(q, scale, shape, lower.tail = TRUE) {
 qgpd <- function(p, scale, shape) {
   # z = (RP^xi - 1) / xi -> log(RP)
   checkmate::assert_numeric(p)
-  checkmate::assert_numeric(scale)
+  checkmate::assert_numeric(scale, 0)
   checkmate::assert_numeric(shape)
   l <- vctrs::vec_recycle_common(p, scale, shape)
   p <- l[[1]]
   scale <- l[[2]]
   shape <- l[[3]]
   rp <- 1 / (1 - p)
-  res <- numeric(length(p))
-  i_zero <- shape == 0
-  i_non0 <- shape != 0
-  res[i_zero] <- log(rp[i_zero])
-  res[i_non0] <- (rp[i_non0]^shape[i_non0] - 1) / shape[i_non0]
-  res[p < 0 | p > 1] <- NaN
+  res <- ifelse(
+    p >= 0 & p <= 1,
+    ifelse(shape == 0, log(rp), (rp^shape - 1) / shape),
+    NaN
+  )
   scale * res
 }
 
@@ -65,7 +64,7 @@ qgpd <- function(p, scale, shape) {
 #' @export
 dgpd <- function(x, scale, shape) {
   checkmate::assert_numeric(x)
-  checkmate::assert_numeric(scale)
+  checkmate::assert_numeric(scale, 0)
   checkmate::assert_numeric(shape)
   l <- vctrs::vec_recycle_common(x, scale, shape)
   x <- l[[1]]
@@ -73,14 +72,14 @@ dgpd <- function(x, scale, shape) {
   shape <- l[[3]]
   z <- x / scale
   hi <- gpd_upper(scale = scale, shape = shape)
-  outside <- x < 0 | x > hi
   t <- gev_t_function(x, location = 0, scale = scale, shape = shape)
-  i_zero <- shape == 0
-  i_non0 <- shape != 0
-  res <- numeric(length(x))
-  res[i_zero] <- t[i_zero]
-  res[i_non0] <- (1 + shape[i_non0] * z[i_non0])^(-1 / shape[i_non0] - 1)
-  res[outside] <- 0
+  res <- ifelse(shape == 0, t, (1 + shape * z)^(-1 / shape - 1))
+  # i_zero <- shape == 0
+  # i_non0 <- shape != 0
+  # res <- numeric(length(x))
+  # res[i_zero] <- t[i_zero]
+  # res[i_non0] <- (1 + shape[i_non0] * z[i_non0])^(-1 / shape[i_non0] - 1)
+  res[x < 0 | x > hi] <- 0
   res / scale
 }
 
@@ -94,8 +93,10 @@ gpd_upper <- function(scale, shape) {
   l <- vctrs::vec_recycle_common(scale, shape)
   scale <- l[[1]]
   shape <- l[[2]]
-  res <- rep(Inf, length(scale))
-  i_calc <- shape < 0
-  res[i_calc] <- -scale[i_calc] / shape[i_calc]
-  res
+  res <- shape # For NA propagation
+  ifelse(shape < 0, -scale / shape, Inf)
+  # i_calc <- shape < 0
+  # res[i_calc] <- -scale[i_calc] / shape[i_calc]
+  # res[shape >= 0] <- Inf
+  # res
 }
