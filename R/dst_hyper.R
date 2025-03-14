@@ -25,7 +25,7 @@ dst_hyper <- function(m, n, k) {
     return(dst_null())
   }
   distribution(
-    parameters = list(m = m, n = n, k = k),
+    .parameters = list(m = m, n = n, k = k),
     pmf = \(x) stats::dhyper(x, m = m, n = n, k = k),
     cdf = \(x) stats::phyper(x, m = m, n = n, k = k),
     quantile = \(p) stats::qhyper(p, m = m, n = n, k = k),

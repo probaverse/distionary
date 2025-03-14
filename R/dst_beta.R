@@ -14,7 +14,7 @@ dst_beta <- function(shape1, shape2) {
     return(dst_null())
   }
   distribution(
-    parameters = list(shape1 = shape1, shape2 = shape2),
+    .parameters = list(shape1 = shape1, shape2 = shape2),
     density = \(x) stats::dbeta(x, shape1, shape2),
     cdf = \(x) stats::pbeta(x, shape1, shape2),
     quantile = \(p) stats::qbeta(p, shape1, shape2),

@@ -14,7 +14,7 @@
 #' @export
 dst_null <- function() {
   distribution(
-    parameters = NULL,
+    .parameters = NULL,
     cdf = \(x) rep(NA_real_, length(x)),
     density = \(x) rep(NA_real_, length(x)),
     hazard = \(x) rep(NA_real_, length(x)),

@@ -16,7 +16,7 @@ dst_weibull <- function(shape, scale) {
     return(dst_null())
   }
   distribution(
-    parameters = list(shape = shape, scale = scale),
+    .parameters = list(shape = shape, scale = scale),
     density = \(x) stats::dweibull(x, shape = shape, scale = scale),
     cdf = \(x) stats::pweibull(x, shape = shape, scale = scale),
     quantile = \(p) stats::qweibull(p, shape = shape, scale = scale),

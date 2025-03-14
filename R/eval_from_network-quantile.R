@@ -12,8 +12,10 @@
 #' @returns The `at`-quantiles of the distribution. Numeric vector
 #' of values between 0 and 1.
 #' @noRd
-eval_quantile_from_network <- function(
-    distribution, at, tol = 1e-9, maxiter = 200) {
+eval_quantile_from_network <- function(distribution,
+                                       at,
+                                       tol = 1e-9,
+                                       maxiter = 200) {
   checkmate::assert_class(distribution, "dst")
   checkmate::assert_numeric(at, 0, 1)
   checkmate::assert_numeric(tol, 0, len = 1)

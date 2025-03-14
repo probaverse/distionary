@@ -17,7 +17,7 @@ dst_binom <- function(size, prob) {
     return(dst_null())
   }
   distribution(
-    parameters = list(size = size, prob = prob),
+    .parameters = list(size = size, prob = prob),
     pmf = \(x) stats::dbinom(x, size = size, prob = prob),
     cdf = \(x) stats::pbinom(x, size = size, prob = prob),
     quantile = \(p) stats::qbinom(p, size = size, prob = prob),

@@ -28,7 +28,7 @@ dst_lp3 <- function(meanlog, sdlog, skew) {
   shift <- meanlog - scale * shape
   cdf_gamma <-
     distribution(
-      parameters = list(meanlog = meanlog, sdlog = sdlog, skew = skew),
+      .parameters = list(meanlog = meanlog, sdlog = sdlog, skew = skew),
       cdf = \(x) stats::pgamma(
         log(pmax(0, x)) - shift,
         shape = shape, scale = scale

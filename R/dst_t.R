@@ -14,7 +14,7 @@ dst_t <- function(df) {
     return(dst_null())
   }
   distribution(
-    parameters = list(df = df),
+    .parameters = list(df = df),
     density = \(x) stats::dt(x, df = df),
     cdf = \(x) stats::pt(x, df = df),
     quantile = \(p) stats::qt(p, df = df),

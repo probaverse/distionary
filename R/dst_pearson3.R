@@ -27,7 +27,7 @@ dst_pearson3 <- function(location, scale, shape) {
     return(dst_null())
   }
   distribution(
-    parameters = list(
+    .parameters = list(
       location = location, scale = scale, shape = shape
     ),
     cdf = \(x) stats::pgamma(x - location, scale = scale, shape = shape),

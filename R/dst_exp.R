@@ -13,7 +13,7 @@ dst_exp <- function(rate) {
     return(dst_null())
   }
   distribution(
-    parameters = list(rate = rate),
+    .parameters = list(rate = rate),
     density = \(x) stats::dexp(x, rate = rate),
     cdf = \(x) stats::pexp(x, rate = rate),
     quantile = \(p) stats::qexp(p, rate = rate),

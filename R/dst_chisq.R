@@ -14,7 +14,7 @@ dst_chisq <- function(df) {
     return(dst_null())
   }
   distribution(
-    parameters = list(df = df),
+    .parameters = list(df = df),
     density = \(x) stats::dchisq(x, df = df),
     cdf = \(x) stats::pchisq(x, df = df),
     quantile = \(p) stats::qchisq(p, df = df),

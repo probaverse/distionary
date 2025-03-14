@@ -22,7 +22,7 @@ dst_nbinom <- function(size, prob) {
     return(dst_null())
   }
   distribution(
-    parameters = list(size = size, prob = prob),
+    .parameters = list(size = size, prob = prob),
     pmf = \(x) stats::dnbinom(x, size = size, prob = prob),
     cdf = \(x) stats::pnbinom(x, size = size, prob = prob),
     quantile = \(p) stats::qnbinom(p, size = size, prob = prob),

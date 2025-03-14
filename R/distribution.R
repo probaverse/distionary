@@ -69,7 +69,10 @@
 #' @srrstats {G2.3b} The use of `tolower()` is applicable for the `.name` argument in `distribution()` and is used.
 #' @family Distribution Construction
 #' @export
-distribution <- function(..., .vtype = NULL, .name = NULL) {
+distribution <- function(...,
+                         .vtype = NULL,
+                         .name = NULL,
+                         .parameters = list()) {
   if (!is.null(.vtype)) {
     .vtype <- as.character(.vtype)
   }
@@ -78,11 +81,15 @@ distribution <- function(..., .vtype = NULL, .name = NULL) {
   }
   checkmate::assert_character(.vtype, len = 1, null.ok = TRUE)
   checkmate::assert_character(.name, len = 1, null.ok = TRUE)
+  checkmate::assert_list(.parameters, names = "named", null.ok = TRUE)
   .vtype <- tolower(.vtype)
   dots <- rlang::enquos(...)
   if (is.null(.name)) {
     .name <- "Unnamed"
   }
   representations <- lapply(dots, rlang::eval_tidy)
-  new_distribution(representations, vtype = .vtype, name = .name)
+  new_distribution(
+    representations,
+    vtype = .vtype, name = .name, parameters = .parameters
+  )
 }

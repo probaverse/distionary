@@ -21,9 +21,10 @@
 #' plot(p)
 #' @export
 plot.dst <- function(
-    x,
-    what = c("density", "pmf", "cdf", "survival", "quantile", "hazard", "chf"),
-    ...) {
+  x,
+  what = c("density", "pmf", "cdf", "survival", "quantile", "hazard", "chf"),
+  ...
+) {
   ellipsis <- rlang::list2(...)
   specified <- length(what) == 1
   fname <- match.arg(what)

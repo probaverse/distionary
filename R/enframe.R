@@ -28,8 +28,13 @@
 #' "minimal" is not sufficient because it may result in columns having the
 #' same names.
 #' @noRd
-enframe_general <- function(..., at, arg_name, fn_prefix, sep,
-                            eval_fn, fn_args = list()) {
+enframe_general <- function(...,
+                            at,
+                            arg_name,
+                            fn_prefix,
+                            sep,
+                            eval_fn,
+                            fn_args = list()) {
   arg_name <- as.character(arg_name)
   fn_prefix <- as.character(fn_prefix)
   sep <- as.character(sep)

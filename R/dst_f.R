@@ -15,7 +15,7 @@ dst_f <- function(df1, df2) {
     return(dst_null())
   }
   distribution(
-    parameters = list(df1 = df1, df2 = df2),
+    .parameters = list(df1 = df1, df2 = df2),
     density = \(x) stats::df(x, df1 = df1, df2 = df2),
     cdf = \(x) stats::pf(x, df1 = df1, df2 = df2),
     quantile = \(p) stats::qf(p, df1 = df1, df2 = df2),

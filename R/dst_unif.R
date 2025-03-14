@@ -18,7 +18,7 @@ dst_unif <- function(min, max) {
     return(dst_null())
   }
   distribution(
-    parameters = list(min = min, max = max),
+    .parameters = list(min = min, max = max),
     density = \(x) stats::dunif(x, min = min, max = max),
     cdf = \(x) stats::punif(x, min = min, max = max),
     quantile = \(p) stats::qunif(p, min = min, max = max),

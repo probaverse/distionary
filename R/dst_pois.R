@@ -12,7 +12,7 @@ dst_pois <- function(lambda) {
     return(dst_null())
   }
   distribution(
-    parameters = list(lambda = lambda),
+    .parameters = list(lambda = lambda),
     pmf = \(x) stats::dpois(x, lambda = lambda),
     cdf = \(x) stats::ppois(x, lambda = lambda),
     quantile = \(p) stats::qpois(p, lambda = lambda),

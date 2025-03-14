@@ -30,7 +30,7 @@ dst_gpd <- function(scale, shape) {
     return(dst_null())
   }
   distribution(
-    parameters = list(scale = scale, shape = shape),
+    .parameters = list(scale = scale, shape = shape),
     cdf = \(x) pgpd(x, scale = scale, shape = shape),
     survival = \(x) pgpd(
       x,

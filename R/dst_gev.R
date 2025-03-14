@@ -33,7 +33,7 @@ dst_gev <- function(location, scale, shape) {
     return(dst_null())
   }
   distribution(
-    parameters = list(location = location, scale = scale, shape = shape),
+    .parameters = list(location = location, scale = scale, shape = shape),
     cdf = \(x) pgev(
       x,
       location = location, scale = scale, shape = shape

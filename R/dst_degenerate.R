@@ -14,7 +14,7 @@ dst_degenerate <- function(location) {
     return(dst_null())
   }
   distribution(
-    parameters = list(location = location),
+    .parameters = list(location = location),
     cdf = \(x) as.numeric(x >= location),
     quantile = function(p) {
       res <- rep(location, length(p))

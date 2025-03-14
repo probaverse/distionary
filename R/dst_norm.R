@@ -34,7 +34,7 @@ dst_norm <- function(mean, sd) {
     return(dst_null())
   }
   distribution(
-    parameters = list(mean = mean, sd = sd),
+    .parameters = list(mean = mean, sd = sd),
     density = \(x) stats::dnorm(x, mean = mean, sd = sd),
     cdf = \(x) stats::pnorm(x, mean = mean, sd = sd),
     quantile = \(p) stats::qnorm(p, mean = mean, sd = sd),

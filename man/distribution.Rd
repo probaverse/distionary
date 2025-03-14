@@ -6,7 +6,7 @@
 \alias{is.distribution}
 \title{Build a Distribution Object}
 \usage{
-distribution(..., .vtype = NULL, .name = NULL)
+distribution(..., .vtype = NULL, .name = NULL, .parameters = list())
 
 is_distribution(object)
 

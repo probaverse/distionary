@@ -17,7 +17,7 @@ dst_lnorm <- function(meanlog, sdlog) {
     return(dst_null())
   }
   distribution(
-    parameters = list(meanlog = meanlog, sdlog = sdlog),
+    .parameters = list(meanlog = meanlog, sdlog = sdlog),
     density = \(x) stats::dlnorm(x, meanlog = meanlog, sdlog = sdlog),
     cdf = \(x) stats::plnorm(x, meanlog = meanlog, sdlog = sdlog),
     quantile = \(p) stats::qlnorm(p, meanlog = meanlog, sdlog = sdlog),

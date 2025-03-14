@@ -19,7 +19,7 @@ dst_cauchy <- function(location, scale) {
     return(dst_null())
   }
   distribution(
-    parameters = list(location = location, scale = scale),
+    .parameters = list(location = location, scale = scale),
     density = \(x) stats::dcauchy(x, location = location, scale = scale),
     cdf = \(x) stats::pcauchy(x, location = location, scale = scale),
     quantile = \(p) stats::qcauchy(p, location = location, scale = scale),

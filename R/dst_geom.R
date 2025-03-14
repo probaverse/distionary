@@ -18,7 +18,7 @@ dst_geom <- function(prob) {
     return(dst_null())
   }
   distribution(
-    parameters = list(prob = prob),
+    .parameters = list(prob = prob),
     pmf = \(x) stats::dgeom(x, prob = prob),
     cdf = \(x) stats::pgeom(x, prob = prob),
     quantile = \(p) stats::qgeom(p, prob = prob),
