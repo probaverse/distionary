@@ -355,6 +355,17 @@ for (i in seq_along(distributions_list)) {
   })
 
   # --- TEST BLOCK ----
+  test_that(
+    paste(
+      "Parameters for Distribution", i, "have been specified correctly."
+    ),
+    {
+      paramset <- item$valid[[1]]
+      d <- rlang::exec(item$distribution, !!!paramset)
+      expect_identical(parameters(d), paramset)
+    })
+
+  # --- TEST BLOCK ----
   # Make sure that defined distributions evaluate NA inputs properly.
   # Make sure they evaluate edge cases properly.
   #' @srrstats {G5.8} Edge conditions are tested when evaluating
