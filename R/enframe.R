@@ -30,6 +30,9 @@
 #' @noRd
 enframe_general <- function(..., at, arg_name, fn_prefix, sep,
                             eval_fn, fn_args = list()) {
+  arg_name <- as.character(arg_name)
+  fn_prefix <- as.character(fn_prefix)
+  sep <- as.character(sep)
   checkmate::assert_numeric(at)
   checkmate::assert_character(arg_name, len = 1)
   checkmate::assert_character(fn_prefix, len = 1)

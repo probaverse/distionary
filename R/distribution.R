@@ -70,6 +70,12 @@
 #' @family Distribution Construction
 #' @export
 distribution <- function(..., .vtype = NULL, .name = NULL) {
+  if (!is.null(.vtype)) {
+    .vtype <- as.character(.vtype)
+  }
+  if (!is.null(.name)) {
+    .name <- as.character(.name)
+  }
   checkmate::assert_character(.vtype, len = 1, null.ok = TRUE)
   checkmate::assert_character(.name, len = 1, null.ok = TRUE)
   .vtype <- tolower(.vtype)

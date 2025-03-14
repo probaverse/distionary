@@ -12,7 +12,12 @@
 #' @srrstats {G2.1} Assertions on types of inputs is conducted using the checkmate package for most functions.
 #' @srrstats {G2.2} Prohibiting or restricting submission of multivariate input (i.e., distributions) to parameters expected to be univariate is done using the checkmate package for relevant functions (e.g., `dst_*()` specifications)
 #' @srrstats {G2.3} Univariate character input specifications are asserted using the checkmate package where relevant (e.g., `.vtype` and `.name` in `distribution()`; `arg_name` and `fn_prefix` in `enframe_*()`).
+#' @srrstats {G2.3a} `match.arg()` is used in the `plot()` method for
+#' distributions, when specifying the representation to plot.
 #' @srrstats {G2.4} Mechanisms to convert between different data types is bypassed by requiring strict type inputs (except integer, which is allowed to be integerish).
+#' @srrstats {G2.4a} Explicit conversion to `integer` via `as.integer()` becomes superfluous after checking that a number is "integerish" using the checkmate package.
+#' @srrstats {G2.4b} Explicit conversion to continuous via `as.numeric()` is avoided in case character input is provided; and error is thrown if the input is not numeric, using the checkmate package.
+#' @srrstats {G2.4c} Explicit conversion to character via `as.character()` (and not `paste` or `paste0`) is done where character input is required: `distribution()`'s `.vtype` and `.name` arguments, and the column naming specifications of `enframe_general()`.
 #' @srrstats {G2.14} distionary is designed to propagate NA as if it's just another data type.
 #' @srrstats {G2.14a} No option is given to error on missing data; if a user wants this behaviour, it should be explicitly specified in their code, because there is nothing fishy about NA inputs in the distionary context.
 #' @srrstats {G2.14b} NA inputs are "ignored" in the sense that they are not treated as special, but rather just another type of data, and therefore does not need to alert the user of their presence.
@@ -72,9 +77,10 @@ NULL
 #' (These comments may also be deleted at any time.)
 #' @srrstatsNA {G1.5} No performance claims.
 #' @srrstatsNA {G1.6} No performance claims.
-#' @srrstatsNA {G2.3a} `match.arg()` or equivalent is not applicable, since
-#' specific character inputs are never required (even variable type is allowed
-#' to be any character).
+#' @srrstatsNA {G2.4d} distionary does not work with factors, so explicit
+#' conversion to factor via `as.factor()` is not needed.
+#' @srrstatsNA {G2.4e} distionary does not work with factors, so explicit
+#' conversion from factor via `as...()` is not needed.
 #' @srrstatsNA {G2.5} No factors in distionary.
 #' @srrstatsNA {G2.7} This software does not accept tabular input.
 #' @srrstatsNA {G2.8} This software does not accept tabular input.
@@ -114,12 +120,6 @@ NULL
 #' @srrstatsNA {PD3.2} distionary does not estimate parameters (that will
 #' be the job of the famish package in the probaverse family).
 #'
-#' TO DO: Argue not needed
-#' @srrstatsNA {G2.4a} Explicit conversion to `integer` via `as.integer()` is not needed because it's sufficient to check for a number to be integer-ish.
-#' @srrstatsNA {G2.4b} Explicit conversion to continuous via `as.numeric()` is not needed for distionary because an error is thrown is numeric input is expected yet not given.
-#' @srrstatsNA {G2.4c} Explicit conversion to character via `as.character()` (and not `paste` or `paste0`) is not needed for distionary; explicit character specification is required.
-#' @srrstatsNA {G2.4d} Explicit conversion to factor via `as.factor()` is not needed because distionary does not work with factors.
-#' @srrstatsNA {G2.4e} Explicit conversion from factor via `as...()` functions is not needed because distionary does not work with factors.
 #'
 #' TO DO
 #' @srrstatsNA {PD3.5a} Discrete summation is not used to approximate integrals.

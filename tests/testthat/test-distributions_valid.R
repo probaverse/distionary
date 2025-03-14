@@ -442,6 +442,8 @@ for (i in seq_along(distributions_list)) {
         expect_equal(dens, c(0, 0))
         # expect_true(all(is.infinite(dens) | dens == rep(0, 4)))
       }
+      ## Realise
+      expect_length(realise(d, n = 0), 0)
     }
   )
 
