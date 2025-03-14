@@ -2,7 +2,7 @@
 title: "Specify a Distribution"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Specify a distribution}
+  %\VignetteIndexEntry{Specify a Distribution}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

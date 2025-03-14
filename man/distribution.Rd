@@ -22,6 +22,13 @@ lowercase with \code{tolower()} for compliance with known types.}
 \item{.name}{A name to give to the distribution.
 Can be any character vector of length 1.}
 
+\item{.parameters}{A named list with one entry per distribution parameter,
+each of which can be any data type. In this version of distionary,
+these parameters are only stored for the benefit of the user to know
+what distribution they are working with; the code never looks at these
+parameters to inform its calculations. This is anticipated to change in
+a future version of distionary.}
+
 \item{object}{Object to be tested}
 }
 \value{
@@ -82,7 +89,8 @@ linear <- distribution(
     p
   },
   .vtype = "continuous",
-  .name = "My Linear"
+  .name = "My Linear",
+  .parameters = list(could = "include", anything = data.frame(x = 1:10))
 )
 
 # Inspect
