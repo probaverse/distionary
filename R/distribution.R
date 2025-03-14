@@ -9,7 +9,8 @@
 #'
 #' @param ... Name-value pairs for defining the distribution.
 #' @param .vtype The variable type, typically "discrete" or "continuous".
-#' Can be any character vector of length 1.
+#' Can be any character vector of length 1, but is converted to
+#' lowercase with `tolower()` for compliance with known types.
 #' @param .name A name to give to the distribution.
 #' Can be any character vector of length 1.
 #' @return A distribution object.
@@ -65,11 +66,13 @@
 #'
 #' # Plot
 #' plot(linear)
+#' @srrstats {G2.3b} The use of `tolower()` is applicable for the `.name` argument in `distribution()` and is used.
 #' @family Distribution Construction
 #' @export
 distribution <- function(..., .vtype = NULL, .name = NULL) {
   checkmate::assert_character(.vtype, len = 1, null.ok = TRUE)
   checkmate::assert_character(.name, len = 1, null.ok = TRUE)
+  .vtype <- tolower(.vtype)
   dots <- rlang::enquos(...)
   if (is.null(.name)) {
     .name <- "Unnamed"

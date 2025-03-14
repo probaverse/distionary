@@ -50,3 +50,14 @@ test_that("Quantile algorithm handles NA appropriately.", {
   )
   expect_equal(eval_quantile(d_flat, at = 0.5), 0.5)
 })
+
+#' @srrstats {G5.7} The only algorithm thus far is the quantile algorithm,
+#' and its performance has been tested to take longer with a smaller
+#' tolerance.
+test_that("Quantile algorithm takes longer for smaller tolerance.", {
+  d <- dst_norm(0, 1)
+  p <- 1:99 / 100
+  t1 <- system.time(eval_quantile_from_network(d, at = p, tol = 1e-4))
+  t2 <- system.time(eval_quantile_from_network(d, at = p, tol = 1e-8))
+  expect_lt(t1[["elapsed"]], t2[["elapsed"]])
+})

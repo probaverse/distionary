@@ -1,3 +1,5 @@
+
+
 test_that("enframe matches eval", {
   d <- dst_norm(0, 1)
   p <- 1:9 / 10
@@ -50,11 +52,16 @@ test_that("Manual column names work.", {
   expect_equal(sort(c("one", "two.mod1", "two.mod2")), sort(names(df)))
 })
 
-test_that("Tibble dimensions are proper.", {
+test_that("Dimensions and type are as expected.", {
   d <- dst_norm(0, 1)
   x <- -3:3
+  ## Outputs from have proper dimensions.
   df <- enframe_cdf(d, at = x, arg_name = "one", fn_prefix = "two")
+  expect_true(is.data.frame(df))
   expect_equal(dim(df), c(7, 2))
   df <- enframe_cdf(mod1 = d, mod2 = d, at = x)
   expect_equal(dim(df), c(7, 3))
+  df <- enframe_cdf(d, at = numeric())
+  expect_equal(nrow(df), 0)
+  expect_length(eval_cdf(d, at = numeric()), 0)
 })

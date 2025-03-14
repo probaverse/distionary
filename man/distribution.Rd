@@ -16,7 +16,8 @@ is.distribution(object)
 \item{...}{Name-value pairs for defining the distribution.}
 
 \item{.vtype}{The variable type, typically "discrete" or "continuous".
-Can be any character vector of length 1.}
+Can be any character vector of length 1, but is converted to
+lowercase with \code{tolower()} for compliance with known types.}
 
 \item{.name}{A name to give to the distribution.
 Can be any character vector of length 1.}

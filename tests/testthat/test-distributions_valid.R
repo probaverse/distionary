@@ -1,38 +1,3 @@
-#' @srrstats {G2.0} Assertions on lengths of inputs (asserting that
-#' inputs expected to be single- or multi-valued) are explicitly
-#' tested for distribution parameters; implicitly through evaluation
-#' functions.
-#' @srrstats {PD4.0} The numeric outputs of probability distribution
-#' functions are rigorously tested, not just output structures. These
-#' tests are for numeric equality.
-#' @srrstats {PD4.1} Tests for numeric equality compare the output of
-#' probability distribution functions with the output of code defined
-#' in the same location in test files.
-#' @srrstats {PD4.2} All distributions are tested using at least two
-#' valid parameter sets, and at least one invalid parameter set.
-#' @srrstats {PD4.3} Tests of optimisation or integration algorithms
-#' compare derived results from built-in results for permutations of
-#' every distribution parameter.
-#' @srrstats {PD4.4} Tests of optimisation or integration algorithms
-#' compare derived results with algorithms in the stats package.
-#' @srrstats {G3.0} Appropriate tolerances for approximate equality is
-#' adopted (stricter tolerances planned for future based on discretes
-#' tracking design).
-#' @srrstats {G5.2} Appropriate error behaviour is tested for all
-#' functions explicitly, but warnings are omitted and saved for a future
-#' version.
-#' @srrstats {G5.2b} Explicit tests trigger the `stop()` calls in this
-#' version of distionary.
-#' @srrstats {G5.4} Correctness tests are conducted to test that
-#' statistical algorithms (calculating properties from other distribution
-#' properties) produce expected results to test distributions with set
-#' parameters.
-#' @srrstats {G5.4b} New implementations of existing methods are compared
-#' against the stats package where possible. Implementations like the
-#' hazard function that are not found in the stats package are compared
-#' to known formulas rather than other implementations, to avoid unnecessary
-#' dependencies on other packages.
-
 distributions_list <- list(
   list(
     distribution = dst_bern,
@@ -284,13 +249,15 @@ distributions_list <- list(
 for (i in seq_along(distributions_list)) {
   item <- distributions_list[[i]]
 
+  # --- TEST BLOCK ----
   test_that(paste("Distribution", i, "invalid parameters check."), {
     for (paramset in item$invalid) {
       expect_error(rlang::exec(item$distribution, !!!paramset))
     }
   })
 
-  test_that(paste("Distribution", i, "parameters have length 1."), {
+  # --- TEST BLOCK ----
+  test_that(paste("Distribution", i, "parameters require length 1."), {
     paramset <- item$valid[[1]]
     for (i in seq_along(paramset)) {
       this_paramset <- paramset
@@ -301,6 +268,80 @@ for (i in seq_along(distributions_list)) {
     }
   })
 
+  # --- TEST BLOCK ----
+  #' @srrstatsNA {G5.9} Noise susceptibility tests have been conducted on
+  #' distribution parameters and evaluation inputs.
+  #' @srrstatsNA {G5.9a} Machine tolerance has been added to distribution
+  #' parameters and evaluation inputs and compared to originals.
+  test_that(paste("Distribution", i, "not sensitive to machine tolerance"), {
+    paramset_orig <- item$valid[[1]]
+    eps <- .Machine$double.eps
+    paramset_eps <- lapply(paramset_orig, \(x) x - eps)
+    d_orig <- rlang::exec(item$distribution, !!!paramset_orig)
+    d_eps <- rlang::exec(item$distribution, !!!paramset_eps)
+    p <- 0.4
+    ## Quantile. Also use x for downstream tests.
+    x <- eval_quantile(d_orig, at = p)
+    expect_equal(x, eval_quantile(d_eps, p + eps))
+    ## CDF
+    expect_equal(
+      eval_cdf(d_orig, x),
+      eval_cdf(d_eps, x + eps)
+    )
+    ## Survival
+    expect_equal(
+      eval_survival(d_orig, x),
+      eval_survival(d_eps, x + eps)
+    )
+    ## Mass
+    if (attr(d_orig, "name") != "Degenerate") {
+      # Degenerate distribution's x would also need to increase by eps,
+      # which is not meaningful to test.
+      expect_equal(
+        eval_pmf(d_orig, x),
+        eval_pmf(d_eps, x)
+      )
+    }
+    ## Density
+    if (vtype(d_orig) == "continuous") {
+      expect_equal(
+        eval_density(d_orig, x),
+        eval_density(d_eps, x + eps)
+      )
+    }
+    ## Mean
+    expect_equal(
+      mean(d_orig),
+      mean(d_eps)
+    )
+    ## Variance
+    expect_equal(
+      variance(d_orig),
+      variance(d_eps)
+    )
+    ## Standard Deviation
+    expect_equal(
+      stdev(d_orig),
+      stdev(d_eps)
+    )
+    ## Skewness
+    expect_equal(
+      skewness(d_orig),
+      skewness(d_eps)
+    )
+    ## Kurtosis
+    expect_equal(
+      kurtosis(d_orig),
+      kurtosis(d_eps)
+    )
+    ## Excess Kurtosis
+    expect_equal(
+      kurtosis_exc(d_orig),
+      kurtosis_exc(d_eps)
+    )
+  })
+
+  # --- TEST BLOCK ----
   test_that(paste("Distribution", i, "resolves to Null dist with NA param"), {
     paramset <- item$valid[[1]]
     for (i in seq_along(paramset)) {
@@ -313,40 +354,98 @@ for (i in seq_along(distributions_list)) {
     }
   })
 
+  # --- TEST BLOCK ----
   # Make sure that defined distributions evaluate NA inputs properly.
+  # Make sure they evaluate edge cases properly.
+  #' @srrstats {G5.8} Edge conditions are tested when evaluating
+  #' representations
+  #' @srrstats {G5.8a} Zero-length data input outputs 0-length vectors.
+  #' An error is thrown if zero-length parameters are input into `dst_*()`
+  #' functions.
+  #' @srrstats {G5.8b} Data of unsupported types does not pass the checkmate
+  #' checks on function inputs.
+  #' @srrstats {G5.8c} Data with all-`NA` fields or columns or all identical
+  #' fields or columns is no different from having some `NA` fields.
+  #' @srrstats {G5.8d} Data outside of the scope of the (quantile) algorithm
+  #' is only applicable when the quantile probability is outside of [0, 1],
+  #' in which case an error is thrown (due to a check for valid function
+  #' inputs)
   test_that(
     paste(
-      "Defined distributions evaluate NA inputs properly: Distribution ", i
+      "Defined distributions evaluate edge cases properly: Distribution ", i
     ),
     {
       d <- rlang::exec(item$distribution, !!!item$valid[[1]])
       r <- range(d)
+      eps <- .Machine$double.eps
       p <- c(0.4, NA_real_)
       ## Quantile. Also use x for downstream tests.
       x <- eval_quantile(d, at = p)
       expect_true(is.numeric(x[1]))
       expect_true(is.na(x[2]))
+      expect_length(eval_quantile(d, at = numeric()), 0)
+      expect_equal(eval_quantile(d, at = 0:1), r)
       ## CDF
       y <- eval_cdf(d, at = x)
       expect_true(is.numeric(y[1]))
       expect_true(is.na(y[2]))
+      expect_length(eval_cdf(d, at = numeric()), 0)
+      if (attr(d, "name") == "Hypergeometric") {
+        # The hypergeometric distribution from the stats package
+        # needs to move about 1e-7 units to the left of the minimum value
+        # in order to register a drop of the CDF to 0. This will be
+        # deemed acceptable since it's acceptable in the stats package,
+        # although may be up for consideration in a future version of
+        # distionary.
+        expect_equal(
+          eval_cdf(d, at = c(-Inf, r[1] - 1e-6, r[2], Inf)),
+          c(0, 0, 1, 1)
+        )
+      } else {
+        expect_equal(
+          eval_cdf(d, at = c(-Inf, r[1] - eps, r[2], Inf)),
+          c(0, 0, 1, 1)
+        )
+      }
       ## Survival
       y <- eval_survival(d, at = x)
       expect_true(is.numeric(y[1]))
       expect_true(is.na(y[2]))
-      ## Density
+      expect_length(eval_survival(d, at = numeric()), 0)
+      if (attr(d, "name") == "Hypergeometric") {
+        expect_equal(
+          eval_survival(d, at = c(-Inf, r[1] - 1e-6, r[2], Inf)),
+          c(1, 1, 0, 0)
+        )
+      } else {
+        expect_equal(
+          eval_survival(d, at = c(-Inf, r[1] - eps, r[2], Inf)),
+          c(1, 1, 0, 0)
+        )
+      }
+      ## Mass
       y <- eval_pmf(d, at = x)
       expect_true(is.numeric(y[1]))
       expect_true(is.na(y[2]))
-      ## Mass
+      expect_length(eval_pmf(d, at = numeric()), 0)
+      expect_equal(
+        eval_pmf(d, at = c(-Inf, r[1] - 1, r[2] + 1, Inf)),
+        rep(0, 4)
+      )
+      ## Density
       if (vtype(d) == "continuous") {
         y <- eval_density(d, at = x)
         expect_true(is.numeric(y[1]))
         expect_true(is.na(y[2]))
+        expect_length(eval_density(d, at = numeric()), 0)
+        dens <- eval_density(d, at = c(-Inf, Inf))
+        expect_equal(dens, c(0, 0))
+        # expect_true(all(is.infinite(dens) | dens == rep(0, 4)))
       }
     }
   )
 
+  # --- TEST BLOCK ----
   # Make sure there's no density for discrete variables, and no
   # PMF for continuous variables.
   test_that(paste("Distribution", i, "density / mass lineup with vtype"), {
@@ -361,12 +460,21 @@ for (i in seq_along(distributions_list)) {
     v <- vtype(d)
     prettynm <- pretty_name(d, param_digits = 2)
 
+    # --- TEST BLOCK ----
+    test_that("pretty name is pretty.", {
+      expect_length(prettynm, 1)
+      expect_true(!is.na(prettynm))
+    })
+
+    # --- TEST BLOCK ----
     test_that("Object is a distribution.", {
       expect_true(is_distribution(d))
     })
 
+    # --- TEST BLOCK ----
     # Check each representation individually, that it corresponds
-    # to a valid distribution.
+    # to a valid distribution, by comparing each representation
+    # to another.
     test_that(
       paste(
         "Defined representations correspond to a distribution: ",
@@ -416,6 +524,7 @@ for (i in seq_along(distributions_list)) {
       }
     )
 
+    # --- TEST BLOCK ----
     # Check that the provided representations link up properly and describe
     # the same distribution. This can be achieved by deriving the
     # representation as if it was absent. Note that some of the previous
@@ -480,6 +589,10 @@ for (i in seq_along(distributions_list)) {
   # --- End distribution ---
 }
 
+# --- TEST BLOCK ----
+# Some representations are never given for distribution families in
+# distionary. For example, no distribution has a hazard function defined.
+# Check that the representation is valid based on its definition.
 test_that("Representations that are never specified in distionary work.", {
   ## Hazard
   d <- dst_norm(0, 1)
