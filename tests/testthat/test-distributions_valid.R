@@ -269,9 +269,9 @@ for (i in seq_along(distributions_list)) {
   })
 
   # --- TEST BLOCK ----
-  #' @srrstatsNA {G5.9} Noise susceptibility tests have been conducted on
+  #' @srrstats {G5.9} Noise susceptibility tests have been conducted on
   #' distribution parameters and evaluation inputs.
-  #' @srrstatsNA {G5.9a} Machine tolerance has been added to distribution
+  #' @srrstats {G5.9a} Machine tolerance has been added to distribution
   #' parameters and evaluation inputs and compared to originals.
   test_that(paste("Distribution", i, "not sensitive to machine tolerance"), {
     paramset_orig <- item$valid[[1]]
