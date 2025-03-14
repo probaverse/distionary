@@ -246,7 +246,7 @@ distribution to see that the representations wrap the
 <span><span class="co">#&gt;     if (is.na(mean) || is.na(sd)) {</span></span>
 <span><span class="co">#&gt;         return(dst_null())</span></span>
 <span><span class="co">#&gt;     }</span></span>
-<span><span class="co">#&gt;     distribution(parameters = list(mean = mean, sd = sd), density = function(x) stats::dnorm(x, </span></span>
+<span><span class="co">#&gt;     distribution(.parameters = list(mean = mean, sd = sd), density = function(x) stats::dnorm(x, </span></span>
 <span><span class="co">#&gt;         mean = mean, sd = sd), cdf = function(x) stats::pnorm(x, </span></span>
 <span><span class="co">#&gt;         mean = mean, sd = sd), quantile = function(p) stats::qnorm(p, </span></span>
 <span><span class="co">#&gt;         mean = mean, sd = sd), realise = function(n) stats::rnorm(n, </span></span>
@@ -256,7 +256,7 @@ distribution to see that the representations wrap the
 <span><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = "Normal", </span></span>
 <span><span class="co">#&gt;         .vtype = "continuous")</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x560b9c04c460&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55cfc1abea60&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -311,8 +311,7 @@ use of these.)</p>
 <span><span class="va">linear</span></span>
 <span><span class="co">#&gt; My Linear distribution (continuous)</span></span>
 <span><span class="co">#&gt; --Parameters--</span></span>
-<span><span class="co">#&gt; a </span></span>
-<span><span class="co">#&gt; 1</span></span></code></pre></div>
+<span><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>The usual evaluation framework can now be accessed. For example, the
 CDF and mean can be evaluated, even though the mean has not been
 specified.</p>
