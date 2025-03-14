@@ -11,5 +11,5 @@ test_that("Null distribution works", {
   expect_equal(eval_pmf(d, at = 0), NA_real_)
   expect_equal(eval_quantile(d, at = 0), NA_real_)
   expect_equal(realise(d), NA_real_)
-  expect_null(vtype(d))
+  expect_equal(vtype(d), NA_character_)
 })

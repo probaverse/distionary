@@ -28,6 +28,6 @@ dst_null <- function() {
     skewness = NA_real_,
     kurtosis_exc = NA_real_,
     .name = "Null",
-    .vtype = NULL
+    .vtype = NA_character_
   )
 }
