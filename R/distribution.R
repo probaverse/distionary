@@ -13,6 +13,12 @@
 #' lowercase with `tolower()` for compliance with known types.
 #' @param .name A name to give to the distribution.
 #' Can be any character vector of length 1.
+#' @param .parameters A named list with one entry per distribution parameter,
+#' each of which can be any data type. In this version of distionary,
+#' these parameters are only stored for the benefit of the user to know
+#' what distribution they are working with; the code never looks at these
+#' parameters to inform its calculations. This is anticipated to change in
+#' a future version of distionary.
 #' @return A distribution object.
 #' @details
 #' Currently, the CDF (`cdf`) is required to be specified, along with the PMF
@@ -58,7 +64,8 @@
 #'     p
 #'   },
 #'   .vtype = "continuous",
-#'   .name = "My Linear"
+#'   .name = "My Linear",
+#'   .parameters = list(could = "include", anything = data.frame(x = 1:10))
 #' )
 #'
 #' # Inspect

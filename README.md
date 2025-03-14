@@ -153,6 +153,8 @@ linear <- distribution(
 # Inspect
 linear
 #> My Linear distribution (continuous)
+#> --Parameters--
+#> NULL
 ```
 
 Here is what it looks like (density function).

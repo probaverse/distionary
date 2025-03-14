@@ -23,7 +23,6 @@ dst_norm
 ## -----------------------------------------------------------------------------
 # Make a continuous distribution
 linear <- distribution(
-  parameters = list(a = 1),
   density = function(x) {
     d <- 2 * (1 - x)
     d[x < 0 | x > 1] <- 0
@@ -38,7 +37,8 @@ linear <- distribution(
   g = 9.81,
   another_representation = function(x) x^2,
   .vtype = "continuous",
-  .name = "My Linear"
+  .name = "My Linear",
+  .parameters = list(a = 1)
 )
 # Inspect
 linear
