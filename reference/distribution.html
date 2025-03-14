@@ -81,7 +81,8 @@ A list of these representations can be found in the details.</p>
 
 <dt id="arg--vtype">.vtype<a class="anchor" aria-label="anchor" href="#arg--vtype"></a></dt>
 <dd><p>The variable type, typically "discrete" or "continuous".
-Can be any character vector of length 1.</p></dd>
+Can be any character vector of length 1, but is converted to
+lowercase with <code><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower()</a></code> for compliance with known types.</p></dd>
 
 
 <dt id="arg--name">.name<a class="anchor" aria-label="anchor" href="#arg--name"></a></dt>
