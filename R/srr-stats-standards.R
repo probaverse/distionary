@@ -64,6 +64,11 @@
 #' @srrstats {PD4.4} Tests of optimisation or integration algorithms
 #' compare derived results with algorithms in the stats package.
 #' See `test-distributions_valid.R`.
+#'
+#' TO DO
+#' @srrstats {PD3.5} Integration routines should only rely on discrete summation where such use can be justified (for example, through providing a literature reference), in which case the following applies:
+#' @srrstats {PD3.5a} Use of discrete summation to approximate integrals must demonstrate that the Reimann sum has a finite limit (or, equivalently, must explicitly describe the conditions under which the sum may be expected to be finite).
+
 
 
 #' @noRd
@@ -119,9 +124,5 @@ NULL
 #' reasonable amount of time and with available data.
 #' @srrstatsNA {PD3.2} distionary does not estimate parameters (that will
 #' be the job of the famish package in the probaverse family).
-#'
-#'
-#' TO DO
-#' @srrstatsNA {PD3.5a} Discrete summation is not used to approximate integrals.
 #' @noRd
 NULL

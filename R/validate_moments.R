@@ -1,5 +1,3 @@
-#' @family validate_properties
-#' @inheritParams validate_density
 #' @noRd
 validate_mean <- function(distribution, verbose = FALSE, tol = 1e-05) {
   checkmate::assert_class(distribution, "dst")
@@ -30,8 +28,7 @@ validate_mean <- function(distribution, verbose = FALSE, tol = 1e-05) {
   }
 }
 
-#' @family validate_properties
-#' @inheritParams validate_density
+
 #' @noRd
 validate_variance <- function(distribution, verbose = FALSE, tol = 1e-05) {
   checkmate::assert_class(distribution, "dst")
@@ -62,7 +59,6 @@ validate_variance <- function(distribution, verbose = FALSE, tol = 1e-05) {
   }
 }
 
-#' @family validate_properties
 #' @inheritParams validate_density
 #' @noRd
 validate_stdev <- function(distribution, verbose = FALSE, tol = 1e-05) {
@@ -94,7 +90,6 @@ validate_stdev <- function(distribution, verbose = FALSE, tol = 1e-05) {
   }
 }
 
-#' @family validate_properties
 #' @inheritParams validate_density
 #' @noRd
 validate_skewness <- function(distribution, verbose = FALSE, tol = 1e-04) {
@@ -126,7 +121,6 @@ validate_skewness <- function(distribution, verbose = FALSE, tol = 1e-04) {
   }
 }
 
-#' @family validate_properties
 #' @inheritParams validate_density
 #' @noRd
 validate_kurtosis <- function(distribution, verbose = FALSE, tol = 1e-04) {
@@ -158,7 +152,6 @@ validate_kurtosis <- function(distribution, verbose = FALSE, tol = 1e-04) {
   }
 }
 
-#' @family validate_properties
 #' @inheritParams validate_density
 #' @noRd
 validate_kurtosis_exc <- function(distribution, verbose = FALSE, tol = 1e-04) {

@@ -1,5 +1,3 @@
-#' @family validate_properties
-#' @inheritParams validate_density
 #' @noRd
 validate_survival <- function(distribution, verbose = FALSE, tol = 1e-9) {
   checkmate::assert_class(distribution, "dst")

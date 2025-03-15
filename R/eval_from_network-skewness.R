@@ -43,12 +43,10 @@ eval_skewness_from_network <- function(distribution) {
   if (is.null(sf)) {
     sf <- \(x) eval_survival(distribution, at = x)
   }
+  # Note (-1)^(1/3) returns a complex root of unity, or NaN, instead of the
+  # real one, -1.
   sf_upper <- function(t) sf(mu + t^(1 / 3))
   cdf_lower <- function(t) cdf(mu - t^(1 / 3))
-  # one_minus_flipped <- function(t) cdf(mu - t^(1 / 3)) #1 - sf(mu - t^(1 / 3))
-  # (flipped about t=0 because (-1)^(1/3) returns a complex root of
-  #  unity, or NaN, instead of the real one, -1.)
-  # positive_part <- stats::integrate(sf2, 0, Inf, ...)
   positive_part <- try(
     stats::integrate(
       sf_upper, 0, rng2[2],

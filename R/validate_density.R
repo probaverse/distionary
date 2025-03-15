@@ -11,7 +11,6 @@
 #' @returns Single logical indicating whether the property is deemed
 #' valid (`TRUE`) or not (`FALSE`). If not applicable (e.g., no such
 #' property has been specified for the distribution), `NA` is returned.
-#' @family validate_properties
 #' @noRd
 validate_density <- function(distribution, verbose = FALSE, tol = 1e-05) {
   checkmate::assert_class(distribution, "dst")
