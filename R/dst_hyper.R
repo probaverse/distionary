@@ -29,7 +29,7 @@ dst_hyper <- function(m, n, k) {
     pmf = \(x) stats::dhyper(x, m = m, n = n, k = k),
     cdf = \(x) stats::phyper(x, m = m, n = n, k = k),
     quantile = \(p) stats::qhyper(p, m = m, n = n, k = k),
-    realise = \(n) stats::rhyper(n, m = m, n = n, k = k),
+    realise = \(nn) stats::rhyper(nn, m = m, n = n, k = k),
     survival = \(x) stats::phyper(
       x,
       m = m, n = n, k = k, lower.tail = FALSE
