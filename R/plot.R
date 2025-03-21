@@ -88,13 +88,11 @@ plot.dst <- function(
         "may not be representative."
       )
     }
-    r <- range(x)
-    if (is.infinite(r[1])) r[1] <- round(ellipsis[["from"]])
-    if (is.infinite(r[2])) r[2] <- round(ellipsis[["to"]])
-    ellipsis[["to"]] <- NULL
+    xvals <- ellipsis[["from"]]:ellipsis[["to"]]
     ellipsis[["from"]] <- NULL
-    ellipsis[["x"]] <- r[1]:r[2]
-    ellipsis[["y"]] <- eval_pmf(x, at = ellipsis[["x"]])
+    ellipsis[["to"]] <- NULL
+    ellipsis[["x"]] <- xvals
+    ellipsis[["y"]] <- eval_pmf(x, at = xvals)
     do.call("plot", args = ellipsis)
     return(invisible(x))
   }
