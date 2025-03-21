@@ -1,23 +1,41 @@
-test_that("Quantile function algorithm works for several distributions", {
-  p <- 1:99 / 100
-  d <- list(
-    dst_beta(3, 5),
-    dst_binom(15, 0.2),
-    dst_norm(0, 1),
-    dst_norm(3.87e287, 1),
-    dst_norm(3.87e287, 1e-200),
-    dst_nbinom(10, 0.5),
-    dst_exp(10),
-    dst_gpd(342, 3)
-  )
-  for (d_ in d) {
-    expect_equal(
-      distionary:::eval_quantile_from_network(d_, at = p),
-      eval_quantile(d_, at = p),
-      tolerance = 1e-6
-    )
+test_that("Quantile function calculated thru network matches known vals.", {
+  for (item in test_distributions) {
+    i <- i + 1
+    cat("\n---- ", i, "\n")
+    j <- 0
+    for (paramset in item$valid) {
+      j <- j + 1
+      cat(j, " ")
+      d <- rlang::exec(item$distribution, !!!paramset)
+      p <- 1:99 / 100
+      if (is_intrinsic(d, "quantile")) {
+        if (vtype(d) == "continuous") {
+          expect_equal(
+            eval_quantile_from_network(d, at = p),
+            eval_quantile(d, at = p)
+          )
+        } else if (pretty_name(d) != "Degenerate") {
+          x <- -1 # All distributions in this version start at 0 at least.
+          q_derived <- numeric(0L)
+          for (i in seq_along(p)) {
+            p_ <- p[i]
+            below <- eval_cdf(d, at = x) < p_
+            while (below) {
+              x <- x + 1
+              below <- eval_cdf(d, at = x) < p_
+            }
+            q_derived[i] <- x
+          }
+          expect_equal(
+            q_derived,
+            eval_quantile(d, at = p)
+          )
+        }
+      }
+    }
   }
 })
+
 
 test_that("Quantile algorithm handles NA appropriately.", {
   d <- distribution(cdf = pnorm, .vtype = "continuous")

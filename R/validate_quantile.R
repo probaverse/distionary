@@ -1,5 +1,5 @@
 #' @noRd
-validate_quantile <- function(distribution, verbose = FALSE, tol = 1e-06) {
+validate_quantile <- function(distribution, verbose = FALSE, tol = 1e-09) {
   checkmate::assert_class(distribution, "dst")
   checkmate::assert_logical(verbose, len = 1, any.missing = FALSE)
   checkmate::assert_numeric(tol, 0, len = 1, any.missing = FALSE)
