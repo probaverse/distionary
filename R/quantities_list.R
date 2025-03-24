@@ -38,10 +38,6 @@
                       2 * (1 + shape) * sqrt(1 - 2 * shape) /
                         (1 - 3 * shape),
                       Inf),
-    kurtosis_exc = ifelse(shape < 1 / 4,
-                          3 * (1 - 2 * shape) * (2 * shape^2 + shape + 3) /
-                            ((1 - 3 * shape) * (1 - 4 * shape)) - 3,
-                          Inf),
     range = c(location,
               ifelse(shape >= 0, Inf, location - (scale / shape))),
     evi = shape
@@ -56,12 +52,6 @@
     skewness = {
       ev <- exp(variancelog)
       (ev + 2) * sqrt(ev - 1)
-    },
-    kurtosis_exc = {
-      e4 <- exp(4 * variancelog)
-      e3 <- exp(3 * variancelog)
-      e2 <- exp(2 * variancelog)
-      e4 + 2 * e3 + 3 * e2 - 6
     },
     range = c(0, Inf)
   ),
@@ -112,17 +102,13 @@
     mean = (1 - prob) * size / prob,
     #median = FILL_THIS_IN,
     variance = (1-prob) * size/(prob^2),
-    skewness = (2 - prob) / sqrt((1 - prob) * size),
-    kurtosis_exc = 6 / size + ((1 - prob)^2) / (prob * size),
-    range = c(0, 1) # need to double check
+    skewness = (2 - prob) / sqrt((1 - prob) * size)
   ),
   geom = rlang::exprs(
     mean = (1 - prob)/prob,
     #median = ifelse((-1)/log2(1 - p)%%1 != 0, (-1)/log2(1 - p), 'No unique integer'), # not sure
     variance = (1 - prob)/prob^2,
-    skewness = ifelse(prob < 1, (2 - prob) / sqrt(1 - prob), NaN),
-    kurtosis_exc = ifelse(prob < 1, 6 + prob^2 / (1 - prob), NaN),
-    range = c(0, size)
+    skewness = ifelse(prob < 1, (2 - prob) / sqrt(1 - prob), NaN)
   ),
   exp = rlang::exprs(
     mean = 1 / rate,
@@ -146,17 +132,6 @@
       sigma <- sqrt(var)
       (g3 * scale^3 - 3 * mu * var - mu^3) / sigma^3
     },
-    kurtosis_exc = {
-      g1 <- gamma(1 + 1 / shape)
-      g2 <- gamma(1 + 2 / shape)
-      g3 <- gamma(1 + 3 / shape)
-      g4 <- gamma(1 + 4 / shape)
-      mu <- scale * g1
-      var <- scale^2 * (g2 - g1^2)
-      sigma <- sqrt(var)
-      sk <- (g3 * scale^3 - 3 * mu * var - mu^3) / sigma^3
-      ((gamma(1+4/1) - 4*sk*(var^3)*mu - 6*(mu^2)*(var^2) - mu^4)/(var^4) - 3)
-    },
     range = c(0, Inf)
     #evi = FILL_THIS_IN
   ),
@@ -164,7 +139,6 @@
     mean = shape / rate,
     variance = shape / rate^2,
     skewness = 2 / sqrt(shape),
-    kurtosis_exc = 6 / shape,
     range = c(0, Inf)
     #evi = FILL_THIS_IN
   ),
@@ -172,9 +146,7 @@
       mean = df,
       # median = df * (1 - 2 / 9 * df)^3,
       variance = 2 * df,
-      skewness = sqrt(8 / df),
-      kurtosis_exc = 12 / df,
-      range = c(0, 1)
+      skewness = sqrt(8 / df)
     ),
   cauchy = rlang::exprs(
       mean = NaN,
@@ -186,16 +158,7 @@
       range = c(-Inf, Inf)
   ),
   hyper = rlang::exprs(
-       mean = (N - K) * K / N,
-       #median = FILL_THIS_IN,
-       variance = (N - K) * K / N * (N - K) / N * K / (N - 1),
-       skewness = (N - 2 * K) * sqrt(N - 1) * (N - 2 * (N - K)) /
-         (sqrt((N - K) * K* (N - K) * K) * (N - 2)),
-       kurtosis_exc = ((N - 1) * N^2 *
-                         (N * (N + 1) - 6 * K * (N - K) - 6 * (N - K) * K) +
-                         6 * (N - K) * K * (N - K) * K * (5 * N - 6)) /
-         ((N - K) * K * (N - K) * K * (N - 2) * (N - 3)),
-       range = c(0, n)
+       mean = (N - K) * K / N
   ),
   t = rlang::exprs(
     mean = ifelse(df > 1, 0, NaN),
@@ -235,12 +198,6 @@
         ((df2 - 6) * sqrt(df1 * (df1 + df2 - 2))),
       NaN
     ),
-    kurtosis_exc = ifelse(
-      df2 > 8,
-      12 * df1 * (5 * df2 - 22) * (df1 + df2 - 2) + (df2 - 4) * (df2 - 2)^2 /
-        (df1 * (df2 - 6) * (df2 - 8) * (df1 + df2 - 2)),
-      NaN
-    ),
     range = c(0, Inf)
     #evi = FILL_THIS_IN
   ),
@@ -268,32 +225,6 @@
         scale^2 * (gamma(1 - 2 * shape) - gamma(1 - shape)^2) / shape^2
       }
     },
-    skewness = {
-      if (shape == 0) {
-        12 * sqrt(6) * zeta(3) / pi^3
-      } else if (shape < 1 / 3) {
-        g1 <- gamma(1 - shape)
-        g2 <- gamma(1 - 2 * shape)
-        g3 <- gamma(1 - 3 * shape)
-        sign(shape) * (g3 - 3 * g2 * g1 + 2 * g1^3) / (g2 - g1^2)^(3 / 2)
-      } else {
-        NaN
-      }
-    },
-    kurtosis_exc = {
-      if (shape == 0) {
-        12 / 5
-      } else if (shape < 1 / 4) {
-        g1 <- gamma(1 - shape)
-        g2 <- gamma(1 - 2 * shape)
-        g3 <- gamma(1 - 3 * shape)
-        g4 <- gamma(1 - 4 * shape)
-        (g4 - 4 * g4 * g1 - 3 * g2^2 + 12 * g2 * g1^2 - 6 * g1^4) /
-          (g2 - g1^2)^2
-      } else {
-        NaN
-      }
-    },
     range = {
       if (shape > 0) {
         c(location - scale / shape, Inf)
@@ -304,19 +235,6 @@
       }
     },
     evi = shape
-  ),
-  sknorm = rlang::exprs(
-    mean = mu + scale * shape / sqrt(1 + shape^2) * sqrt(2 / pi),
-    variance = shape^2 * (1 - 2 * shape^2 / (1 + shape^2) / pi),
-    skewness = {
-      delta <- shape / sqrt(1 + shape^2)
-      (4 - pi) / 2 * (delta * sqrt(2 / pi))^3 / (1 - 2 * delta^2 / pi)^(3 / 2)
-    },
-    kurtosis_exc = {
-      delta <- shape / sqrt(1 + shape^2)
-      2 * (pi - 3) * delta ^ 4 * 4 / pi^2 / (1 - 2 * delta^2 / pi)^2
-    },
-    range = c(-Inf, Inf)
   )
 )
 
