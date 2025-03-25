@@ -2,8 +2,14 @@
 eval_variance_from_network <- function(distribution, ...) {
   checkmate::assert_class(distribution, "dst")
   if (is_intrinsic(distribution, "stdev")) {
-    return(stdev(distribution)^2)
+    stdev(distribution)^2
+  } else {
+    algorithm_variance(distribution, ...)
   }
+}
+
+#' @noRd
+algorithm_variance <- function(distribution, ...) {
   if (vtype(distribution) != "continuous") {
     stop(
       "Numerical computation for non-continuous distributions is ",

@@ -1,64 +1,81 @@
-test_that("Network is invoked in priority: stdev", {
-  d <- distribution(
-    density = \(x) stats::dnorm(x, sd = 3),
-    range = c(-Inf, Inf),
-    variance = 100, # deliberately incorrect
-    .vtype = "continuous"
-  )
-  # Standard deviation should come from built-in variance.
-  expect_equal(stdev(d), 10)
-  expect_equal(eval_stdev_from_network(d), 10)
-  # Remove variance, and sd of 3 should be retrieved through density.
-  d$variance <- NULL
-  expect_equal(stdev(d), 3)
-  expect_equal(eval_stdev_from_network(d), 3)
-})
-
 test_that("Network is invoked in priority: variance", {
+  # First look for `stdev`, then invoke algorithm if not found.
   d <- distribution(
     density = \(x) stats::dnorm(x, sd = 3),
     range = c(-Inf, Inf),
     stdev = 10, # deliberately incorrect
     .vtype = "continuous"
   )
-  # Standard deviation should come from built-in variance.
   expect_equal(variance(d), 100)
   expect_equal(eval_variance_from_network(d), 100)
-  # Remove variance, and sd of 3 should be retrieved through density.
   d$stdev <- NULL
   expect_equal(variance(d), 9)
   expect_equal(eval_variance_from_network(d), 9)
 })
 
-test_that("Variance calculated thru network matches known vals", {
+test_that("Variance algorithm matches known vals", {
   for (item in test_distributions) {
     for (paramset in item$valid) {
       d <- rlang::exec(item$distribution, !!!paramset)
-      if (is_intrinsic(d, "variance")) {
-        expect_equal(eval_variance_from_network(d), variance(d))
-        if (is_intrinsic(d, "stdev")) {
-          d[["stdev"]] <- NULL
-          expect_equal(eval_variance_from_network(d), variance(d))
+      if (is_intrinsic(d, "variance") || is_intrinsic(d, "stdev")) {
+        supposed_var <- variance(d)
+        if (is.infinite(supposed_var)) {
+          supposed_var <- NaN  # To align with numerical integration output.
+        }
+        if (vtype(d) == "continuous") {
+          if (
+            pretty_name(d) == "Generalised Extreme Value" &&
+            parameters(d)$shape == 0
+          ) {
+            # GEV with shape = 0 has NaN density for very negative values.
+            mu <- mean(d)
+            integrand <- \(x) (x - mu)^2 * eval_density(d, at = x)
+            expect_equal(
+              cubature::hcubature(integrand, -1000, Inf)$integral,
+              supposed_var
+            )
+          } else {
+            expect_equal(suppressMessages(algorithm_variance(d)), supposed_var)
+          }
+        } else if (
+          pretty_name(d) %in%
+          c("Hypergeometric", "Bernoulli", "Binomial")
+        ) {
+          expect_error(algorithm_variance(d))
+          r <- range(d)
+          x <- seq(r[1], r[2], by = 1L)
+          mu <- mean(d)
+          x2 <- (x - mu)^2
+          p <- eval_pmf(d, at = x)
+          expect_equal(sum(p * x2), supposed_var)
+        } else if (
+          pretty_name(d) %in%
+          c("Negative Binomial", "Poisson", "Geometric")
+        ) {
+          expect_error(algorithm_variance(d))
+          mu <- mean(d)
+          to_add <- Inf
+          i <- 0
+          v <- 0
+          while (to_add > 1e-9) {
+            x <- 0:99 + 100 * i
+            to_add <- sum(eval_pmf(d, x) * (x - mu)^2)
+            v <- v + to_add
+            i <- i + 1
+          }
+          expect_equal(v, supposed_var)
+        } else if (pretty_name(d) == "Degenerate") {
+          # Do nothing; checked in a separate script.
+        } else {
+          # Shouldn't be any distributions left.
+          stop("At least one distribution family has not been accounted for.")
         }
       }
     }
   }
 })
 
-test_that("Standard dev calculated thru network matches known vals", {
-  for (item in test_distributions) {
-    for (paramset in item$valid) {
-      d <- rlang::exec(item$distribution, !!!paramset)
-      if (is_intrinsic(d, "stdev")) {
-        expect_equal(eval_stdev_from_network(d), stdev(d))
-        if (is_intrinsic(d, "variance")) {
-          d[["variance"]] <- NULL
-          expect_equal(eval_stdev_from_network(d), stdev(d))
-        }
-      }
-    }
-  }
-})
+
 
 # if (attr(distribution, "name") %in% c(
 #   "Hypergeometric", "Bernoulli", "Binomial"
@@ -66,11 +83,7 @@ test_that("Standard dev calculated thru network matches known vals", {
 #   # This case is for double-checking the moments supplied for these
 #   # distributions, and will be included until discretes handling is
 #   # implemented.
-#   r <- range(distribution)
-#   x <- seq(r[1], r[2], by = 1L)
-#   x2 <- (x - mu)^2
-#   p <- eval_pmf(distribution, at = x)
-#   return(sum(p * x2))
+
 # }
 # if (attr(distribution, "name") %in% c(
 #   "Negative Binomial", "Poisson", "Geometric"
