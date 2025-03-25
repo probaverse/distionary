@@ -82,18 +82,19 @@ distribution <- function(...,
                          .parameters = list()) {
   if (!is.null(.vtype)) {
     .vtype <- as.character(.vtype)
+  } else {
+    .vtype <- "unknown"
   }
   if (!is.null(.name)) {
     .name <- as.character(.name)
+  } else {
+    .name <- "Unnamed"
   }
   checkmate::assert_character(.vtype, len = 1, null.ok = TRUE)
   checkmate::assert_character(.name, len = 1, null.ok = TRUE)
   checkmate::assert_list(.parameters, names = "named", null.ok = TRUE)
   .vtype <- tolower(.vtype)
   dots <- rlang::enquos(...)
-  if (is.null(.name)) {
-    .name <- "Unnamed"
-  }
   representations <- lapply(dots, rlang::eval_tidy)
   new_distribution(
     representations,

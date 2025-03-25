@@ -23,3 +23,11 @@ test_that("Variable type specified correctly.", {
   expect_equal(vtype(dst_unif(0, 1)), "continuous")
   expect_equal(vtype(dst_weibull(1, 1)), "continuous")
 })
+
+test_that("Variable type matches manual distribution input", {
+  expect_identical(vtype(distribution(.vtype = "foofy")), "foofy")
+  expect_identical(vtype(distribution(.vtype = "FoOFy")), "foofy")
+  expect_identical(vtype(distribution()), "unknown")
+  expect_identical(vtype(distribution()), vtype(distribution(.vtype = NULL)))
+  expect_identical(vtype(distribution(.vtype = NA_character_)), NA_character_)
+})
