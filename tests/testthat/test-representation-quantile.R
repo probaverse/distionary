@@ -69,6 +69,17 @@ test_that("Quantile algorithm handles NA appropriately.", {
   expect_equal(eval_quantile(d_flat, at = 0.5), 0.5)
 })
 
+test_that("Quantile algorithm is only set up for continuous distributions.", {
+  d <- distribution(
+    cdf = \(x) stats::ppois(x, lambda = 1),
+    pmf = \(x) stats::dpois(x, lambda = 1),
+    .vtype = "foofy"
+  )
+  expect_error(eval_quantile(d, at = 0.4))
+  attr(d, "vtype") <- "continuous"
+  expect_equal(round(eval_quantile(d, at = 0.4)), qpois(0.4, lambda = 1))
+})
+
 #' @srrstats {G5.7} The only algorithm thus far is the quantile algorithm,
 #' and its performance has been tested to take longer with a smaller
 #' tolerance.
