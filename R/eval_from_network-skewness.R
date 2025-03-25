@@ -1,5 +1,5 @@
 #' @noRd
-eval_skewness_from_network <- function(distribution) {
+eval_skewness_from_network <- function(distribution, ...) {
   checkmate::assert_class(distribution, "dst")
   if (vtype(distribution) != "continuous") {
     stop(
@@ -18,14 +18,31 @@ eval_skewness_from_network <- function(distribution) {
   dens <- representation_as_function(distribution, representation = "density")
   integrand <- function(x) ((x - mu) / sigma)^3 * dens(x)
   r <- range(distribution)
+  if (r[1] == -Inf && r[2] == Inf) {
+    # t(3) distribution mistakenly comes back with finite skewness; break
+    # integral into two to solve this issue.
+    int1 <- try(
+      stats::integrate(
+        integrand,
+        lower = r[1], upper = 0,
+        rel.tol = 1e-09,
+        subdivisions = 200L,
+        ...
+      )$value,
+      silent = TRUE
+    )
+    r[1] <- 0
+  } else {
+    int1 <- 0
+  }
   int <- try(
-    stats::integrate(
+    int1 + stats::integrate(
       integrand,
       lower = r[1], upper = r[2],
       rel.tol = 1e-09,
       subdivisions = 200L,
       ...
-    ),
+    )$value,
     silent = TRUE
   )
   if (inherits(int, "try-error")) {
@@ -35,5 +52,5 @@ eval_skewness_from_network <- function(distribution) {
     )
     return(NaN)
   }
-  int$value
+  int
 }
