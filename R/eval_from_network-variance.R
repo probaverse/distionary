@@ -29,7 +29,7 @@ eval_variance_from_network <- function(distribution, ...) {
   )
   if (inherits(int, "try-error")) {
     message(
-      "Integration routine for numerical computation of mean failed. ",
+      "Integration routine for numerical computation of variance failed. ",
       "This could be because the variance does not exist. Returning NaN."
     )
     return(NaN)

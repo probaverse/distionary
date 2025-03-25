@@ -1,9 +1,21 @@
 #' @noRd
+eval_kurtosis_exc_from_network <- function(distribution) {
+  checkmate::assert_class(distribution, "dst")
+  kurtosis(distribution) - 3
+}
+
+#' @noRd
 eval_kurtosis_from_network <- function(distribution, ...) {
   checkmate::assert_class(distribution, "dst")
   if (is_intrinsic(distribution, "kurtosis_exc")) {
-    return(kurtosis_exc(distribution) + 3)
+    kurtosis_exc(distribution) + 3
+  } else {
+    algorithm_kurtosis(distribution, ...)
   }
+}
+
+#' @noRd
+algorithm_kurtosis <- function(distribution, ...) {
   if (vtype(distribution) != "continuous") {
     stop(
       "Numerical computation for non-continuous distributions is ",
@@ -33,16 +45,10 @@ eval_kurtosis_from_network <- function(distribution, ...) {
   )
   if (inherits(int, "try-error")) {
     message(
-      "Integration routine for numerical computation of mean failed. ",
+      "Integration routine for numerical computation of kurtosis failed. ",
       "This could be because the kurtosis does not exist. Returning NaN."
     )
     return(NaN)
   }
   int$value
-}
-
-#' @noRd
-eval_kurtosis_exc_from_network <- function(distribution) {
-  checkmate::assert_class(distribution, "dst")
-  kurtosis(distribution) - 3
 }

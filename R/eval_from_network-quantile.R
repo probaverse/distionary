@@ -24,6 +24,13 @@ eval_quantile_from_network <- function(distribution,
   if (n == 0) {
     return(numeric(0L))
   }
+  if (vtype(distribution) != "continuous") {
+    stop(
+      "The current quantile algorithm can suffer from low precision with ",
+      "non-continuous distributions, so this functionality is disabled ",
+      "for now."
+    )
+  }
   ord <- order(at)
   at <- at[ord]
   x <- at

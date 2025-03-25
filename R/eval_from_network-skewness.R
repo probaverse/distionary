@@ -30,7 +30,7 @@ eval_skewness_from_network <- function(distribution) {
   )
   if (inherits(int, "try-error")) {
     message(
-      "Integration routine for numerical computation of mean failed. ",
+      "Integration routine for numerical computation of skewness failed. ",
       "This could be because the skewness does not exist. Returning NaN."
     )
     return(NaN)
