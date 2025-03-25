@@ -1,5 +1,3 @@
-
-
 test_that("enframe matches eval", {
   d <- dst_norm(0, 1)
   p <- 1:9 / 10
@@ -25,6 +23,7 @@ test_that("enframe matches eval", {
 
 test_that("enframe throws error if an ellipsis entry is not a distribution", {
   d <- dst_norm(0, 1)
+  expect_error(enframe_cdf(5, at = 1:10))
   expect_error(enframe_cdf(d, 5, at = 1:10))
   expect_error(enframe_cdf(at = 1:10))
 })
@@ -50,12 +49,15 @@ test_that("Manual column names work.", {
     mod1 = d, mod2 = d, at = x, arg_name = "one", fn_prefix = "two", sep = "."
   )
   expect_equal(sort(c("one", "two.mod1", "two.mod2")), sort(names(df)))
+  df <- enframe_cdf(
+    mod1 = d, d, at = x, arg_name = "one", fn_prefix = "two", sep = "."
+  )
+  expect_equal(sort(c("one", "two.mod1", "two.d")), sort(names(df)))
 })
 
 test_that("Dimensions and type are as expected.", {
   d <- dst_norm(0, 1)
   x <- -3:3
-  ## Outputs from have proper dimensions.
   df <- enframe_cdf(d, at = x, arg_name = "one", fn_prefix = "two")
   expect_true(is.data.frame(df))
   expect_equal(dim(df), c(7, 2))
