@@ -4,7 +4,6 @@
 #' parameters and evaluation inputs and compared to originals.
 test_that("Distributions are not sensitive to machine tolerance.", {
   for (item in test_distributions) {
-    cat(item$distribution)
     paramset_orig <- item$valid[[1]]
     eps <- .Machine$double.eps
     paramset_eps <- lapply(paramset_orig, \(x) x - eps)

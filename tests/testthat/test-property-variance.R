@@ -75,27 +75,9 @@ test_that("Variance algorithm matches known vals", {
   }
 })
 
-
-
-# if (attr(distribution, "name") %in% c(
-#   "Hypergeometric", "Bernoulli", "Binomial"
-# )) {
-#   # This case is for double-checking the moments supplied for these
-#   # distributions, and will be included until discretes handling is
-#   # implemented.
-
-# }
-# if (attr(distribution, "name") %in% c(
-#   "Negative Binomial", "Poisson", "Geometric"
-# )) {
-#   to_add <- Inf
-#   i <- 0
-#   variance <- 0
-#   while (to_add > 1e-9) {
-#     x <- 0:99 + 100 * i
-#     to_add <- sum(eval_pmf(distribution, x) * (x - mu)^2)
-#     variance <- variance + to_add
-#     i <- i + 1
-#   }
-#   return(variance)
-# }
+test_that("Variance algorithm takes longer for smaller tolerance.", {
+  d <- dst_norm(0, 1)
+  t1 <- system.time(algorithm_variance(d, tol = 1e-4))
+  t2 <- system.time(algorithm_variance(d, tol = 1e-8))
+  expect_lt(t1[["elapsed"]], t2[["elapsed"]])
+})

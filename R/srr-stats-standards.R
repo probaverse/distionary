@@ -45,7 +45,9 @@
 #' hazard function that are not found in the stats package are compared
 #' to known formulas rather than other implementations, to avoid unnecessary
 #' dependencies on other packages. See `test-distributions_valid.R`.
-
+#' @srrstats {G5.7} The only algorithm thus far is the quantile algorithm,
+#' and its performance has been tested to take longer with a smaller
+#' tolerance.
 #' @srrstats {PD1.0} Distributions are treated generally in distionary.
 #' @srrstats {PD2.0} Representing probability distributions using a package
 #' for general representation is the main purpose of distionary.

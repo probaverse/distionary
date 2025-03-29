@@ -52,4 +52,9 @@ test_that("Skewness algorithm matches known vals", {
   }
 })
 
-
+test_that("Skewness algorithm takes longer for smaller tolerance.", {
+  d <- dst_norm(0, 1)
+  t1 <- system.time(eval_skewness_from_network(d, tol = 1e-4))
+  t2 <- system.time(eval_skewness_from_network(d, tol = 1e-8))
+  expect_lt(t1[["elapsed"]], t2[["elapsed"]])
+})
