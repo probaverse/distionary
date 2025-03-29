@@ -13,7 +13,7 @@
 #' is only applicable when the quantile probability is outside of [0, 1],
 #' in which case an error is thrown (due to a check for valid function
 #' inputs)
-test_that("Built-in distributions evaluate edge cases properly", {
+test_that("`eval_()` functions handle edge cases properly", {
   for (item in test_distributions) {
     d <- rlang::exec(item$distribution, !!!item$valid[[1]])
     r <- range(d)
