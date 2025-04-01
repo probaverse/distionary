@@ -26,6 +26,7 @@ Roxygen: list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_
 RoxygenNote: 7.3.2
 Imports: 
     checkmate,
+    cubature,
     ellipsis,
     rlang,
     stats,

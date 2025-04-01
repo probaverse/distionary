@@ -9,7 +9,7 @@ eval_variance_from_network <- function(distribution, ...) {
 }
 
 #' @noRd
-algorithm_variance <- function(distribution, ...) {
+algorithm_variance <- function(distribution, tol = 1e-7, ...) {
   if (vtype(distribution) != "continuous") {
     stop(
       "Numerical computation for non-continuous distributions is ",
@@ -24,13 +24,12 @@ algorithm_variance <- function(distribution, ...) {
   integrand <- function(x) (x - mu)^2 * dens(x)
   r <- range(distribution)
   int <- try(
-    stats::integrate(
+    cubature::hcubature(
       integrand,
-      lower = r[1], upper = r[2],
-      rel.tol = 1e-09,
-      subdivisions = 200L,
+      lowerLimit = r[1], upperLimit = r[2],
+      tol = tol,
       ...
-    ),
+    )$integral,
     silent = TRUE
   )
   if (inherits(int, "try-error")) {
@@ -40,5 +39,5 @@ algorithm_variance <- function(distribution, ...) {
     )
     return(NaN)
   }
-  int$value
+  int
 }

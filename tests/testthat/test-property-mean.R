@@ -2,7 +2,7 @@ test_that("Mean calculated thru network matches known vals", {
   for (item in test_distributions) {
     for (paramset in item$valid) {
       d <- rlang::exec(item$distribution, !!!paramset)
-      # print(d)
+      print(d)
       supposed_mean <- mean(d)
       if (is.infinite(supposed_mean)) {
         supposed_mean <- NaN  # For direct comparison to integral output.

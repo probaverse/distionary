@@ -74,7 +74,7 @@ test_that("Kurtosis algorithm matches known vals", {
 
 test_that("Kurtosis algorithm takes longer for smaller tolerance.", {
   d <- dst_norm(0, 1)
-  t1 <- system.time(algorithm_kurtosis(d, tol = 1e-4))
-  t2 <- system.time(algorithm_kurtosis(d, tol = 1e-8))
+  t1 <- system.time(suppressMessages(algorithm_kurtosis(d, tol = 1e-4)))
+  t2 <- system.time(suppressMessages(algorithm_kurtosis(d, tol = 1e-8)))
   expect_lt(t1[["elapsed"]], t2[["elapsed"]])
 })

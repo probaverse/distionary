@@ -15,7 +15,7 @@ eval_kurtosis_from_network <- function(distribution, ...) {
 }
 
 #' @noRd
-algorithm_kurtosis <- function(distribution, ...) {
+algorithm_kurtosis <- function(distribution, tol = 1e-7, ...) {
   if (vtype(distribution) != "continuous") {
     stop(
       "Numerical computation for non-continuous distributions is ",
@@ -34,13 +34,12 @@ algorithm_kurtosis <- function(distribution, ...) {
   dens <- representation_as_function(distribution, representation = "density")
   integrand <- \(x) ((x - mu) / sigma)^4 * dens(x)
   int <- try(
-    stats::integrate(
+    cubature::hcubature(
       integrand,
-      lower = r[1], upper = r[2],
-      rel.tol = 1e-9,
-      subdivisions = 200L,
+      lowerLimit = r[1], upperLimit = r[2],
+      tol = tol,
       ...
-    ),
+    )$integral,
     silent = TRUE
   )
   if (inherits(int, "try-error")) {
@@ -50,5 +49,5 @@ algorithm_kurtosis <- function(distribution, ...) {
     )
     return(NaN)
   }
-  int$value
+  int
 }

@@ -1,5 +1,5 @@
 #' @noRd
-eval_mean_from_network <- function(distribution, ...) {
+eval_mean_from_network <- function(distribution, tol = 1e-7, ...) {
   checkmate::assert_class(distribution, "dst")
   if (vtype(distribution) != "continuous") {
     stop(
@@ -14,13 +14,12 @@ eval_mean_from_network <- function(distribution, ...) {
     # Cauchy distribution mistakenly comes back with finite mean; break
     # integral into two to solve this issue.
     int1 <- try(
-      stats::integrate(
+      cubature::hcubature(
         integrand,
-        lower = r[1], upper = 0,
-        rel.tol = 1e-09,
-        subdivisions = 200L,
+        lowerLimit = r[1], upperLimit = 0,
+        tol = tol,
         ...
-      )$value,
+      )$integral,
       silent = TRUE
     )
     r[1] <- 0
@@ -28,13 +27,12 @@ eval_mean_from_network <- function(distribution, ...) {
     int1 <- 0
   }
   int <- try(
-    int1 + stats::integrate(
+    int1 + cubature::hcubature(
       integrand,
-      lower = r[1], upper = r[2],
-      rel.tol = 1e-09,
-      subdivisions = 200L,
+      lowerLimit = r[1], upperLimit = r[2],
+      tol = tol,
       ...
-    )$value,
+    )$integral,
     silent = TRUE
   )
   if (inherits(int, "try-error")) {
