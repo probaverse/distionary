@@ -5,6 +5,12 @@
 #' seeds, applicable for testing the `realise()` function. --> Copied to
 #' `test-realise.R`.
 test_that("Random number generation works", {
+  # Strategy:
+  # Generate more and more data until the p-value is > 0.05.
+  # If the distribution is not the correct specification, the p-value
+  # will get closer and closer to 0. If the distribution is correct,
+  # then p ~ Unif(0,1), and if p < 0.05 (unlucky), extending the
+  # sample will eliminate the luck factor.
   for (item in test_distributions) {
     for (paramset in item$valid) {
       d <- rlang::exec(item$distribution, !!!paramset)
@@ -24,10 +30,14 @@ test_that("Random number generation works", {
           expect_gt(pval, 0.05)
         }
       } else if (pretty_name(d) != "Degenerate") {
-        # print(d)
         for (sd in 1:4) {
+          # For tapering distributions like the Poisson,
+          # generate data only within a finite range encompassing most of the
+          # possibilities, and compare to the distribution trimmed to those
+          # values. This is because generating more and more data will
+          # result in more and more new (large) values with low frequency,
+          # throwing off the chi-squared test.
           set.seed(sd)
-          # print(sd)
           x <- realise(d, n = 1000)
           bnds <- range(x)
           tbl <- table(x)

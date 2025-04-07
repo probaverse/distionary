@@ -10,14 +10,8 @@
 test_that("CHF algorithm validated by comparing to a different algorithm.", {
   # - `eval_chf()` goes through the survival function only.
   # - integrating the hazard goes through both the density and survival.
-  # i <- 0
   for (item in test_distributions) {
-    # i <- i + 1
-    # cat("\n---- ", i, "\n")
-    # j <- 0
     for (paramset in item$valid) {
-      # j <- j + 1
-      # cat(j, " ")
       d <- rlang::exec(item$distribution, !!!paramset)
       if (vtype(d) == "continuous") {
         p <- 1:9 / 10

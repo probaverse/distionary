@@ -1,4 +1,4 @@
-test_that("Parameters are specified and retrieved correctly w parameters()", {
+test_that("Parameters are specified and retrieved correctly w/ parameters()", {
   param_retrieved <- list()
   for (i in seq_along(test_distributions)) {
     item <- test_distributions[[i]]
