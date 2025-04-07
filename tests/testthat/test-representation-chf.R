@@ -1,3 +1,8 @@
+#' @srrstats {G5.5} Correctness tests are run with four fixed random seeds,
+#' applicable for testing the `realise()` function (same as G5.6b). --> Copied
+#' to `test-realise.R`. See, for example, `test-representation-chf.R` (copied
+#' there).
+
 #' CHF is never intrinsic, which means there are no known values to compare
 #' against. Compare built-in algorithm with another algorithm for deriving
 #' CHF: integrating the hazard.

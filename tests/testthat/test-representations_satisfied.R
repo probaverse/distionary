@@ -1,7 +1,13 @@
+#' @srrstats {G3.0} Appropriate tolerances for approximate equality is
+#' adopted in instances of `expect_equal()`. The default is used, except
+#' for instances where comparison can allow a larger tolerance. --> This
+#' srrstats statement is included in all test files that use a different
+#' tolerance in `expect_equal()` than the default.
+
 #' Check that each representation satisfies the properties of that
 #' representation. For example, a CDF should be non-decreasing and
 #' evaluate between 0 and 1, reaching 0 and 1 at the endpoints.
-test_that("Each representation satisfies its requirements.", {
+test_that("Each representation satisfies its definition.", {
   for (i in seq_along(test_distributions)) {
     item <- test_distributions[[i]]
     for (paramset in item$valid) {

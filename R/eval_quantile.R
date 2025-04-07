@@ -23,6 +23,16 @@
 #' cutting an initially wide range in half, moving into the left or right
 #' half depending on where the solution is. I found the idea on Stack
 #' Overflow somewhere, but unfortunately cannot find the location anymore.
+#' @srrstats {G1.1} The only relevant algorithm is the quantile algorithm.
+#' It's included in the documentation that this algorithm is not new, and
+#' was found on Stack Overflow somewhere, but unfortunately cannot find
+#' the location anymore. --> Copied to `eval_quantile()`.
+#' @srrstats {PD3.3} *Return objects which include values generated
+#' from optimisation algorithms should include information on
+#' optimisation algorithm and performance, minimally including the name
+#' of the algorithm used, the convergence tolerance, and the number of
+#' iterations.* This is specified for the only relevant algorithm, the
+#' quantile algorithm. --> Copied to `eval_from_network-quantile.R`.
 #' @rdname quantile
 #' @export
 eval_quantile <- function(distribution, at) {

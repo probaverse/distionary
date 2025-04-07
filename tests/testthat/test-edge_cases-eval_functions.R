@@ -1,3 +1,6 @@
+#' @srrstats {G5.8} Edge conditions are tested when evaluating
+#' representations. --> Copied to `test-edge_cases-*.R`.
+
 # Make sure that defined distributions evaluate NA inputs properly.
 # Make sure they evaluate edge cases properly.
 test_that("`eval_()` functions handle edge cases properly", {

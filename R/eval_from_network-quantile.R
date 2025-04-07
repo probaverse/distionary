@@ -11,6 +11,10 @@
 #' of iterations (at least 1); length 1 vectors.
 #' @returns The `at`-quantiles of the distribution. Numeric vector
 #' of values between 0 and 1.
+#' @srrstats {PD3.4} Noted that distribution integration is generally intended
+#' for continuous distributions in this version of distionary, and does not
+#' work so well with discrete components yet. --> Copied to
+#' `eval_from_network-quantile.R`.
 #' @noRd
 eval_quantile_from_network <- function(distribution,
                                        at,

@@ -9,7 +9,10 @@
 #' @returns The original list `l` with the specified attributes.
 #' @examples
 #' new_distribution(list(mean = 3))
-#'
+#' @srrstats {G5.3} Functions that are expected to return objects containing no
+#' missing (`NA`) or undefined (`NaN`, `Inf`) values are tested either
+#' implicitly (e.g., `is_distribution()` implicitly checks non-NA value) or
+#' explicitly (e.g., `pretty_name()` is never NA). --> Copied to both files.
 #' @export
 new_distribution <- function(l, ..., class = character()) {
   checkmate::assert_list(l)

@@ -41,7 +41,7 @@ distribution's definition, a numerical algorithm may be used.
 \details{
 If there is no method associated with a subclass of
 \code{x}, then moments are calculated using
-\code{stats::integrate()} from the quantile function.
+\code{stats::integrate()} from the density function.
 }
 \note{
 Beware that if a quantity is being calculated numerically

@@ -24,5 +24,4 @@ Print the name of a distribution, possibly with parameters.
 d <- dst_norm(0.3552, 1.1453)
 pretty_name(d)
 pretty_name(d, 2)
-
 }

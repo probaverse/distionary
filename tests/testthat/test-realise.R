@@ -1,3 +1,9 @@
+#' @srrstats {G5.5} Correctness tests are run with four fixed random seeds,
+#' applicable for testing the `realise()` function (same as G5.6b). --> Copied
+#' to `test-realise.R`.
+#' @srrstats {G5.6b} Parameter recovery tests are run with four fixed random
+#' seeds, applicable for testing the `realise()` function. --> Copied to
+#' `test-realise.R`.
 test_that("Random number generation works", {
   for (item in test_distributions) {
     for (paramset in item$valid) {

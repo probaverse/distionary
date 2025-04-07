@@ -1,11 +1,5 @@
 #' @srrstatsVerbose TRUE
 #'
-#' Here is a list of all complied standards. Where relevant, the standards
-#' are copied over to a relevant location in the code base, either in a
-#' test script or along with the function definitions.
-#'
-#' ## ---- G 1 ----
-#'
 #' @srrstats {G1.0} Distributions are generic enough to not need a specific
 #' reference (e.g., an intro probability book will cover most concepts in
 #' distionary), and it appears most other distribution packages on CRAN do
@@ -14,14 +8,15 @@
 #' @srrstats {G1.1} The only relevant algorithm is the quantile algorithm.
 #' It's included in the documentation that this algorithm is not new, and
 #' was found on Stack Overflow somewhere, but unfortunately cannot find
-#' the location anymore.
+#' the location anymore. --> Copied to `eval_quantile()`.
 #'
 #' @srrstats {G1.2} A Life Cycle Statement describing current and anticipated
 #' future states of development can be found in the CONTRIBUTING file.
 #'
 #' @srrstats {G1.3} Users are referred to general texts in probability to learn
-#' more about probability concepts and terminology. Terms specific to the
-#' package (like "distributional representation" are defined in vignettes).
+#' more about probability concepts and terminology (see README). Terms specific
+#' to the package (like "distributional representation" are defined in
+#' vignettes).
 #'
 #' @srrstats {G1.4} Software uses [`roxygen2`](https://roxygen2.r-lib.org/) to
 #' document all functions.
@@ -46,17 +41,19 @@
 #' example.
 #'
 #' @srrstats {G2.2} Prohibiting or restricting submission of multivariate
-#' input (i.e., distributions) to parameters expected to be univariate is
+#' input (i.e., distributions) to univariate parameters is
 #' done using the checkmate package for relevant functions (e.g., `dst_*()`
 #' specifications)
 #'
 #' @srrstats {G2.3} Univariate character input specifications are asserted
 #' using the checkmate package where relevant (e.g., `.vtype` and `.name`
 #' in `distribution()`; `arg_name` and `fn_prefix` in `enframe_*()`).
+#' --> Copied to those functions.
 #' @srrstats {G2.3a} `match.arg()` is used in the `plot()` method for
-#' distributions, when specifying the representation to plot.
+#' distributions, when specifying the representation to plot. --> Copied
+#' to `plot()` function.
 #' @srrstats {G2.3b} The use of `tolower()` is applicable for the `.name`
-#' argument in `distribution()` and is used.
+#' argument in `distribution()` and is used. --> Copied to `distribution()`.
 #'
 #' @srrstats {G2.4} Mechanisms to convert between different data types is
 #' bypassed by requiring strict type inputs (except integer, which is allowed
@@ -70,7 +67,7 @@
 #' @srrstats {G2.4c} Explicit conversion to character via `as.character()`
 #' (and not `paste` or `paste0`) is done where character input is required:
 #' `distribution()`'s `.vtype` and `.name` arguments, and the column naming
-#' specifications of `enframe_general()`.
+#' specifications of `enframe_general()`. --> Copied to both functions.
 #'
 #' @srrstats {G2.6} distionary asserts one-dimensional input where required
 #' (e.g., `dst_*()` specifications) using the checkmate package.
@@ -82,21 +79,19 @@
 #' distributions.
 #'
 #' @srrstats {G2.14} distionary is designed to propagate NA as if it's just
-#' another data type.
+#' another data type. See `eval_*()` functions by way of example.
 #' @srrstats {G2.14a} No option is given to error on missing data; if a user
 #' wants this behaviour, it should be explicitly specified in their code,
 #' because there is nothing fishy about NA inputs in the distionary context.
 #' @srrstats {G2.14b} NA inputs are "ignored" in the sense that they are not
 #' treated as special, but rather just another type of data, and therefore
 #' does not need to alert the user of their presence.
-#' @srrstats {G2.14c} Replacing data with imputed data does not make sense in
-#' the context of distionary, so is not done.
 #'
 #' @srrstats {G2.15} Functions never assume non-missingness, and never
-#' passes arguments to another function with `na.rm = FALSE`-type parameters.
+#' pass arguments to another function with `na.rm = FALSE`-type parameters.
 #' This is most relevant for functions like `dst_norm()`.
 #'
-#' @srrstats {G2.16} This version of distionary does forces the propagation of
+#' @srrstats {G2.16} This version of distionary does force the propagation of
 #' undefined values (e.g., `NaN`, `Inf` and `-Inf`) rather than allowing user
 #' specification for length-stability, also because `Inf` and `-Inf` are
 #' expected in some cases (e.g., the support of any Normal distribution).
@@ -104,54 +99,61 @@
 #' ## ---- G 3 ----
 #'
 #' @srrstats {G3.0} Appropriate tolerances for approximate equality is
-#' adopted (stricter tolerances planned for future based on discretes
-#' tracking design). See `test-distributions_valid.R`.
+#' adopted in instances of `expect_equal()`. The default is used, except
+#' for instances where comparison can allow a larger tolerance. --> This
+#' srrstats statement is included in all test files that use a different
+#' tolerance in `expect_equal()` than the default.
 #'
 #' ## ---- G 5 ----
 #'
 #' @srrstats {G5.2} Appropriate error behaviour is tested for all
 #' functions explicitly, but warnings are omitted and saved for a future
-#' version. See `test-distributions_valid.R`.
+#' version. --> Copied to test-edge_cases-builtin_dists.R
 #' @srrstats {G5.2a} While messages produced within R code by `stop()`,
 #' `warning()`, `message()`, or equivalent are not unique (e.g.,
 #' `dst_norm()`, `dst_pois()`, etc. all have the same `length != 1`
 #' error message), they are unique enough to allow the user to debug.
 #' @srrstats {G5.2b} Explicit tests trigger the `stop()` calls in this
-#' version of distionary. See `test-distributions_valid.R`.
+#' version of distionary. --> Copied to test-edge_cases-builtin_dists.R
 #'
 #' @srrstats {G5.3} Functions that are expected to return objects containing no
 #' missing (`NA`) or undefined (`NaN`, `Inf`) values are tested either
 #' implicitly (e.g., `is_distribution()` implicitly checks non-NA value) or
-#' explicitly (e.g., `pretty_name()` is never NA).
+#' explicitly (e.g., `pretty_name()` is never NA). --> Copied to both files.
 #'
 #' @srrstats {G5.4} Correctness tests are conducted to test that
 #' statistical algorithms (calculating properties from other distribution
 #' properties) produce expected results to test distributions with set
-#' parameters. See `test-distributions_valid.R`.
-#' @srrstats {G5.4b} New implementations of existing methods are compared
-#' against the stats package where possible. Implementations like the
-#' hazard function that are not found in the stats package are compared
-#' to known formulas rather than other implementations, to avoid unnecessary
-#' dependencies on other packages. See `test-distributions_valid.R`.
+#' parameters. See `test-property-*.R` and `test-evaluation-*.R`.
+#' @srrstats {G5.4b} Implementations of existing methods (cdf, density, ...)
+#' are compared against the stats package where possible. Implementations
+#' like the hazard function that are not found in the stats package are
+#' implemented formulaically and verified by comparing to algorithm based
+#' on the representation's definition.
 #'
 #' @srrstats {G5.5} Correctness tests are run with four fixed random seeds,
-#' applicable for testing the `realise()` function (same as G5.6b).
+#' applicable for testing the `realise()` function (same as G5.6b). --> Copied
+#' to `test-realise.R`. See, for example, `test-representation-chf.R` (copied
+#' there).
 #'
 #' @srrstats {G5.6} Parameter recovery is relevant when distributional
 #' properties (like quantiles) are computed from other properties (like the
-#' cdf); these are all tested in `test-distributions_valid.R` when the
-#' computational version is compared to the embedded property.
-#' @srrstats {G5.6a} Parameter recovery tests are conducted using a reasonable
-#' tolerance.
+#' cdf); these are possible to validate by comparing the intrinsic version
+#' of the property against the derived version as if it were absent. See,
+#' for example, `test-representation-density.R` (copied there).
+#' @srrstats {G5.6a} Parameter recovery tests are conducted using the default
+#' tolerance in the `testthat::expect_equal()` function whenever tests of
+#' user-facing outputs are evaluated.
 #' @srrstats {G5.6b} Parameter recovery tests are run with four fixed random
-#' seeds, applicable for testing the `realise()` function.
+#' seeds, applicable for testing the `realise()` function. --> Copied to
+#' `test-realise.R`.
 #'
-#' -@srrstats {G5.7} The only algorithm thus far is the quantile algorithm,
+#' @srrstats {G5.7} The only algorithm thus far is the quantile algorithm,
 #' and its performance has been tested to take longer with a smaller
-#' tolerance.
+#' tolerance. --> Copied to `test-representation-quantile.R`.
 #'
 #' @srrstats {G5.8} Edge conditions are tested when evaluating
-#' representations
+#' representations. --> Copied to `test-edge_cases-*.R`.
 #' @srrstats {G5.8a} Zero-length data input outputs 0-length vectors.
 #' An error is thrown if zero-length parameters are input into `dst_*()`
 #' functions.
@@ -164,10 +166,12 @@
 #' in which case an error is thrown (due to a check for valid function
 #' inputs)
 #'
-#' -@srrstats {G5.9} Noise susceptibility tests have been conducted on
-#' distribution parameters and evaluation inputs.
-#' -@srrstats {G5.9a} Machine tolerance has been added to distribution
-#' parameters and evaluation inputs and compared to originals.
+#' @srrstats {G5.9} Noise susceptibility tests have been conducted on
+#' distribution parameters and evaluation inputs. --> Copied to
+#' `test-machine_tolerance.R`.
+#' @srrstats {G5.9a} Machine tolerance has been added to distribution
+#' parameters and evaluation inputs and compared to originals. --> Copied to
+#' `test-machine_tolerance.R`.
 #'
 #' ## ---- PD 1 ----
 #'
@@ -184,8 +188,9 @@
 #' very generally be analytic, with numeric manipulations only
 #' implemented with clear justification (ideally including references).*
 #' This only applies to the Pearson Type III and Log Pearson Type III
-#' that manipulates the Gamma distribution from the stats package.
-#' Manipulations are analytic.
+#' that manipulates the Gamma distribution from the stats package analytically.
+#' User-facing manipulation is the job of the `distplyr` package in the
+#' probaverse family. --> Copied to `dst_lp3.R`.
 #' @srrstats {PD3.1} Operations on probability distributions are
 #' contained within separate functions which themselves accept the
 #' names of the distributions as one input parameter. Examples include
@@ -194,36 +199,33 @@
 #' from optimisation algorithms should include information on
 #' optimisation algorithm and performance, minimally including the name
 #' of the algorithm used, the convergence tolerance, and the number of
-#' iterations.*
-#' - This is specified.
-#' @srrstats {PD3.4} *Use of routines to integrate probability
-#' distributions should explicitly document conditions under which
-#' integrals are expected to remain stable, and ideally include
-#' pre-processing checks for potentially unstable behaviour.*
-#' - Noted that the integration is generally intended for continuous
-#'   distributions and does not work so well with discrete components yet.
+#' iterations.* This is specified for the only relevant algorithm, the
+#' quantile algorithm. --> Copied to `eval_quantile.R`.
+#' @srrstats {PD3.4} Noted that distribution integration is generally intended
+#' for continuous distributions in this version of distionary, and does not
+#' work so well with discrete components yet. --> Copied to
+#' `eval_from_network-quantile.R`.
 #'
 #' ## ---- PD 4 ----
 #'
 #' @srrstats {PD4.0} The numeric outputs of probability distribution
 #' functions are rigorously tested, not just output structures. These
-#' tests are for numeric equality. See `test-distributions_valid.R`.
+#' tests are for numeric equality.
 #'
 #' @srrstats {PD4.1} Tests for numeric equality compare the output of
 #' probability distribution functions with the output of code defined
-#' in the same location in test files. See `test-distributions_valid.R`.
+#' in the same location in test files.
 #'
 #' @srrstats {PD4.2} All distributions are tested using at least two
 #' valid parameter sets, and at least one invalid parameter set.
-#' See `test-distributions_valid.R`.
 #'
 #' @srrstats {PD4.3} Tests of optimisation or integration algorithms
 #' compare derived results from built-in results for permutations of
-#' every distribution parameter. See `test-distributions_valid.R`.
+#' every distribution parameter.
 #'
 #' @srrstats {PD4.4} Tests of optimisation or integration algorithms
-#' compare derived results with algorithms in the stats package.
-#' See `test-distributions_valid.R`.
+#' compare derived results with algorithms in the stats package (e.g.,
+#' quantile algorithm compared to `stats::q*()` functions).
 #' @noRd
 NULL
 
@@ -242,6 +244,8 @@ NULL
 #' @srrstatsNA {G2.10} This software does not accept tabular input.
 #' @srrstatsNA {G2.11} This software does not accept tabular input.
 #' @srrstatsNA {G2.12} This software does not accept tabular input.
+#' @srrstatsNA {G2.14c} Replacing data with imputed data does not make sense in
+#' the context of distionary, so is not done.
 #' @srrstatsNA {G3.1} This software does not rely on covariance calculations.
 #' @srrstatsNA {G3.1a} This software does not rely on covariance calculations.
 #' @srrstatsNA {G4.0} This software does not enable outputs to be written to

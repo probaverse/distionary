@@ -34,7 +34,7 @@ test_that("Quantile function calculated thru network matches known vals", {
 
 #' @srrstats {G5.7} The only algorithm thus far is the quantile algorithm,
 #' and its performance has been tested to take longer with a smaller
-#' tolerance.
+#' tolerance. --> Copied to `test-representation-quantile.R`.
 test_that("Quantile algorithm takes longer for smaller tolerance.", {
   d <- dst_norm(0, 1)
   p <- 1:99 / 100

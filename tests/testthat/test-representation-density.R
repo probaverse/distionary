@@ -1,3 +1,9 @@
+#' @srrstats {G5.6} Parameter recovery is relevant when distributional
+#' properties (like quantiles) are computed from other properties (like the
+#' cdf); these are possible to validate by comparing the intrinsic version
+#' of the property against the derived version as if it were absent. See,
+#' for example, `test-representation-density.R` (copied there).
+
 test_that("Built-in density functions match cdf", {
   for (item in test_distributions) {
     for (paramset in item$valid) {
