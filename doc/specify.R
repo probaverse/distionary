@@ -55,3 +55,6 @@ eval_property(linear, "mean")
 eval_property(linear, "another_representation", 1:4)
 eval_property(linear, "g")
 
+## ----echo=FALSE, out.width="100%", fig.align="center"-------------------------
+knitr::include_graphics("network_diagram.svg")
+

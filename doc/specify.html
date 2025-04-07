@@ -512,7 +512,7 @@ distribution to see that the representations wrap the
 <span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = &quot;Normal&quot;, </span></span>
 <span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;         .vtype = &quot;continuous&quot;)</span></span>
 <span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; }</span></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x13c516250&gt;</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x10a679608&gt;</span></span>
 <span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
 </div>
 <div id="user-defined-distributions" class="section level2">
@@ -589,6 +589,204 @@ example.</p>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; [1]  1  4  9 16</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">eval_property</span>(linear, <span class="st">&quot;g&quot;</span>)</span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; [1] 9.81</span></span></code></pre></div>
+<p><svg id="svg_8fc031e545ce196457ac" role="img" width="100%" style="display: block; margin: auto;" height="476pt" viewBox="0.00 0.00 481.04 476.00">
+<g id="svg_8fc031e545ce196457ac_graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 472)">
+<title>G</title>
+<polygon fill="#ffffff" stroke="transparent" points="-4,4 -4,-472 477.0408,-472 477.0408,4 -4,4"></polygon>
+<!-- quantile -->
+<g id="svg_8fc031e545ce196457ac_node1" class="node">
+<title>quantile</title>
+<ellipse fill="none" stroke="#000000" cx="270.9059" cy="-288" rx="42.2932" ry="18"></ellipse>
+<text text-anchor="middle" x="270.9059" y="-283.8" font-family="Times,serif" font-size="14.00" fill="#000000">quantile</text>
+</g>
+<!-- cdf -->
+<g id="svg_8fc031e545ce196457ac_node2" class="node">
+<title>cdf</title>
+<ellipse fill="none" stroke="#000000" cx="413.1952" cy="-234" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="413.1952" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#000000">cdf</text>
+</g>
+<!-- quantile&#45;&gt;cdf -->
+<g id="svg_8fc031e545ce196457ac_edge1" class="edge">
+<title>quantile-&gt;cdf</title>
+<path fill="none" stroke="#000000" d="M302.4845,-276.0156C325.5525,-267.2611 356.7579,-255.4184 380.1592,-246.5374" />
+<polygon fill="#000000" stroke="#000000" points="381.5566,-249.7508 389.6641,-242.9302 379.0728,-243.2062 381.5566,-249.7508"></polygon>
+</g>
+<!-- return -->
+<g id="svg_8fc031e545ce196457ac_node3" class="node">
+<title>return</title>
+<ellipse fill="none" stroke="#000000" cx="148.9995" cy="-396" rx="34.1871" ry="18"></ellipse>
+<text text-anchor="middle" x="148.9995" y="-391.8" font-family="Times,serif" font-size="14.00" fill="#000000">return</text>
+</g>
+<!-- return&#45;&gt;quantile -->
+<g id="svg_8fc031e545ce196457ac_edge2" class="edge">
+<title>return-&gt;quantile</title>
+<path fill="none" stroke="#000000" d="M170.7995,-382.0934C176.6858,-378.07 182.9485,-373.5349 188.4622,-369 209.9643,-351.3148 232.3768,-329.0059 248.3964,-312.2804" />
+<polygon fill="#000000" stroke="#000000" points="250.9363,-314.6885 255.2807,-305.0253 245.8585,-309.8702 250.9363,-314.6885"></polygon>
+</g>
+<!-- range -->
+<g id="svg_8fc031e545ce196457ac_node4" class="node">
+<title>range</title>
+<ellipse fill="none" stroke="#000000" cx="148.9995" cy="-342" rx="32.4634" ry="18"></ellipse>
+<text text-anchor="middle" x="148.9995" y="-337.8" font-family="Times,serif" font-size="14.00" fill="#000000">range</text>
+</g>
+<!-- range&#45;&gt;quantile -->
+<g id="svg_8fc031e545ce196457ac_edge3" class="edge">
+<title>range-&gt;quantile</title>
+<path fill="none" stroke="#000000" d="M174.5551,-330.6798C191.2787,-323.2719 213.4427,-313.454 232.2965,-305.1025" />
+<polygon fill="#000000" stroke="#000000" points="233.8013,-308.264 241.5269,-301.0138 230.9662,-301.8638 233.8013,-308.264"></polygon>
+</g>
+<!-- realise -->
+<g id="svg_8fc031e545ce196457ac_node5" class="node">
+<title>realise</title>
+<ellipse fill="none" stroke="#000000" cx="148.9995" cy="-288" rx="36.4703" ry="18"></ellipse>
+<text text-anchor="middle" x="148.9995" y="-283.8" font-family="Times,serif" font-size="14.00" fill="#000000">realise</text>
+</g>
+<!-- realise&#45;&gt;quantile -->
+<g id="svg_8fc031e545ce196457ac_edge4" class="edge">
+<title>realise-&gt;quantile</title>
+<path fill="none" stroke="#000000" d="M185.2454,-288C195.67,-288 207.2553,-288 218.4505,-288" />
+<polygon fill="#000000" stroke="#000000" points="218.5777,-291.5001 228.5777,-288 218.5776,-284.5001 218.5777,-291.5001"></polygon>
+</g>
+<!-- median -->
+<g id="svg_8fc031e545ce196457ac_node6" class="node">
+<title>median</title>
+<ellipse fill="none" stroke="#000000" cx="148.9995" cy="-234" rx="39.4254" ry="18"></ellipse>
+<text text-anchor="middle" x="148.9995" y="-229.8" font-family="Times,serif" font-size="14.00" fill="#000000">median</text>
+</g>
+<!-- median&#45;&gt;quantile -->
+<g id="svg_8fc031e545ce196457ac_edge5" class="edge">
+<title>median-&gt;quantile</title>
+<path fill="none" stroke="#000000" d="M177.5811,-246.6606C193.7321,-253.8149 214.1549,-262.8614 231.7748,-270.6664" />
+<polygon fill="#000000" stroke="#000000" points="230.6697,-274.0048 241.2304,-274.8549 233.5048,-267.6046 230.6697,-274.0048"></polygon>
+</g>
+<!-- survival -->
+<g id="svg_8fc031e545ce196457ac_node7" class="node">
+<title>survival</title>
+<ellipse fill="none" stroke="#000000" cx="270.9059" cy="-180" rx="42.2932" ry="18"></ellipse>
+<text text-anchor="middle" x="270.9059" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">survival</text>
+</g>
+<!-- survival&#45;&gt;cdf -->
+<g id="svg_8fc031e545ce196457ac_edge6" class="edge">
+<title>survival-&gt;cdf</title>
+<path fill="none" stroke="#000000" d="M302.4845,-191.9844C325.5525,-200.7389 356.7579,-212.5816 380.1592,-221.4626" />
+<polygon fill="#000000" stroke="#000000" points="379.0728,-224.7938 389.6641,-225.0698 381.5566,-218.2492 379.0728,-224.7938"></polygon>
+</g>
+<!-- chf -->
+<g id="svg_8fc031e545ce196457ac_node8" class="node">
+<title>chf</title>
+<ellipse fill="none" stroke="#000000" cx="148.9995" cy="-180" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="148.9995" y="-175.8" font-family="Times,serif" font-size="14.00" fill="#000000">chf</text>
+</g>
+<!-- chf&#45;&gt;survival -->
+<g id="svg_8fc031e545ce196457ac_edge7" class="edge">
+<title>chf-&gt;survival</title>
+<path fill="none" stroke="#000000" d="M176.0545,-180C188.4725,-180 203.6428,-180 218.1776,-180" />
+<polygon fill="#000000" stroke="#000000" points="218.6004,-183.5001 228.6004,-180 218.6004,-176.5001 218.6004,-183.5001"></polygon>
+</g>
+<!-- hazard -->
+<g id="svg_8fc031e545ce196457ac_node9" class="node">
+<title>hazard</title>
+<ellipse fill="none" stroke="#000000" cx="36.7684" cy="-126" rx="36.5383" ry="18"></ellipse>
+<text text-anchor="middle" x="36.7684" y="-121.8" font-family="Times,serif" font-size="14.00" fill="#000000">hazard</text>
+</g>
+<!-- empty -->
+<g id="svg_8fc031e545ce196457ac_node16" class="node">
+<title>empty</title>
+<ellipse fill="none" stroke="#000000" cx="148.9995" cy="-126" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="148.9995" y="-121.8" font-family="Times,serif" font-size="14.00" fill="#000000"> </text>
+</g>
+<!-- hazard&#45;&gt;empty -->
+<g id="svg_8fc031e545ce196457ac_edge10" class="edge">
+<title>hazard-&gt;empty</title>
+<path fill="none" stroke="#000000" d="M73.8281,-126C85.9763,-126 99.4765,-126 111.6462,-126" />
+<polygon fill="#000000" stroke="#000000" points="111.931,-129.5001 121.931,-126 111.9309,-122.5001 111.931,-129.5001"></polygon>
+</g>
+<!-- density -->
+<g id="svg_8fc031e545ce196457ac_node10" class="node">
+<title>density</title>
+<ellipse fill="none" stroke="#000000" cx="413.1952" cy="-126" rx="38.8632" ry="18"></ellipse>
+<text text-anchor="middle" x="413.1952" y="-121.8" font-family="Times,serif" font-size="14.00" fill="#000000">density</text>
+</g>
+<!-- moments -->
+<g id="svg_8fc031e545ce196457ac_node11" class="node">
+<title>moments</title>
+<ellipse fill="none" stroke="#000000" cx="270.9059" cy="-72" rx="46.3875" ry="18"></ellipse>
+<text text-anchor="middle" x="270.9059" y="-67.8" font-family="Times,serif" font-size="14.00" fill="#000000">moments</text>
+</g>
+<!-- moments&#45;&gt;density -->
+<g id="svg_8fc031e545ce196457ac_edge11" class="edge">
+<title>moments-&gt;density</title>
+<path fill="none" stroke="#000000" d="M304.2664,-84.6606C324.9237,-92.5002 351.568,-102.612 373.3342,-110.8724" />
+<polygon fill="#000000" stroke="#000000" points="372.3614,-114.2467 382.9526,-114.5227 374.8451,-107.7022 372.3614,-114.2467"></polygon>
+</g>
+<!-- stdev -->
+<g id="svg_8fc031e545ce196457ac_node12" class="node">
+<title>stdev</title>
+<ellipse fill="none" stroke="#000000" cx="413.1952" cy="-72" rx="31.339" ry="18"></ellipse>
+<text text-anchor="middle" x="413.1952" y="-67.8" font-family="Times,serif" font-size="14.00" fill="#000000">stdev</text>
+</g>
+<!-- moments&#45;&gt;stdev -->
+<g id="svg_8fc031e545ce196457ac_edge13" class="edge">
+<title>moments-&gt;stdev</title>
+<path fill="none" stroke="#000000" d="M314.7584,-65.7124C333.4117,-65.0494 355.0154,-65.0994 373.2235,-65.8624" />
+<polygon fill="#000000" stroke="#000000" points="373.0591,-69.3585 383.2257,-66.3768 373.4187,-62.3678 373.0591,-69.3585"></polygon>
+</g>
+<!-- kurtosis_exc -->
+<g id="svg_8fc031e545ce196457ac_node13" class="node">
+<title>kurtosis_exc</title>
+<ellipse fill="none" stroke="#000000" cx="413.1952" cy="-18" rx="59.6916" ry="18"></ellipse>
+<text text-anchor="middle" x="413.1952" y="-13.8" font-family="Times,serif" font-size="14.00" fill="#000000">kurtosis_exc</text>
+</g>
+<!-- moments&#45;&gt;kurtosis_exc -->
+<g id="svg_8fc031e545ce196457ac_edge15" class="edge">
+<title>moments-&gt;kurtosis_exc</title>
+<path fill="none" stroke="#000000" d="M296.6734,-56.8809C313.4044,-49.3087 335.8818,-40.3509 356.6305,-32.8444" />
+<polygon fill="#000000" stroke="#000000" points="358.0777,-36.0446 366.3287,-29.3984 355.734,-29.4486 358.0777,-36.0446"></polygon>
+</g>
+<!-- stdev&#45;&gt;moments -->
+<g id="svg_8fc031e545ce196457ac_edge12" class="edge">
+<title>stdev-&gt;moments</title>
+<path fill="none" stroke="#000000" d="M383.2257,-77.6232C366.3107,-78.6727 344.6605,-78.989 324.8905,-78.5724" />
+<polygon fill="#000000" stroke="#000000" points="324.8528,-75.07 314.7584,-78.2876 324.6561,-82.0673 324.8528,-75.07"></polygon>
+</g>
+<!-- kurtosis_exc&#45;&gt;moments -->
+<g id="svg_8fc031e545ce196457ac_edge14" class="edge">
+<title>kurtosis_exc-&gt;moments</title>
+<path fill="none" stroke="#000000" d="M385.3379,-34.0588C367.0463,-42.2321 342.5961,-51.8423 320.9928,-59.4716" />
+<polygon fill="#000000" stroke="#000000" points="319.6056,-56.2479 311.2997,-62.8253 321.8944,-62.8632 319.6056,-56.2479"></polygon>
+</g>
+<!-- odds -->
+<g id="svg_8fc031e545ce196457ac_node14" class="node">
+<title>odds</title>
+<ellipse fill="none" stroke="#000000" cx="36.7684" cy="-450" rx="29.0567" ry="18"></ellipse>
+<text text-anchor="middle" x="36.7684" y="-445.8" font-family="Times,serif" font-size="14.00" fill="#000000">odds</text>
+</g>
+<!-- pmf -->
+<g id="svg_8fc031e545ce196457ac_node15" class="node">
+<title>pmf</title>
+<ellipse fill="none" stroke="#000000" cx="148.9995" cy="-450" rx="27" ry="18"></ellipse>
+<text text-anchor="middle" x="148.9995" y="-445.8" font-family="Times,serif" font-size="14.00" fill="#000000">pmf</text>
+</g>
+<!-- odds&#45;&gt;pmf -->
+<g id="svg_8fc031e545ce196457ac_edge16" class="edge">
+<title>odds-&gt;pmf</title>
+<path fill="none" stroke="#000000" d="M66.2558,-450C80.0527,-450 96.6453,-450 111.3384,-450" />
+<polygon fill="#000000" stroke="#000000" points="111.6344,-453.5001 121.6344,-450 111.6344,-446.5001 111.6344,-453.5001"></polygon>
+</g>
+<!-- empty&#45;&gt;survival -->
+<g id="svg_8fc031e545ce196457ac_edge8" class="edge">
+<title>empty-&gt;survival</title>
+<path fill="none" stroke="#000000" d="M171.6435,-136.0304C188.644,-143.561 212.3308,-154.0534 232.3021,-162.9" />
+<polygon fill="#000000" stroke="#000000" points="230.9091,-166.1109 241.4698,-166.9609 233.7442,-159.7107 230.9091,-166.1109"></polygon>
+</g>
+<!-- empty&#45;&gt;density -->
+<g id="svg_8fc031e545ce196457ac_edge9" class="edge">
+<title>empty-&gt;density</title>
+<path fill="none" stroke="#000000" d="M176.278,-126C220.4948,-126 308.4417,-126 363.8551,-126" />
+<polygon fill="#000000" stroke="#000000" points="364.1434,-129.5001 374.1434,-126 364.1433,-122.5001 364.1434,-129.5001"></polygon>
+</g>
+</g>
+</svg></p>
 </div>
 
 

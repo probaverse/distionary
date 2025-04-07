@@ -131,3 +131,11 @@ eval_property(linear, "mean")
 eval_property(linear, "another_representation", 1:4)
 eval_property(linear, "g")
 ```
+
+## Network of Properties
+
+The current version of `distionary` derives distribution properties from other properties according to the following network. An arrow from one property to another indicates that the first property can be calculated from the second. For example, `quantile` can be calculated from `cdf`, and `mean` can be calculated from `density`.
+
+```{r, echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("network_diagram.svg")
+```
