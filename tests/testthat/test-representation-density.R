@@ -9,7 +9,7 @@ test_that("Built-in density functions match cdf", {
     for (paramset in item$valid) {
       d <- rlang::exec(item$distribution, !!!paramset)
       if (is_intrinsic(d, "density")) {
-        expect_false(is_intrinsic("pmf"))
+        expect_false(is_intrinsic(d, "pmf"))
         rng <- range(d)
         p <- 1:99 / 100
         x <- eval_quantile(d, at = p)
