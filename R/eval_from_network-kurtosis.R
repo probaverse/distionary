@@ -34,12 +34,12 @@ algorithm_kurtosis <- function(distribution, tol = 1e-7, ...) {
   dens <- representation_as_function(distribution, representation = "density")
   integrand <- \(x) ((x - mu) / sigma)^4 * dens(x)
   int <- try(
-    cubature::hcubature(
+    distionary_integrate(
       integrand,
-      lowerLimit = r[1], upperLimit = r[2],
+      lower = r[1], upper = r[2],
       tol = tol,
       ...
-    )$integral,
+    ),
     silent = TRUE
   )
   if (inherits(int, "try-error")) {

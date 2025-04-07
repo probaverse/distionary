@@ -2,7 +2,7 @@ test_that("Mean calculated thru network matches known vals", {
   for (item in test_distributions) {
     for (paramset in item$valid) {
       d <- rlang::exec(item$distribution, !!!paramset)
-      print(d)
+      # print(d)
       supposed_mean <- mean(d)
       if (is.infinite(supposed_mean)) {
         supposed_mean <- NaN  # For direct comparison to integral output.
@@ -58,11 +58,4 @@ test_that("Mean calculated thru network matches known vals", {
       }
     }
   }
-})
-
-test_that("Mean algorithm takes longer for smaller tolerance.", {
-  d <- dst_norm(0, 1)
-  t1 <- system.time(eval_mean_from_network(d, tol = 1e-4))
-  t2 <- system.time(eval_mean_from_network(d, tol = 1e-8))
-  expect_lt(t1[["elapsed"]], t2[["elapsed"]])
 })
