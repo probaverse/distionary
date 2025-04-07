@@ -73,7 +73,16 @@
 #'
 #' # Plot
 #' plot(linear)
-#' @srrstats {G2.3b} The use of `tolower()` is applicable for the `.name` argument in `distribution()` and is used.
+#' @srrstats {G2.3} Univariate character input specifications are asserted
+#' using the checkmate package where relevant (e.g., `.vtype` and `.name`
+#' in `distribution()`; `arg_name` and `fn_prefix` in `enframe_*()`).
+#' --> Copied to those functions.
+#' @srrstats {G2.3b} The use of `tolower()` is applicable for the `.name`
+#' argument in `distribution()` and is used. --> Copied to `distribution()`.
+#' @srrstats {G2.4c} Explicit conversion to character via `as.character()`
+#' (and not `paste` or `paste0`) is done where character input is required:
+#' `distribution()`'s `.vtype` and `.name` arguments, and the column naming
+#' specifications of `enframe_general()`. --> Copied to both functions.
 #' @family Distribution Construction
 #' @export
 distribution <- function(...,
@@ -82,18 +91,19 @@ distribution <- function(...,
                          .parameters = list()) {
   if (!is.null(.vtype)) {
     .vtype <- as.character(.vtype)
+  } else {
+    .vtype <- "unknown"
   }
   if (!is.null(.name)) {
     .name <- as.character(.name)
+  } else {
+    .name <- "Unnamed"
   }
   checkmate::assert_character(.vtype, len = 1, null.ok = TRUE)
   checkmate::assert_character(.name, len = 1, null.ok = TRUE)
   checkmate::assert_list(.parameters, names = "named", null.ok = TRUE)
   .vtype <- tolower(.vtype)
   dots <- rlang::enquos(...)
-  if (is.null(.name)) {
-    .name <- "Unnamed"
-  }
   representations <- lapply(dots, rlang::eval_tidy)
   new_distribution(
     representations,

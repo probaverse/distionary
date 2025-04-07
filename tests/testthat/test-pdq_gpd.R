@@ -1,3 +1,9 @@
+#' @srrstats {G3.0} Appropriate tolerances for approximate equality is
+#' adopted in instances of `expect_equal()`. The default is used, except
+#' for instances where comparison can allow a larger tolerance. --> This
+#' srrstats statement is included in all test files that use a different
+#' tolerance in `expect_equal()` than the default.
+
 test_that("GPD quantities match known cases, shape > 0", {
   scale <- 1
   shape <- 1
@@ -12,7 +18,7 @@ test_that("GPD quantities match known cases, shape > 0", {
   expect_equal(dgpd(c(-1, Inf), scale = scale, shape = shape), c(0, 0))
   expect_true(all(diff(dgpd(1:10, scale = scale, shape = shape)) < 0))
   pdf <- \(x) dgpd(x, scale = scale, shape = shape)
-  expect_equal(integrate(pdf, 0, Inf)$value, 1, tolerance = 0.0001)
+  expect_equal(stats::integrate(pdf, 0, Inf)$value, 1, tolerance = 0.0001)
 })
 
 
@@ -30,7 +36,7 @@ test_that("GPD quantities match known cases, shape = 0", {
   expect_equal(dgpd(c(-1, Inf), scale = scale, shape = shape), c(0, 0))
   pdf <- \(x) dgpd(x, scale = scale, shape = shape)
   expect_true(all(diff(pdf(1:10)) < 0))
-  expect_equal(integrate(pdf, 0, Inf)$value, 1, tolerance = 0.0001)
+  expect_equal(stats::integrate(pdf, 0, Inf)$value, 1, tolerance = 0.0001)
 })
 
 test_that("GPD quantities match known cases, shape < 0", {
@@ -54,7 +60,7 @@ test_that("GPD quantities match known cases, shape < 0", {
     c(0, 0, 0)
   )
   pdf <- \(x) dgpd(x, scale = scale, shape = shape)
-  expect_equal(integrate(pdf, 0, rightend)$value, 1, tolerance = 0.0001)
+  expect_equal(stats::integrate(pdf, 0, rightend)$value, 1, tolerance = 0.0001)
 })
 
 test_that("GPD negative scale not allowed.", {

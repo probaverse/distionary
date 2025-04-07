@@ -51,6 +51,12 @@ The algorithm is not currently fast and is subject to improvement,
 and is a simple idea that has been passed around on the internet
 here and there. Tolerance is less than 1e-9, unless the maximum
 number of iterations (200) is reached.
+
+The algorithm is not new, and is rather simple.
+The algorithm works by progressively
+cutting an initially wide range in half, moving into the left or right
+half depending on where the solution is. I found the idea on Stack
+Overflow somewhere, but unfortunately cannot find the location anymore.
 }
 \examples{
 d <- dst_unif(0, 4)

@@ -27,6 +27,14 @@
 #' because names are anticipated to be syntactic with the `eval_fn` prefix;
 #' "minimal" is not sufficient because it may result in columns having the
 #' same names.
+#' @srrstats {G2.3} Univariate character input specifications are asserted
+#' using the checkmate package where relevant (e.g., `.vtype` and `.name`
+#' in `distribution()`; `arg_name` and `fn_prefix` in `enframe_*()`).
+#' --> Copied to those functions.
+#' @srrstats {G2.4c} Explicit conversion to character via `as.character()`
+#' (and not `paste` or `paste0`) is done where character input is required:
+#' `distribution()`'s `.vtype` and `.name` arguments, and the column naming
+#' specifications of `enframe_general()`. --> Copied to both functions.
 #' @noRd
 enframe_general <- function(...,
                             at,

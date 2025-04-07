@@ -10,12 +10,6 @@
 #' @param shape Shape parameter of the Gamma distribution;
 #' single positive numeric.
 #' @returns A Pearson Type III distribution.
-#' @srrstats {PD3.0} *Manipulation of probability distributions should
-#' very generally be analytic, with numeric manipulations only
-#' implemented with clear justification (ideally including references).*
-#' This only applies to the Pearson Type III and Log Pearson Type III
-#' that manipulates the Gamma distribution from the stats package.
-#' Manipulations are analytic.
 #' @examples
 #' dst_pearson3(1, 1, 1)
 #' @export

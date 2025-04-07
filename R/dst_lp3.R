@@ -12,6 +12,13 @@
 #' @returns A Log Pearson Type III distribution.
 #' @examples
 #' dst_lp3(0, 1, 1)
+#' @srrstats {PD3.0} *Manipulation of probability distributions should
+#' very generally be analytic, with numeric manipulations only
+#' implemented with clear justification (ideally including references).*
+#' This only applies to the Pearson Type III and Log Pearson Type III
+#' that manipulates the Gamma distribution from the stats package analytically.
+#' User-facing manipulation is the job of the `distplyr` package in the
+#' probaverse family. --> Copied to `dst_lp3.R`.
 #' @export
 dst_lp3 <- function(meanlog, sdlog, skew) {
   checkmate::assert_numeric(meanlog, len = 1)

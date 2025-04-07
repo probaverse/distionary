@@ -1,52 +1,47 @@
 #' @noRd
-eval_mean_from_network <- function(distribution, ...) {
+eval_mean_from_network <- function(distribution, tol = 1e-9, ...) {
   checkmate::assert_class(distribution, "dst")
-
-  if (
-    attr(distribution, "name") %in%
-    c("Hypergeometric", "Bernoulli", "Binomial")
-  ) {
-    # This case is for double-checking the moments supplied for these
-    # distributions, and will be included until discretes handling is
-    # implemented.
-    r <- range(distribution)
-    x <- seq(r[1], r[2], by = 1L)
-    p <- eval_pmf(distribution, at = x)
-    return(sum(p * x))
-  } else if (
-    attr(distribution, "name") %in%
-      c("Negative Binomial", "Poisson", "Geometric")
-  ) {
-    to_add <- Inf
-    i <- 0
-    mean <- 0
-    while (to_add > 1e-9) { # Tolerance built-in because only used in tests.
-      x <- 1:100 + 100 * i
-      to_add <- sum(eval_pmf(distribution, x) * x)
-      mean <- mean + to_add
-      i <- i + 1
-    }
-    return(mean)
-  } else if (vtype(distribution) != "continuous") {
+  if (vtype(distribution) != "continuous") {
     stop(
-      "Numerical computation for most non-continuous distributions is ",
-      "not supported in this version of distionary."
+      "Numerical computation for non-continuous distributions is ",
+      "not yet supported in this version of distionary."
     )
   }
-  qf <- distribution[["quantile"]]
-  if (is.null(qf)) {
-    qf <- \(x) eval_quantile_from_network(distribution, x)
-  }
-  int <- try(
-    stats::integrate(
-      qf,
-      lower = 0, upper = 1, rel.tol = 1e-09, subdivisions = 200L, ...
-    ),
-    silent = TRUE
-  )
+  dens <- representation_as_function(distribution, representation = "density")
+  integrand <- function(x) x * dens(x)
+  r <- range(distribution)
+  # if (r[1] == -Inf && r[2] == Inf) {
+  #   # Cauchy distribution mistakenly comes back with finite mean; break
+  #   # integral into two to solve this issue.
+  #   int1 <- try(
+  #     cubature::hcubature(
+  #       integrand,
+  #       lower = r[1], upper = 0,
+  #       tol = tol,
+  #       ...
+  #     ),
+  #     silent = TRUE
+  #   )
+  #   r[1] <- 0
+  # } else {
+  #   int1 <- 0
+  # }
+  # int <- try(
+  #   int1 + cubature::hcubature(
+  #     integrand,
+  #     lowerLimit = r[1], upperLimit = r[2],
+  #     tol = tol,
+  #     ...
+  #   )$integral,
+  #   silent = TRUE
+  # )
+  int <- try(distionary_integrate(integrand, r[1], r[2], tol = tol, ...), silent = TRUE)
   if (inherits(int, "try-error")) {
-    message("Integration routine for numerical computation of mean failed; returning NaN.")
+    message(
+      "Integration routine for numerical computation of mean failed. ",
+      "This could be because the mean does not exist. Returning NaN."
+    )
     return(NaN)
   }
-  int$value
+  int
 }

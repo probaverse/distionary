@@ -1,7 +1,9 @@
 #' @srrstats {G5.9} Noise susceptibility tests have been conducted on
-#' distribution parameters and evaluation inputs.
+#' distribution parameters and evaluation inputs. --> Copied to
+#' `test-machine_tolerance.R`.
 #' @srrstats {G5.9a} Machine tolerance has been added to distribution
-#' parameters and evaluation inputs and compared to originals.
+#' parameters and evaluation inputs and compared to originals. --> Copied to
+#' `test-machine_tolerance.R`.
 test_that("Distributions are not sensitive to machine tolerance.", {
   for (item in test_distributions) {
     paramset_orig <- item$valid[[1]]
@@ -55,19 +57,40 @@ test_that("Distributions are not sensitive to machine tolerance.", {
       stdev(d_eps)
     )
     ## Skewness
-    expect_equal(
-      skewness(d_orig),
-      skewness(d_eps)
-    )
+    if (pretty_name(d_orig) == "Log Pearson Type III") {
+      expect_equal(
+        suppressMessages(skewness(d_orig)),
+        suppressMessages(skewness(d_eps))
+      )
+    } else {
+      expect_equal(
+        skewness(d_orig),
+        skewness(d_eps)
+      )
+    }
     ## Kurtosis
-    expect_equal(
-      kurtosis(d_orig),
-      kurtosis(d_eps)
-    )
+    if (pretty_name(d_orig) == "Log Pearson Type III") {
+      expect_equal(
+        suppressMessages(kurtosis(d_orig)),
+        suppressMessages(kurtosis(d_eps))
+      )
+    } else {
+      expect_equal(
+        kurtosis(d_orig),
+        kurtosis(d_eps)
+      )
+    }
     ## Excess Kurtosis
-    expect_equal(
-      kurtosis_exc(d_orig),
-      kurtosis_exc(d_eps)
-    )
+    if (pretty_name(d_orig) == "Log Pearson Type III") {
+      expect_equal(
+        suppressMessages(kurtosis_exc(d_orig)),
+        suppressMessages(kurtosis_exc(d_eps))
+      )
+    } else {
+      expect_equal(
+        kurtosis_exc(d_orig),
+        kurtosis_exc(d_eps)
+      )
+    }
   }
 })

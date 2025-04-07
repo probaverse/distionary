@@ -11,6 +11,10 @@
 #' of iterations (at least 1); length 1 vectors.
 #' @returns The `at`-quantiles of the distribution. Numeric vector
 #' of values between 0 and 1.
+#' @srrstats {PD3.4} Noted that distribution integration is generally intended
+#' for continuous distributions in this version of distionary, and does not
+#' work so well with discrete components yet. --> Copied to
+#' `eval_from_network-quantile.R`.
 #' @noRd
 eval_quantile_from_network <- function(distribution,
                                        at,
@@ -23,6 +27,13 @@ eval_quantile_from_network <- function(distribution,
   n <- length(at)
   if (n == 0) {
     return(numeric(0L))
+  }
+  if (vtype(distribution) != "continuous") {
+    stop(
+      "The current quantile algorithm can suffer from low precision with ",
+      "non-continuous distributions, so this functionality is disabled ",
+      "for now."
+    )
   }
   ord <- order(at)
   at <- at[ord]
@@ -138,7 +149,6 @@ encapsulate_p <- function(distribution, p, direction) {
 #' Calculates the smallest value for which a function `f`
 #' evaluates to be greater than or equal to `y` -- that is,
 #' the left inverse of `f` at `y`.
-
 #' @param p Single value for which to calculate the left inverse.
 #' @param low,high Single numeric values forming a range
 #' within which to search for the solution.

@@ -12,7 +12,10 @@
 #' d <- dst_norm(0.3552, 1.1453)
 #' pretty_name(d)
 #' pretty_name(d, 2)
-#'
+#' @srrstats {G5.3} Functions that are expected to return objects containing no
+#' missing (`NA`) or undefined (`NaN`, `Inf`) values are tested either
+#' implicitly (e.g., `is_distribution()` implicitly checks non-NA value) or
+#' explicitly (e.g., `pretty_name()` is never NA). --> Copied to both files.
 #' @export
 pretty_name <- function(distribution, param_digits = 0) {
   checkmate::check_class(distribution, "dst")

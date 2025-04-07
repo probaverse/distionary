@@ -14,7 +14,11 @@
 #' @returns The distribution's property, evaluated. If cannot be
 #' evaluated, returns `NULL`.
 #' @examples
-#' d <- distribution(cdf = \(x) (x > 0) * pmin(x^2, 1), g = 9.81)
+#' d <- distribution(
+#'   cdf = \(x) (x > 0) * pmin(x^2, 1),
+#'   g = 9.81,
+#'   .vtype = "continuous"
+#' )
 #' eval_property(d, "g")
 #' eval_property(d, "quantile", 1:9 / 10)
 #' eval_property(d, "mean")

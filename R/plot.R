@@ -19,6 +19,9 @@
 #'
 #' p <- dst_pois(4)
 #' plot(p)
+#' @srrstats {G2.3a} `match.arg()` is used in the `plot()` method for
+#' distributions, when specifying the representation to plot. --> Copied
+#' to `plot()` function.
 #' @export
 plot.dst <- function(
   x,
