@@ -16,7 +16,8 @@ test_that("Mean calculated thru network matches known vals", {
             # The density becomes NaN if x is too small. Manually check.
             integrand <- \(x) x * eval_density(d, at = x)
             expect_equal(
-              cubature::hcubature(integrand, -1000, Inf)$integral,
+              stats::integrate(integrand, -1000, 0)$value +
+                stats::integrate(integrand, 0, Inf)$value,
               supposed_mean
             )
           } else {

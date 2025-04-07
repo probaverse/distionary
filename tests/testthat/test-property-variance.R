@@ -31,7 +31,8 @@ test_that("Variance algorithm matches known vals", {
             mu <- mean(d)
             integrand <- \(x) (x - mu)^2 * eval_density(d, at = x)
             expect_equal(
-              cubature::hcubature(integrand, -1000, Inf)$integral,
+              stats::integrate(integrand, -1000, 0)$value +
+                stats::integrate(integrand, 0, Inf)$value,
               supposed_var
             )
           } else {

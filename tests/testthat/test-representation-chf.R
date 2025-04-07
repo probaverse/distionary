@@ -21,7 +21,7 @@ test_that("CHF algorithm validated by comparing to a different algorithm.", {
         increments <- vapply(
           seq_along(x[-1L]),
           function(t) {
-            cubature::hcubature(haz_fun, x[1], x[t + 1])$integral
+            stats::integrate(haz_fun, x[1], x[t + 1])$value
           },
           FUN.VALUE = numeric(1L)
         )

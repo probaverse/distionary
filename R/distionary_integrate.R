@@ -15,16 +15,21 @@
 #'   should not exist. This happens because the function is symmetric and
 #'   the negative part cancels out the positive part numerically, but
 #'   both sides of the integral are not well-defined.
-#' - Functions that go to infinity as x -> constant sometimes come back as
-#'   infinite, when that's not true (e.g., some Beta distributions).
 #'
-#' The solution involves `if` statements evaluating:
+#' The solution involves a simple `if` statement to break the integral in two.
 #'
-#' - If both ends are infinite, cut the integral in half.
-#' - Then, if either end is finite but does not have a finite evaluation,
-#'   change the variable to evaluate to an infinite endpoint.
+#' NOTE: if `cubature::hcubature()` is used, there have been other challenges,
+#' and so it's best to use `stats::integrate()`.
 #'
-#' **Change of variables math**
+#' - Sometimes, if either end of the integral is finite but evaluates to
+#'   infinity (like the integrand for calculating the mean of the
+#'   Beta(0.5, 0.5) distribution through its density), the integral evaluates
+#'   to infinity.
+#' - The integrand for the Cauchy(0, 1) mean via the density function should
+#'   be infinite on either side of x=0, but comes back as finite.
+#'
+#' **Change of variables math if having trouble integrating to a finite
+#'   endpoint that evaluates to infinity**
 #' Integral is I = int f(x) dx, x = x0..x1
 #'
 #' _Upper Integral_
@@ -55,16 +60,16 @@
 #' plot(integrand)
 #' distionary_integrate(integrand, 0, 1)
 #' stats::integrate(integrand, 0, 1)  # Good
-#' cubature::hcubature(integrand, 0, 1, tol = 1e-7)
+#' cubature::hcubature(integrand, 0, 1, tol = 1e-7) # Bad
 #' cubature::hcubature(integrand, 0, 1)  # Works but not as accurate
 #'
 #' # Cauchy(0, 1)
 #' integrand <- \(x) x * stats::dcauchy(x)
 #' plot(integrand, -10, 10)
-#' distionary_integrate(integrand, 0, Inf)
-#' stats::integrate(integrand, -Inf, Inf)  # 0
-#' cubature::hcubature(integrand, -Inf, Inf) # Correctly NaN
-#' cubature::hcubature(integrand, -Inf, Inf, tol = 1e-9)
+#' distionary_integrate(integrand, 0, Inf) # NaN. Ideally would be Inf.
+#' distionary_integrate(integrand, -Inf, Inf) # NaN, good.
+#' stats::integrate(integrand, -Inf, Inf)  # 0, bad.
+#' cubature::hcubature(integrand, -Inf, Inf) # Sometimes hangs, or NaN.
 #' @noRd
 distionary_integrate <- function(fun, lower, upper, tol = 1e-9, ...) {
   checkmate::assert_function(fun)
@@ -89,52 +94,13 @@ distionary_integrate <- function(fun, lower, upper, tol = 1e-9, ...) {
     )
     return(i_lower + i_upper)
   }
-  # f_lower <- fun(lower)
-  # f_upper <- fun(upper)
-  # chng_variable_upper <- !is.infinite(upper) && is.infinite(f_upper)
-  # chng_variable_lower <- !is.infinite(lower) && is.infinite(f_lower)
-  # if (chng_variable_upper && chng_variable_lower) {
-  #   mid <- (lower + upper) / 2
-  #   integrand_upper <- \(t) fun(mid + 1 / t) / t^2
-  #   integrand_lower <- \(t) fun(mid - 1 / t) / t^2
-  #   i_lower <- distionary_integrate(
-  #     integrand_lower,
-  #     lower = 1 / (mid - lower), upper = Inf,
-  #     tol = tol / 2,
-  #     ...
-  #   )
-  #   i_upper <- distionary_integrate(
-  #     integrand_upper,
-  #     lower = 1 / (upper - mid), upper = Inf,
-  #     tol = tol / 2,
-  #     ...
-  #   )
-  #   return(i_lower + i_upper)
-  # }
-  # if (chng_variable_lower) {
-  #   integrand_lower <- \(t) fun(lower + 1 / t) / t^2
-  #   return(distionary_integrate(
-  #     integrand_lower,
-  #     lower = 1 / (upper - lower), upper = Inf,
-  #     tol = tol,
-  #     ...
-  #   ))
-  # }
-  # if (chng_variable_upper) {
-  #   integrand_upper <- \(t) fun(upper - 1 / t) / t^2
-  #   return(distionary_integrate(
-  #     integrand_upper,
-  #     lower = 1 / (upper - lower), upper = Inf,
-  #     tol = tol,
-  #     ...
-  #   ))
-  # }
-  # cubature::hcubature(
-  #   fun,
-  #   lowerLimit = lower, upperLimit = upper,
-  #   tol = tol,
-  #   ...
-  # )$integral
-  stats::integrate(fun, lower, upper, rel.tol = tol, ...)$value
+  int <- try(
+    stats::integrate(fun, lower, upper, rel.tol = tol, ...)$value,
+    silent = TRUE
+  )
+  if (inherits(int, "try-error")) {
+    return(NaN)
+  }
+  int
 }
 
