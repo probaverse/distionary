@@ -73,7 +73,6 @@
 #'
 #' # Plot
 #' plot(linear)
-#' @srrstats {G2.3b} The use of `tolower()` is applicable for the `.name` argument in `distribution()` and is used.
 #' @family Distribution Construction
 #' @export
 distribution <- function(...,

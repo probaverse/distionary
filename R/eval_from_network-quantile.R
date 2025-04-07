@@ -145,7 +145,6 @@ encapsulate_p <- function(distribution, p, direction) {
 #' Calculates the smallest value for which a function `f`
 #' evaluates to be greater than or equal to `y` -- that is,
 #' the left inverse of `f` at `y`.
-
 #' @param p Single value for which to calculate the left inverse.
 #' @param low,high Single numeric values forming a range
 #' within which to search for the solution.
