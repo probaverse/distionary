@@ -17,5 +17,4 @@ Makes a Chi-Squared distribution.
 }
 \examples{
 dst_chisq(3)
-
 }

@@ -1,3 +1,5 @@
+#' @srrstats {G5.3} Functions that are expected to return objects containing no
+#' missing (`NA`) or undefined (`NaN`, `Inf`) values are tested.
 test_that("Pretty name is pretty.", {
   for (item in test_distributions) {
     d <- rlang::exec(item$distribution, !!!item$valid[[1]])

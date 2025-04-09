@@ -1,3 +1,9 @@
+#' @srrstats {PD4.0} The numeric outputs of probability distribution
+#' functions are rigorously tested, not just output structures. These
+#' tests are for numeric equality.
+#' @srrstats {PD4.1} Tests for numeric equality compare the output of
+#' probability distribution functions with the output of code defined
+#' in the same location in test files.
 #' @srrstats {G3.0} Appropriate tolerances for approximate equality is
 #' adopted in instances of `expect_equal()`. The default is used, except
 #' for instances where comparison can allow a larger tolerance. --> This

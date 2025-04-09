@@ -24,5 +24,4 @@ using a scoop that holds a fixed number of balls.
 }
 \examples{
 dst_hyper(15, 50, 10)
-
 }

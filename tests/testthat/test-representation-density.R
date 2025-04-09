@@ -1,8 +1,17 @@
+#' @srrstats {G3.0} Appropriate tolerances for approximate equality is
+#' adopted in instances of `expect_equal()`. The default is used, except
+#' for instances where comparison can allow a larger tolerance. --> This
+#' srrstats statement is included in all test files that use a different
+#' tolerance in `expect_equal()` than the default.
 #' @srrstats {G5.6} Parameter recovery is relevant when distributional
 #' properties (like quantiles) are computed from other properties (like the
 #' cdf); these are possible to validate by comparing the intrinsic version
 #' of the property against the derived version as if it were absent. See,
 #' for example, `test-representation-density.R` (copied there).
+#' @srrstats {G5.6a} Parameter recovery tests are conducted using the default
+#' tolerance in the `testthat::expect_equal()` function whenever tests of
+#' user-facing outputs are evaluated.
+
 
 test_that("Built-in density functions match cdf", {
   for (item in test_distributions) {

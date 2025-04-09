@@ -19,5 +19,4 @@ Makes a Weibull distribution.
 }
 \examples{
 dst_weibull(1, 1)
-
 }

@@ -1,3 +1,8 @@
+#' @srrstats {G5.4} Correctness tests are conducted to test that statistical 
+#' algorithms produce expected results.
+#' @srrstats {G5.4b} Implementations of existing methods are compared against 
+#' the stats package where possible.
+
 test_that("Network is invoked in priority: stdev", {
   # First look for `variance`, then invoke algorithm if not found.
   d <- distribution(

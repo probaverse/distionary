@@ -1,3 +1,8 @@
+#' @srrstats {G5.3} Functions that are expected to return objects containing no
+#' missing (`NA`) or undefined (`NaN`, `Inf`) values are tested either
+#' implicitly (e.g., `is_distribution()` implicitly checks non-NA value) or
+#' explicitly (e.g., `pretty_name()` is never NA).
+
 test_that("Checking for intrinsically defined properties works", {
   d <- dst_norm(0, 1)
   int <- intrinsics(d)

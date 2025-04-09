@@ -13,6 +13,13 @@
 #' dgpd(1:10, 2, 0)
 #' qgpd(1:9 / 10, 10, -2)
 #' @rdname gpd_raw
+#' @srrstats {G2.1} Assertions on types of inputs is conducted using the
+#' checkmate package for most functions.
+#' @srrstats {G2.14} distionary is designed to propagate NA as if it's just
+#' another data type. See `eval_*()` functions by way of example.
+#' @srrstats {G2.14b} NA inputs are "ignored" in the sense that they are not
+#' treated as special, but rather just another type of data, and therefore
+#' does not need to alert the user of their presence.
 #' @export
 pgpd <- function(q, scale, shape, lower.tail = TRUE) {
   checkmate::assert_numeric(q)

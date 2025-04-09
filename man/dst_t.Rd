@@ -17,5 +17,4 @@ Makes a Student t distribution.
 }
 \examples{
 dst_t(3)
-
 }

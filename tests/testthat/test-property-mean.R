@@ -1,3 +1,7 @@
+#' @srrstats {G5.4} Correctness tests are conducted to test that statistical 
+#' algorithms produce expected results.
+#' @srrstats {G5.4b} Implementations of existing methods are compared against 
+#' the stats package where possible.
 test_that("Mean calculated thru network matches known vals", {
   for (item in test_distributions) {
     for (paramset in item$valid) {

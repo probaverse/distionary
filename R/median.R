@@ -14,6 +14,8 @@
 #' @examples
 #' d <- dst_gamma(3, 3)
 #' median(d)
+#' @srrstats {G2.1} Assertions on types of inputs is conducted using the
+#' checkmate package for most functions.
 #' @export
 median.dst <- function(x, ...) {
   ellipsis::check_dots_empty()

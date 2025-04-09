@@ -1,7 +1,20 @@
-#' @srrstats {G5.5} Correctness tests are run with four fixed random seeds,
-#' applicable for testing the `realise()` function (same as G5.6b). --> Copied
-#' to `test-realise.R`. See, for example, `test-representation-chf.R` (copied
-#' there).
+#' @srrstats {G5.4} Correctness tests are conducted to test that
+#' statistical algorithms (calculating properties from other distribution
+#' properties) produce expected results to test distributions with set
+#' parameters.
+#' @srrstats {G5.4b} Implementations of existing methods (cdf, density, ...)
+#' are compared against the stats package where possible. Implementations
+#' like the hazard function that are not found in the stats package are
+#' implemented formulaically and verified by comparing to algorithm based
+#' on the representation's definition.
+#' @srrstats {G5.6} Parameter recovery is relevant when distributional
+#' properties (like quantiles) are computed from other properties (like the
+#' cdf); these are possible to validate by comparing the intrinsic version
+#' of the property against the derived version as if it were absent. See,
+#' for example, `test-representation-density.R` (copied there).
+#' @srrstats {G5.6a} Parameter recovery tests are conducted using the default
+#' tolerance in the `testthat::expect_equal()` function whenever tests of
+#' user-facing outputs are evaluated.
 
 #' CHF is never intrinsic, which means there are no known values to compare
 #' against. Compare built-in algorithm with another algorithm for deriving

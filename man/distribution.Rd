@@ -4,7 +4,7 @@
 \alias{distribution}
 \alias{is_distribution}
 \alias{is.distribution}
-\title{Build a Distribution Object}
+\title{Distribution Objects}
 \usage{
 distribution(..., .vtype = NULL, .name = NULL, .parameters = list())
 
@@ -35,12 +35,7 @@ a future version of distionary.}
 A distribution object.
 }
 \description{
-Make a distribution object by specifying properties
-(e.g., cdf, density, mean, etc.).
-Some properties, if not included, will be calculated based
-on other properties that are included (e.g., quantile from cdf;
-variance from standard deviation).
-A list of these representations can be found in the details.
+Distribution Objects
 }
 \details{
 Currently, the CDF (\code{cdf}) is required to be specified, along with the PMF

@@ -12,6 +12,10 @@
 #' of `property` indicating whether each property in `property`
 #' is intrinsically defined in the distribution
 #' (`TRUE`) or not (`FALSE`). If `property` is NA, the output is `NA`.
+#' @srrstats {G2.3} Univariate character input specifications are asserted
+#' using the checkmate package where relevant (e.g., `.vtype` and `.name`
+#' in `distribution()`; `arg_name` and `fn_prefix` in `enframe_*()`).
+#' --> Copied to those functions.
 #' @noRd
 intrinsics <- function(distribution) {
   checkmate::assert_class(distribution, "dst")

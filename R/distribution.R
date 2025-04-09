@@ -1,3 +1,16 @@
+#' @srrstats {G1.0} Distributions are generic enough to not need a specific
+#' reference (e.g., an intro probability book will cover most concepts in
+#' distionary), and it appears most other distribution packages on CRAN do
+#' not include references.
+#' @srrstats {G1.4} Software uses [`roxygen2`](https://roxygen2.r-lib.org/) to
+#' document all functions.
+#' @srrstats {G1.4a} All internal (non-exported) functions are documented in
+#' standard [`roxygen2`](https://roxygen2.r-lib.org/) format, along with a
+#' final `@noRd` tag to suppress automatic generation of `.Rd` files.
+#' @srrstats {PD1.0} Distributions are treated generally in distionary.
+#' @srrstats {PD2.0} Representing probability distributions using a package
+#' for general representation is the main purpose of distionary.
+
 #' Build a Distribution Object
 #'
 #' Make a distribution object by specifying properties
@@ -104,6 +117,7 @@ distribution <- function(...,
   checkmate::assert_list(.parameters, names = "named", null.ok = TRUE)
   .vtype <- tolower(.vtype)
   dots <- rlang::enquos(...)
+  checkmate::assert_list(dots, names = "named", null.ok = TRUE)
   representations <- lapply(dots, rlang::eval_tidy)
   new_distribution(
     representations,

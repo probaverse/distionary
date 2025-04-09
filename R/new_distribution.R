@@ -9,6 +9,8 @@
 #' @returns The original list `l` with the specified attributes.
 #' @examples
 #' new_distribution(list(mean = 3))
+#' @srrstats {G2.1} Assertions on types of inputs is conducted using the
+#' checkmate package for most functions.
 #' @srrstats {G5.3} Functions that are expected to return objects containing no
 #' missing (`NA`) or undefined (`NaN`, `Inf`) values are tested either
 #' implicitly (e.g., `is_distribution()` implicitly checks non-NA value) or

@@ -1,3 +1,5 @@
+#' @srrstats {PD4.2} All distributions are tested using at least two
+#' valid parameter sets, and at least one invalid parameter set.
 test_that("Parameters are specified and retrieved correctly w/ parameters()", {
   param_retrieved <- list()
   for (i in seq_along(test_distributions)) {

@@ -1,9 +1,8 @@
 #' @srrstats {G5.9} Noise susceptibility tests have been conducted on
-#' distribution parameters and evaluation inputs. --> Copied to
-#' `test-machine_tolerance.R`.
+#' distribution parameters and evaluation inputs.
 #' @srrstats {G5.9a} Machine tolerance has been added to distribution
-#' parameters and evaluation inputs and compared to originals. --> Copied to
-#' `test-machine_tolerance.R`.
+#' parameters and evaluation inputs and compared to originals.
+
 test_that("Distributions are not sensitive to machine tolerance.", {
   for (item in test_distributions) {
     paramset_orig <- item$valid[[1]]

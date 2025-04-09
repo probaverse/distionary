@@ -1,10 +1,14 @@
 #' @srrstats {G5.2} Appropriate error behaviour is tested for all
 #' functions explicitly, but warnings are omitted and saved for a future
-#' version. --> Copied to test-edge_cases-builtin_dists.R
+#' version.
+#' @srrstats {G5.2a} While messages produced within R code by `stop()`,
+#' `warning()`, `message()`, or equivalent are not unique (e.g.,
+#' `dst_norm()`, `dst_pois()`, etc. all have the same `length != 1`
+#' error message), they are unique enough to allow the user to debug.
 #' @srrstats {G5.2b} Explicit tests trigger the `stop()` calls in this
-#' version of distionary. --> Copied to test-edge_cases-builtin_dists.R
+#' version of distionary.
 #' @srrstats {G5.8} Edge conditions are tested when evaluating
-#' representations. --> Copied to `test-edge_cases-*.R`.
+#' representations.
 
 test_that("Built-in distributions resolve to Null dist with NA param.", {
   for (item in test_distributions) {

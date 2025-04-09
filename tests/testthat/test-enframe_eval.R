@@ -1,3 +1,17 @@
+#' @srrstats {G5.4} Correctness tests are conducted to test that
+#' statistical algorithms (calculating properties from other distribution
+#' properties) produce expected results to test distributions with set
+#' parameters.
+#' @srrstats {G5.8} Edge conditions are tested when evaluating
+#' representations.
+#' @srrstats {G5.8a} Zero-length data input outputs 0-length vectors.
+#' An error is thrown if zero-length parameters are input into `dst_*()`
+#' functions.
+#' @srrstats {G5.8b} Data of unsupported types does not pass the checkmate
+#' checks on function inputs.
+#' @srrstats {G5.8c} Data with all-`NA` fields or columns or all identical
+#' fields or columns is no different from having some `NA` fields.
+
 test_that("enframe matches eval", {
   d <- dst_norm(0, 1)
   p <- 1:9 / 10
