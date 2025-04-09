@@ -4,6 +4,9 @@
 #' @srrstats {G5.6b} Parameter recovery tests are run with four fixed random
 #' seeds, applicable for testing the `realise()` function. --> Copied to
 #' `test-realise.R`.
+#' @srrstats {G5.9b} Four different seeds are chosen, and the results do
+#' not differ: the data still come from the specified distribution.
+
 test_that("Random number generation works", {
   # Strategy:
   # Generate more and more data until the p-value is > 0.05.
