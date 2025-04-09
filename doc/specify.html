@@ -512,7 +512,7 @@ distribution to see that the representations wrap the
 <span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = &quot;Normal&quot;, </span></span>
 <span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt;         .vtype = &quot;continuous&quot;)</span></span>
 <span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; }</span></span>
-<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x10a679608&gt;</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; &lt;bytecode: 0x1187abf00&gt;</span></span>
 <span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
 </div>
 <div id="user-defined-distributions" class="section level2">
@@ -589,6 +589,15 @@ example.</p>
 <span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#&gt; [1]  1  4  9 16</span></span>
 <span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="fu">eval_property</span>(linear, <span class="st">&quot;g&quot;</span>)</span>
 <span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#&gt; [1] 9.81</span></span></code></pre></div>
+</div>
+<div id="network-of-properties" class="section level2">
+<h2>Network of Properties</h2>
+<p>The current version of <code>distionary</code> derives distribution
+properties from other properties according to the following network. An
+arrow from one property to another indicates that the first property can
+be calculated from the second. For example, <code>quantile</code> can be
+calculated from <code>cdf</code>, and <code>mean</code> can be
+calculated from <code>density</code>.</p>
 <p><svg id="svg_8fc031e545ce196457ac" role="img" width="100%" style="display: block; margin: auto;" height="476pt" viewBox="0.00 0.00 481.04 476.00">
 <g id="svg_8fc031e545ce196457ac_graph0" class="graph" transform="scale(1 1) rotate(0) translate(4 472)">
 <title>G</title>
