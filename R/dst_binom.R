@@ -46,7 +46,7 @@
 #' This is most relevant for functions like `dst_norm()`.
 #' @export
 dst_binom <- function(size, prob) {
-  checkmate::assert_integerish(size, 0, len = 1)
+  checkmate::assert_integerish(size, lower = 0, len = 1)
   checkmate::assert_numeric(prob, 0, 1, len = 1)
   if (is.na(size) || is.na(prob)) {
     return(dst_null())

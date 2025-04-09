@@ -19,7 +19,7 @@
 #' @export
 realise <- function(distribution, n = 1) {
   checkmate::assert_class(distribution, "dst")
-  checkmate::assert_integerish(n, 0, len = 1)
+  checkmate::assert_integerish(n, lower = 0, len = 1)
   eval_property(distribution, "realise", n)
 }
 
@@ -27,6 +27,6 @@ realise <- function(distribution, n = 1) {
 #' @export
 realize <- function(distribution, n = 1) {
   checkmate::assert_class(distribution, "dst")
-  checkmate::assert_integerish(n, 0, len = 1)
+  checkmate::assert_integerish(n, lower = 0, len = 1)
   eval_property(distribution, "realize", n)
 }

@@ -23,7 +23,7 @@ eval_quantile_from_network <- function(distribution,
   checkmate::assert_class(distribution, "dst")
   checkmate::assert_numeric(at, 0, 1)
   checkmate::assert_numeric(tol, 0, len = 1)
-  checkmate::assert_integerish(maxiter, 1, len = 1)
+  checkmate::assert_integerish(maxiter, lower = 1, len = 1)
   n <- length(at)
   if (n == 0) {
     return(numeric(0L))
