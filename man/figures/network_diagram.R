@@ -51,3 +51,6 @@ digraph G {
 
 svg <- export_svg(graph)
 writeLines(svg, here::here("vignettes/network_diagram.svg"))
+
+# Export `graph` to png
+rsvg::rsvg_png(charToRaw(svg), file = here::here("vignettes/network_diagram.png"), width = 1600)

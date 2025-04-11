@@ -56,5 +56,5 @@ eval_property(linear, "another_representation", 1:4)
 eval_property(linear, "g")
 
 ## ----echo=FALSE, out.width="100%", fig.align="center"-------------------------
-knitr::include_graphics("./images/network_diagram.svg")
+knitr::include_graphics("network_diagram.png")
 

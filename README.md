@@ -21,10 +21,8 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 
 With `distionary`, you can:
 
-1.  [Specify](https://distionary.probaverse.com/articles/specify) a
-    probability distribution, and
-2.  [Evaluate](https://distionary.probaverse.com/articles/evaluate) the
-    probability distribution.
+1.  [Specify](./articles/specify.html) a probability distribution, and
+2.  [Evaluate](./articles/evaluate.html) the probability distribution.
 
 The main purpose of `distionary` is to implement a distribution object,
 and to make distribution calculations available even if they are not
@@ -42,8 +40,8 @@ it’s more self-contained.
 The name “distionary” is a portmanteau of “distribution” and
 “dictionary”. While a dictionary lists and defines words, `distionary`
 defines distributions and makes a list of common distribution families
-available. These distributions act as building blocks for the wider
-probaverse.
+available. The built-in distributions act as building blocks for the
+wider probaverse.
 
 ## Installation
 
@@ -208,6 +206,5 @@ Distributions*. R package version 0.1.0,
 ## Code of Conduct
 
 Please note that the distionary project is released with a [Contributor
-Code of
-Conduct](https://distionary.probaverse.com/CODE_OF_CONDUCT.html). By
-contributing to this project, you agree to abide by its terms.
+Code of Conduct](./CODE_OF_CONDUCT.html). By contributing to this
+project, you agree to abide by its terms.
