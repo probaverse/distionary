@@ -256,7 +256,7 @@ distribution to see that the representations wrap the
 <span><span class="co">#&gt;         kurtosis_exc = 0, range = c(-Inf, Inf), .name = "Normal", </span></span>
 <span><span class="co">#&gt;         .vtype = "continuous")</span></span>
 <span><span class="co">#&gt; }</span></span>
-<span><span class="co">#&gt; &lt;bytecode: 0x55ab498b6830&gt;</span></span>
+<span><span class="co">#&gt; &lt;bytecode: 0x55bb3ef38e98&gt;</span></span>
 <span><span class="co">#&gt; &lt;environment: namespace:distionary&gt;</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -274,8 +274,8 @@ to compute other properties that aren’t specified in
 <code><a href="../reference/quantile.html">eval_quantile()</a></code>).</li>
 <li>Any property (e.g., <code>mean</code> for <code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code>)</li>
 </ul>
-<p>See the [Evaluate a Distribution] vignette for more details on these
-evaluation functions.</p>
+<p>See the <a href="./evaluate.html">Evaluate a Distribution</a>
+vignette for more details on these evaluation functions.</p>
 <p>For this version of <code>distionary</code>, it is mandatory to
 specify at least <code>cdf</code> in order for non-specified properties
 to be evaluated. For continuous or discrete distributions,
@@ -348,7 +348,7 @@ arrow from one property to another indicates that the first property can
 be calculated from the second. For example, <code>quantile</code> can be
 calculated from <code>cdf</code>, and <code>mean</code> can be
 calculated from <code>density</code>.</p>
-<p><img src="images%2Fnetwork_diagram.svg" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="network_diagram.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
