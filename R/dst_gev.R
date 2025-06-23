@@ -82,7 +82,7 @@ dst_gev <- function(location, scale, shape) {
       }
     },
     variance = {
-      if (shape > 0.5) {
+      if (shape >= 0.5) {
         Inf
       } else if (shape == 0) {
         scale^2 * pi^2 / 6
