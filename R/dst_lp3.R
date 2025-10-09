@@ -68,15 +68,15 @@ dst_lp3 <- function(meanlog, sdlog, skew) {
   cdf_gamma <-
     distribution(
       .parameters = list(meanlog = meanlog, sdlog = sdlog, skew = skew),
-      cdf = function(x) stats::pgamma(
+      cdf = \(x) stats::pgamma(
         log(pmax(0, x)) - shift,
         shape = shape, scale = scale
       ),
-      survival = function(x) stats::pgamma(
+      survival = \(x) stats::pgamma(
         log(pmax(0, x)) - shift,
         shape = shape, scale = scale, lower.tail = FALSE
       ),
-      density = function(x) {
+      density = \(x) {
         res <- stats::dgamma(
           log(pmax(0, x)) - shift,
           shape = shape, scale = scale
@@ -84,12 +84,10 @@ dst_lp3 <- function(meanlog, sdlog, skew) {
         res[x == 0] <- 0
         res
       },
-      quantile = function(p) exp(
+      quantile = \(p) exp(
         stats::qgamma(p, shape = shape, scale = scale) + shift
       ),
-      realise = function(n) exp(
-        stats::rgamma(n, shape = shape, scale = scale) + shift
-      ),
+      realise = \(n) exp(stats::rgamma(n, shape = shape, scale = scale) + shift),
       .name = "Log Pearson Type III",
       .vtype = "continuous"
     )
