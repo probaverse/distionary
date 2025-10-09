@@ -4,29 +4,31 @@
 #' estimate a distribution using data. By default,
 #' it assigns equal probability to all observations
 #' (this can be overridden with the `weights` argument).
-#' Identical to [dst_finite()] with weights as probabilities,
-#' except weights need not add to 1.
+#' Identical to [dst_finite()] with NA handling and with weights not needing
+#' to add to 1.
 #'
 #' @param y <`data-masking`> Numeric vector representing the potential
 #' outcomes of the distribution.
 #' @param weights <`data-masking`> Numeric vector of weights corresponding to
 #' to the outcomes `y`. These will be scaled so that they add up to 1.
 #' @param data Optionally, a data frame to compute `y` and `weights` from.
-#' `NULL` if not present (the default).
+#' `NULL` if data are not coming from a data frame (the default).
 #' @param na_action_y,na_action_w What should be done with `NA` entries in
-#' `y` and `w`eights? See details.
+#' `y` and `w`eights? Character vector of length 1: one of `"fail"`,
+#' `"null"` (default), or `"drop"`. See details.
 #' @returns A finite distribution. If only one outcome, returns a degenerate
 #' distribution. Returns a Null distribution if `NA` values are present
 #' and `"null"` is specified as an NA action.
 #' @details
 #' `y` and `weights` are recycled to have the same length, but only
-#' if one of them has length 1.
+#' if one of them has length 1 (via `vctrs::vec_recycle_common()`).
 #'
 #' `na_action_y` and `na_action_w` specify the NA action for `y` and `weights`.
 #' Options are, in order of precedence:
 #'
 #' - `"fail"`: Throw an error in the presence of `NA`.
-#' - `"null"`: Return a Null distribution in the presence of `NA`.
+#' - `"null"`: Return a Null distribution (`dst_null()`) in the presence
+#'   of `NA`.
 #' - `"drop"` (the default for `na_action_w`): Remove outcome-weight pairs
 #'   having an `NA` value in the specified vector.
 #'
@@ -48,8 +50,11 @@
 #'
 #' # "Null" takes precedence over "drop".
 #' df$w <- c(NA, NA, 0:9)
+#' df$time[1] <- -3
+#' df$time[12] <- NA
 #' dst_empirical(time, w, data = df, na_action_w = "null", na_action_y = "drop")
 #' dst_empirical(time, w, data = df, na_action_w = "drop", na_action_y = "null")
+#' dst_empirical(time, w, data = df, na_action_w = "drop", na_action_y = "drop")
 #' @export
 dst_empirical <- function(y,
                           weights = 1,
@@ -72,13 +77,13 @@ dst_empirical <- function(y,
   # Fail first
   if (has_na_w && na_action_w == "fail") {
     stop(
-      "Weights have NA values. You can either fix the problem, or choose ",
+      "Weights have NA values. You can either deal with these, or choose ",
       "an alternate option for `na_action_w`."
     )
   }
   if (has_na_y && na_action_y == "fail") {
     stop(
-      "Outcomes have NA values. You can either fix the problem, or choose ",
+      "Outcomes have NA values. You can either deal with these, or choose ",
       "an alternate option for `na_action_y`."
     )
   }
@@ -95,6 +100,7 @@ dst_empirical <- function(y,
     w <- w[!na_w]
   }
   if (na_action_y == "drop") {
+    na_y <- is.na(y) # Because y has a new length.
     y <- y[!na_y]
     w <- w[!na_y]
   }

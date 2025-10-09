@@ -20,10 +20,11 @@ outcomes of the distribution.}
 to the outcomes \code{y}. These will be scaled so that they add up to 1.}
 
 \item{data}{Optionally, a data frame to compute \code{y} and \code{weights} from.
-\code{NULL} if not present (the default).}
+\code{NULL} if data are not coming from a data frame (the default).}
 
 \item{na_action_y, na_action_w}{What should be done with \code{NA} entries in
-\code{y} and \code{w}eights? See details.}
+\code{y} and \code{w}eights? Character vector of length 1: one of \code{"fail"},
+\code{"null"} (default), or \code{"drop"}. See details.}
 }
 \value{
 A finite distribution. If only one outcome, returns a degenerate
@@ -35,18 +36,19 @@ An empirical distribution is a non-parametric way to
 estimate a distribution using data. By default,
 it assigns equal probability to all observations
 (this can be overridden with the \code{weights} argument).
-Identical to \code{\link[=dst_finite]{dst_finite()}} with weights as probabilities,
-except weights need not add to 1.
+Identical to \code{\link[=dst_finite]{dst_finite()}} with NA handling and with weights not needing
+to add to 1.
 }
 \details{
 \code{y} and \code{weights} are recycled to have the same length, but only
-if one of them has length 1.
+if one of them has length 1 (via \code{vctrs::vec_recycle_common()}).
 
 \code{na_action_y} and \code{na_action_w} specify the NA action for \code{y} and \code{weights}.
 Options are, in order of precedence:
 \itemize{
 \item \code{"fail"}: Throw an error in the presence of \code{NA}.
-\item \code{"null"}: Return a Null distribution in the presence of \code{NA}.
+\item \code{"null"}: Return a Null distribution (\code{dst_null()}) in the presence
+of \code{NA}.
 \item \code{"drop"} (the default for \code{na_action_w}): Remove outcome-weight pairs
 having an \code{NA} value in the specified vector.
 }
@@ -68,8 +70,11 @@ dst_empirical(time * 60, w, data = df, na_action_y = "drop")
 
 # "Null" takes precedence over "drop".
 df$w <- c(NA, NA, 0:9)
+df$time[1] <- -3
+df$time[12] <- NA
 dst_empirical(time, w, data = df, na_action_w = "null", na_action_y = "drop")
 dst_empirical(time, w, data = df, na_action_w = "drop", na_action_y = "null")
+dst_empirical(time, w, data = df, na_action_w = "drop", na_action_y = "drop")
 }
 \seealso{
 \code{\link[=dst_finite]{dst_finite()}}
