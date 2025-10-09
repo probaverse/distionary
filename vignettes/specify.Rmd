@@ -136,6 +136,12 @@ eval_property(linear, "g")
 
 The current version of `distionary` derives distribution properties from other properties according to the following network. An arrow from one property to another indicates that the first property can be calculated from the second. For example, `quantile` can be calculated from `cdf`, and `mean` can be calculated from `density`.
 
+<!-- 
+Network diagram generated using man/figures/network_diagram.R script.
+The script uses DiagrammeR and Graphviz DOT language to create the diagram.
+To regenerate: Rscript man/figures/network_diagram.R
+-->
+
 ```{r, echo=FALSE, out.width="100%", fig.align="center"}
 knitr::include_graphics("network_diagram.png")
 ```

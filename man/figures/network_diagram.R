@@ -24,25 +24,25 @@ digraph G {
   kurtosis_exc [label = 'kurtosis_exc']
   odds [label = 'odds']
   pmf [label = 'pmf']
-  empty [label = ' ']
+  junction [label = '', shape = point, width = 0, height = 0, style = invis]
 
   # Define edges
-  quantile -> cdf
-  return -> quantile
-  range -> quantile
-  realise -> quantile
-  median -> quantile
-  survival -> cdf
-  chf -> survival
-  empty -> survival
-  empty -> density
-  hazard -> empty
-  moments -> density
-  stdev -> moments
+  cdf -> quantile
+  quantile -> return
+  quantile -> range
+  quantile -> realise
+  quantile -> median
+  cdf -> survival
+  survival -> chf
+  survival -> junction [arrowhead = none]
+  density -> junction [arrowhead = none]
+  junction -> hazard
+  density -> moments
   moments -> stdev
-  kurtosis_exc -> moments
+  stdev -> moments
   moments -> kurtosis_exc
-  odds -> pmf
+  kurtosis_exc -> moments
+  pmf -> odds
 
   # Arrange nodes
   {rank = same; cdf; density}
