@@ -18,16 +18,5 @@ eval_skewness_from_network <- function(distribution, tol = 1e-9, ...) {
   dens <- representation_as_function(distribution, representation = "density")
   integrand <- function(x) ((x - mu) / sigma)^3 * dens(x)
   r <- range(distribution)
-  int <- try(
-    distionary_integrate(integrand, r[1], r[2], tol = tol, ...),
-    silent = TRUE
-  )
-  if (inherits(int, "try-error")) {
-    message(
-      "Integration routine for numerical computation of skewness failed. ",
-      "This could be because the skewness does not exist. Returning NaN."
-    )
-    return(NaN)
-  }
-  int
+  distionary_integrate(integrand, lower = r[1], upper = r[2], tol = tol, ...)
 }
