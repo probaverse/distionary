@@ -45,7 +45,7 @@ dst_pois <- function(lambda) {
   }
   distribution(
     .parameters = list(lambda = lambda),
-    pmf = \(x) stats::dpois(x, lambda = lambda),
+    pmf = \(x) suppressWarnings(stats::dpois(x, lambda = lambda)),
     cdf = \(x) stats::ppois(x, lambda = lambda),
     quantile = \(p) stats::qpois(p, lambda = lambda),
     realise = \(n) stats::rpois(n, lambda = lambda),
