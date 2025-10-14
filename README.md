@@ -45,6 +45,22 @@ defines distributions and makes a list of common distribution families
 available. The built-in distributions act as building blocks for the
 wider probaverse.
 
+## Statement of Need
+
+In stochastic modeling and risk assessment, distributions should
+accurately reflect your data, rather than relying solely on
+out-of-the-box options like the Normal or Poisson distributions.
+Achieving realistic probability distributions demands a versatile
+workbench where distributions can be manipulated and data can inform
+their features. This is the goal of the broader probaverse ecosystem,
+with `distionary` playing a foundational role.
+
+As a core package within `probaverse`, `distionary` defines the
+probability distribution object and enables the evaluation of
+distribution properties, even when not explicitly specified. It is
+useful as a standalone package for users who can specify a distribution
+in some forms but need to evaluate it in others.
+
 ## Installation
 
 `distionary` is not on CRAN yet. You can download the development
@@ -55,7 +71,7 @@ version from GitHub with:
 devtools::install_github("probaverse/distionary")
 ```
 
-## Example
+## Example: Built-in Distributions
 
 ``` r
 library(distionary)
@@ -70,7 +86,7 @@ functions.
 poisson <- dst_pois(1.5)
 # Inspect
 poisson
-#> Poisson distribution (discrete)
+#> Poisson distribution (discrete) 
 #> --Parameters--
 #> lambda 
 #>    1.5
@@ -81,7 +97,7 @@ poisson
 gev <- dst_gev(-1, 1, 0.2)
 # Inspect
 gev
-#> Generalised Extreme Value distribution (continuous)
+#> Generalised Extreme Value distribution (continuous) 
 #> --Parameters--
 #> location    scale    shape 
 #>     -1.0      1.0      0.2
@@ -102,11 +118,23 @@ plot(gev)
 
 <img src="man/figures/README-unnamed-chunk-5-2.png" width="100%" />
 
-**Evaluate** various distributional representations (functions that
-fully describe the distribution), such as the PMF or quantiles. The
-`eval_*()` functions simply evaluate the representation, whereas the
-`enframe_*()` functions place the output alongside the input in a data
-frame or tibble.
+**Evaluate** various *distributional properties* such as mean, skewness,
+and range of valid values.
+
+``` r
+mean(gev)
+#> [1] -0.1788514
+skewness(poisson)
+#> [1] 0.8164966
+range(gev)
+#> [1]  -6 Inf
+```
+
+Properties that completely define the distribution are called
+*distributional representations*, and can be accessed by the `eval_*()`
+functions. such as the PMF or quantiles. The `eval_*()` functions simply
+evaluate the representation, whereas the `enframe_*()` functions place
+the output alongside the input in a data frame or tibble.
 
 ``` r
 eval_pmf(poisson, at = 0:4)
@@ -120,21 +148,16 @@ enframe_quantile(gev, at = c(0.2, 0.5, 0.9))
 #> 3   0.9    1.84
 ```
 
-Evaluate properties such as mean, skewness, and range of valid values.
+## Example: Custom Distributions
+
+You can create a custom distribution using `distribution()`. The
+innovative aspect of `distionary` is its ability to automatically
+compute properties from the specified representations. By providing just
+one or two representations (such as CDF and density), `distionary` can
+derive other properties as needed.
 
 ``` r
-mean(gev)
-#> [1] -0.1788514
-skewness(poisson)
-#> [1] 0.8164966
-range(gev)
-#> [1]  -6 Inf
-```
-
-You can make your own distribution, too.
-
-``` r
-# Make a distribution.
+# Make a distribution by specifying only density and CDF
 linear <- distribution(
   density = function(x) {
     d <- 2 * (1 - x)
@@ -152,7 +175,7 @@ linear <- distribution(
 )
 # Inspect
 linear
-#> My Linear distribution (continuous)
+#> My Linear distribution (continuous) 
 #> --Parameters--
 #> NULL
 ```
@@ -165,8 +188,8 @@ plot(linear)
 
 <img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
 
-Even though only the density and CDF are defining the distribution,
-other properties can be evaluated, like its mean and quantiles
+Even though only the density and CDF were specified, other properties
+can be evaluated, like its mean and quantiles:
 
 ``` r
 mean(linear)

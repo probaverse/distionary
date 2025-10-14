@@ -36,6 +36,12 @@ The main purpose of `distionary` is to implement a distribution object, and to m
 
 The name "distionary" is a portmanteau of "distribution" and "dictionary". While a dictionary lists and defines words, `distionary` defines distributions and makes a list of common distribution families available. The built-in distributions act as building blocks for the wider probaverse.
 
+## Statement of Need
+
+In stochastic modeling and risk assessment, distributions should accurately reflect your data, rather than relying solely on out-of-the-box options like the Normal or Poisson distributions. Achieving realistic probability distributions demands a versatile workbench where distributions can be manipulated and data can inform their features. This is the goal of the broader probaverse ecosystem, with `distionary` playing a foundational role.
+
+As a core package within `probaverse`, `distionary` defines the probability distribution object and enables the evaluation of distribution properties, even when not explicitly specified. It is useful as a standalone package for users who can specify a distribution in some forms but need to evaluate it in others.
+
 ## Installation
 
 `distionary` is not on CRAN yet. You can download the development version from GitHub with:
