@@ -169,8 +169,8 @@ test_distributions <- list(
       list(location = 0, scale = 1.5, shape = -1.2)
     )
   ),
-  gpd = list(
-    distribution = "dst_gpd",
+  gp = list(
+    distribution = "dst_gp",
     invalid = list(
       list(scale = -1, shape = 1)
     ),

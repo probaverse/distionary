@@ -1,6 +1,6 @@
 #' Generalised Pareto Distribution
 #'
-#' Makes a Generalized Pareto distribution (GPD), corresponding to the
+#' Makes a Generalized Pareto (GP) distribution, corresponding to the
 #' limiting distribution of excesses over a threshold.
 #' @param scale Scale parameter; single positive numeric.
 #' @param shape Shape parameter; single positive numeric.
@@ -9,17 +9,17 @@
 #' @return A Generalised Pareto Distribution.
 #' @examples
 #' # Short-tailed example
-#' short <- dst_gpd(1, -1)
+#' short <- dst_gp(1, -1)
 #' range(short)
 #' mean(short)
 #'
 #' # Heavy-tailed example
-#' heavy <- dst_gpd(1, 1)
+#' heavy <- dst_gp(1, 1)
 #' range(heavy)
 #' mean(heavy)
 #'
 #' # Light-tailed example (a Gumbel distribution)
-#' light <- dst_gpd(1, 0)
+#' light <- dst_gp(1, 0)
 #' range(light)
 #' mean(light)
 #' @srrstats {G2.0} Assertions on lengths of inputs (asserting that
@@ -55,7 +55,7 @@
 #' pass arguments to another function with `na.rm = FALSE`-type parameters.
 #' This is most relevant for functions like `dst_norm()`.
 #' @export
-dst_gpd <- function(scale, shape) {
+dst_gp <- function(scale, shape) {
   checkmate::assert_numeric(scale, 0, len = 1)
   checkmate::assert_numeric(shape, len = 1)
   if (is.na(scale) || is.na(shape)) {
@@ -63,13 +63,13 @@ dst_gpd <- function(scale, shape) {
   }
   distribution(
     .parameters = list(scale = scale, shape = shape),
-    cdf = \(x) pgpd(x, scale = scale, shape = shape),
-    survival = \(x) pgpd(
+    cdf = \(x) pgp(x, scale = scale, shape = shape),
+    survival = \(x) pgp(
       x,
       scale = scale, shape = shape, lower.tail = FALSE
     ),
-    quantile = \(p) qgpd(p, scale = scale, shape = shape),
-    density = \(x) dgpd(x, scale = scale, shape = shape),
+    quantile = \(p) qgp(p, scale = scale, shape = shape),
+    density = \(x) dgp(x, scale = scale, shape = shape),
     mean = ifelse(shape < 1, scale / (1 - shape), Inf),
     variance = ifelse(
       shape < 1 / 2,
@@ -88,7 +88,7 @@ dst_gpd <- function(scale, shape) {
         ((1 - 3 * shape) * (1 - 4 * shape)) - 3,
       Inf
     ),
-    range = c(0, gpd_upper(scale = scale, shape = shape)),
+    range = c(0, gp_upper(scale = scale, shape = shape)),
     .name = "Generalised Pareto",
     .vtype = "continuous"
   )

@@ -88,7 +88,7 @@ dgev <- function(x, location, scale, shape) {
 #' 't()' function for calculating GEV quantities
 #'
 #' Decides whether to use `exp()` when the shape parameter is 0,
-#' or the non-limiting form otherwise. Also useful for the GPD.
+#' or the non-limiting form otherwise. Also useful for the GP.
 #'
 #' @param x Argument of the function; vectorized.
 #' @returns A vector of the t function evaluated.

@@ -6,13 +6,13 @@
 #' @param shape Vector of shape parameters; positive numeric.
 #' @param lower.tail Single logical. If `TRUE`, cdf (default);
 #' if `FALSE`, survival function.
-#' @returns Vector of evaluated GPD distribution, with length
+#' @returns Vector of evaluated GP distribution, with length
 #' equal to the recycled lengths of `q`/`x`/`p`, `scale`, and `shape`.
 #' @examples
-#' pgpd(1:10, 1, 1)
-#' dgpd(1:10, 2, 0)
-#' qgpd(1:9 / 10, 10, -2)
-#' @rdname gpd_raw
+#' pgp(1:10, 1, 1)
+#' dgp(1:10, 2, 0)
+#' qgp(1:9 / 10, 10, -2)
+#' @rdname gp_raw
 #' @srrstats {G2.1} Assertions on types of inputs is conducted using the
 #' checkmate package for most functions.
 #' @srrstats {G2.14} distionary is designed to propagate NA as if it's just
@@ -21,7 +21,7 @@
 #' treated as special, but rather just another type of data, and therefore
 #' does not need to alert the user of their presence.
 #' @export
-pgpd <- function(q, scale, shape, lower.tail = TRUE) {
+pgp <- function(q, scale, shape, lower.tail = TRUE) {
   checkmate::assert_numeric(q)
   checkmate::assert_numeric(scale, 0)
   checkmate::assert_numeric(shape)
@@ -30,7 +30,7 @@ pgpd <- function(q, scale, shape, lower.tail = TRUE) {
   q <- l[[1]]
   scale <- l[[2]]
   shape <- l[[3]]
-  hi <- gpd_upper(scale = scale, shape = shape)
+  hi <- gp_upper(scale = scale, shape = shape)
   left <- q < 0
   right <- q > hi
   t <- gev_t_function(q, location = 0, scale = scale, shape = shape)
@@ -47,9 +47,9 @@ pgpd <- function(q, scale, shape, lower.tail = TRUE) {
 }
 
 
-#' @rdname gpd_raw
+#' @rdname gp_raw
 #' @export
-qgpd <- function(p, scale, shape) {
+qgp <- function(p, scale, shape) {
   # z = (RP^xi - 1) / xi -> log(RP)
   checkmate::assert_numeric(p)
   checkmate::assert_numeric(scale, 0)
@@ -67,9 +67,9 @@ qgpd <- function(p, scale, shape) {
   scale * res
 }
 
-#' @rdname gpd_raw
+#' @rdname gp_raw
 #' @export
-dgpd <- function(x, scale, shape) {
+dgp <- function(x, scale, shape) {
   checkmate::assert_numeric(x)
   checkmate::assert_numeric(scale, 0)
   checkmate::assert_numeric(shape)
@@ -78,7 +78,7 @@ dgpd <- function(x, scale, shape) {
   scale <- l[[2]]
   shape <- l[[3]]
   z <- x / scale
-  hi <- gpd_upper(scale = scale, shape = shape)
+  hi <- gp_upper(scale = scale, shape = shape)
   t <- gev_t_function(x, location = 0, scale = scale, shape = shape)
   res <- ifelse(shape == 0, t, (1 + shape * z)^(-1 / shape - 1))
   # i_zero <- shape == 0
@@ -91,12 +91,12 @@ dgpd <- function(x, scale, shape) {
 }
 
 
-#' Upper endpoint of GPD
+#' Upper endpoint of GP
 #'
-#' @inheritParams dst_gpd
+#' @inheritParams dst_gp
 #' @returns A vector of maxima corresponding to the input parameters.
 #' @noRd
-gpd_upper <- function(scale, shape) {
+gp_upper <- function(scale, shape) {
   l <- vctrs::vec_recycle_common(scale, shape)
   scale <- l[[1]]
   shape <- l[[2]]

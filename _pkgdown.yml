@@ -50,4 +50,4 @@ reference:
   desc: Distributional representations not found in the `stats` package.
   contents:
   - ends_with("gev")
-  - ends_with("gpd")
+  - ends_with("gp")

@@ -25,7 +25,7 @@ the range is calculated
 using \code{eval_quantile()} at 0 and at 1.
 }
 \examples{
-a <- dst_gpd(1, 0.5)
+a <- dst_gp(1, 0.5)
 b <- dst_unif(0, 1)
 c <- dst_norm(3, 4)
 range(a)

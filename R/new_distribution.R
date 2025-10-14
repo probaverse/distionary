@@ -7,8 +7,6 @@
 #' @param ... Attributes to add to the list.
 #' @param class If making a subclass, specify its name here.
 #' @returns The original list `l` with the specified attributes.
-#' @examples
-#' new_distribution(list(mean = 3))
 #' @srrstats {G2.1} Assertions on types of inputs is conducted using the
 #' checkmate package for most functions.
 #' @srrstats {G5.3} Functions that are expected to return objects containing no

@@ -10,7 +10,7 @@
 #' @details This function is simply the quantile
 #' function evaluated at `1 - 1 / at`.
 #' @examples
-#' d <- dst_gpd(24, 0.3)
+#' d <- dst_gp(24, 0.3)
 #' eval_return(d, at = c(2, 25, 100, 200))
 #' @family distributional representations
 #' @rdname return
