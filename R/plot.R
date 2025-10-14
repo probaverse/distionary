@@ -81,9 +81,9 @@ plot.dst <- function(
     ellipsis[["xlab"]] <- "y"
   }
   if (fname == "pmf") {
-    if (!attr(x, "name") %in% c(
+    if (!pretty_name(x) %in% c(
       "Bernoulli", "Binomial", "Poisson", "Geometric", "Negative Binomial",
-      "Hypergeometric", "Degenerate"
+      "Hypergeometric", "Degenerate", "Finite"
     )) {
       warning(
         "This version of distionary assumes the distribution takes on ",
@@ -92,6 +92,13 @@ plot.dst <- function(
       )
     }
     xvals <- ellipsis[["from"]]:ellipsis[["to"]]
+    if (pretty_name(x) == "Finite") {
+      outcomes <- parameters(x)[["outcomes"]]
+      xvals <- outcomes[
+        outcomes >= ellipsis[["from"]] &
+          outcomes <= ellipsis[["to"]]
+      ]
+    }
     ellipsis[["from"]] <- NULL
     ellipsis[["to"]] <- NULL
     ellipsis[["x"]] <- xvals

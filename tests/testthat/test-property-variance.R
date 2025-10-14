@@ -1,6 +1,6 @@
-#' @srrstats {G5.4} Correctness tests are conducted to test that statistical 
+#' @srrstats {G5.4} Correctness tests are conducted to test that statistical
 #' algorithms produce expected results.
-#' @srrstats {G5.4b} Implementations of existing methods are compared against 
+#' @srrstats {G5.4b} Implementations of existing methods are compared against
 #' the stats package where possible.
 
 test_that("Network is invoked in priority: variance", {
@@ -45,11 +45,16 @@ test_that("Variance algorithm matches known vals", {
           }
         } else if (
           pretty_name(d) %in%
-          c("Hypergeometric", "Bernoulli", "Binomial")
+          c("Hypergeometric", "Bernoulli", "Binomial", "Finite")
         ) {
+          # Finite support.
           expect_error(algorithm_variance(d))
           r <- range(d)
           x <- seq(r[1], r[2], by = 1L)
+          if (pretty_name(d) == "Finite") {
+            # Finite distribution can have non-integer support.
+            x <- parameters(d)$outcomes
+          }
           mu <- mean(d)
           x2 <- (x - mu)^2
           p <- eval_pmf(d, at = x)
@@ -58,6 +63,7 @@ test_that("Variance algorithm matches known vals", {
           pretty_name(d) %in%
           c("Negative Binomial", "Poisson", "Geometric")
         ) {
+          # Infinite support.
           expect_error(algorithm_variance(d))
           mu <- mean(d)
           to_add <- Inf

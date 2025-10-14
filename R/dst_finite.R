@@ -13,16 +13,22 @@
 #' dst_finite(2:5, probs = 1:4 / 10)
 #' @export
 dst_finite <- function(outcomes, probs) {
+  if (any(is.na(outcomes)) || any(is.na(probs))) {
+    return(dst_null())
+  }
   if (length(outcomes) != length(probs)) {
     stop("Inputs `outcomes` and `probs` should have the same length.")
   }
   if (length(outcomes) == 0) {
     warning(
       "Can't make a finite distribution from empty data. ",
-      "Returning an empty distribution."
+      "Returning a Null distribution."
     )
     return(dst_null())
   }
+  mask <- probs != 0
+  outcomes <- outcomes[mask]
+  probs <- probs[mask]
   if (any(probs < 0)) {
     stop("Probabilities must be between 0 and 1.")
   }
@@ -36,30 +42,31 @@ dst_finite <- function(outcomes, probs) {
   mu <- sum(probs * outcomes)
   ss <- sum(probs * (outcomes - mu)^2)
   sigma <- sqrt(ss)
-  cumsum_p <- cumsum(probs)
-  heights <- c(0, cumsum_p)
-  taus <- cumsum_p[-length(cumsum_p)]
   ## Sort outcomes and probabilities for the stepfuns
   order <- order(outcomes)
   outcomes <- outcomes[order]
   probs <- probs[order]
+  cumsum_p <- cumsum(probs)
+  heights <- c(0, cumsum_p)
+  taus <- cumsum_p[-length(cumsum_p)]
   distribution(
-    .parameters = list(values = outcomes, probs = probs),
+    .parameters = list(outcomes = outcomes, probs = probs),
     pmf = function(q) {
-      na_q <- is.na(q)
+      na_mask <- is.na(q)
       matched <- match(q, outcomes)
       res <- probs[matched]
-      res[!is.na(q) & is.na(matched)] <- 0
+      res[is.na(matched)] <- 0
+      res[na_mask] <- NA_real_
       res
     },
     cdf = stats::stepfun(outcomes, heights, right = FALSE),
     quantile = stats::stepfun(taus, outcomes, right = TRUE),
     realise = \(n) sample(outcomes, size = n, replace = TRUE, prob = probs),
-    survival = stats::stepfun(outcomes, heights, right = FALSE),
+    survival = stats::stepfun(outcomes, 1 - heights, right = FALSE),
     mean = mu,
     variance = ss,
     skewness = sum(probs * ((outcomes - mu) / sigma)^3),
-    kurtosis = sum(probs * ((outcomes - mu) / sigma)^4),
+    kurtosis_exc = sum(probs * ((outcomes - mu) / sigma)^4) - 3,
     range = range(outcomes),
     .vtype = "discrete",
     .name = "Finite"

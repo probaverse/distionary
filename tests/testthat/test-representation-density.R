@@ -1,3 +1,9 @@
+# Validate density can be recovered from CDF
+#
+# Systematic testing uses the `test_distributions` object.
+# To modify it, see `data-raw/test_distributions.R`.
+# To update it, run `Rscript data-raw/test_distributions.R`.
+
 #' @srrstats {G3.0} Appropriate tolerances for approximate equality is
 #' adopted in instances of `expect_equal()`. The default is used, except
 #' for instances where comparison can allow a larger tolerance. --> This

@@ -25,9 +25,9 @@ test_that("Distributions are not sensitive to machine tolerance.", {
       eval_survival(d_eps, x + eps)
     )
     ## Mass
-    if (attr(d_orig, "name") != "Degenerate") {
-      # Degenerate distribution's x would also need to increase by eps,
-      # which is not meaningful to test.
+    if (!attr(d_orig, "name") %in% c("Degenerate", "Finite")) {
+      # Degenerate and Finite distribution's x would also need to increase
+      # by eps, which is not meaningful to test.
       expect_equal(
         eval_pmf(d_orig, x),
         eval_pmf(d_eps, x)

@@ -1,5 +1,23 @@
-#' A list of distributions to be used for testing
-#' @noRd
+# A list of distributions to be used for systematic testing
+#
+# This object defines a comprehensive set of distributions used for systematic
+# testing of distribution representations. The testing strategy involves:
+#
+# 1. **Property Recovery Testing**: Each distribution is tested to ensure
+#    that all defined properties (CDF, PDF/PMF, quantile, mean, etc.)
+#    can be accurately recovered from other representations. The volume of
+#    distributions tested acts as further verification that the formulas /
+#    algorithms for recovering these properties are correctly implemented.
+#
+# 2. **Representation Validation**: Each representation is tested to
+#    ensure it satisfies its mathematical properties (e.g., CDFs are
+#    non-decreasing, densities integrate to 1, PMFs sum to 1, etc.).
+#
+# Each distribution entry contains:
+# - `distribution`: The constructor function name
+# - `invalid`: Parameter sets that should fail validation
+# - `valid`: Parameter sets for systematic testing
+
 test_distributions <- list(
   bern = list(
     distribution = "dst_bern",
@@ -64,6 +82,18 @@ test_distributions <- list(
       list(location = -4)
     )
   ),
+  empirical = list(
+    distribution = "dst_empirical",
+    invalid = list(
+      list(y = 1:3, weights = -1:1),
+      list(y = 1:3, weights = 1:2)
+    ),
+    valid = list(
+      list(y = 1:3, weights = 1:3),
+      list(y = -1:2),
+      list(y = 1:10000)
+    )
+  ),
   exp = list(
     distribution = "dst_exp",
     invalid = list(
@@ -86,6 +116,23 @@ test_distributions <- list(
       list(df1 = 1.5, df2 = 5),
       list(df1 = 3.5, df2 = 7),
       list(df1 = 2.2, df2 = 9)
+    )
+  ),
+  finite = list(
+    distribution = "dst_finite",
+    invalid = list(
+      list(outcomes = 1:3, probs = rep(0.25, 4)),
+      list(outcomes = letters[1:4], probs = c(0.5, 0.3, 0.1)),
+      list(outcomes = 1:3, probs = letters[1:3]),
+      list(outcomes = 1:3, probs = rep(0.1, 3)),
+      list(outcomes = 1:3, probs = c(-0.2, 0.8, 0.4)),
+      list(outcomes = 1:3, probs = c(1.2, 0.2, 0.2))
+    ),
+    valid = list(
+      list(outcomes = -1:2, probs = rep(0.25, 4)),
+      list(outcomes = 8, probs = 1),
+      list(outcomes = c(0.34, 0.55, 0.12), probs = c(0.5, 0.2, 0.3)),
+      list(outcomes = 1:5, probs = 0:4 / 10)
     )
   ),
   gamma = list(

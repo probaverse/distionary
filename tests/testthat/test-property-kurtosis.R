@@ -1,6 +1,6 @@
-#' @srrstats {G5.4} Correctness tests are conducted to test that statistical 
+#' @srrstats {G5.4} Correctness tests are conducted to test that statistical
 #' algorithms produce expected results.
-#' @srrstats {G5.4b} Implementations of existing methods are compared against 
+#' @srrstats {G5.4b} Implementations of existing methods are compared against
 #' the stats package where possible.
 test_that("Network is invoked in priority: kurtosis", {
   # First look for `kurtosis_exc`, then invoke algorithm if not found.
@@ -38,11 +38,16 @@ test_that("Kurtosis algorithm matches known vals", {
           expect_equal(suppressMessages(algorithm_kurtosis(d)), supposed_kurt)
         } else if (
           pretty_name(d) %in%
-          c("Hypergeometric", "Bernoulli", "Binomial")
+          c("Hypergeometric", "Bernoulli", "Binomial", "Finite")
         ) {
+          # Finite support.
           expect_error(algorithm_kurtosis(d))
           r <- range(d)
           x <- seq(r[1], r[2], by = 1L)
+          if (pretty_name(d) == "Finite") {
+            # Finite distribution can have non-integer support.
+            x <- parameters(d)$outcomes
+          }
           mu <- mean(d)
           sigma <- stdev(d)
           x4 <- ((x - mu) / sigma)^4
@@ -52,6 +57,7 @@ test_that("Kurtosis algorithm matches known vals", {
           pretty_name(d) %in%
           c("Negative Binomial", "Poisson", "Geometric")
         ) {
+          # Infinite support.
           expect_error(algorithm_kurtosis(d))
           mu <- mean(d)
           sigma <- stdev(d)

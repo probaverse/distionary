@@ -1,3 +1,9 @@
+# Validate PMF can be recovered from CDF
+#
+# Systematic testing uses the `test_distributions` object.
+# To modify it, see `data-raw/test_distributions.R`.
+# To update it, run `Rscript data-raw/test_distributions.R`.
+
 #' @srrstats {G5.4} Correctness tests are conducted to test that
 #' statistical algorithms (calculating properties from other distribution
 #' properties) produce expected results to test distributions with set
@@ -24,7 +30,7 @@ test_that("PMF calculated thru CDF matches known vals.", {
         expect_false(is_intrinsic(d, "density"))
         p <- 1:99 / 100
         x <- unique(eval_quantile(d, at = p))
-        pmf_evald <- eval_cdf(d, at = x) - eval_cdf(d, at = x - 1)
+        pmf_evald <- eval_cdf(d, at = x) - eval_cdf(d, at = x - 1e-6)
         expect_equal(pmf_evald, eval_pmf(d, at = x))
       }
     }

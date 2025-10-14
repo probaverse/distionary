@@ -1,6 +1,6 @@
-#' @srrstats {G5.4} Correctness tests are conducted to test that statistical 
+#' @srrstats {G5.4} Correctness tests are conducted to test that statistical
 #' algorithms produce expected results.
-#' @srrstats {G5.4b} Implementations of existing methods are compared against 
+#' @srrstats {G5.4b} Implementations of existing methods are compared against
 #' the stats package where possible.
 test_that("Mean calculated thru network matches known vals", {
   for (item in test_distributions) {
@@ -32,17 +32,23 @@ test_that("Mean calculated thru network matches known vals", {
           }
         } else if (
           pretty_name(d) %in%
-          c("Hypergeometric", "Bernoulli", "Binomial")
+          c("Hypergeometric", "Bernoulli", "Binomial", "Finite")
         ) {
+          # Finite support.
           expect_error(eval_mean_from_network(d))
           r <- range(d)
           x <- seq(r[1], r[2], by = 1L)
+          if (pretty_name(d) == "Finite") {
+            # Finite distribution can have non-integer support.
+            x <- parameters(d)$outcomes
+          }
           p <- eval_pmf(d, at = x)
           expect_equal(sum(p * x), supposed_mean)
         } else if (
           pretty_name(d) %in%
           c("Negative Binomial", "Poisson", "Geometric")
         ) {
+          # Infinite support.
           expect_error(eval_mean_from_network(d))
           to_add <- Inf
           i <- 0
