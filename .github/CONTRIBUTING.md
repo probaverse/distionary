@@ -1,50 +1,87 @@
 # Contributing to distionary
 
-This outlines how to propose a change to distionary.
-For a detailed discussion on contributing to this and other tidyverse packages, please see the [development contributing guide](https://rstd.io/tidy-contrib) and our [code review principles](https://code-review.tidyverse.org/).
-
-## Fixing typos
-
-You can fix typos, spelling mistakes, or grammatical errors in the documentation directly using the GitHub web interface, as long as the changes are made in the _source_ file. 
-This generally means you'll need to edit [roxygen2 comments](https://roxygen2.r-lib.org/articles/roxygen2.html) in an `.R`, not a `.Rd` file. 
-You can find the `.R` file that generates the `.Rd` by reading the comment in the first line.
-
-## Bigger changes
-
-If you want to make a bigger change, it's a good idea to first file an issue and make sure someone from the team agrees that it’s needed. 
-If you’ve found a bug, please file an issue that illustrates the bug with a minimal 
-[reprex](https://www.tidyverse.org/help/#reprex) (this will also help you write a unit test, if needed).
-See our guide on [how to create a great issue](https://code-review.tidyverse.org/issues/) for more advice.
-
-### Pull request process
-
-*   Fork the package and clone onto your computer. If you haven't done this before, we recommend using `usethis::create_from_github("probaverse/distionary", fork = TRUE)`.
-
-*   Install all development dependencies with `devtools::install_dev_deps()`, and then make sure the package passes R CMD check by running `devtools::check()`. 
-    If R CMD check doesn't pass cleanly, it's a good idea to ask for help before continuing. 
-*   Create a Git branch for your pull request (PR). We recommend using `usethis::pr_init("brief-description-of-change")`.
-
-*   Make your changes, commit to git, and then create a PR by running `usethis::pr_push()`, and following the prompts in your browser.
-    The title of your PR should briefly describe the change.
-    The body of your PR should contain `Fixes #issue-number`.
-
-*  For user-facing changes, add a bullet to the top of `NEWS.md` (i.e. just below the first header). Follow the style described in <https://style.tidyverse.org/news.html>.
-
-### Code style
-
-*   New code should follow the tidyverse [style guide](https://style.tidyverse.org). 
-    You can use the [styler](https://CRAN.R-project.org/package=styler) package to apply these styles, but please don't restyle code that has nothing to do with your PR.  
-
-*  We use [roxygen2](https://cran.r-project.org/package=roxygen2), with [Markdown syntax](https://cran.r-project.org/web/packages/roxygen2/vignettes/rd-formatting.html), for documentation.  
-
-*  We use [testthat](https://cran.r-project.org/package=testthat) for unit tests. 
-   Contributions with test cases included are easier to accept.  
+Thank you for considering contributing to `distionary`! This package
+and the probaverse more generally have ambitious goals, so your help
+is needed. This document 
+provides guidelines and instructions for contributing to the package.
 
 ## Code of Conduct
 
-Please note that the distionary project is released with a
-[Contributor Code of Conduct](CODE_OF_CONDUCT.md). By contributing to this
-project you agree to abide by its terms.
+Please note that this project is released with a 
+[Contributor Code of Conduct](CODE_OF_CONDUCT.md). By participating in 
+this project you agree to abide by its terms.
+
+## How Can I Contribute?
+
+### Reporting Bugs
+
+If you find a bug, please open an issue on 
+[GitHub](https://github.com/probaverse/distionary/issues) with:
+
+- A clear, descriptive title
+- Steps to reproduce the issue
+- Expected behavior
+- Actual behavior
+- Your R session info (output of `sessionInfo()`)
+- A minimal reproducible example (reprex)
+
+You can create a reprex using the 
+[reprex package](https://reprex.tidyverse.org/), for example.
+
+### Suggesting Enhancements
+
+Enhancement suggestions are tracked as GitHub issues. When creating an 
+enhancement suggestion, please include:
+
+- A clear, descriptive title
+- A detailed description of the proposed enhancement
+- Explanation of why this enhancement would be useful
+- Examples of how the enhancement would be used
+
+If your suggestion is about adding a new distribution family, please
+indicate why you think the family is significant enough to be included.
+
+### Pull Requests
+
+We welcome pull requests! Here's the process:
+
+1. **Fork the repository** and clone it locally.
+2. **Create a branch** for your changes.
+3. **Make your changes** following the coding style guidelines.
+4. **Write or update tests** to cover your changes.
+5. **Run checks** locally.
+6. **Update documentation** including roxygen2 comments and vignettes 
+   if needed.
+7. **Commit your changes** with clear, descriptive commit messages.
+8. **Push to your fork** and submit a pull request to the 
+   `development` branch.
+
+
+## Coding Style
+
+`distionary` follows the 
+[tidyverse style guide](https://style.tidyverse.org/). Key points:
+
+- Use `<-` for assignment, not `=`
+- Use `snake_case` for function and variable names
+- Keep lines to a maximum of 80 characters
+- Add spaces around operators (`x + y`, not `x+y`)
+- Add spaces after commas (`f(x, y)`, not `f(x,y)`)
+
+
+### Documentation Style
+
+- All exported functions must have complete roxygen2 documentation
+- Include `@param` for all parameters with clear descriptions
+- Include `@return` describing what the function returns
+- Include `@examples` with working examples
+- Use proper markdown formatting in documentation
+
+
+## Questions?
+
+If you have questions about contributing, please
+contact the maintainer: Vincenzo Coia (vincenzo.coia@gmail.com).
 
 ## Life Cycle Statement
 
