@@ -15,7 +15,6 @@
 #' missing (`NA`) or undefined (`NaN`, `Inf`) values are tested either
 #' implicitly (e.g., `is_distribution()` implicitly checks non-NA value) or
 #' explicitly (e.g., `pretty_name()` is never NA). --> Copied to both files.
-#' @export
 new_distribution <- function(l, ..., class = character()) {
   checkmate::assert_list(l)
   checkmate::assert_character(class)

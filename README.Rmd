@@ -45,7 +45,7 @@ The name "distionary" is a portmanteau of "distribution" and "dictionary". While
 devtools::install_github("probaverse/distionary")
 ```
 
-## Example
+## Example: Built-in Distributions
 
 ```{r}
 library(distionary)
@@ -74,14 +74,7 @@ plot(poisson)
 plot(gev)
 ```
 
-**Evaluate** various distributional representations (functions that fully describe the distribution), such as the PMF or quantiles. The `eval_*()` functions simply evaluate the representation, whereas the `enframe_*()` functions place the output alongside the input in a data frame or tibble.
-
-```{r}
-eval_pmf(poisson, at = 0:4)
-enframe_quantile(gev, at = c(0.2, 0.5, 0.9))
-```
-
-Evaluate properties such as mean, skewness, and range of valid values.
+**Evaluate** various _distributional properties_ such as mean, skewness, and range of valid values.
 
 ```{r}
 mean(gev)
@@ -89,10 +82,19 @@ skewness(poisson)
 range(gev)
 ```
 
-You can make your own distribution, too. 
+Properties that completely define the distribution are called _distributional representations_, and can be accessed by the `eval_*()` functions. such as the PMF or quantiles. The `eval_*()` functions simply evaluate the representation, whereas the `enframe_*()` functions place the output alongside the input in a data frame or tibble.
 
 ```{r}
-# Make a distribution.
+eval_pmf(poisson, at = 0:4)
+enframe_quantile(gev, at = c(0.2, 0.5, 0.9))
+```
+
+## Example: Custom Distributions
+
+You can create a custom distribution using `distribution()`. The innovative aspect of `distionary` is its ability to automatically compute properties from the specified representations. By providing just one or two representations (such as CDF and density), `distionary` can derive other properties as needed.
+
+```{r}
+# Make a distribution by specifying only density and CDF
 linear <- distribution(
   density = function(x) {
     d <- 2 * (1 - x)
@@ -118,7 +120,7 @@ Here is what it looks like (density function).
 plot(linear)
 ```
 
-Even though only the density and CDF are defining the distribution, other properties can be evaluated, like its mean and quantiles
+Even though only the density and CDF were specified, other properties can be evaluated, like its mean and quantiles:
 
 ```{r}
 mean(linear)

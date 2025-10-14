@@ -76,10 +76,10 @@ dst_norm
 
 You can make your own distribution using the `distribution()` function. Provide it with name-value pairs that will be stored with the object in a list. Some names have a special interpretation in `distionary` in that they may be leveraged to compute other properties that aren't specified in `distribution()`. These special names are:
 
-- Any distributional representation `*` invoked by `eval_*()` (e.g., `quantile` for `eval_quantile()`).
-- Any property (e.g., `mean` for `mean()`)
+- Any distributional representation `*` invoked by `eval_*()` (e.g., `quantile` for `eval_quantile()`). A _distributional representation_ is a mathematical function that completely defines a probability distribution.
+- Any property (e.g., `mean` for `mean()`). A _property_ is a measurable characteristic that can be computed from a representation.
 
-See the [Evaluate a Distribution](./evaluate.html) vignette for more details on these evaluation functions.
+See the [Evaluate a Distribution](./evaluate.html) vignette for more details on these evaluation functions and the distinction between representations and properties.
 
 For this version of `distionary`, it is mandatory to specify at least `cdf` in order for non-specified properties to be evaluated. For continuous or discrete distributions, `density` or `pmf` may also be needed.
 
@@ -134,7 +134,9 @@ eval_property(linear, "g")
 
 ## Network of Properties
 
-The current version of `distionary` derives distribution properties from other properties according to the following network. An arrow from one property to another indicates that the first property can be calculated from the second. For example, `quantile` can be calculated from `cdf`, and `mean` can be calculated from `density`.
+The key innovation in `distionary` is its network-based approach to probability distributions. Different distributional representations (CDF, PDF/PMF, quantile function, survival function, etc.) are interconnected through a network of mathematical relationships. This means you can specify a distribution using _any_ available representation, and `distionary` will automatically derive other representations and properties as needed.
+
+The diagram below shows how `distionary` derives distribution properties from other properties. An arrow from one property to another indicates that the first property can be calculated from the second. For example, `quantile` can be calculated from `cdf`, and `mean` can be calculated from `density`. This network structure is what allows you to define a custom distribution with just one or two representations (like `cdf` and `density` in the example above) and still have access to all other properties.
 
 <!-- 
 Network diagram generated using man/figures/network_diagram.R script.

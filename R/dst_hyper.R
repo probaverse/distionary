@@ -1,7 +1,8 @@
 #' Hypergeometric Distribution
 #'
-#' Creates a Hypergeometric distribution, representing the
-#' number of red balls drawn from an urn containing multiple colours,
+#' Creates a Hypergeometric distribution. The parameterization used here
+#' is the same as for `stats::phyper()`, where the outcome can be thought
+#' of as the number of red balls drawn from an urn of coloured balls,
 #' using a scoop that holds a fixed number of balls.
 #'
 #' @param m The number of red balls in the urn; single positive integer.

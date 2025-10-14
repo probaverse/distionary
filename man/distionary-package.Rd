@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Create probability distribution objects from a list of common distribution families, or make your own distribution. Evaluate distribution properties, even if it is not specified in the distribution's definition.
+Create and evaluate probability distribution objects from a range of families or define custom distributions. Automatically compute distibutional properties, even when they have not been specified. This package supports statistical modeling and simulations, and forms the core of the probaverse suite of R packages.
 }
 \section{Overview}{
 

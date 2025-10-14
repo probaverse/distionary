@@ -22,7 +22,11 @@ This vignette covers the second goal of `distionary`: to evaluate probability di
 
 ## Distributional Representations
 
-A _distributional representation_ is a function that fully describes the distribution, such that any property can be calculated from it. Here is a list of representations recognised by `distionary`, and the functions for accessing them. 
+A _distributional representation_ is a mathematical function that completely defines a probability distribution. Unlike a simple property (such as the mean or variance), a representation contains enough information that any other property or representation can be calculated from it.
+
+The key innovation in `distionary` is that these representations are interconnected through a network of relationships, allowing you to specify a distribution using any available representation and automatically derive others as needed. For example, if you specify only a CDF, `distionary` can compute the quantile function, mean, variance, and other properties.
+
+Here is a list of representations recognised by `distionary`, and the functions for accessing them. 
 
 | Representation                   | `distionary` Functions                  |
 |----------------------------------|-----------------------------------------|
@@ -84,7 +88,9 @@ While random sampling falls into the same family as the `p*/d*/q*/r*` functions 
 
 ## Properties of Distributions
 
-`distionary` refers to a distribution _property_ as any value that can be calculated from a distribution, such as the mean and variance. Whereas a distributional representation must fully define a distribution, a property need not.
+`distionary` distinguishes between _distributional representations_ (which fully define a distribution) and _distributional properties_ (which are characteristics that can be computed from representations). 
+
+A distribution _property_ is any measurable characteristic that can be calculated from a distribution's representation. Unlike representations, properties do not contain enough information to fully reconstruct the distribution. For example, knowing the mean and variance of a distribution doesn't tell you whether it's a Normal, Gamma, or some other distribution family. Properties include statistical moments and other summary measures.
 
 Below is a table of the properties incorporated in `distionary`, and the corresponding functions for accessing them.
 

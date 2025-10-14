@@ -1,6 +1,6 @@
 #' Plot a Distribution
 #'
-#' Plot a distributional representation of a distribution.
+#' Plot a distribution's representation.
 #'
 #' @param x Distribution object
 #' @param what Name of the representation to plot.

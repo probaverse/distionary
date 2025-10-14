@@ -23,7 +23,7 @@ This function is run for its graphics byproduct, and therefore
 returns the original distribution, invisibly.
 }
 \description{
-Plot a distributional representation of a distribution.
+Plot a distribution's representation.
 }
 \examples{
 d <- dst_norm(0, 1)

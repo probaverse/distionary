@@ -18,8 +18,9 @@ single positive integer.}
 A Hypergeometric distribution.
 }
 \description{
-Creates a Hypergeometric distribution, representing the
-number of red balls drawn from an urn containing multiple colours,
+Creates a Hypergeometric distribution. The parameterization used here
+is the same as for \code{stats::phyper()}, where the outcome can be thought
+of as the number of red balls drawn from an urn of coloured balls,
 using a scoop that holds a fixed number of balls.
 }
 \examples{
