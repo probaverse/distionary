@@ -40,7 +40,11 @@ plot.dst <- function(
     }
   } else {
     if (fname == "density" && vtype(x) == "discrete") {
-      fname <- "pmf"
+      if (pretty_name(x) == "Finite") {
+        fname <- "cdf"
+      } else {
+        fname <- "pmf"
+      }
     }
   }
   if (is.null(ellipsis[["ylab"]])) {
