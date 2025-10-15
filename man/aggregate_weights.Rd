@@ -31,3 +31,4 @@ For a vector of outcomes \code{y} with a matching vector of \code{weights},
 \code{aggregate_weights()} provides a single non-zero, non-NA
 weight per unique value of \code{y}.
 }
+\keyword{internal}

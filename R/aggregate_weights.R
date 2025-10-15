@@ -15,6 +15,7 @@
 #' For a vector of outcomes `y` with a matching vector of `weights`,
 #' `aggregate_weights()` provides a single non-zero, non-NA
 #' weight per unique value of `y`.
+#' @keywords internal
 aggregate_weights <- function(y,
                               weights,
                               sum_to_one = FALSE) {

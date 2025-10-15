@@ -46,6 +46,9 @@ reference:
 - subtitle: Random Sampling
   contents:
   - realise
+- subtitle: Package Overview
+  contents:
+  - distionary-package
 - title: Built-in Distributional Representations
   desc: Distributional representations not found in the `stats` package.
   contents:

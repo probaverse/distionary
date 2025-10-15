@@ -32,13 +32,3 @@ realise(d1)
 mean(d1)
 variance(d1)
 
-## -----------------------------------------------------------------------------
-# Make a function that takes a distribution as input, and returns the
-# interquartile range.
-iqr <- function(distribution) {
-  diff(eval_quantile(distribution, at = c(0.25, 0.75)))
-}
-
-## -----------------------------------------------------------------------------
-iqr(d2)
-

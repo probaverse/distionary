@@ -103,6 +103,7 @@ Below is a table of the properties incorporated in `distionary`, and the corresp
 | Skewness                   | `skewness()` |
 | Excess Kurtosis            | `kurtosis_exc()` |
 | Kurtosis                   | `kurtosis()` |
+| Range                      | `range()` |
 
 Here's the mean and variance of our original distribution.
 
@@ -110,21 +111,3 @@ Here's the mean and variance of our original distribution.
 mean(d1)
 variance(d1)
 ```
-
-Some properties are easy to make yourself. Here is an example of a function that calculates interquartile range.
-
-```{r}
-# Make a function that takes a distribution as input, and returns the
-# interquartile range.
-iqr <- function(distribution) {
-  diff(eval_quantile(distribution, at = c(0.25, 0.75)))
-}
-```
-
-Apply the function.
-
-```{r}
-iqr(d2)
-```
-
-For properties that are not handled by `distionary` (e.g., extreme value index, or moment generating function), one option is to build these properties into your own distribution. A future version of `distionary` will make user-defined properties easier to work with.
