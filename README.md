@@ -24,21 +24,16 @@ Review](https://badges.ropensci.org/688_status.svg)](https://github.com/ropensci
 With `distionary`, you can:
 
 1.  Specify a probability distribution
-    ([built-in](./articles/specify-built-in.html) or [on your
+    ([built-in](./articles/specify-built-in.html) or [your
     own](./articles/specify-user-defined.html)), and
 2.  [Evaluate](./articles/evaluate.html) the probability distribution.
 
 The main purpose of `distionary` is to implement a distribution object,
 and to make distribution calculations available even if they are not
-specified in the distribution. `distionary` provides the building blocks
-of the wider [`probaverse` ecosystem](https://probaverse.com) for making
-representative statistical models.
-
-`distionary` makes reference to common terms regarding probability
-distributions. If you’re uneasy with these terms and concepts, most
-intro books in probability will be a good resource to learn from. As
-`distionary` develops, more documentation will be made available so that
-it’s more self-contained.
+specified in the distribution’s definition. `distionary` provides the
+building blocks of the wider [`probaverse`
+ecosystem](https://probaverse.com) for making representative statistical
+models.
 
 The name “distionary” is a portmanteau of “distribution” and
 “dictionary”. While a dictionary lists and defines words, `distionary`
@@ -56,30 +51,36 @@ manipulated, and data can inform their features. This is the goal of the
 `probaverse` ecosystem, with `distionary` providing the foundational
 building blocks.
 
-As a core component of the `probaverse`, `distionary` provides the
-fundamental infrastructure for defining probability distribution
-objects. It allows for the evaluation of distribution properties, even
-if they aren’t explicitly specified, offering standalone utility for
-users needing to define a distribution in various forms and evaluate it
-comprehensively.
+`distionary` provides the fundamental `probaverse` infrastructure for
+defining probability distribution objects. It allows for the evaluation
+of distribution properties, even if they aren’t explicitly specified,
+offering standalone utility for users needing to define a distribution
+in various forms and evaluate it comprehensively.
 
-### Target Audience
+## Target Audience
 
-Lots of people work with probability distributions. Lots of people don’t
-work with probability distributions but should, because they don’t see
-the value or because distributions are too clumsy to work with under
-existing infrastructure. And, there are lots of people learning about
-probability distributions that would have an easier time if they get to
-“feel” distributions and their multifaceted nature. `distionary` is for
-all of these people.
+Lots of people work with probability distributions. Lots of people
+*don’t* work with probability distributions but should, because they
+don’t see the value or because distributions are too clumsy to work with
+under existing infrastructure. And, there are lots of people learning
+about probability distributions that would have an easier time if they
+get to “feel” distributions and their multifaceted nature. `distionary`
+is for all of these people.
 
-`distionary` is designed for data scientists, statisticians, and
-researchers who require the flexibility to develop custom statistical
-models. It caters to those in finance, insurance, environmental science,
-and engineering, where nuanced distribution modeling is crucial. Whether
-building complex stochastic models or performing detailed risk
-assessments, `distionary` equips users with the tools needed to explore
-and manipulate probability distributions effectively.
+`distionary` – and the `probaverse` more widely – is designed for data
+scientists, statisticians, and researchers who require the flexibility
+to develop custom statistical models. It caters to those in finance,
+insurance, environmental science, and engineering, where nuanced
+distribution modeling is crucial. Whether building complex stochastic
+models or performing detailed risk assessments, `distionary` equips
+users with the tools needed to explore and manipulate probability
+distributions effectively.
+
+`distionary` makes reference to common terms regarding probability
+distributions. If you’re uneasy with these terms and concepts, most
+intro books in probability will be a good resource to learn from. As
+`distionary` develops, more documentation will be made available so that
+it’s more self-contained.
 
 ## Installation
 
