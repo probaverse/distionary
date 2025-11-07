@@ -99,6 +99,10 @@ distionary_integrate <- function(fun, lower, upper, tol = 1e-9, ...) {
     silent = TRUE
   )
   if (inherits(int, "try-error")) {
+    message(
+      "Integration routine for numerical computation failed. ",
+      "This could be because the property is not well-defined. Returning NaN."
+    )
     return(NaN)
   }
   int

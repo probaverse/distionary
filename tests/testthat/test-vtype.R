@@ -10,7 +10,7 @@ test_that("Variable type specified correctly.", {
   expect_equal(vtype(dst_gamma(1, 1)), "continuous")
   expect_equal(vtype(dst_geom(0.5)), "discrete")
   expect_equal(vtype(dst_gev(1, 1, 1)), "continuous")
-  expect_equal(vtype(dst_gpd(1, 1)), "continuous")
+  expect_equal(vtype(dst_gp(1, 1)), "continuous")
   expect_equal(vtype(dst_hyper(1, 1, 1)), "discrete")
   expect_equal(vtype(dst_lnorm(1, 1)), "continuous")
   expect_equal(vtype(dst_lp3(1, 1, 1)), "continuous")

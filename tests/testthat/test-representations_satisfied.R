@@ -1,12 +1,19 @@
+# Testing that each representation satisfies its definition.
+#
+# Check that each representation satisfies the properties of that
+# representation. For example, a CDF should be non-decreasing and
+# evaluate between 0 and 1, reaching 0 and 1 at the endpoints.
+#
+# Systematic testing uses the `test_distributions` object.
+# To modify it, see `data-raw/test_distributions.R`.
+# To update it, run `Rscript data-raw/test_distributions.R`.
+
 #' @srrstats {G3.0} Appropriate tolerances for approximate equality is
 #' adopted in instances of `expect_equal()`. The default is used, except
 #' for instances where comparison can allow a larger tolerance. --> This
 #' srrstats statement is included in all test files that use a different
 #' tolerance in `expect_equal()` than the default.
 
-#' Check that each representation satisfies the properties of that
-#' representation. For example, a CDF should be non-decreasing and
-#' evaluate between 0 and 1, reaching 0 and 1 at the endpoints.
 test_that("Each representation satisfies its definition.", {
   for (i in seq_along(test_distributions)) {
     item <- test_distributions[[i]]
@@ -46,7 +53,14 @@ test_that("Each representation satisfies its definition.", {
       ## Mass
       pmf_fun <- d$pmf
       if (!is.null(pmf_fun)) {
+        # Most of the distributions tested will have mass here:
         pmf_vals <- eval_pmf(d, at = -40:1000)
+        # Test finite distributions specially:
+        if (pretty_name(d) == "Finite") {
+          outcomes <- parameters(d)$outcomes
+          pmf_vals <- eval_pmf(d, at = outcomes)
+          expect_equal(sum(pmf_vals), 1)
+        }
         expect_true(all(pmf_vals >= 0))
         expect_gt(sum(pmf_vals), 0.9)
         expect_lt(sum(pmf_vals), 1 + 2 * .Machine$double.eps)
@@ -69,25 +83,38 @@ test_that("Each representation satisfies its definition.", {
         expect_true(all(diff(chf) >= 0))
       }
       ## PMF
-      if (v == "discrete" && pretty_name(d) != "Degenerate") {
-        if (is.infinite(r[2])) {
-          xx <- 0:99
-        } else {
-          xx <- r[1]:r[2]
-        }
-        ## From CDF
-        pmf_evald <- eval_pmf(d, at = xx)
-        pmf_derived <- prob_left(d, of = xx, inclusive = TRUE) -
-          prob_left(d, of = xx, inclusive = FALSE)
-        expect_equal(pmf_derived, pmf_evald)
-        ## Sum to 1
-        pmf_sum <- sum(pmf_evald)
-        diff_from_one <- 1 - pmf_sum
-        while (diff_from_one > 1e-9) {
-          xx <- 100 + xx
+      if (v == "discrete") {
+        if (pretty_name(d) == "Finite") {
+          xx <- parameters(d)$outcomes
+          ## From CDF
           pmf_evald <- eval_pmf(d, at = xx)
-          pmf_sum <- pmf_sum + sum(pmf_evald)
+          pmf_derived <- prob_left(d, of = xx, inclusive = TRUE) -
+            prob_left(d, of = xx, inclusive = FALSE)
+          expect_equal(pmf_derived, pmf_evald)
+          ## Sum to 1
+          pmf_sum <- sum(pmf_evald)
           diff_from_one <- 1 - pmf_sum
+        } else if (pretty_name(d) != "Degenerate") {
+          if (is.infinite(r[2])) {
+            xx <- 0:99
+          } else {
+            xx <- r[1]:r[2]
+          }
+          ## From CDF
+          pmf_evald <- eval_pmf(d, at = xx)
+          pmf_derived <- prob_left(d, of = xx, inclusive = TRUE) -
+            prob_left(d, of = xx, inclusive = FALSE)
+          expect_equal(pmf_derived, pmf_evald)
+          ## Sum to 1
+          pmf_sum <- sum(pmf_evald)
+          diff_from_one <- 1 - pmf_sum
+          while (diff_from_one > 1e-9) {
+            xx <- 100 + xx
+            pmf_evald <- eval_pmf(d, at = xx)
+            pmf_sum <- pmf_sum + sum(pmf_evald)
+            diff_from_one <- 1 - pmf_sum
+          }
+          expect_lt(diff_from_one, 1e-9)
         }
       }
     }

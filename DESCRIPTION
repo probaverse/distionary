@@ -3,15 +3,16 @@ Title: Create and Evaluate Probability Distributions
 Version: 0.1.0
 Authors@R: c(
     person("Vincenzo", "Coia", , "vincenzo.coia@gmail.com", 
-           role = c("aut", "cre")),
+           role = c("aut", "cre", "cph")),
     person("Amogh", "Joshi", role = "ctb"),
     person("Shuyi", "Tan", role = "ctb"),
     person("Zhipeng", "Zhu", role = "ctb")
     )
-Description: Create probability distribution objects from a list of
-    common distribution families, or make your own distribution.
-    Evaluate distribution properties, even if it is not specified
-    in the distribution's definition.
+Description: Create and evaluate probability distribution objects from a
+    range of families or define custom distributions. Automatically compute
+    distibutional properties, even when they have not been specified.
+    This package supports statistical modeling and simulations, and forms
+    the core of the probaverse suite of R packages.
 License: MIT + file LICENSE
 Suggests: 
     covr,

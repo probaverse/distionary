@@ -14,6 +14,10 @@ test_that("Random number generation works", {
   # will get closer and closer to 0. If the distribution is correct,
   # then p ~ Unif(0,1), and if p < 0.05 (unlucky), extending the
   # sample will eliminate the luck factor.
+  # If the number generator is *not* correct, then the large sample
+  # size drawn (1000) is likely to trigger a small p-value; to mitigate
+  # the risk that a large p-value is obtained anyway, the process is
+  # repeated 4 times with different seeds.
   for (item in test_distributions) {
     for (paramset in item$valid) {
       d <- rlang::exec(item$distribution, !!!paramset)
@@ -42,9 +46,14 @@ test_that("Random number generation works", {
           # throwing off the chi-squared test.
           set.seed(sd)
           x <- realise(d, n = 1000)
-          bnds <- range(x)
           tbl <- table(x)
-          rng <- bnds[1]:bnds[2]
+          bnds <- range(x)
+          if (pretty_name(d) == "Finite") {
+            rng <- parameters(d)$outcomes
+            rng <- rng[rng >= bnds[1] & rng <= bnds[2]]
+          } else {
+            rng <- bnds[1]:bnds[2]
+          }
           freq <- rep(0, length(rng))
           names(freq) <- rng
           freq[names(tbl)] <- unname(unclass(tbl))
@@ -57,6 +66,8 @@ test_that("Random number generation works", {
             x <- append(x, realise(d, n = 10000))
             x <- x[x >= bnds[1] & x <= bnds[2]]
             tbl <- table(x)
+            freq <- rep(0, length(rng))
+            names(freq) <- rng
             freq[names(tbl)] <- unname(unclass(tbl))
             pval <- suppressWarnings(chisq.test(freq, p = p)$p.value)
             i <- i + 1
@@ -68,9 +79,8 @@ test_that("Random number generation works", {
           }
           expect_gt(pval, 0.05)
         }
-      } else {
+      } else if (pretty_name(d) == "Degenerate") {
         for (sd in 1:4) {
-          # Degenerate
           set.seed(sd)
           x <- realise(d, n = 1000)
           expect_identical(unique(x), parameters(d)[[1]])

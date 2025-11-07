@@ -35,7 +35,7 @@ pretty_name <- function(distribution, param_digits = 0) {
     )
   }
   if (low_name == "gev") name <- "GEV"
-  if (low_name == "gpd") name <- "GPD"
+  if (low_name == "gp") name <- "GP"
   if (param_digits > 0 && !is.null(parameters(distribution))) {
     brackets <- bracket_parameters(distribution, param_digits = param_digits)
     name <- paste0(name, brackets)

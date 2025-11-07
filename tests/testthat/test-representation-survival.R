@@ -1,3 +1,9 @@
+# Validates survival can be recovered from network
+#
+# Systematic testing uses the `test_distributions` object.
+# To modify it, see `data-raw/test_distributions.R`.
+# To update it, run `Rscript data-raw/test_distributions.R`.
+
 #' @srrstats {G5.4} Correctness tests are conducted to test that
 #' statistical algorithms (calculating properties from other distribution
 #' properties) produce expected results to test distributions with set

@@ -119,6 +119,24 @@ distribution <- function(...,
   dots <- rlang::enquos(...)
   checkmate::assert_list(dots, names = "named", null.ok = TRUE)
   representations <- lapply(dots, rlang::eval_tidy)
+  # Check for required properties.
+  reps_missing <- is.null(representations$cdf) ||
+    (is.null(representations$density) && is.null(representations$pmf))
+  if (reps_missing) {
+    warning(
+      "Full suite of distribution properties may not be accessible ",
+      "without specifying 'cdf', and either 'density' or 'pmf'."
+    )
+  }
+  # Typo detection for variable type.
+  vtypes <- c("discrete", "continuous", "ordinal", "categorical", "mixed")
+  vtype_match <- agrep(.vtype, vtypes, max.distance = 0.1, value = TRUE)
+  if (length(vtype_match) > 0 && !(.vtype %in% vtype_match)) {
+    warning(paste0(
+      "The .vtype '", .vtype, "' looks similar to ",
+      paste(vtype_match, collapse = ", "), "."
+    ))
+  }
   new_distribution(
     representations,
     vtype = .vtype, name = .name, parameters = .parameters

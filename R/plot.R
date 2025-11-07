@@ -1,6 +1,6 @@
 #' Plot a Distribution
 #'
-#' Plot a distributional representation of a distribution.
+#' Plot a distribution's representation.
 #'
 #' @param x Distribution object
 #' @param what Name of the representation to plot.
@@ -40,7 +40,11 @@ plot.dst <- function(
     }
   } else {
     if (fname == "density" && vtype(x) == "discrete") {
-      fname <- "pmf"
+      if (pretty_name(x) == "Finite") {
+        fname <- "cdf"
+      } else {
+        fname <- "pmf"
+      }
     }
   }
   if (is.null(ellipsis[["ylab"]])) {
@@ -81,9 +85,9 @@ plot.dst <- function(
     ellipsis[["xlab"]] <- "y"
   }
   if (fname == "pmf") {
-    if (!attr(x, "name") %in% c(
+    if (!pretty_name(x) %in% c(
       "Bernoulli", "Binomial", "Poisson", "Geometric", "Negative Binomial",
-      "Hypergeometric", "Degenerate"
+      "Hypergeometric", "Degenerate", "Finite"
     )) {
       warning(
         "This version of distionary assumes the distribution takes on ",
@@ -92,6 +96,13 @@ plot.dst <- function(
       )
     }
     xvals <- ellipsis[["from"]]:ellipsis[["to"]]
+    if (pretty_name(x) == "Finite") {
+      outcomes <- parameters(x)[["outcomes"]]
+      xvals <- outcomes[
+        outcomes >= ellipsis[["from"]] &
+          outcomes <= ellipsis[["to"]]
+      ]
+    }
     ellipsis[["from"]] <- NULL
     ellipsis[["to"]] <- NULL
     ellipsis[["x"]] <- xvals

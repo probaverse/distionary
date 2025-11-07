@@ -33,21 +33,5 @@ algorithm_kurtosis <- function(distribution, tol = 1e-7, ...) {
   r <- range(distribution)
   dens <- representation_as_function(distribution, representation = "density")
   integrand <- \(x) ((x - mu) / sigma)^4 * dens(x)
-  int <- try(
-    distionary_integrate(
-      integrand,
-      lower = r[1], upper = r[2],
-      tol = tol,
-      ...
-    ),
-    silent = TRUE
-  )
-  if (inherits(int, "try-error")) {
-    message(
-      "Integration routine for numerical computation of kurtosis failed. ",
-      "This could be because the kurtosis does not exist. Returning NaN."
-    )
-    return(NaN)
-  }
-  int
+  distionary_integrate(integrand, lower = r[1], upper = r[2], tol = tol, ...)
 }

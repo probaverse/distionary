@@ -1,6 +1,6 @@
-#' @srrstats {G5.4} Correctness tests are conducted to test that statistical 
+#' @srrstats {G5.4} Correctness tests are conducted to test that statistical
 #' algorithms produce expected results.
-#' @srrstats {G5.4b} Implementations of existing methods are compared against 
+#' @srrstats {G5.4b} Implementations of existing methods are compared against
 #' the stats package where possible.
 test_that("Skewness algorithm matches known vals", {
   for (item in test_distributions) {
@@ -18,11 +18,16 @@ test_that("Skewness algorithm matches known vals", {
           )
         } else if (
           pretty_name(d) %in%
-          c("Hypergeometric", "Bernoulli", "Binomial")
+          c("Hypergeometric", "Bernoulli", "Binomial", "Finite")
         ) {
+          # Finite support.
           expect_error(eval_skewness_from_network(d))
           r <- range(d)
           x <- seq(r[1], r[2], by = 1L)
+          if (pretty_name(d) == "Finite") {
+            # Finite distribution can have non-integer support.
+            x <- parameters(d)$outcomes
+          }
           mu <- mean(d)
           sigma <- stdev(d)
           x3 <- ((x - mu) / sigma)^3
@@ -32,6 +37,7 @@ test_that("Skewness algorithm matches known vals", {
           pretty_name(d) %in%
           c("Negative Binomial", "Poisson", "Geometric")
         ) {
+          # Infinite support.
           expect_error(eval_skewness_from_network(d))
           mu <- mean(d)
           sigma <- stdev(d)

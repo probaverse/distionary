@@ -20,6 +20,3 @@ The original list \code{l} with the specified attributes.
 Low level constructor function for creating distribution objects.
 Consider the user-facing constructor function, \code{distribution()}.
 }
-\examples{
-new_distribution(list(mean = 3))
-}

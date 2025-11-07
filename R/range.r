@@ -11,7 +11,7 @@
 #' @returns Vector of length two, containing the minimum and maximum
 #' values of a distribution.
 #' @examples
-#' a <- dst_gpd(1, 0.5)
+#' a <- dst_gp(1, 0.5)
 #' b <- dst_unif(0, 1)
 #' c <- dst_norm(3, 4)
 #' range(a)
