@@ -46,7 +46,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/evaluate.html">Evaluate a Distribution</a></li>
-    <li><a class="dropdown-item" href="../articles/specify.html">Specify a Distribution</a></li>
+    <li><a class="dropdown-item" href="../articles/specify-built-in.html">Built-In Distributions</a></li>
+    <li><a class="dropdown-item" href="../articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -85,9 +86,18 @@ specified in the distribution’s definition.</p>
 <div class="section level2">
 <h2 id="distributional-representations">Distributional Representations<a class="anchor" aria-label="anchor" href="#distributional-representations"></a>
 </h2>
-<p>A <em>distributional representation</em> is a function that fully
-describes the distribution, such that any property can be calculated
-from it. Here is a list of representations recognised by
+<p>A <em>distributional representation</em> is a mathematical function
+that completely defines a probability distribution. Unlike a simple
+property (such as the mean or variance), a representation contains
+enough information that any other property or representation can be
+calculated from it.</p>
+<p>The key innovation in <code>distionary</code> is that these
+representations are interconnected through a network of relationships,
+allowing you to specify a distribution using any available
+representation and automatically derive others as needed. For example,
+if you specify only a CDF, <code>distionary</code> can compute the
+quantile function, mean, variance, and other properties.</p>
+<p>Here is a list of representations recognised by
 <code>distionary</code>, and the functions for accessing them.</p>
 <table class="table">
 <colgroup>
@@ -230,10 +240,17 @@ perfectly describe a distribution based on a sample.</p>
 <div class="section level2">
 <h2 id="properties-of-distributions">Properties of Distributions<a class="anchor" aria-label="anchor" href="#properties-of-distributions"></a>
 </h2>
-<p><code>distionary</code> refers to a distribution <em>property</em> as
-any value that can be calculated from a distribution, such as the mean
-and variance. Whereas a distributional representation must fully define
-a distribution, a property need not.</p>
+<p><code>distionary</code> distinguishes between <em>distributional
+representations</em> (which fully define a distribution) and
+<em>distributional properties</em> (which are characteristics that can
+be computed from representations).</p>
+<p>A distribution <em>property</em> is any measurable characteristic
+that can be calculated from a distribution’s representation. Unlike
+representations, properties do not contain enough information to fully
+reconstruct the distribution. For example, knowing the mean and variance
+of a distribution doesn’t tell you whether it’s a Normal, Gamma, or some
+other distribution family. Properties include statistical moments and
+other summary measures.</p>
 <p>Below is a table of the properties incorporated in
 <code>distionary</code>, and the corresponding functions for accessing
 them.</p>
@@ -272,6 +289,10 @@ them.</p>
 <td>Kurtosis</td>
 <td><code><a href="../reference/moments.html">kurtosis()</a></code></td>
 </tr>
+<tr class="even">
+<td>Range</td>
+<td><code><a href="https://rdrr.io/r/base/range.html" class="external-link">range()</a></code></td>
+</tr>
 </tbody>
 </table>
 <p>Here’s the mean and variance of our original distribution.</p>
@@ -280,23 +301,6 @@ them.</p>
 <span><span class="co">#&gt; [1] 0.6666667</span></span>
 <span><span class="fu"><a href="../reference/moments.html">variance</a></span><span class="op">(</span><span class="va">d1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1.111111</span></span></code></pre></div>
-<p>Some properties are easy to make yourself. Here is an example of a
-function that calculates interquartile range.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Make a function that takes a distribution as input, and returns the</span></span>
-<span><span class="co"># interquartile range.</span></span>
-<span><span class="va">iqr</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">distribution</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/diff.html" class="external-link">diff</a></span><span class="op">(</span><span class="fu"><a href="../reference/quantile.html">eval_quantile</a></span><span class="op">(</span><span class="va">distribution</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.25</span>, <span class="fl">0.75</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">}</span></span></code></pre></div>
-<p>Apply the function.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">iqr</span><span class="op">(</span><span class="va">d2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 2</span></span></code></pre></div>
-<p>For properties that are not handled by <code>distionary</code> (e.g.,
-extreme value index, or moment generating function), one option is to
-build these properties into your own distribution. A future version of
-<code>distionary</code> will make user-defined properties easier to work
-with.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

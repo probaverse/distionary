@@ -16,8 +16,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Create and Evaluate Probability Distributions">
-<meta name="description" content="Create probability distribution objects from a list of common distribution families, or make your own distribution. Evaluate distribution properties, even if it is not specified in the distribution's definition.">
-<meta property="og:description" content="Create probability distribution objects from a list of common distribution families, or make your own distribution. Evaluate distribution properties, even if it is not specified in the distribution's definition.">
+<meta name="description" content="Create and evaluate probability distribution objects from a range of families or define custom distributions. Automatically compute distibutional properties, even when they have not been specified. This package supports statistical modeling and simulations, and forms the core of the probaverse suite of R packages.">
+<meta property="og:description" content="Create and evaluate probability distribution objects from a range of families or define custom distributions. Automatically compute distibutional properties, even when they have not been specified. This package supports statistical modeling and simulations, and forms the core of the probaverse suite of R packages.">
 <meta property="og:image" content="https://distionary.probaverse.com/logo.png">
 <!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-73DKMR0WHY"></script><script>
   window.dataLayer = window.dataLayer || [];
@@ -49,7 +49,8 @@
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="articles/evaluate.html">Evaluate a Distribution</a></li>
-    <li><a class="dropdown-item" href="articles/specify.html">Specify a Distribution</a></li>
+    <li><a class="dropdown-item" href="articles/specify-built-in.html">Built-In Distributions</a></li>
+    <li><a class="dropdown-item" href="articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -75,14 +76,25 @@
 
 <p>With <code>distionary</code>, you can:</p>
 <ol style="list-style-type: decimal">
-<li>
-<a href="./articles/specify.html">Specify</a> a probability distribution, and</li>
+<li>Specify a probability distribution (<a href="./articles/specify-built-in.html">built-in</a> or <a href="./articles/specify-user-defined.html">your own</a>), and</li>
 <li>
 <a href="./articles/evaluate.html">Evaluate</a> the probability distribution.</li>
 </ol>
-<p>The main purpose of <code>distionary</code> is to implement a distribution object, and to make distribution calculations available even if they are not specified in the distribution. <code>distionary</code> powers the wider <a href="https://probaverse.com" class="external-link"><code>probaverse</code> ecosystem</a> for making probability distributions that are representative of your data, not just out-of-the-bag distributions like the Normal, Poisson, etc.</p>
-<p><code>distionary</code> makes reference to common terms regarding probability distributions. If you’re uneasy with these terms and concepts, most intro books in probability will be a good resource to learn from. As <code>distionary</code> develops, more documentation will be made available so that it’s more self-contained.</p>
+<p>The main purpose of <code>distionary</code> is to implement a distribution object, and to make distribution calculations available even if they are not specified in the distribution’s definition. <code>distionary</code> provides the building blocks of the wider <a href="https://probaverse.com" class="external-link"><code>probaverse</code> ecosystem</a> for making representative statistical models.</p>
 <p>The name “distionary” is a portmanteau of “distribution” and “dictionary”. While a dictionary lists and defines words, <code>distionary</code> defines distributions and makes a list of common distribution families available. The built-in distributions act as building blocks for the wider probaverse.</p>
+<div class="section level2">
+<h2 id="statement-of-need">Statement of Need<a class="anchor" aria-label="anchor" href="#statement-of-need"></a>
+</h2>
+<p>When building statistical models, distributions should accurately reflect your data, but out-of-the-box options like the Normal or Poisson distributions often fall short. Achieving realistic probability distributions demands a versatile workbench where distributions can be manipulated, and data can inform their features. This is the goal of the <code>probaverse</code> ecosystem, with <code>distionary</code> providing the foundational building blocks.</p>
+<p><code>distionary</code> provides the fundamental <code>probaverse</code> infrastructure for defining probability distribution objects. It allows for the evaluation of distribution properties, even if they aren’t explicitly specified, offering standalone utility for users needing to define a distribution in various forms and evaluate it comprehensively.</p>
+</div>
+<div class="section level2">
+<h2 id="target-audience">Target Audience<a class="anchor" aria-label="anchor" href="#target-audience"></a>
+</h2>
+<p>Lots of people work with probability distributions. Lots of people <em>don’t</em> work with probability distributions but should, because they don’t see the value or because distributions are too clumsy to work with under existing infrastructure. And, there are lots of people learning about probability distributions that would have an easier time if they get to “feel” distributions and their multifaceted nature. <code>distionary</code> is for all of these people.</p>
+<p><code>distionary</code> – and the <code>probaverse</code> more widely – is designed for data scientists, statisticians, and researchers who require the flexibility to develop custom statistical models. It caters to those in finance, insurance, environmental science, and engineering, where nuanced distribution modeling is crucial. Whether building complex stochastic models or performing detailed risk assessments, <code>distionary</code> equips users with the tools needed to explore and manipulate probability distributions effectively.</p>
+<p><code>distionary</code> makes reference to common terms regarding probability distributions. If you’re uneasy with these terms and concepts, most intro books in probability will be a good resource to learn from. As <code>distionary</code> develops, more documentation will be made available so that it’s more self-contained.</p>
+</div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -92,7 +104,7 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"probaverse/distionary"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+<h2 id="example-built-in-distributions">Example: Built-in Distributions<a class="anchor" aria-label="anchor" href="#example-built-in-distributions"></a>
 </h2>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://distionary.probaverse.com/">distionary</a></span><span class="op">)</span></span></code></pre></div>
@@ -102,7 +114,7 @@
 <span><span class="va">poisson</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dst_pois.html">dst_pois</a></span><span class="op">(</span><span class="fl">1.5</span><span class="op">)</span></span>
 <span><span class="co"># Inspect</span></span>
 <span><span class="va">poisson</span></span>
-<span><span class="co">#&gt; Poisson distribution (discrete)</span></span>
+<span><span class="co">#&gt; Poisson distribution (discrete) </span></span>
 <span><span class="co">#&gt; --Parameters--</span></span>
 <span><span class="co">#&gt; lambda </span></span>
 <span><span class="co">#&gt;    1.5</span></span></code></pre></div>
@@ -111,7 +123,7 @@
 <span><span class="va">gev</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dst_gev.html">dst_gev</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0.2</span><span class="op">)</span></span>
 <span><span class="co"># Inspect</span></span>
 <span><span class="va">gev</span></span>
-<span><span class="co">#&gt; Generalised Extreme Value distribution (continuous)</span></span>
+<span><span class="co">#&gt; Generalised Extreme Value distribution (continuous) </span></span>
 <span><span class="co">#&gt; --Parameters--</span></span>
 <span><span class="co">#&gt; location    scale    shape </span></span>
 <span><span class="co">#&gt;     -1.0      1.0      0.2</span></span></code></pre></div>
@@ -122,8 +134,16 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">gev</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-2.png" width="100%"></p>
-<p><strong>Evaluate</strong> various distributional representations (functions that fully describe the distribution), such as the PMF or quantiles. The <code>eval_*()</code> functions simply evaluate the representation, whereas the <code>enframe_*()</code> functions place the output alongside the input in a data frame or tibble.</p>
+<p><strong>Evaluate</strong> various <em>distributional properties</em> such as mean, skewness, and range of valid values.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">gev</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] -0.1788514</span></span>
+<span><span class="fu"><a href="reference/moments.html">skewness</a></span><span class="op">(</span><span class="va">poisson</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.8164966</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">gev</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1]  -6 Inf</span></span></code></pre></div>
+<p>Properties that completely define the distribution are called <em>distributional representations</em>, and can be accessed by the <code>eval_*()</code> functions. such as the PMF or quantiles. The <code>eval_*()</code> functions simply evaluate the representation, whereas the <code>enframe_*()</code> functions place the output alongside the input in a data frame or tibble.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/pmf.html">eval_pmf</a></span><span class="op">(</span><span class="va">poisson</span>, at <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.22313016 0.33469524 0.25102143 0.12551072 0.04706652</span></span>
 <span><span class="fu"><a href="reference/quantile.html">enframe_quantile</a></span><span class="op">(</span><span class="va">gev</span>, at <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.9</span><span class="op">)</span><span class="op">)</span></span>
@@ -133,17 +153,13 @@
 <span><span class="co">#&gt; 1   0.2   -1.45 </span></span>
 <span><span class="co">#&gt; 2   0.5   -0.620</span></span>
 <span><span class="co">#&gt; 3   0.9    1.84</span></span></code></pre></div>
-<p>Evaluate properties such as mean, skewness, and range of valid values.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">gev</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.1788514</span></span>
-<span><span class="fu"><a href="reference/moments.html">skewness</a></span><span class="op">(</span><span class="va">poisson</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.8164966</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">gev</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1]  -6 Inf</span></span></code></pre></div>
-<p>You can make your own distribution, too.</p>
+</div>
+<div class="section level2">
+<h2 id="example-custom-distributions">Example: Custom Distributions<a class="anchor" aria-label="anchor" href="#example-custom-distributions"></a>
+</h2>
+<p>You can create a custom distribution using <code><a href="reference/distribution.html">distribution()</a></code>. The innovative aspect of <code>distionary</code> is its ability to automatically compute properties from the specified representations. By providing just one or two representations (such as CDF and density), <code>distionary</code> can derive other properties as needed.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Make a distribution.</span></span>
+<code class="sourceCode R"><span><span class="co"># Make a distribution by specifying only density and CDF</span></span>
 <span><span class="va">linear</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/distribution.html">distribution</a></span><span class="op">(</span></span>
 <span>  density <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">d</span> <span class="op">&lt;-</span> <span class="fl">2</span> <span class="op">*</span> <span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="va">x</span><span class="op">)</span></span>
@@ -161,14 +177,14 @@
 <span><span class="op">)</span></span>
 <span><span class="co"># Inspect</span></span>
 <span><span class="va">linear</span></span>
-<span><span class="co">#&gt; My Linear distribution (continuous)</span></span>
+<span><span class="co">#&gt; My Linear distribution (continuous) </span></span>
 <span><span class="co">#&gt; --Parameters--</span></span>
 <span><span class="co">#&gt; NULL</span></span></code></pre></div>
 <p>Here is what it looks like (density function).</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">linear</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-9-1.png" width="100%"></p>
-<p>Even though only the density and CDF are defining the distribution, other properties can be evaluated, like its mean and quantiles</p>
+<p>Even though only the density and CDF were specified, other properties can be evaluated, like its mean and quantiles:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">linear</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.3333333</span></span>
@@ -182,14 +198,21 @@
 </div>
 <div class="section level2">
 <h2 id="distionary-in-the-context-of-other-packages">
-<code>distionary</code> in the context of other packages<a class="anchor" aria-label="anchor" href="#distionary-in-the-context-of-other-packages"></a>
+<code>distionary</code> in the Context of Other Packages<a class="anchor" aria-label="anchor" href="#distionary-in-the-context-of-other-packages"></a>
 </h2>
-<p>Other R packages exist that turn probability distributions into objects and allow their evaluation. <code>distionary</code> is unique in that provides the distribution framework needed to power the wider <a href="https://probaverse.com" class="external-link"><code>probaverse</code> ecosystem</a>, which provides a natural API for making probability distributions that are representative of the system being modelled.</p>
+<p>The R ecosystem offers several packages for working with probability distributions, each with unique strengths:</p>
+<ul>
+<li><p><strong><code>stats</code> Package</strong>: Provides fundamental functions for standard distributions but lacks a unified object-oriented approach for complex manipulations.</p></li>
+<li><p><strong><code>distr</code> Package</strong>: Introduces an object-oriented framework for distribution objects using S4, offering flexible manipulation, though it can be complex to extend and use.</p></li>
+<li><p><strong><code>distributions3</code> Package</strong>: Utilizes S3 classes for a straightforward interface focused on simplicity, suitable for basic tasks but may not meet advanced application needs.</p></li>
+<li><p><strong><code>distributional</code> Package</strong>: Extends <code>distributions3</code> to support vectorized operations, aiding statistical modelling but lacking extensive tools for custom distribution creation.</p></li>
+</ul>
+<p>In this landscape, <code>distionary</code> addresses the need for a cohesive and flexible API that can seamlessly integrate the strengths of these packages. It provides a unified framework for defining, manipulating, and evaluating probability distributions. Because <code>distionary</code> only needs some distribution properties to be specified, it offers a level of flexibility central to the <code>probaverse</code> ecosystem.</p>
 </div>
 <div class="section level2">
 <h2 id="acknowledgements">Acknowledgements<a class="anchor" aria-label="anchor" href="#acknowledgements"></a>
 </h2>
-<p>The creation of <code>distionary</code> would not have been possible without the support of the R Consortium, The Natural Science and Engineering Research Council of Canada (NSERC), The University of British Columbia, and BGC Engineering Inc.</p>
+<p>The creation of <code>distionary</code> would not have been possible without the support of the R Consortium, BGC Engineering Inc., The University of British Columbia, Politecnico di Milano, and the Natural Science and Engineering Research Council of Canada (NSERC). The authors would also like to thank the reviewers from ROpenSci for their insightful feedback, which greatly contributed to enhancing the quality of this R package.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
@@ -238,7 +261,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Vincenzo Coia <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Vincenzo Coia <br><small class="roles"> Author, maintainer, copyright holder </small>   </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>

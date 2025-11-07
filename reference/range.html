@@ -27,7 +27,8 @@ values of the (support of the) distribution."><meta property="og:image" content=
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/evaluate.html">Evaluate a Distribution</a></li>
-    <li><a class="dropdown-item" href="../articles/specify.html">Specify a Distribution</a></li>
+    <li><a class="dropdown-item" href="../articles/specify-built-in.html">Built-In Distributions</a></li>
+    <li><a class="dropdown-item" href="../articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -41,7 +42,7 @@ values of the (support of the) distribution."><meta property="og:image" content=
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Range of Distribution</h1>
-      <small class="dont-index">Source: <a href="https://github.com/probaverse/distionary/blob/main/R/range.r" class="external-link"><code>R/range.r</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/probaverse/distionary/blob/main/R/range.R" class="external-link"><code>R/range.R</code></a></small>
       <div class="d-none name"><code>range.Rd</code></div>
     </div>
 
@@ -82,7 +83,7 @@ using <code><a href="quantile.html">eval_quantile()</a></code> at 0 and at 1.</p
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="dst_gpd.html">dst_gpd</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="dst_gp.html">dst_gp</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">0.5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="dst_unif.html">dst_unif</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">c</span> <span class="op">&lt;-</span> <span class="fu"><a href="dst_norm.html">dst_norm</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span></span></span>

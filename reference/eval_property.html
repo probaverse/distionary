@@ -31,7 +31,8 @@ from other entries."><meta property="og:image" content="https://distionary.proba
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/evaluate.html">Evaluate a Distribution</a></li>
-    <li><a class="dropdown-item" href="../articles/specify.html">Specify a Distribution</a></li>
+    <li><a class="dropdown-item" href="../articles/specify-built-in.html">Built-In Distributions</a></li>
+    <li><a class="dropdown-item" href="../articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -93,16 +94,18 @@ evaluated, returns <code>NULL</code>.</p>
 <span class="r-in"><span>  g <span class="op">=</span> <span class="fl">9.81</span>,</span></span>
 <span class="r-in"><span>  .vtype <span class="op">=</span> <span class="st">"continuous"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Full suite of distribution properties may not be accessible without specifying 'cdf', and either 'density' or 'pmf'.</span>
 <span class="r-in"><span><span class="fu">eval_property</span><span class="op">(</span><span class="va">d</span>, <span class="st">"g"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 9.81</span>
 <span class="r-in"><span><span class="fu">eval_property</span><span class="op">(</span><span class="va">d</span>, <span class="st">"quantile"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">9</span> <span class="op">/</span> <span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0.3162278 0.4472136 0.5477226 0.6324555 0.7071068 0.7745967 0.8366600</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [8] 0.8944272 0.9486833</span>
 <span class="r-in"><span><span class="fu">eval_property</span><span class="op">(</span><span class="va">d</span>, <span class="st">"mean"</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Integration routine for numerical computation failed. This could be because the property is not well-defined. Returning NaN.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] NaN</span>
 <span class="r-in"><span><span class="fu">eval_property</span><span class="op">(</span><span class="va">d</span>, <span class="st">"realise"</span>, <span class="fl">10</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.4518610 0.8446285 0.2553745 0.5951528 0.9084049 0.5232765 0.7550132</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.5794127 0.7721805 0.4376277</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 0.7550132 0.5794127 0.7721805 0.4376277 0.9735317 0.7365327 0.7379725</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [8] 0.5278230 0.6683580 0.6095172</span>
 <span class="r-in"><span><span class="fu">eval_property</span><span class="op">(</span><span class="va">d</span>, <span class="st">"foofy"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span><span class="fu">eval_property</span><span class="op">(</span><span class="va">d</span>, <span class="st">"foofy"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
