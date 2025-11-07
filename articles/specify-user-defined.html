@@ -153,9 +153,12 @@ can be specified in the <code>...</code> argument.</p>
 programmatically accessing distribution properties.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">properties</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean"</span>, <span class="st">"variance"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">properties</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="../reference/eval_property.html">eval_property</a></span><span class="op">(</span><span class="va">my_normal</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt;     mean variance </span></span>
-<span><span class="co">#&gt;        0        1</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">properties</span>, \<span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="../reference/eval_property.html">eval_property</a></span><span class="op">(</span><span class="va">my_normal</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [[1]]</span></span>
+<span><span class="co">#&gt; [1] 0</span></span>
+<span><span class="co">#&gt; </span></span>
+<span><span class="co">#&gt; [[2]]</span></span>
+<span><span class="co">#&gt; [1] 1</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="distribution-attributes">Distribution Attributes<a class="anchor" aria-label="anchor" href="#distribution-attributes"></a>
@@ -293,7 +296,7 @@ distribution.</p>
 <span>  col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"purple"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span><span class="op">)</span>,</span>
 <span>  lty <span class="op">=</span> <span class="fl">1</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="specify-user-defined_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+<p><img src="specify-user-defined_files/figure-html/unnamed-chunk-16-1.png" class="r-plt" width="700"></p>
 <p>As usual, properties can be evaluated, even if they are not
 specified. Consider, for example, calculating return periods of three
 different Linear distributions.</p>
@@ -337,7 +340,7 @@ Network diagram generated using man/figures/network_diagram.R script.
 The script uses DiagrammeR and Graphviz DOT language to create the diagram.
 To regenerate: Rscript man/figures/network_diagram.R
 -->
-<p><img src="network_diagram.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="network_diagram.png" class="r-plt" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="making-your-own-properties">Making your own properties<a class="anchor" aria-label="anchor" href="#making-your-own-properties"></a>
@@ -425,7 +428,7 @@ implement appropriate behavior.</td>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer>
