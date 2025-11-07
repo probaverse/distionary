@@ -5,8 +5,6 @@
 
 <!-- badges: start -->
 
-[![CRAN
-status](https://www.r-pkg.org/badges/version/distionary)](https://CRAN.R-project.org/package=distionary)
 [![License:
 MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://cran.r-project.org/web/licenses/MIT)
 [![R-CMD-check](https://github.com/probaverse/distionary/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/probaverse/distionary/actions/workflows/R-CMD-check.yaml)
@@ -84,12 +82,10 @@ it’s more self-contained.
 
 ## Installation
 
-`distionary` is not on CRAN yet. You can download the development
-version from GitHub with:
+To install `distionary`, run the following code in R:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("probaverse/distionary")
+install.packages("distionary")
 ```
 
 ## Example: Built-in Distributions
@@ -256,10 +252,11 @@ flexibility central to the `probaverse` ecosystem.
 
 The creation of `distionary` would not have been possible without the
 support of the R Consortium, BGC Engineering Inc., The University of
-British Columbia, Politecnico di Milano, and the Natural Science and
-Engineering Research Council of Canada (NSERC). The authors would also
-like to thank the reviewers from ROpenSci for their insightful feedback,
-which greatly contributed to enhancing the quality of this R package.
+British Columbia, the European Space Agency, the Politecnico di Milano,
+and the Natural Science and Engineering Research Council of Canada
+(NSERC). The authors would also like to thank the reviewers from
+ROpenSci for their insightful feedback, which greatly contributed to
+enhancing the quality of this R package.
 
 ## Citation
 

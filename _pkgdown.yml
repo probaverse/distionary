@@ -21,7 +21,6 @@ reference:
 - subtitle: General Distribution Creation
   contents:
   - distribution
-  - new_distribution
 - subtitle: Distribution Characteristics
   contents:
   - parameters
