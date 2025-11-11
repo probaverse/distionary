@@ -65,7 +65,6 @@ dst_lp3 <- function(meanlog, sdlog, skew) {
   scale <- sdlog / sqrt(shape)
   # mean = scale * shape
   shift <- meanlog - scale * shape
-  cdf_gamma <-
     distribution(
       .parameters = list(meanlog = meanlog, sdlog = sdlog, skew = skew),
       cdf = function(x) stats::pgamma(
