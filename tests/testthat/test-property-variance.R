@@ -6,7 +6,9 @@
 test_that("Network is invoked in priority: variance", {
   # First look for `stdev`, then invoke algorithm if not found.
   d <- distribution(
-    density = \(x) stats::dnorm(x, sd = 3),
+    density = function(x) {
+      stats::dnorm(x, sd = 3)
+    },
     range = c(-Inf, Inf),
     stdev = 10, # deliberately incorrect
     .vtype = "continuous"
@@ -34,7 +36,9 @@ test_that("Variance algorithm matches known vals", {
           ) {
             # GEV with shape = 0 has NaN density for very negative values.
             mu <- mean(d)
-            integrand <- \(x) (x - mu)^2 * eval_density(d, at = x)
+            integrand <- function(x) {
+              (x - mu)^2 * eval_density(d, at = x)
+            }
             expect_equal(
               stats::integrate(integrand, -1000, 0)$value +
                 stats::integrate(integrand, 0, Inf)$value,

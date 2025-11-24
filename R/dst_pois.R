@@ -45,11 +45,21 @@ dst_pois <- function(lambda) {
   }
   distribution(
     .parameters = list(lambda = lambda),
-    pmf = \(x) suppressWarnings(stats::dpois(x, lambda = lambda)),
-    cdf = \(x) stats::ppois(x, lambda = lambda),
-    quantile = \(p) stats::qpois(p, lambda = lambda),
-    realise = \(n) stats::rpois(n, lambda = lambda),
-    survival = \(x) stats::ppois(x, lambda = lambda, lower.tail = FALSE),
+    pmf = function(x) {
+      suppressWarnings(stats::dpois(x, lambda = lambda))
+    },
+    cdf = function(x) {
+      stats::ppois(x, lambda = lambda)
+    },
+    quantile = function(p) {
+      stats::qpois(p, lambda = lambda)
+    },
+    realise = function(n) {
+      stats::rpois(n, lambda = lambda)
+    },
+    survival = function(x) {
+      stats::ppois(x, lambda = lambda, lower.tail = FALSE)
+    },
     mean = lambda,
     variance = lambda,
     skewness = lambda^(-0.5),

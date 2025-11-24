@@ -6,7 +6,9 @@
 test_that("Network is invoked in priority: stdev", {
   # First look for `variance`, then invoke algorithm if not found.
   d <- distribution(
-    density = \(x) stats::dnorm(x, sd = 3),
+    density = function(x) {
+      stats::dnorm(x, sd = 3)
+    },
     range = c(-Inf, Inf),
     variance = 100, # deliberately incorrect
     .vtype = "continuous"

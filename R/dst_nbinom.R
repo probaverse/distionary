@@ -55,14 +55,21 @@ dst_nbinom <- function(size, prob) {
   }
   distribution(
     .parameters = list(size = size, prob = prob),
-    pmf = \(x) stats::dnbinom(x, size = size, prob = prob),
-    cdf = \(x) stats::pnbinom(x, size = size, prob = prob),
-    quantile = \(p) stats::qnbinom(p, size = size, prob = prob),
-    realise = \(n) stats::rnbinom(n, size = size, prob = prob),
-    survival = \(x) stats::pnbinom(
-      x,
-      size = size, prob = prob, lower.tail = FALSE
-    ),
+    pmf = function(x) {
+      stats::dnbinom(x, size = size, prob = prob)
+    },
+    cdf = function(x) {
+      stats::pnbinom(x, size = size, prob = prob)
+    },
+    quantile = function(p) {
+      stats::qnbinom(p, size = size, prob = prob)
+    },
+    realise = function(n) {
+      stats::rnbinom(n, size = size, prob = prob)
+    },
+    survival = function(x) {
+      stats::pnbinom(x, size = size, prob = prob, lower.tail = FALSE)
+    },
     mean = (1 - prob) * size / prob,
     variance = (1 - prob) * size / prob^2,
     skewness = (2 - prob) / sqrt((1 - prob) * size),

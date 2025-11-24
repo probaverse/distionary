@@ -93,7 +93,9 @@ dst_finite <- function(outcomes, probs) {
     },
     cdf = stats::stepfun(outcomes, heights, right = FALSE),
     quantile = stats::stepfun(taus, outcomes, right = TRUE),
-    realise = \(n) sample(outcomes, size = n, replace = TRUE, prob = probs),
+    realise = function(n) {
+      sample(outcomes, size = n, replace = TRUE, prob = probs)
+    },
     survival = stats::stepfun(outcomes, 1 - heights, right = FALSE),
     mean = mu,
     variance = ss,

@@ -49,14 +49,21 @@ dst_norm <- function(mean, sd) {
   }
   distribution(
     .parameters = list(mean = mean, sd = sd),
-    density = \(x) stats::dnorm(x, mean = mean, sd = sd),
-    cdf = \(x) stats::pnorm(x, mean = mean, sd = sd),
-    quantile = \(p) stats::qnorm(p, mean = mean, sd = sd),
-    realise = \(n) stats::rnorm(n, mean = mean, sd = sd),
-    survival = \(x) stats::pnorm(
-      x,
-      mean = mean, sd = sd, lower.tail = FALSE
-    ),
+    density = function(x) {
+      stats::dnorm(x, mean = mean, sd = sd)
+    },
+    cdf = function(x) {
+      stats::pnorm(x, mean = mean, sd = sd)
+    },
+    quantile = function(p) {
+      stats::qnorm(p, mean = mean, sd = sd)
+    },
+    realise = function(n) {
+      stats::rnorm(n, mean = mean, sd = sd)
+    },
+    survival = function(x) {
+      stats::pnorm(x, mean = mean, sd = sd, lower.tail = FALSE)
+    },
     mean = mean,
     median = mean,
     variance = sd^2,

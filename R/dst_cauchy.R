@@ -52,14 +52,21 @@ dst_cauchy <- function(location, scale) {
   }
   distribution(
     .parameters = list(location = location, scale = scale),
-    density = \(x) stats::dcauchy(x, location = location, scale = scale),
-    cdf = \(x) stats::pcauchy(x, location = location, scale = scale),
-    quantile = \(p) stats::qcauchy(p, location = location, scale = scale),
-    realise = \(n) stats::rcauchy(n, location = location, scale = scale),
-    survival = \(x) stats::pcauchy(
-      x,
-      location = location, scale = scale, lower.tail = FALSE
-    ),
+    density = function(x) {
+      stats::dcauchy(x, location = location, scale = scale)
+    },
+    cdf = function(x) {
+      stats::pcauchy(x, location = location, scale = scale)
+    },
+    quantile = function(p) {
+      stats::qcauchy(p, location = location, scale = scale)
+    },
+    realise = function(n) {
+      stats::rcauchy(n, location = location, scale = scale)
+    },
+    survival = function(x) {
+      stats::pcauchy(x, location = location, scale = scale, lower.tail = FALSE)
+    },
     mean = NaN,
     median = location,
     variance = NaN,

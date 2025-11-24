@@ -153,7 +153,7 @@ In this landscape, `distionary` addresses the need for a cohesive and flexible A
 
 ## Acknowledgements
 
-The creation of `distionary` would not have been possible without the support of the R Consortium, BGC Engineering Inc., The University of British Columbia, the European Space Agency, the Politecnico di Milano, and the Natural Science and Engineering Research Council of Canada (NSERC). The authors would also like to thank the reviewers from ROpenSci for their insightful feedback, which greatly contributed to enhancing the quality of this R package.
+The creation of `distionary` would not have been possible without the support of BGC Engineering Inc., the R Consortium, the Politecnico di Milano, the European Space Agency, The University of British Columbia, and the Natural Science and Engineering Research Council of Canada (NSERC). The authors would also like to thank the reviewers from ROpenSci for their insightful feedback, which greatly contributed to enhancing the quality of this R package.
 
 ## Citation
 
@@ -165,4 +165,4 @@ To cite package `distionary` in publications use:
 
 ## Code of Conduct
 
-Please note that the distionary project is released with a [Contributor Code of Conduct](./CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+Please note that the distionary project is released with a [Code of Conduct](./CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.

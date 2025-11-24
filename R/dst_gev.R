@@ -66,12 +66,15 @@ dst_gev <- function(location, scale, shape) {
   }
   distribution(
     .parameters = list(location = location, scale = scale, shape = shape),
-    cdf = \(x) pgev(
-      x,
-      location = location, scale = scale, shape = shape
-    ),
-    quantile = \(p) qgev(p, location = location, scale = scale, shape = shape),
-    density = \(x) dgev(x, location = location, scale = scale, shape = shape),
+    cdf = function(x) {
+      pgev(x, location = location, scale = scale, shape = shape)
+    },
+    quantile = function(p) {
+      qgev(p, location = location, scale = scale, shape = shape)
+    },
+    density = function(x) {
+      dgev(x, location = location, scale = scale, shape = shape)
+    },
     mean = {
       if (shape >= 1) {
         Inf
