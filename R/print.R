@@ -16,7 +16,8 @@ print.dst <- function(x, ...) {
   # Parameters
   if (!is.null(param) && all(!is.na(param))) {
     all_numeric <- all(vapply(
-      param, \(x) is.numeric(x) && length(x) == 1,
+      param,
+      function(x) is.numeric(x) && length(x) == 1,
       FUN.VALUE = logical(1)
     ))
     if (all_numeric) {
