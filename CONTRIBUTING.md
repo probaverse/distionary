@@ -7,7 +7,7 @@ contributing to the package.
 
 ## Code of Conduct
 
-Please note that this project is released with a [Contributor Code of
+Please note that this project is released with a [Code of
 Conduct](https://distionary.probaverse.com/CODE_OF_CONDUCT.md). By
 participating in this project you agree to abide by its terms.
 

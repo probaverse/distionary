@@ -236,8 +236,8 @@ flexibility central to the `probaverse` ecosystem.
 ## Acknowledgements
 
 The creation of `distionary` would not have been possible without the
-support of the R Consortium, BGC Engineering Inc., The University of
-British Columbia, the European Space Agency, the Politecnico di Milano,
+support of BGC Engineering Inc., the R Consortium, the Politecnico di
+Milano, the European Space Agency, The University of British Columbia,
 and the Natural Science and Engineering Research Council of Canada
 (NSERC). The authors would also like to thank the reviewers from
 ROpenSci for their insightful feedback, which greatly contributed to
@@ -254,9 +254,9 @@ Distributions*. R package version 0.1.0,
 
 ## Code of Conduct
 
-Please note that the distionary project is released with a [Contributor
-Code of Conduct](https://distionary.probaverse.com/CODE_OF_CONDUCT.md).
-By contributing to this project, you agree to abide by its terms.
+Please note that the distionary project is released with a [Code of
+Conduct](https://distionary.probaverse.com/CODE_OF_CONDUCT.md). By
+contributing to this project, you agree to abide by its terms.
 
 # Package index
 
