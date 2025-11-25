@@ -22,9 +22,12 @@ Review](https://badges.ropensci.org/688_status.svg)](https://github.com/ropensci
 With `distionary`, you can:
 
 1.  Specify a probability distribution
-    ([built-in](./articles/specify-built-in.html) or [your
-    own](./articles/specify-user-defined.html)), and
-2.  [Evaluate](./articles/evaluate.html) the probability distribution.
+    ([built-in](https://distionary.probaverse.com/articles/specify-built-in.html)
+    or [your
+    own](https://distionary.probaverse.com/articles/specify-user-defined.html)),
+    and
+2.  [Evaluate](https://distionary.probaverse.com/articles/evaluate.html)
+    the probability distribution.
 
 The main purpose of `distionary` is to implement a distribution object,
 and to make distribution calculations available even if they are not
@@ -270,5 +273,5 @@ Distributions*. R package version 0.1.0,
 ## Code of Conduct
 
 Please note that the distionary project is released with a [Code of
-Conduct](./CODE_OF_CONDUCT.html). By contributing to this project, you
-agree to abide by its terms.
+Conduct](https://distionary.probaverse.com/CODE_OF_CONDUCT.html). By
+contributing to this project, you agree to abide by its terms.
