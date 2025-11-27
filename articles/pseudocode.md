@@ -1,0 +1,154 @@
+# Pseudocode
+
+This document outlines the core functionalities of `distionary` for
+other programming languages. Developers can add extra checks as needed.
+
+## Distribution Objects
+
+Distribution objects store user-defined properties and distribution
+metadata. The key metadata field is `vtype` (e.g., continuous, discrete,
+mixed). Properties and metadata are bundled in a dictionary-like
+structure ([`{}`](https://rdrr.io/r/base/Paren.html)).
+
+    distribution = function(properties, vtype = Null):
+      return {properties = properties, vtype = vtype}
+
+Currently, `distionary` supports only numeric, univariate distributions
+(i.e., single variable). Future versions will support multivariate
+distributions.
+
+## Common Distribution Families
+
+Wrappers allow access to common distributions like Normal and Poisson,
+prefixed with `dst_`. For example:
+
+    dst_norm = function(mean, sd):
+      return distribution(
+        properties = [
+          density = function(x) dnorm(x, mean = mean, sd = sd),
+          realise = function(n) rnorm(n, mean = mean, sd = sd),
+          ...,
+          range = [-Inf, Inf],
+          mean = mean,
+          stdev = sd,
+          skewness = 0,
+          ...
+        ],
+        vtype = "continuous"
+      )
+
+Here, `[]` is a list-like structure that can be used to pass arguments
+to the function. `dnorm` and `rnorm` are assumed to be available or
+should be implemented manually.
+
+In addition to common families, a Null distribution that always
+evaluates to NA should be created. This object is useful when external
+algorithms fail, where a Null distribution can be output instead of an
+error.
+
+## Evaluating
+
+Start with thin wrappers for evaluating specific properties, which
+invoke the general function `eval_property`.
+
+Properties that are not functions can be accessed by functions of the
+same name:
+
+    mean = function(distribution):
+      eval_property(distribution, name = "mean")
+
+    range = function(distribution):
+      eval_property(distribution, name = "range")
+
+Properties that are functions are prefixed with `eval_` to indicate they
+require an argument, passed with `at`. All such properties currently in
+distionary only have one argument, but in principle could accept others;
+these all go in `[]`.
+
+    eval_density = function(distribution, at):
+      eval_property(distribution, name = "density", args = [at])
+
+    eval_survival = function(distribution, at):
+      eval_property(distribution, name = "cdf", args = [at])
+
+The `at` parameter can accept a vector of values. The current version
+supports a single distribution input, but future versions might allow
+recycling both arguments.
+
+The main function `eval_property` evaluates properties if present or
+delegates network evaluation. If the property is a function, it will
+evaluate it using the provided arguments in `args`. By default, `args`
+is `Null`, meaning arguments are not relevant (therefore, this argument
+can be ignored for numeric properties).
+
+    eval_property = function(distribution, property_name, args = Null):
+      properties = subset(distribution, "properties")
+      property = subset(properties, property_name)
+      if is_null(property):
+        return eval_from_network(distribution, name = property_name, args = args)
+      else if is_function(property):
+        return property(args)
+      else:
+        return property
+
+Use `subset` to retrieve entries from dictionary-like structures.
+`property(args)` means to call the function property with arguments.
+
+The absence of a property is evaluated using a [network of
+properties](https://distionary.probaverse.com/articles/specify-user-defined#network-of-properties),
+specifying how one property can be retrieved from others. For example,
+the cumulative hazard function (CHF) can be calculated using the
+survival function:
+
+    eval_from_network = function(distribution, name, args):
+      if name == "chf":
+        return -log(eval_survival(distribution, args))
+      if name == "survival":
+        return 1 - eval_cdf(distribution, args)
+      if name == "mean":
+      ...
+
+Network evaluation is still robust against whether the survival function
+has been specified for the distribution due to the use of
+`eval_survival`: if the survival function can’t be retrieved from the
+distribution, it will evaluate it from the network, this time from the
+cumulative distribution function (CDF). The network has been set up to
+avoid getting caught in a loop, so that the survival function doesn’t
+look back to the CHF for evaluation – it’s (mostly) a directed acyclic
+graph.
+
+Network computation failures throw errors, though future versions might
+allow user-specified error-handling strategies.
+
+The defined network is not unique. For example, the CHF could be
+retrieved from the hazard function rather than the survival function.
+The network was minimized for numerical efficiency.
+
+Currently, the CDF and density/PMF anchor the property network, meaning
+that they are assumed available. Future improvements may implement
+networks as their own objects, customized to each distribution to be
+seeded from the properties specified in each distribution.
+
+## Enframing
+
+Instead of `eval`uating properties that are functions, `enframe` these
+to place inputs and outputs in tabular form. This is useful for
+table-centric data analyses. Start with simple wrappers:
+
+    enframe_density = function(distributions, at):
+      enframe_general(distributions, at = at, eval_fn = eval_density)
+
+    enframe_survival = function(distributions, at):
+      enframe_general(distributions, at = at, eval_fn = eval_survival)
+
+`distributions` might contain multiple distributions. The main function
+loops over each distribution, adding results to new columns:
+
+    enframe_general = function(distributions, at, eval_fn):
+      tbl = [x = at]
+      for d in distributions:
+        y = eval_fn(d, at)
+        tbl = append(tbl, [y])
+      return tbl
+
+The developer may wish to consider features related to column naming.
