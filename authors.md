@@ -13,7 +13,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/probaverse/distionary/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/probaverse/distionary/blob/v0.1.0/DESCRIPTION)
 
 Coia V (2025). *distionary: Create and Evaluate Probability
 Distributions*. R package version 0.1.0,
