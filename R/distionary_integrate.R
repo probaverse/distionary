@@ -56,7 +56,9 @@
 #'
 #' @examples
 #' # Beta(0.5, 0.5) should have mean of 0.5.
-#' integrand <- \(x) x * stats::dbeta(x, 0.5, 0.5)
+#' integrand <- function(x) {
+#'   x * stats::dbeta(x, 0.5, 0.5)
+#' }
 #' plot(integrand)
 #' distionary_integrate(integrand, 0, 1)
 #' stats::integrate(integrand, 0, 1)  # Good
@@ -64,7 +66,9 @@
 #' cubature::hcubature(integrand, 0, 1)  # Works but not as accurate
 #'
 #' # Cauchy(0, 1)
-#' integrand <- \(x) x * stats::dcauchy(x)
+#' integrand <- function(x) {
+#'   x * stats::dcauchy(x)
+#' }
 #' plot(integrand, -10, 10)
 #' distionary_integrate(integrand, 0, Inf) # NaN. Ideally would be Inf.
 #' distionary_integrate(integrand, -Inf, Inf) # NaN, good.

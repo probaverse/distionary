@@ -47,11 +47,21 @@ dst_beta <- function(shape1, shape2) {
   }
   distribution(
     .parameters = list(shape1 = shape1, shape2 = shape2),
-    density = \(x) stats::dbeta(x, shape1, shape2),
-    cdf = \(x) stats::pbeta(x, shape1, shape2),
-    quantile = \(p) stats::qbeta(p, shape1, shape2),
-    realise = \(n) stats::rbeta(n, shape1, shape2),
-    survival = \(x) stats::pbeta(x, shape1, shape2, lower.tail = FALSE),
+    density = function(x) {
+      stats::dbeta(x, shape1, shape2)
+    },
+    cdf = function(x) {
+      stats::pbeta(x, shape1, shape2)
+    },
+    quantile = function(p) {
+      stats::qbeta(p, shape1, shape2)
+    },
+    realise = function(n) {
+      stats::rbeta(n, shape1, shape2)
+    },
+    survival = function(x) {
+      stats::pbeta(x, shape1, shape2, lower.tail = FALSE)
+    },
     mean = shape1 / (shape1 + shape2),
     variance = shape1 * shape2 / (shape1 + shape2)^2 /
       (shape1 + shape2 + 1),

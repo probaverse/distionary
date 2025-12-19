@@ -58,14 +58,21 @@ dst_hyper <- function(m, n, k) {
   }
   distribution(
     .parameters = list(m = m, n = n, k = k),
-    pmf = \(x) stats::dhyper(x, m = m, n = n, k = k),
-    cdf = \(x) stats::phyper(x, m = m, n = n, k = k),
-    quantile = \(p) stats::qhyper(p, m = m, n = n, k = k),
-    realise = \(nn) stats::rhyper(nn, m = m, n = n, k = k),
-    survival = \(x) stats::phyper(
-      x,
-      m = m, n = n, k = k, lower.tail = FALSE
-    ),
+    pmf = function(x) {
+      stats::dhyper(x, m = m, n = n, k = k)
+    },
+    cdf = function(x) {
+      stats::phyper(x, m = m, n = n, k = k)
+    },
+    quantile = function(p) {
+      stats::qhyper(p, m = m, n = n, k = k)
+    },
+    realise = function(nn) {
+      stats::rhyper(nn, m = m, n = n, k = k)
+    },
+    survival = function(x) {
+      stats::phyper(x, m = m, n = n, k = k, lower.tail = FALSE)
+    },
     mean = k * m / N,
     variance = k * (m / N) * (n / N) * ((N - k) / (N - 1)),
     skewness = (N - 2 * m) * sqrt(N - 1) * (N - 2 * k) /

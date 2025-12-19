@@ -51,11 +51,21 @@ dst_geom <- function(prob) {
   }
   distribution(
     .parameters = list(prob = prob),
-    pmf = \(x) stats::dgeom(x, prob = prob),
-    cdf = \(x) stats::pgeom(x, prob = prob),
-    quantile = \(p) stats::qgeom(p, prob = prob),
-    realise = \(n) stats::rgeom(n, prob = prob),
-    survival = \(x) stats::pgeom(x, prob = prob, lower.tail = FALSE),
+    pmf = function(x) {
+      stats::dgeom(x, prob = prob)
+    },
+    cdf = function(x) {
+      stats::pgeom(x, prob = prob)
+    },
+    quantile = function(p) {
+      stats::qgeom(p, prob = prob)
+    },
+    realise = function(n) {
+      stats::rgeom(n, prob = prob)
+    },
+    survival = function(x) {
+      stats::pgeom(x, prob = prob, lower.tail = FALSE)
+    },
     mean = (1 - prob) / prob,
     variance = (1 - prob) / prob^2,
     skewness = ifelse(prob < 1, (2 - prob) / sqrt(1 - prob), NaN),

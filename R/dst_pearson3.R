@@ -63,17 +63,23 @@ dst_pearson3 <- function(location, scale, shape) {
     .parameters = list(
       location = location, scale = scale, shape = shape
     ),
-    cdf = \(x) stats::pgamma(x - location, scale = scale, shape = shape),
-    survival = \(x) stats::pgamma(
-      x - location,
-      scale = scale, shape = shape, lower.tail = FALSE
-    ),
-    density = \(x) stats::dgamma(
-      x - location,
-      scale = scale, shape = shape
-    ),
-    quantile = \(p) location + stats::qgamma(p, shape = shape, scale = scale),
-    realise = \(n) location + stats::rgamma(n, shape = shape, scale = scale),
+    cdf = function(x) {
+      stats::pgamma(x - location, scale = scale, shape = shape)
+    },
+    survival = function(x) {
+      stats::pgamma(
+        x - location, scale = scale, shape = shape, lower.tail = FALSE
+      )
+    },
+    density = function(x) {
+      stats::dgamma(x - location, scale = scale, shape = shape)
+    },
+    quantile = function(p) {
+      location + stats::qgamma(p, shape = shape, scale = scale)
+    },
+    realise = function(n) {
+      location + stats::rgamma(n, shape = shape, scale = scale)
+    },
     mean = location + scale * shape,
     variance = shape * scale^2,
     skewness = 2 / sqrt(shape),

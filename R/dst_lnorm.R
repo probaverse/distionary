@@ -50,14 +50,21 @@ dst_lnorm <- function(meanlog, sdlog) {
   }
   distribution(
     .parameters = list(meanlog = meanlog, sdlog = sdlog),
-    density = \(x) stats::dlnorm(x, meanlog = meanlog, sdlog = sdlog),
-    cdf = \(x) stats::plnorm(x, meanlog = meanlog, sdlog = sdlog),
-    quantile = \(p) stats::qlnorm(p, meanlog = meanlog, sdlog = sdlog),
-    realise = \(n) stats::rlnorm(n, meanlog = meanlog, sdlog = sdlog),
-    survival = \(x) stats::plnorm(
-      x,
-      meanlog = meanlog, sdlog = sdlog, lower.tail = FALSE
-    ),
+    density = function(x) {
+      stats::dlnorm(x, meanlog = meanlog, sdlog = sdlog)
+    },
+    cdf = function(x) {
+      stats::plnorm(x, meanlog = meanlog, sdlog = sdlog)
+    },
+    quantile = function(p) {
+      stats::qlnorm(p, meanlog = meanlog, sdlog = sdlog)
+    },
+    realise = function(n) {
+      stats::rlnorm(n, meanlog = meanlog, sdlog = sdlog)
+    },
+    survival = function(x) {
+      stats::plnorm(x, meanlog = meanlog, sdlog = sdlog, lower.tail = FALSE)
+    },
     mean = exp(meanlog + sdlog^2 / 2),
     median = exp(meanlog),
     variance = {

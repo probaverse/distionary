@@ -23,7 +23,9 @@ test_that("GP quantities match known cases, shape > 0", {
   )
   expect_equal(dgp(c(-1, Inf), scale = scale, shape = shape), c(0, 0))
   expect_true(all(diff(dgp(1:10, scale = scale, shape = shape)) < 0))
-  pdf <- \(x) dgp(x, scale = scale, shape = shape)
+  pdf <- function(x) {
+    dgp(x, scale = scale, shape = shape)
+  }
   expect_equal(stats::integrate(pdf, 0, Inf)$value, 1, tolerance = 0.0001)
 })
 
@@ -40,7 +42,9 @@ test_that("GP quantities match known cases, shape = 0", {
     c(NaN, 0, med, Inf, NaN)
   )
   expect_equal(dgp(c(-1, Inf), scale = scale, shape = shape), c(0, 0))
-  pdf <- \(x) dgp(x, scale = scale, shape = shape)
+  pdf <- function(x) {
+    dgp(x, scale = scale, shape = shape)
+  }
   expect_true(all(diff(pdf(1:10)) < 0))
   expect_equal(stats::integrate(pdf, 0, Inf)$value, 1, tolerance = 0.0001)
 })
@@ -65,7 +69,9 @@ test_that("GP quantities match known cases, shape < 0", {
     dgp(c(-1, rightend + 1, Inf), scale = scale, shape = shape),
     c(0, 0, 0)
   )
-  pdf <- \(x) dgp(x, scale = scale, shape = shape)
+  pdf <- function(x) {
+    dgp(x, scale = scale, shape = shape)
+  }
   expect_equal(stats::integrate(pdf, 0, rightend)$value, 1, tolerance = 0.0001)
 })
 

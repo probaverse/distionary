@@ -46,11 +46,21 @@ dst_exp <- function(rate) {
   }
   distribution(
     .parameters = list(rate = rate),
-    density = \(x) stats::dexp(x, rate = rate),
-    cdf = \(x) stats::pexp(x, rate = rate),
-    quantile = \(p) stats::qexp(p, rate = rate),
-    realise = \(n) stats::rexp(n, rate = rate),
-    survival = \(x) stats::pexp(x, rate = rate, lower.tail = FALSE),
+    density = function(x) {
+      stats::dexp(x, rate = rate)
+    },
+    cdf = function(x) {
+      stats::pexp(x, rate = rate)
+    },
+    quantile = function(p) {
+      stats::qexp(p, rate = rate)
+    },
+    realise = function(n) {
+      stats::rexp(n, rate = rate)
+    },
+    survival = function(x) {
+      stats::pexp(x, rate = rate, lower.tail = FALSE)
+    },
     mean = 1 / rate,
     median = log(2) / rate,
     variance = 1 / rate^2,

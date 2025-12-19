@@ -13,3 +13,4 @@
 ^codemeta\.json$
 ^CODE_OF_CONDUCT\.md$
 ^data-raw$
+^CRAN-SUBMISSION$

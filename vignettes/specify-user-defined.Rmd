@@ -73,7 +73,7 @@ The `eval_property()` function is also useful for programmatically accessing dis
 
 ```{r}
 properties <- c("mean", "variance")
-sapply(properties, \(x) eval_property(my_normal, x))
+lapply(properties, \(x) eval_property(my_normal, x))
 ```
 
 ## Distribution Attributes

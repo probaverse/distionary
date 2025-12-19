@@ -46,11 +46,21 @@ dst_t <- function(df) {
   }
   distribution(
     .parameters = list(df = df),
-    density = \(x) stats::dt(x, df = df),
-    cdf = \(x) stats::pt(x, df = df),
-    quantile = \(p) stats::qt(p, df = df),
-    realise = \(n) stats::rt(n, df = df),
-    survival = \(x) stats::pt(x, df = df, lower.tail = FALSE),
+    density = function(x) {
+      stats::dt(x, df = df)
+    },
+    cdf = function(x) {
+      stats::pt(x, df = df)
+    },
+    quantile = function(p) {
+      stats::qt(p, df = df)
+    },
+    realise = function(n) {
+      stats::rt(n, df = df)
+    },
+    survival = function(x) {
+      stats::pt(x, df = df, lower.tail = FALSE)
+    },
     mean = ifelse(df > 1, 0, NaN),
     median = 0,
     variance = {

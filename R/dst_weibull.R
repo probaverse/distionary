@@ -48,14 +48,21 @@ dst_weibull <- function(shape, scale) {
   }
   distribution(
     .parameters = list(shape = shape, scale = scale),
-    density = \(x) stats::dweibull(x, shape = shape, scale = scale),
-    cdf = \(x) stats::pweibull(x, shape = shape, scale = scale),
-    quantile = \(p) stats::qweibull(p, shape = shape, scale = scale),
-    realise = \(n) stats::rweibull(n, shape = shape, scale = scale),
-    survival = \(x) stats::pweibull(
-      x,
-      shape = shape, scale = scale, lower.tail = FALSE
-    ),
+    density = function(x) {
+      stats::dweibull(x, shape = shape, scale = scale)
+    },
+    cdf = function(x) {
+      stats::pweibull(x, shape = shape, scale = scale)
+    },
+    quantile = function(p) {
+      stats::qweibull(p, shape = shape, scale = scale)
+    },
+    realise = function(n) {
+      stats::rweibull(n, shape = shape, scale = scale)
+    },
+    survival = function(x) {
+      stats::pweibull(x, shape = shape, scale = scale, lower.tail = FALSE)
+    },
     mean = scale * gamma(1 + 1 / shape),
     variance = scale^2 * (gamma(1 + 2 / shape) - gamma(1 + 1 / shape)^2),
     skewness = {

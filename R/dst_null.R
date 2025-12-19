@@ -47,14 +47,30 @@
 dst_null <- function() {
   distribution(
     .parameters = NULL,
-    cdf = \(x) rep(NA_real_, length(x)),
-    density = \(x) rep(NA_real_, length(x)),
-    hazard = \(x) rep(NA_real_, length(x)),
-    chf = \(x) rep(NA_real_, length(x)),
-    pmf = \(x) rep(NA_real_, length(x)),
-    odds = \(x) rep(NA_real_, length(x)),
-    return = \(x) rep(NA_real_, length(x)),
-    quantile = \(x) rep(NA_real_, length(x)),
+    cdf = function(x) {
+      rep(NA_real_, length(x))
+    },
+    density = function(x) {
+      rep(NA_real_, length(x))
+    },
+    hazard = function(x) {
+      rep(NA_real_, length(x))
+    },
+    chf = function(x) {
+      rep(NA_real_, length(x))
+    },
+    pmf = function(x) {
+      rep(NA_real_, length(x))
+    },
+    odds = function(x) {
+      rep(NA_real_, length(x))
+    },
+    return = function(x) {
+      rep(NA_real_, length(x))
+    },
+    quantile = function(x) {
+      rep(NA_real_, length(x))
+    },
     mean = NA_real_,
     variance = NA_real_,
     skewness = NA_real_,

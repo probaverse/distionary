@@ -15,7 +15,9 @@
 #' evaluated, returns `NULL`.
 #' @examples
 #' d <- distribution(
-#'   cdf = \(x) (x > 0) * pmin(x^2, 1),
+#'   cdf = function(x) {
+#'     (x > 0) * pmin(x^2, 1)
+#'   },
 #'   g = 9.81,
 #'   .vtype = "continuous"
 #' )

@@ -48,11 +48,21 @@ dst_f <- function(df1, df2) {
   }
   distribution(
     .parameters = list(df1 = df1, df2 = df2),
-    density = \(x) stats::df(x, df1 = df1, df2 = df2),
-    cdf = \(x) stats::pf(x, df1 = df1, df2 = df2),
-    quantile = \(p) stats::qf(p, df1 = df1, df2 = df2),
-    realise = \(n) stats::rf(n, df1 = df1, df2 = df2),
-    survival = \(x) stats::pf(x, df1 = df1, df2 = df2, lower.tail = FALSE),
+    density = function(x) {
+      stats::df(x, df1 = df1, df2 = df2)
+    },
+    cdf = function(x) {
+      stats::pf(x, df1 = df1, df2 = df2)
+    },
+    quantile = function(p) {
+      stats::qf(p, df1 = df1, df2 = df2)
+    },
+    realise = function(n) {
+      stats::rf(n, df1 = df1, df2 = df2)
+    },
+    survival = function(x) {
+      stats::pf(x, df1 = df1, df2 = df2, lower.tail = FALSE)
+    },
     mean = ifelse(df2 > 2, df2 / (df2 - 2), NaN),
     variance = ifelse(
       df2 > 4,

@@ -32,6 +32,8 @@ algorithm_kurtosis <- function(distribution, tol = 1e-7, ...) {
   }
   r <- range(distribution)
   dens <- representation_as_function(distribution, representation = "density")
-  integrand <- \(x) ((x - mu) / sigma)^4 * dens(x)
+  integrand <- function(x) {
+    ((x - mu) / sigma)^4 * dens(x)
+  }
   distionary_integrate(integrand, lower = r[1], upper = r[2], tol = tol, ...)
 }

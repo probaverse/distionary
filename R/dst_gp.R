@@ -63,13 +63,18 @@ dst_gp <- function(scale, shape) {
   }
   distribution(
     .parameters = list(scale = scale, shape = shape),
-    cdf = \(x) pgp(x, scale = scale, shape = shape),
-    survival = \(x) pgp(
-      x,
-      scale = scale, shape = shape, lower.tail = FALSE
-    ),
-    quantile = \(p) qgp(p, scale = scale, shape = shape),
-    density = \(x) dgp(x, scale = scale, shape = shape),
+    cdf = function(x) {
+      pgp(x, scale = scale, shape = shape)
+    },
+    survival = function(x) {
+      pgp(x, scale = scale, shape = shape, lower.tail = FALSE)
+    },
+    quantile = function(p) {
+      qgp(p, scale = scale, shape = shape)
+    },
+    density = function(x) {
+      dgp(x, scale = scale, shape = shape)
+    },
     mean = ifelse(shape < 1, scale / (1 - shape), Inf),
     variance = ifelse(
       shape < 1 / 2,

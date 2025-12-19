@@ -12,7 +12,9 @@ representation_as_function <- function(distribution, representation) {
   checkmate::assert_character(representation, len = 1)
   f <- distribution[[representation]]
   if (is.null(f)) {
-    f <- \(x) eval_property(distribution, representation, x)
+    f <- function(x) {
+      eval_property(distribution, representation, x)
+    }
   }
   f
 }

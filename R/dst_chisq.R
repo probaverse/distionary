@@ -46,11 +46,21 @@ dst_chisq <- function(df) {
   }
   distribution(
     .parameters = list(df = df),
-    density = \(x) stats::dchisq(x, df = df),
-    cdf = \(x) stats::pchisq(x, df = df),
-    quantile = \(p) stats::qchisq(p, df = df),
-    realise = \(n) stats::rchisq(n, df = df),
-    survival = \(x) stats::pchisq(x, df = df, lower.tail = FALSE),
+    density = function(x) {
+      stats::dchisq(x, df = df)
+    },
+    cdf = function(x) {
+      stats::pchisq(x, df = df)
+    },
+    quantile = function(p) {
+      stats::qchisq(p, df = df)
+    },
+    realise = function(n) {
+      stats::rchisq(n, df = df)
+    },
+    survival = function(x) {
+      stats::pchisq(x, df = df, lower.tail = FALSE)
+    },
     mean = df,
     median = df * (1 - 2 / 9 * df)^3,
     variance = 2 * df,

@@ -9,8 +9,8 @@ Authors@R: c(
     person("Zhipeng", "Zhu", role = "ctb")
     )
 Description: Create and evaluate probability distribution objects from a
-    range of families or define custom distributions. Automatically compute
-    distibutional properties, even when they have not been specified.
+    variety of families or define custom distributions. Automatically compute
+    distributional properties, even when they have not been specified.
     This package supports statistical modeling and simulations, and forms
     the core of the probaverse suite of R packages.
 License: MIT + file LICENSE
@@ -24,7 +24,7 @@ Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list (markdown = TRUE, roclets = c ("namespace", "rd", "srr::srr_stats_roclet"))
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Imports: 
     checkmate,
     ellipsis,

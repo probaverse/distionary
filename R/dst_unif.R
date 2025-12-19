@@ -51,11 +51,21 @@ dst_unif <- function(min, max) {
   }
   distribution(
     .parameters = list(min = min, max = max),
-    density = \(x) stats::dunif(x, min = min, max = max),
-    cdf = \(x) stats::punif(x, min = min, max = max),
-    quantile = \(p) stats::qunif(p, min = min, max = max),
-    realise = \(n) stats::runif(n, min = min, max = max),
-    survival = \(x) stats::punif(x, min = min, max = max, lower.tail = FALSE),
+    density = function(x) {
+      stats::dunif(x, min = min, max = max)
+    },
+    cdf = function(x) {
+      stats::punif(x, min = min, max = max)
+    },
+    quantile = function(p) {
+      stats::qunif(p, min = min, max = max)
+    },
+    realise = function(n) {
+      stats::runif(n, min = min, max = max)
+    },
+    survival = function(x) {
+      stats::punif(x, min = min, max = max, lower.tail = FALSE)
+    },
     mean = (min + max) / 2,
     median = (min + max) / 2,
     variance = (min - max)^2 / 12,
