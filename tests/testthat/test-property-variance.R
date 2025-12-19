@@ -5,14 +5,14 @@
 
 test_that("Network is invoked in priority: variance", {
   # First look for `stdev`, then invoke algorithm if not found.
-  d <- distribution(
+  d <- suppressWarnings(distribution(
     density = function(x) {
       stats::dnorm(x, sd = 3)
     },
     range = c(-Inf, Inf),
     stdev = 10, # deliberately incorrect
     .vtype = "continuous"
-  )
+  ))
   expect_equal(variance(d), 100)
   expect_equal(eval_variance_from_network(d), 100)
   d$stdev <- NULL
@@ -30,17 +30,18 @@ test_that("Variance algorithm matches known vals", {
           supposed_var <- NaN  # To align with numerical integration output.
         }
         if (vtype(d) == "continuous") {
-          if (
+          is_gumbel <- (
             pretty_name(d) == "Generalised Extreme Value" &&
-            parameters(d)$shape == 0
-          ) {
+              parameters(d)$shape == 0
+          ) || pretty_name(d) == "Gumbel"
+          if (is_gumbel) {
             # GEV with shape = 0 has NaN density for very negative values.
             mu <- mean(d)
             integrand <- function(x) {
               (x - mu)^2 * eval_density(d, at = x)
             }
             expect_equal(
-              stats::integrate(integrand, -1000, 0)$value +
+              stats::integrate(integrand, -700, 0)$value +
                 stats::integrate(integrand, 0, Inf)$value,
               supposed_var
             )

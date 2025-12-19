@@ -3,26 +3,31 @@
 #' @srrstats {G5.4b} Implementations of existing methods are compared against
 #' the stats package where possible.
 test_that("Mean calculated thru network matches known vals", {
+  verbose <- FALSE
   for (item in test_distributions) {
     for (paramset in item$valid) {
       d <- rlang::exec(item$distribution, !!!paramset)
-      # print(d)
+      if (verbose) {
+        cat("\n\n")
+        print(d)
+      }
       supposed_mean <- mean(d)
       if (is.infinite(supposed_mean)) {
         supposed_mean <- NaN  # For direct comparison to integral output.
       }
       if (is_intrinsic(d, "mean")) {
         if (vtype(d) == "continuous") {
-          if (
+          is_gumbel <- (
             pretty_name(d) == "Generalised Extreme Value" &&
-            parameters(d)$shape == 0
-          ) {
+              parameters(d)$shape == 0
+          ) || pretty_name(d) == "Gumbel"
+          if (is_gumbel) {
             # The density becomes NaN if x is too small. Manually check.
             integrand <- function(x) {
               x * eval_density(d, at = x)
             }
             expect_equal(
-              stats::integrate(integrand, -1000, 0)$value +
+              stats::integrate(integrand, -700, 0)$value +
                 stats::integrate(integrand, 0, Inf)$value,
               supposed_mean
             )

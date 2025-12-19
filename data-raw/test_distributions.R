@@ -180,6 +180,16 @@ test_distributions <- list(
       list(scale = 1.5, shape = -1.2)
     )
   ),
+  gumbel = list(
+    distribution = "dst_gumbel",
+    invalid = list(
+      list(location = 0, scale = -1)
+    ),
+    valid = list(
+      list(location = 0, scale = 1),
+      list(location = 1, scale = 1.2)
+    )
+  ),
   hyper = list(
     distribution = "dst_hyper",
     invalid = list(

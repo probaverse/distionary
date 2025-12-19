@@ -35,4 +35,4 @@ VignetteBuilder: knitr
 URL: https://distionary.probaverse.com/, https://github.com/probaverse/distionary
 BugReports: https://github.com/probaverse/distionary/issues
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5)
