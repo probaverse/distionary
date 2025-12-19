@@ -39,6 +39,7 @@ All distribution families found in the `stats` package are integrated into `dist
 | Gamma | `dst_gamma()` | Yes |
 | Geometric | `dst_geom()` | Yes |
 | Generalised Extreme Value (GEV) | `dst_gev()` | No |
+| Gumbel | `dst_gumbel()` | No |
 | Generalised Pareto (GP) | `dst_gp()` | No |
 | Hypergeometric | `dst_hyper()` | Yes |
 | Log Normal | `dst_lnorm()` | Yes |
