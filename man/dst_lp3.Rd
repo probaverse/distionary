@@ -13,7 +13,7 @@ dst_lp3(meanlog, sdlog, skew)
 single positive numeric.}
 
 \item{skew}{Skewness of the log of the random variable;
-single numeric.}
+single positive numeric.}
 }
 \value{
 A Log Pearson Type III distribution.

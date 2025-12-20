@@ -218,11 +218,12 @@ test_distributions <- list(
   lp3 = list(
     distribution = "dst_lp3",
     invalid = list(
-      list(meanlog = 0, sdlog = -1, skew = 1)
+      list(meanlog = 0, sdlog = -1, skew = 1),
+      list(meanlog = 0, sdlog = 1, skew = -1)
     ),
     valid = list(
       list(meanlog = 0, sdlog = 1.1, skew = 0.7),
-      list(meanlog = -1, sdlog = 0.7, skew = -0.7)
+      list(meanlog = -1, sdlog = 0.7, skew = 1.2)
     )
   ),
   nbinom = list(

@@ -8,7 +8,7 @@
 #' @param sdlog Standard deviation of the log of the random variable;
 #' single positive numeric.
 #' @param skew Skewness of the log of the random variable;
-#' single numeric.
+#' single positive numeric.
 #' @returns A Log Pearson Type III distribution.
 #' @examples
 #' dst_lp3(0, 1, 1)
@@ -55,41 +55,18 @@
 dst_lp3 <- function(meanlog, sdlog, skew) {
   checkmate::assert_numeric(meanlog, len = 1)
   checkmate::assert_numeric(sdlog, 0, len = 1)
-  checkmate::assert_numeric(skew, len = 1)
+  checkmate::assert_numeric(skew, 0, len = 1)
   if (is.na(meanlog) || is.na(sdlog) || is.na(skew)) {
     return(dst_null())
   }
-  # skewness = 2 / sqrt(shape), shape = 4 / skewness^2
-  shape <- 4 / skew^2
-  # sd = sqrt(shape) * scale
-  scale <- sdlog / sqrt(shape)
-  # mean = scale * shape
-  shift <- meanlog - scale * shape
-    distribution(
-      .parameters = list(meanlog = meanlog, sdlog = sdlog, skew = skew),
-      cdf = function(x) stats::pgamma(
-        log(pmax(0, x)) - shift,
-        shape = shape, scale = scale
-      ),
-      survival = function(x) stats::pgamma(
-        log(pmax(0, x)) - shift,
-        shape = shape, scale = scale, lower.tail = FALSE
-      ),
-      density = function(x) {
-        res <- stats::dgamma(
-          log(pmax(0, x)) - shift,
-          shape = shape, scale = scale
-        ) / x
-        res[x == 0] <- 0
-        res
-      },
-      quantile = function(p) exp(
-        stats::qgamma(p, shape = shape, scale = scale) + shift
-      ),
-      realise = function(n) exp(
-        stats::rgamma(n, shape = shape, scale = scale) + shift
-      ),
-      .name = "Log Pearson Type III",
-      .vtype = "continuous"
-    )
+  distribution(
+    .parameters = list(meanlog = meanlog, sdlog = sdlog, skew = skew),
+    cdf = function(x) plp3(x, meanlog, sdlog, skew),
+    survival = function(x) plp3(x, meanlog, sdlog, skew, lower.tail = FALSE),
+    density = function(x) dlp3(x, meanlog, sdlog, skew),
+    quantile = function(p) qlp3(p, meanlog, sdlog, skew),
+    realise = function(n) rlp3(n, meanlog, sdlog, skew),
+    .name = "Log Pearson Type III",
+    .vtype = "continuous"
+  )
 }
