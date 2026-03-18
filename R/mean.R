@@ -31,6 +31,6 @@
 #' checkmate package for most functions.
 #' @export
 mean.dst <- function(x, ...) {
-  ellipsis::check_dots_empty()
+  rlang::check_dots_empty()
   eval_property(x, "mean")
 }
