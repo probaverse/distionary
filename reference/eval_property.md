@@ -51,8 +51,8 @@ eval_property(d, "mean")
 #> Integration routine for numerical computation failed. This could be because the property is not well-defined. Returning NaN.
 #> [1] NaN
 eval_property(d, "realise", 10)
-#>  [1] 0.7550132 0.5794127 0.7721805 0.4376277 0.9735317 0.7365327 0.7379725
-#>  [8] 0.5278230 0.6683580 0.6095172
+#>  [1] 0.2841657 0.9134183 0.7750877 0.3964952 0.0860200 0.6829301 0.7055334
+#>  [8] 0.5383003 0.8560853 0.8789320
 eval_property(d, "foofy")
 #> NULL
 eval_property(d, "foofy", 1:10)
