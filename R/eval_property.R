@@ -71,7 +71,7 @@ eval_property <- function(distribution, entry, ...) {
     if (is.function(repres)) {
       return(repres(...))
     } else {
-      ellipsis::check_dots_empty()
+      rlang::check_dots_empty()
       return(repres)
     }
   }
