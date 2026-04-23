@@ -1,7 +1,3 @@
-#' @srrstats {G5.4} Correctness tests are conducted to test that
-#' statistical algorithms (calculating properties from other distribution
-#' properties) produce expected results to test distributions with set
-#' parameters.
 
 test_that("Degenerate Distribution quantities are appropriate", {
   d <- dst_degenerate(0.5)

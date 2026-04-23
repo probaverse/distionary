@@ -1,5 +1,3 @@
-#' @srrstats {PD4.2} All distributions are tested using at least two
-#' valid parameter sets, and at least one invalid parameter set.
 test_that("Parameters are specified and retrieved correctly w/ parameters()", {
   param_retrieved <- list()
   # Remove the finite and empirical distributions, which are special.

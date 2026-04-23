@@ -27,8 +27,6 @@
 #' kurtosis(c)
 #' kurtosis_exc(c)
 #' @rdname moments
-#' @srrstats {G2.1} Assertions on types of inputs is conducted using the
-#' checkmate package for most functions.
 #' @export
 mean.dst <- function(x, ...) {
   rlang::check_dots_empty()

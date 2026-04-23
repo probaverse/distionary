@@ -27,18 +27,6 @@
 #' because names are anticipated to be syntactic with the `eval_fn` prefix;
 #' "minimal" is not sufficient because it may result in columns having the
 #' same names.
-#' @srrstats {G2.3} Univariate character input specifications are asserted
-#' using the checkmate package where relevant (e.g., `.vtype` and `.name`
-#' in `distribution()`; `arg_name` and `fn_prefix` in `enframe_*()`).
-#' --> Copied to those functions.
-#' @srrstats {G2.4c} Explicit conversion to character via `as.character()`
-#' (and not `paste` or `paste0`) is done where character input is required:
-#' `distribution()`'s `.vtype` and `.name` arguments, and the column naming
-#' specifications of `enframe_general()`. --> Copied to both functions.
-#' @srrstats {PD3.1} Operations on probability distributions are
-#' contained within separate functions which themselves accept the
-#' names of the distributions as one input parameter. Examples include
-#' the `eval_()` and `enframe_()` families of functions.
 #' @noRd
 enframe_general <- function(...,
                             at,

@@ -1,6 +1,3 @@
-#' @srrstats {G5.2} Appropriate error behaviour is tested for all
-#' functions explicitly, but warnings are omitted and saved for a future
-#' version. --> Copied to test-edge_cases-builtin_dists.R
 
 test_that("Object is a distribution.", {
   expect_true(is_distribution(distribution()))

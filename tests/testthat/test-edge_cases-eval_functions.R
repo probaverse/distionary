@@ -1,5 +1,3 @@
-#' @srrstats {G5.8} Edge conditions are tested when evaluating
-#' representations.
 
 # Make sure that defined distributions evaluate NA inputs properly.
 # Make sure they evaluate edge cases properly.

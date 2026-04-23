@@ -1,15 +1,3 @@
-#' @srrstats {G1.0} Distributions are generic enough to not need a specific
-#' reference (e.g., an intro probability book will cover most concepts in
-#' distionary), and it appears most other distribution packages on CRAN do
-#' not include references.
-#' @srrstats {G1.4} Software uses [`roxygen2`](https://roxygen2.r-lib.org/) to
-#' document all functions.
-#' @srrstats {G1.4a} All internal (non-exported) functions are documented in
-#' standard [`roxygen2`](https://roxygen2.r-lib.org/) format, along with a
-#' final `@noRd` tag to suppress automatic generation of `.Rd` files.
-#' @srrstats {PD1.0} Distributions are treated generally in distionary.
-#' @srrstats {PD2.0} Representing probability distributions using a package
-#' for general representation is the main purpose of distionary.
 
 #' Build a Distribution Object
 #'
@@ -86,16 +74,6 @@
 #'
 #' # Plot
 #' plot(linear)
-#' @srrstats {G2.3} Univariate character input specifications are asserted
-#' using the checkmate package where relevant (e.g., `.vtype` and `.name`
-#' in `distribution()`; `arg_name` and `fn_prefix` in `enframe_*()`).
-#' --> Copied to those functions.
-#' @srrstats {G2.3b} The use of `tolower()` is applicable for the `.name`
-#' argument in `distribution()` and is used. --> Copied to `distribution()`.
-#' @srrstats {G2.4c} Explicit conversion to character via `as.character()`
-#' (and not `paste` or `paste0`) is done where character input is required:
-#' `distribution()`'s `.vtype` and `.name` arguments, and the column naming
-#' specifications of `enframe_general()`. --> Copied to both functions.
 #' @family Distribution Construction
 #' @export
 distribution <- function(...,

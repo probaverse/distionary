@@ -7,12 +7,6 @@
 #' @param ... Attributes to add to the list.
 #' @param class If making a subclass, specify its name here.
 #' @returns The original list `l` with the specified attributes.
-#' @srrstats {G2.1} Assertions on types of inputs is conducted using the
-#' checkmate package for most functions.
-#' @srrstats {G5.3} Functions that are expected to return objects containing no
-#' missing (`NA`) or undefined (`NaN`, `Inf`) values are tested either
-#' implicitly (e.g., `is_distribution()` implicitly checks non-NA value) or
-#' explicitly (e.g., `pretty_name()` is never NA). --> Copied to both files.
 #' @noRd
 new_distribution <- function(l, ..., class = character()) {
   checkmate::assert_list(l)
