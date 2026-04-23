@@ -33,4 +33,8 @@ A Log Pearson Type III distribution.
 
 ``` r
 dst_lp3(0, 1, 1)
+#> Log Pearson Type III distribution (continuous) 
+#> --Parameters--
+#> meanlog   sdlog    skew 
+#>       0       1       1 
 ```

@@ -60,7 +60,7 @@
 - [`distribution()`](https://distionary.probaverse.com/reference/distribution.md)
   [`is_distribution()`](https://distionary.probaverse.com/reference/distribution.md)
   [`is.distribution()`](https://distionary.probaverse.com/reference/distribution.md)
-  : Distribution Objects
+  : Build a Distribution Object
 
 ### Distribution Characteristics
 

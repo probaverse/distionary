@@ -1,5 +1,7 @@
 # Changelog
 
+## distionary (development version)
+
 ## distionary 0.1.0
 
 CRAN release: 2025-12-01

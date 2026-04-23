@@ -1,6 +1,10 @@
-# Distribution Objects
+# Build a Distribution Object
 
-Distribution Objects
+Make a distribution object by specifying properties (e.g., cdf, density,
+mean, etc.). Some properties, if not included, will be calculated based
+on other properties that are included (e.g., quantile from cdf; variance
+from standard deviation). A list of these representations can be found
+in the details.
 
 ## Usage
 

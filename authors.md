@@ -16,13 +16,13 @@ Source:
 [`DESCRIPTION`](https://github.com/probaverse/distionary/blob/main/DESCRIPTION)
 
 Coia V (2026). *distionary: Create and Evaluate Probability
-Distributions*. R package version 0.1.0,
+Distributions*. R package version 0.1.0.9000,
 <https://distionary.probaverse.com/>.
 
     @Manual{,
       title = {distionary: Create and Evaluate Probability Distributions},
       author = {Vincenzo Coia},
       year = {2026},
-      note = {R package version 0.1.0},
+      note = {R package version 0.1.0.9000},
       url = {https://distionary.probaverse.com/},
     }
