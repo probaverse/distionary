@@ -1,6 +1,6 @@
 Package: distionary
 Title: Create and Evaluate Probability Distributions
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: c(
     person("Vincenzo", "Coia", , "vincenzo.coia@gmail.com", 
            role = c("aut", "cre", "cph")),
