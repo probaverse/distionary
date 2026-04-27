@@ -6,8 +6,8 @@ Authors@R: c(
            role = c("aut", "cre", "cph")),
     person("Amogh", "Joshi", role = "ctb"),
     person("Shuyi", "Tan", role = "ctb"),
-    person("Zhipeng", "Zhu", role = "ctb")
-    )
+    person("Zhipeng", "Zhu", role = "ctb"),
+    person("olivroy", role = "ctb", comment = "GitHub contributor"))
 Description: Create and evaluate probability distribution objects from a
     variety of families or define custom distributions. Automatically compute
     distributional properties, even when they have not been specified.
