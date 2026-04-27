@@ -100,6 +100,8 @@ Other contributors:
 
 - Zhipeng Zhu \[contributor\]
 
+- olivroy (GitHub contributor) \[contributor\]
+
 ## Examples
 
 ``` r
