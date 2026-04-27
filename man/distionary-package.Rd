@@ -125,6 +125,7 @@ Other contributors:
   \item Amogh Joshi [contributor]
   \item Shuyi Tan [contributor]
   \item Zhipeng Zhu [contributor]
+  \item olivroy (GitHub contributor) [contributor]
 }
 
 }
