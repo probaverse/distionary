@@ -10,6 +10,9 @@
 
 - **Zhipeng Zhu**. Contributor.
 
+- **olivroy**. Contributor.  
+  GitHub contributor
+
 ## Citation
 
 Source:
