@@ -1,6 +1,7 @@
 # Evaluate a Distribution
 
 ``` r
+
 library(distionary)
 ```
 
@@ -26,22 +27,23 @@ and other properties.
 Here is a list of representations recognised by `distionary`, and the
 functions for accessing them.
 
-| Representation                   | `distionary` Functions                                                                                                                                        |
-|----------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Cumulative Distribution Function | [`eval_cdf()`](https://distionary.probaverse.com/reference/cdf.md), [`enframe_cdf()`](https://distionary.probaverse.com/reference/cdf.md)                     |
-| Survival Function                | [`eval_survival()`](https://distionary.probaverse.com/reference/survival.md), [`enframe_survival()`](https://distionary.probaverse.com/reference/survival.md) |
-| Quantile Function                | [`eval_quantile()`](https://distionary.probaverse.com/reference/quantile.md), [`enframe_quantile()`](https://distionary.probaverse.com/reference/quantile.md) |
-| Hazard Function                  | [`eval_hazard()`](https://distionary.probaverse.com/reference/hazard.md), [`enframe_hazard()`](https://distionary.probaverse.com/reference/hazard.md)         |
-| Cumulative Hazard Function       | [`eval_chf()`](https://distionary.probaverse.com/reference/chf.md), [`enframe_chf()`](https://distionary.probaverse.com/reference/chf.md)                     |
-| Probability density Function     | [`eval_density()`](https://distionary.probaverse.com/reference/density.md), [`enframe_density()`](https://distionary.probaverse.com/reference/density.md)     |
-| Probability mass Function (PMF)  | [`eval_pmf()`](https://distionary.probaverse.com/reference/pmf.md), [`enframe_pmf()`](https://distionary.probaverse.com/reference/pmf.md)                     |
-| Odds Function                    | [`eval_odds()`](https://distionary.probaverse.com/reference/odds.md), [`enframe_odds()`](https://distionary.probaverse.com/reference/odds.md)                 |
-| Return Level Function            | [`eval_return()`](https://distionary.probaverse.com/reference/return.md), [`enframe_return()`](https://distionary.probaverse.com/reference/return.md)         |
+| Representation | `distionary` Functions |
+|----|----|
+| Cumulative Distribution Function | [`eval_cdf()`](https://distionary.probaverse.com/reference/cdf.md), [`enframe_cdf()`](https://distionary.probaverse.com/reference/cdf.md) |
+| Survival Function | [`eval_survival()`](https://distionary.probaverse.com/reference/survival.md), [`enframe_survival()`](https://distionary.probaverse.com/reference/survival.md) |
+| Quantile Function | [`eval_quantile()`](https://distionary.probaverse.com/reference/quantile.md), [`enframe_quantile()`](https://distionary.probaverse.com/reference/quantile.md) |
+| Hazard Function | [`eval_hazard()`](https://distionary.probaverse.com/reference/hazard.md), [`enframe_hazard()`](https://distionary.probaverse.com/reference/hazard.md) |
+| Cumulative Hazard Function | [`eval_chf()`](https://distionary.probaverse.com/reference/chf.md), [`enframe_chf()`](https://distionary.probaverse.com/reference/chf.md) |
+| Probability density Function | [`eval_density()`](https://distionary.probaverse.com/reference/density.md), [`enframe_density()`](https://distionary.probaverse.com/reference/density.md) |
+| Probability mass Function (PMF) | [`eval_pmf()`](https://distionary.probaverse.com/reference/pmf.md), [`enframe_pmf()`](https://distionary.probaverse.com/reference/pmf.md) |
+| Odds Function | [`eval_odds()`](https://distionary.probaverse.com/reference/odds.md), [`enframe_odds()`](https://distionary.probaverse.com/reference/odds.md) |
+| Return Level Function | [`eval_return()`](https://distionary.probaverse.com/reference/return.md), [`enframe_return()`](https://distionary.probaverse.com/reference/return.md) |
 
 All representations can either be accessed by the `eval_*()` family of
 functions, providing a vector of the evaluated representation.
 
 ``` r
+
 d1 <- dst_geom(0.6)
 eval_pmf(d1, at = 0:5)
 #> [1] 0.600000 0.240000 0.096000 0.038400 0.015360 0.006144
@@ -52,6 +54,7 @@ results in a tibble or data frame paired with the inputs, useful in a
 data wrangling workflow.
 
 ``` r
+
 enframe_pmf(d1, at = 0:5)
 #> # A tibble: 6 × 2
 #>    .arg     pmf
@@ -77,6 +80,7 @@ can be changed in three ways:
 Let’s practice this with the addition of a second distribution.
 
 ``` r
+
 d2 <- dst_geom(0.4)
 enframe_pmf(
   model1 = d1, model2 = d2, at = 0:5,
@@ -101,6 +105,7 @@ To draw a random sample from a distribution, use the
 function:
 
 ``` r
+
 set.seed(42)
 realise(d1, n = 5)
 #> [1] 0 0 0 0 0
@@ -111,6 +116,7 @@ default, `n` is set to 1, so that realising converts a distribution to a
 numeric draw:
 
 ``` r
+
 realise(d1)
 #> [1] 0
 ```
@@ -139,20 +145,21 @@ other summary measures.
 Below is a table of the properties incorporated in `distionary`, and the
 corresponding functions for accessing them.
 
-| Property           | `distionary` Function                                                      |
-|--------------------|----------------------------------------------------------------------------|
-| Mean               | [`mean()`](https://rdrr.io/r/base/mean.html)                               |
-| Median             | [`median()`](https://rdrr.io/r/stats/median.html)                          |
-| Variance           | [`variance()`](https://distionary.probaverse.com/reference/moments.md)     |
-| Standard Deviation | [`sd()`](https://rdrr.io/r/stats/sd.html)                                  |
-| Skewness           | [`skewness()`](https://distionary.probaverse.com/reference/moments.md)     |
-| Excess Kurtosis    | [`kurtosis_exc()`](https://distionary.probaverse.com/reference/moments.md) |
-| Kurtosis           | [`kurtosis()`](https://distionary.probaverse.com/reference/moments.md)     |
-| Range              | [`range()`](https://rdrr.io/r/base/range.html)                             |
+| Property | `distionary` Function |
+|----|----|
+| Mean | [`mean()`](https://rdrr.io/r/base/mean.html) |
+| Median | [`median()`](https://rdrr.io/r/stats/median.html) |
+| Variance | [`variance()`](https://distionary.probaverse.com/reference/moments.md) |
+| Standard Deviation | [`sd()`](https://rdrr.io/r/stats/sd.html) |
+| Skewness | [`skewness()`](https://distionary.probaverse.com/reference/moments.md) |
+| Excess Kurtosis | [`kurtosis_exc()`](https://distionary.probaverse.com/reference/moments.md) |
+| Kurtosis | [`kurtosis()`](https://distionary.probaverse.com/reference/moments.md) |
+| Range | [`range()`](https://rdrr.io/r/base/range.html) |
 
 Here’s the mean and variance of our original distribution.
 
 ``` r
+
 mean(d1)
 #> [1] 0.6666667
 variance(d1)

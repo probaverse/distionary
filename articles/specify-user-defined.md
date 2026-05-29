@@ -1,6 +1,7 @@
 # Specifying Your Own Distribution
 
 ``` r
+
 library(distionary)
 ```
 
@@ -17,6 +18,7 @@ the cumulative distribution function (CDF) can be specified as
 functions.
 
 ``` r
+
 my_normal <- distribution(
   density = stats::dnorm,
   cdf = stats::pnorm,
@@ -36,6 +38,7 @@ The usual evaluation framework can now be accessed, such as evaluating
 the CDF.
 
 ``` r
+
 eval_cdf(my_normal, at = c(0.2, 0.5, 0.7))
 #> [1] 0.5792597 0.6914625 0.7580363
 ```
@@ -43,6 +46,7 @@ eval_cdf(my_normal, at = c(0.2, 0.5, 0.7))
 Even though the mean has not been specified, it can still be evaluated.
 
 ``` r
+
 mean(my_normal)
 #> [1] 0
 ```
@@ -78,6 +82,7 @@ which is useful for accessing entries that are not known to
 in this way.
 
 ``` r
+
 eval_property(my_normal, "g")
 #> [1] 9.81
 ```
@@ -88,6 +93,7 @@ to evaluate a function, arguments can be specified in the `...`
 argument.
 
 ``` r
+
 eval_property(my_normal, "another_representation", 1:4)
 #> [1]  1  4  9 16
 ```
@@ -98,6 +104,7 @@ function is also useful for programmatically accessing distribution
 properties.
 
 ``` r
+
 properties <- c("mean", "variance")
 lapply(properties, \(x) eval_property(my_normal, x))
 #> [[1]]
@@ -123,6 +130,7 @@ function.
   as the distribution’s name.
 
 ``` r
+
 my_distribution <- distribution(
   cdf = pnorm,
   density = dnorm,
@@ -149,6 +157,7 @@ my_distribution
 Retrieve the variable type:
 
 ``` r
+
 vtype(my_distribution)
 #> [1] "continuous"
 ```
@@ -156,6 +165,7 @@ vtype(my_distribution)
 Retrieve the parameters:
 
 ``` r
+
 parameters(my_distribution)
 #> $theta
 #> [1] 1.7
@@ -173,6 +183,7 @@ You can also reset the parameters with `<-`. Lets give this distribution
 scalar parameters.
 
 ``` r
+
 parameters(my_distribution)[["mat"]] <- 1
 parameters(my_distribution)[["hello"]] <- NULL
 # Inspect the distribution
@@ -187,6 +198,7 @@ Retrieve the distribution’s name with
 [`pretty_name()`](https://distionary.probaverse.com/reference/pretty_name.md).
 
 ``` r
+
 pretty_name(my_distribution)
 #> [1] "Special"
 ```
@@ -195,6 +207,7 @@ Names are “pretty” because they can also include the parameters in a
 compact way, when the parameters are scalars (which they now are):
 
 ``` r
+
 pretty_name(my_distribution, param_digits = 2)
 #> [1] "Special(1.7, 1)"
 ```
@@ -209,6 +222,7 @@ specified, as required for continuous distributions, and metadata are
 specified with the arguments starting with `.`.
 
 ``` r
+
 dst_linear <- function(a) {
   # It helps to check that the parameter is valid.
   checkmate::assert_number(a, lower = 0)
@@ -241,6 +255,7 @@ dst_linear <- function(a) {
 Notice how the distribution metadata gets printed with the distribution.
 
 ``` r
+
 dst_linear(3)
 #> Linear distribution (continuous) 
 #> --Parameters--
@@ -251,6 +266,7 @@ dst_linear(3)
 Here are the density plots of different members of this family.
 
 ``` r
+
 plot(dst_linear(1), to = 4, col = "purple")
 plot(dst_linear(2), add = TRUE, col = "red")
 plot(dst_linear(4), add = TRUE, col = "blue")
@@ -269,6 +285,7 @@ Consider, for example, calculating return periods of three different
 Linear distributions.
 
 ``` r
+
 enframe_return(
   model1 = dst_linear(1),
   model2 = dst_linear(2),
@@ -311,6 +328,7 @@ Some properties are easy to make yourself. Here is an example of a
 function that calculates interquartile range.
 
 ``` r
+
 # Make a function that takes a distribution as input, and returns the
 # interquartile range.
 iqr <- function(distribution) {
@@ -321,6 +339,7 @@ iqr <- function(distribution) {
 Apply the function to a Linear distribution as defined before.
 
 ``` r
+
 iqr(dst_linear(2))
 #> [1] 0.7320508
 ```
@@ -336,9 +355,9 @@ The `distionary` package is still young. Lots of helpful features are
 still missing, and your patience is appreciated as more features are
 developed. Some examples follow.
 
-| \#  | Limitation                                                                                                                                                                                                                 | Explanation                                                                                                                                          |
-|-----|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
-| 1\. | When a user-specified distribution isn’t continuous (e.g., is discrete), only the properties specified in [`distribution()`](https://distionary.probaverse.com/reference/distribution.md) can be accessed in this version. | Specifying the set of possible outcomes for discrete distributions requires special attention, particularly when there are infinitely many of them.  |
-| 2\. | Representations are not checked for accuracy in this version.                                                                                                                                                              | While this is done in the test suite for the built-in distributions, additional levels of detail are required when accepting a foreign distribution. |
-| 3\. | Typos when specifying distribution property names (e.g. `densty` instead of `density`) or variable type (e.g., `"contnous"` instead of `"continuous"`) will not trigger an error.                                          | The package does not assume that distribution properties and types are limited, allowing for flexibility.                                            |
-| 4\. | It is currently assumed that the distributional representations are specified in a way that remains valid beyond the range of the distribution.                                                                            | A future version aims to use the specified range to automatically implement appropriate behavior.                                                    |
+| \# | Limitation | Explanation |
+|----|----|----|
+| 1\. | When a user-specified distribution isn’t continuous (e.g., is discrete), only the properties specified in [`distribution()`](https://distionary.probaverse.com/reference/distribution.md) can be accessed in this version. | Specifying the set of possible outcomes for discrete distributions requires special attention, particularly when there are infinitely many of them. |
+| 2\. | Representations are not checked for accuracy in this version. | While this is done in the test suite for the built-in distributions, additional levels of detail are required when accepting a foreign distribution. |
+| 3\. | Typos when specifying distribution property names (e.g. `densty` instead of `density`) or variable type (e.g., `"contnous"` instead of `"continuous"`) will not trigger an error. | The package does not assume that distribution properties and types are limited, allowing for flexibility. |
+| 4\. | It is currently assumed that the distributional representations are specified in a way that remains valid beyond the range of the distribution. | A future version aims to use the specified range to automatically implement appropriate behavior. |

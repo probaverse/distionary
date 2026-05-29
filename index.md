@@ -69,12 +69,14 @@ it’s more self-contained.
 To install `distionary`, run the following code in R:
 
 ``` r
+
 install.packages("distionary")
 ```
 
 ## Example: Built-in Distributions
 
 ``` r
+
 library(distionary)
 ```
 
@@ -83,6 +85,7 @@ Extreme Value (GEV) distribution using the `dst_*()` family of
 functions.
 
 ``` r
+
 # Create a Poisson distribution
 poisson <- dst_pois(1.5)
 # Inspect
@@ -94,6 +97,7 @@ poisson
 ```
 
 ``` r
+
 # Create a GEV distribution
 gev <- dst_gev(-1, 1, 0.2)
 # Inspect
@@ -108,12 +112,14 @@ Here is what the distributions look like, via their probability mass
 (PMF) and density functions.
 
 ``` r
+
 plot(poisson)
 ```
 
 ![](reference/figures/README-unnamed-chunk-5-1.png)
 
 ``` r
+
 plot(gev)
 ```
 
@@ -123,6 +129,7 @@ plot(gev)
 and range of valid values.
 
 ``` r
+
 mean(gev)
 #> [1] -0.1788514
 skewness(poisson)
@@ -138,6 +145,7 @@ evaluate the representation, whereas the `enframe_*()` functions place
 the output alongside the input in a data frame or tibble.
 
 ``` r
+
 eval_pmf(poisson, at = 0:4)
 #> [1] 0.22313016 0.33469524 0.25102143 0.12551072 0.04706652
 enframe_quantile(gev, at = c(0.2, 0.5, 0.9))
@@ -159,6 +167,7 @@ one or two representations (such as CDF and density), `distionary` can
 derive other properties as needed.
 
 ``` r
+
 # Make a distribution by specifying only density and CDF
 linear <- distribution(
   density = function(x) {
@@ -185,6 +194,7 @@ linear
 Here is what it looks like (density function).
 
 ``` r
+
 plot(linear)
 ```
 
@@ -194,6 +204,7 @@ Even though only the density and CDF were specified, other properties
 can be evaluated, like its mean and quantiles:
 
 ``` r
+
 mean(linear)
 #> [1] 0.3333333
 enframe_quantile(linear, at = c(0.2, 0.5, 0.9))

@@ -2,6 +2,8 @@
 
 ## distionary 0.1.1
 
+CRAN release: 2026-04-27
+
 - Replaced usage of the deprecated `ellipsis` package with `rlang` for
   checking expected use of ellipsis (thanks to
   [@olivroy](https://github.com/olivroy), PR
