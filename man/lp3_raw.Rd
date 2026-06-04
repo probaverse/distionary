@@ -26,7 +26,7 @@ random variable in log (base e) space; positive numeric.
 Vectors are allowed except for \code{rlp3()}.}
 
 \item{skew}{Parameter representing the skewness of the random variable
-in log (base e) space; positive numeric.
+in log (base e) space; numeric.
 Vectors are allowed except for \code{rlp3()}.}
 
 \item{lower.tail}{Logical; if \code{TRUE} (default), probabilities are

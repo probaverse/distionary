@@ -8,7 +8,7 @@
 #' @param sdlog Standard deviation of the log of the random variable;
 #' single positive numeric.
 #' @param skew Skewness of the log of the random variable;
-#' single positive numeric.
+#' single numeric.
 #' @returns A Log Pearson Type III distribution.
 #' @examples
 #' dst_lp3(0, 1, 1)
@@ -55,7 +55,7 @@
 dst_lp3 <- function(meanlog, sdlog, skew) {
   checkmate::assert_numeric(meanlog, len = 1)
   checkmate::assert_numeric(sdlog, 0, len = 1)
-  checkmate::assert_numeric(skew, 0, len = 1)
+  checkmate::assert_numeric(skew, len = 1)
   if (is.na(meanlog) || is.na(sdlog) || is.na(skew)) {
     return(dst_null())
   }
