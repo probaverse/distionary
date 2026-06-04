@@ -18,8 +18,6 @@
 #' range(b)
 #' range(c)
 #' @rdname range
-#' @srrstats {G2.1} Assertions on types of inputs is conducted using the
-#' checkmate package for most functions.
 #' @export
 range.dst <- function(distribution, ...) {
   checkmate::assert_class(distribution, "dst")

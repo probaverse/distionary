@@ -130,13 +130,13 @@ Here is what the distributions look like, via their probability mass
 plot(poisson)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="100%" />
 
 ``` r
 plot(gev)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-2.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-2.png" alt="" width="100%" />
 
 **Evaluate** various *distributional properties* such as mean, skewness,
 and range of valid values.
@@ -206,7 +206,7 @@ Here is what it looks like (density function).
 plot(linear)
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-9-1.png" alt="" width="100%" />
 
 Even though only the density and CDF were specified, other properties
 can be evaluated, like its mean and quantiles:
