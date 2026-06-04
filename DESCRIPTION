@@ -27,7 +27,6 @@ Roxygen: list (markdown = TRUE)
 RoxygenNote: 7.3.3
 Imports: 
     checkmate,
-    Rcpp,
     rlang,
     stats,
     vctrs
@@ -36,5 +35,3 @@ URL: https://distionary.probaverse.com/, https://github.com/probaverse/distionar
 BugReports: https://github.com/probaverse/distionary/issues
 Depends: 
     R (>= 3.5)
-LinkingTo: 
-    Rcpp

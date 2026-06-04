@@ -88,7 +88,5 @@
 "_PACKAGE"
 
 ## usethis namespace: start
-#' @importFrom Rcpp sourceCpp
-#' @useDynLib distionary, .registration = TRUE
 ## usethis namespace: end
 NULL
