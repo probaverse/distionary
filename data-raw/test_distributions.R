@@ -180,6 +180,16 @@ test_distributions <- list(
       list(scale = 1.5, shape = -1.2)
     )
   ),
+  gumbel = list(
+    distribution = "dst_gumbel",
+    invalid = list(
+      list(location = 0, scale = -1)
+    ),
+    valid = list(
+      list(location = 0, scale = 1),
+      list(location = 1, scale = 1.2)
+    )
+  ),
   hyper = list(
     distribution = "dst_hyper",
     invalid = list(
@@ -212,7 +222,8 @@ test_distributions <- list(
     ),
     valid = list(
       list(meanlog = 0, sdlog = 1.1, skew = 0.7),
-      list(meanlog = -1, sdlog = 0.7, skew = -0.7)
+      list(meanlog = -1, sdlog = 0.7, skew = 1.2),
+      list(meanlog = 0, sdlog = 1.1, skew = -0.7)
     )
   ),
   nbinom = list(

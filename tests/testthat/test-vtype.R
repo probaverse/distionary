@@ -25,9 +25,11 @@ test_that("Variable type specified correctly.", {
 })
 
 test_that("Variable type matches manual distribution input", {
-  expect_identical(vtype(distribution(.vtype = "foofy")), "foofy")
-  expect_identical(vtype(distribution(.vtype = "FoOFy")), "foofy")
-  expect_identical(vtype(distribution()), "unknown")
-  expect_identical(vtype(distribution()), vtype(distribution(.vtype = NULL)))
-  expect_identical(vtype(distribution(.vtype = NA_character_)), NA_character_)
+  suppressWarnings({
+    expect_identical(vtype(distribution(.vtype = "foofy")), "foofy")
+    expect_identical(vtype(distribution(.vtype = "FoOFy")), "foofy")
+    expect_identical(vtype(distribution()), "unknown")
+    expect_identical(vtype(distribution()), vtype(distribution(.vtype = NULL)))
+    expect_identical(vtype(distribution(.vtype = NA_character_)), NA_character_)
+  })
 })
