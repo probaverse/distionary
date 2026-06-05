@@ -1,6 +1,14 @@
 #' @noRd
 eval_mean_from_network <- function(distribution, tol = 1e-9, ...) {
   checkmate::assert_class(distribution, "dst")
+  if (is_intrinsic(distribution, "expectile")) {
+    expectile <- representation_as_function(distribution, "expectile")
+    return(expectile(0.5))
+  }
+  if (is_intrinsic(distribution, "cte")) {
+    cte <- representation_as_function(distribution, "cte")
+    return(cte_left_reference(cte)[["m"]])
+  }
   if (vtype(distribution) != "continuous") {
     stop(
       "Numerical computation for non-continuous distributions is ",

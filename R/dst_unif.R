@@ -34,6 +34,12 @@ dst_unif <- function(min, max) {
     survival = function(x) {
       stats::punif(x, min = min, max = max, lower.tail = FALSE)
     },
+    expectile = function(tau) {
+      xi <- (tau * max - (1 - tau) * min -
+        (max - min) * sqrt(tau * (1 - tau))) / (2 * tau - 1)
+      xi[tau == 0.5] <- (min + max) / 2
+      xi
+    },
     mean = (min + max) / 2,
     median = (min + max) / 2,
     variance = (min - max)^2 / 12,

@@ -56,7 +56,9 @@ eval_return(d, at = c(2, 25, 100, 200))
 Other distributional representations: 
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
+\code{\link{eval_cte}()},
 \code{\link{eval_density}()},
+\code{\link{eval_expectile}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
 \code{\link{eval_pmf}()},

@@ -56,6 +56,13 @@ understood by \code{distionary} include:
 \item \code{hazard}: the hazard function, for continuous variables only.
 \item \code{chf}: the cumulative hazard function, for continuous variables only.
 \item \code{quantile}: the quantile function, or left-inverse of the cdf.
+\item \code{expectile}: the expectile function, the least-squares analogue of the
+quantile function. A distribution with a finite first moment can be
+specified through its expectile function alone.
+\item \code{cte}: the (upper) conditional tail expectation \code{E[X | X > x]} as a
+function of a threshold \code{x}, also known as expected shortfall. A
+distribution with a finite first moment can be specified through its
+conditional tail expectation alone.
 \item \code{realise} or \code{realize}: a function that takes an integer and generates
 a vector of that many random draws from the distribution.
 \item \code{odds}: for discrete variables, the probability odds function

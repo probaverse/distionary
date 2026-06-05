@@ -1,4 +1,3 @@
-
 #' Build a Distribution Object
 #'
 #' Make a distribution object by specifying properties
@@ -35,6 +34,13 @@
 #' - `hazard`: the hazard function, for continuous variables only.
 #' - `chf`: the cumulative hazard function, for continuous variables only.
 #' - `quantile`: the quantile function, or left-inverse of the cdf.
+#' - `expectile`: the expectile function, the least-squares analogue of the
+#'   quantile function. A distribution with a finite first moment can be
+#'   specified through its expectile function alone.
+#' - `cte`: the (upper) conditional tail expectation `E[X | X > x]` as a
+#'   function of a threshold `x`, also known as expected shortfall. A
+#'   distribution with a finite first moment can be specified through its
+#'   conditional tail expectation alone.
 #' - `realise` or `realize`: a function that takes an integer and generates
 #'   a vector of that many random draws from the distribution.
 #' - `odds`: for discrete variables, the probability odds function

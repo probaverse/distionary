@@ -16,3 +16,5 @@
 ^CRAN-SUBMISSION$
 ^\.positai$
 ^\.claude$
+^voice\.md$
+^coding_guidelines_R\.md$

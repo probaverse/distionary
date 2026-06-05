@@ -12,7 +12,7 @@ dst_t <- function(df) {
   if (is.na(df)) {
     return(dst_null())
   }
-  distribution(
+  d <- distribution(
     .parameters = list(df = df),
     density = function(x) {
       stats::dt(x, df = df)
@@ -52,6 +52,14 @@ dst_t <- function(df) {
     },
     range = c(-Inf, Inf),
     .name = "Student t",
-    .vtype = "continuous",
+    .vtype = "continuous"
   )
+  # The t distribution with 2 degrees of freedom is Koenker's distribution,
+  # whose expectiles are available in closed form.
+  if (df == 2) {
+    d$expectile <- function(tau) {
+      (2 * tau - 1) / sqrt(2 * tau * (1 - tau))
+    }
+  }
+  d
 }

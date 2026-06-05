@@ -29,6 +29,9 @@ dst_exp <- function(rate) {
     survival = function(x) {
       stats::pexp(x, rate = rate, lower.tail = FALSE)
     },
+    expectile = function(tau) {
+      (1 + lambert_w0((2 * tau - 1) / (1 - tau) * exp(-1))) / rate
+    },
     mean = 1 / rate,
     median = log(2) / rate,
     variance = 1 / rate^2,

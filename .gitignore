@@ -5,6 +5,7 @@
 .Rdata
 .httr-oauth
 .DS_Store
+voice.md
 docs
 inst/doc
 /doc/
