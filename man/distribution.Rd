@@ -6,7 +6,13 @@
 \alias{is.distribution}
 \title{Build a Distribution Object}
 \usage{
-distribution(..., .vtype = NULL, .name = NULL, .parameters = list())
+distribution(
+  ...,
+  .support = NULL,
+  .vtype = NULL,
+  .name = NULL,
+  .parameters = list()
+)
 
 is_distribution(object)
 
@@ -15,9 +21,16 @@ is.distribution(object)
 \arguments{
 \item{...}{Name-value pairs for defining the distribution.}
 
-\item{.vtype}{The variable type, typically "discrete" or "continuous".
-Can be any character vector of length 1, but is converted to
-lowercase with \code{tolower()} for compliance with known types.}
+\item{.support}{The support of the distribution, built with \code{\link[=discrete]{discrete()}},
+\code{\link[=continuous]{continuous()}}, or \code{\link[=mixed]{mixed()}} (a bare \code{discretes} object is also accepted and
+treated as \code{discrete()}). The variable type (\code{\link[=vtype]{vtype()}}) is derived from it.
+Preferred over \code{.vtype}.}
+
+\item{.vtype}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Superseded by \code{.support}.
+The variable type, typically "discrete" or "continuous". Accepts a support
+object (treated as \code{.support}), or, for backward compatibility, a length-1
+character vector that is converted to lowercase with \code{tolower()} for
+compliance with known types.}
 
 \item{.name}{A name to give to the distribution.
 Can be any character vector of length 1.}
@@ -88,7 +101,7 @@ linear <- distribution(
     p[x > 1] <- 1
     p
   },
-  .vtype = "continuous",
+  .support = continuous(c(0, 1)),
   .name = "My Linear",
   .parameters = list(could = "include", anything = data.frame(x = 1:10))
 )

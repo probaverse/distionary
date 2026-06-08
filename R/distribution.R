@@ -9,9 +9,15 @@
 #' A list of these representations can be found in the details.
 #'
 #' @param ... Name-value pairs for defining the distribution.
-#' @param .vtype The variable type, typically "discrete" or "continuous".
-#' Can be any character vector of length 1, but is converted to
-#' lowercase with `tolower()` for compliance with known types.
+#' @param .support The support of the distribution, built with [discrete()],
+#' [continuous()], or [mixed()] (a bare `discretes` object is also accepted and
+#' treated as `discrete()`). The variable type ([vtype()]) is derived from it.
+#' Preferred over `.vtype`.
+#' @param .vtype `r lifecycle::badge("superseded")` Superseded by `.support`.
+#' The variable type, typically "discrete" or "continuous". Accepts a support
+#' object (treated as `.support`), or, for backward compatibility, a length-1
+#' character vector that is converted to lowercase with `tolower()` for
+#' compliance with known types.
 #' @param .name A name to give to the distribution.
 #' Can be any character vector of length 1.
 #' @param .parameters A named list with one entry per distribution parameter,
@@ -64,7 +70,7 @@
 #'     p[x > 1] <- 1
 #'     p
 #'   },
-#'   .vtype = "continuous",
+#'   .support = continuous(c(0, 1)),
 #'   .name = "My Linear",
 #'   .parameters = list(could = "include", anything = data.frame(x = 1:10))
 #' )
@@ -77,11 +83,40 @@
 #' @family Distribution Construction
 #' @export
 distribution <- function(...,
+                         .support = NULL,
                          .vtype = NULL,
                          .name = NULL,
                          .parameters = list()) {
-  if (!is.null(.vtype)) {
-    .vtype <- as.character(.vtype)
+  # Resolve the support. `.support` is canonical; a support (or `discretes`)
+  # object passed to the soft-deprecated `.vtype` is bridged to it.
+  support <- NULL
+  if (!is.null(.support)) {
+    support <- as_support(.support)
+  } else if (!is.null(.vtype) &&
+    (is_support(.vtype) || inherits(.vtype, "discretes"))) {
+    support <- as_support(.vtype)
+  }
+  # Derive the variable type. From the support when we have one; otherwise from
+  # the legacy `.vtype` string (status quo, including typo detection).
+  if (!is.null(support)) {
+    .vtype <- vtype_of_support(support)
+  } else if (!is.null(.vtype)) {
+    lifecycle::deprecate_soft(
+      when = "0.2.0",
+      what = "distribution(.vtype)",
+      with = "distribution(.support)"
+    )
+    .vtype <- tolower(as.character(.vtype))
+    checkmate::assert_character(.vtype, len = 1)
+    # Typo detection for variable type.
+    vtypes <- c("discrete", "continuous", "ordinal", "categorical", "mixed")
+    vtype_match <- agrep(.vtype, vtypes, max.distance = 0.1, value = TRUE)
+    if (length(vtype_match) > 0 && !(.vtype %in% vtype_match)) {
+      warning(paste0(
+        "The .vtype '", .vtype, "' looks similar to ",
+        paste(vtype_match, collapse = ", "), "."
+      ))
+    }
   } else {
     .vtype <- "unknown"
   }
@@ -90,10 +125,8 @@ distribution <- function(...,
   } else {
     .name <- "Unnamed"
   }
-  checkmate::assert_character(.vtype, len = 1, null.ok = TRUE)
   checkmate::assert_character(.name, len = 1, null.ok = TRUE)
   checkmate::assert_list(.parameters, names = "named", null.ok = TRUE)
-  .vtype <- tolower(.vtype)
   dots <- rlang::enquos(...)
   checkmate::assert_list(dots, names = "named", null.ok = TRUE)
   representations <- lapply(dots, rlang::eval_tidy)
@@ -106,17 +139,8 @@ distribution <- function(...,
       "without specifying 'cdf', and either 'density' or 'pmf'."
     )
   }
-  # Typo detection for variable type.
-  vtypes <- c("discrete", "continuous", "ordinal", "categorical", "mixed")
-  vtype_match <- agrep(.vtype, vtypes, max.distance = 0.1, value = TRUE)
-  if (length(vtype_match) > 0 && !(.vtype %in% vtype_match)) {
-    warning(paste0(
-      "The .vtype '", .vtype, "' looks similar to ",
-      paste(vtype_match, collapse = ", "), "."
-    ))
-  }
   new_distribution(
     representations,
-    vtype = .vtype, name = .name, parameters = .parameters
+    vtype = .vtype, name = .name, parameters = .parameters, support = support
   )
 }

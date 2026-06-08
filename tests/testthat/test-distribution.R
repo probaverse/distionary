@@ -18,6 +18,8 @@ test_that("distribution() edge cases satisfied.", {
 })
 
 test_that("Typo warning works: vtype", {
+  # Silence the `.vtype` soft-deprecation so only the typo warning is under test.
+  rlang::local_options(lifecycle_verbosity = "quiet")
   expect_warning(
     distribution(cdf = pnorm, density = dnorm, .vtype = "discreet")
   )
