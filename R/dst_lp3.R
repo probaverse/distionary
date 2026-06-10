@@ -28,6 +28,6 @@ dst_lp3 <- function(meanlog, sdlog, skew) {
     quantile = function(p) qlp3(p, meanlog, sdlog, skew),
     realise = function(n) rlp3(n, meanlog, sdlog, skew),
     .name = "Log Pearson Type III",
-    .vtype = "continuous"
+    .support = continuous(qlp3(c(0, 1), meanlog, sdlog, skew))
   )
 }

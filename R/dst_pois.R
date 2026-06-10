@@ -32,8 +32,7 @@ dst_pois <- function(lambda) {
     variance = lambda,
     skewness = lambda^(-0.5),
     kurtosis_exc = 1 / lambda,
-    range = c(0, Inf),
     .name = "Poisson",
-    .vtype = "discrete"
+    .support = discrete(natural0())
   )
 }

@@ -61,11 +61,7 @@ dst_gev <- function(location, scale, shape) {
         scale^2 * (gamma(1 - 2 * shape) - gamma(1 - shape)^2) / shape^2
       }
     },
-    range = c(
-      gev_lower(location, scale, shape),
-      gev_upper(location, scale, shape)
-    ),
     .name = "Generalised Extreme Value",
-    .vtype = "continuous"
+    .support = continuous(c(gev_lower(location, scale, shape), gev_upper(location, scale, shape)))
   )
 }

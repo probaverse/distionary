@@ -49,7 +49,7 @@ test_that("Variance algorithm matches known vals", {
           c("Hypergeometric", "Bernoulli", "Binomial", "Finite")
         ) {
           # Finite support.
-          expect_error(algorithm_variance(d))
+          expect_equal(suppressMessages(algorithm_variance(d)), supposed_var, tolerance = 1e-6)
           r <- range(d)
           x <- seq(r[1], r[2], by = 1L)
           if (pretty_name(d) == "Finite") {
@@ -65,7 +65,7 @@ test_that("Variance algorithm matches known vals", {
           c("Negative Binomial", "Poisson", "Geometric")
         ) {
           # Infinite support.
-          expect_error(algorithm_variance(d))
+          expect_equal(suppressMessages(algorithm_variance(d)), supposed_var, tolerance = 1e-6)
           mu <- mean(d)
           to_add <- Inf
           i <- 0

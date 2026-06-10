@@ -339,6 +339,12 @@ normalize_intervals <- function(m) {
   if (any(m[, 1L] > m[, 2L])) {
     stop("Each interval must have `lower <= upper`.")
   }
+  # Drop degenerate intervals `[a, a]`: a continuous part on a single point has
+  # measure zero (no probability mass), so it is not part of the canonical form.
+  m <- m[m[, 1L] < m[, 2L], , drop = FALSE]
+  if (nrow(m) == 0) {
+    return(empty_intervals())
+  }
   ord <- order(m[, 1L], m[, 2L])
   m <- m[ord, , drop = FALSE]
   lo <- m[1L, 1L]
@@ -356,6 +362,9 @@ normalize_intervals <- function(m) {
   }
   out[[length(out) + 1L]] <- c(lo, hi)
   res <- do.call(rbind, out)
+  # Normalize negative zero (e.g. from negating an endpoint at 0) so it does not
+  # surface as "-0" in printing or comparisons.
+  res[res == 0] <- 0
   colnames(res) <- c("lower", "upper")
   res
 }

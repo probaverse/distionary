@@ -52,8 +52,7 @@ dst_hyper <- function(m, n, k) {
     ) / (
       k * m * n * (N - k) * (N - 2) * (N - 3)
     ),
-    range = c(max(0, k - n), min(m, k)),
     .name = "Hypergeometric",
-    .vtype = "discrete"
+    .support = discrete(discretes::integers(max(0, k - n), min(m, k)))
   )
 }

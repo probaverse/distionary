@@ -27,8 +27,7 @@ dst_gumbel <- function(location, scale) {
     },
     mean = location - scale * digamma(1),
     variance = scale^2 * pi^2 / 6,
-    range = c(-Inf, Inf),
     .name = "Gumbel",
-    .vtype = "continuous"
+    .support = continuous(c(-Inf, Inf))
   )
 }

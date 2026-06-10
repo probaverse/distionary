@@ -50,6 +50,6 @@ dst_pearson3 <- function(location, scale, shape) {
     skewness = 2 / sqrt(shape),
     kurtosis_exc = 6 / shape,
     .name = "Pearson Type III",
-    .vtype = "continuous"
+    .support = continuous(c(location, Inf))
   )
 }

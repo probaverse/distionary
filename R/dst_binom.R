@@ -37,8 +37,7 @@ dst_binom <- function(size, prob) {
     variance = size * prob * (1 - prob),
     skewness = (1 - 2 * prob) / sqrt(size * prob * (1 - prob)),
     kurtosis_exc = (1 - 6 * prob * (1 - prob)) / (size * prob * (1 - prob)),
-    range = c(0, size),
-    .vtype = "discrete",
+    .support = discrete(0:size),
     .name = "Binomial"
   )
 }

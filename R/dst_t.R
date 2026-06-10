@@ -50,8 +50,7 @@ dst_t <- function(df) {
         NaN
       }
     },
-    range = c(-Inf, Inf),
     .name = "Student t",
-    .vtype = "continuous",
+    .support = continuous(c(-Inf, Inf)),
   )
 }

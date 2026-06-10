@@ -40,8 +40,7 @@ dst_cauchy <- function(location, scale) {
     variance = NaN,
     skewness = NaN,
     kurtosis_exc = NaN,
-    range = c(-Inf, Inf),
-    .vtype = "continuous",
+    .support = continuous(c(-Inf, Inf)),
     .name = "Cauchy"
   )
 }

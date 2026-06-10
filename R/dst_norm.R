@@ -38,8 +38,7 @@ dst_norm <- function(mean, sd) {
     stdev = sd,
     skewness = 0,
     kurtosis_exc = 0,
-    range = c(-Inf, Inf),
     .name = "Normal",
-    .vtype = "continuous"
+    .support = continuous(c(-Inf, Inf))
   )
 }
