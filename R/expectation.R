@@ -87,11 +87,11 @@ expect_over_support <- function(distribution, g, tol = 1e-9, ...) {
 #' - With sinks only at +/-Inf (the usual case --- Poisson, geometric, the
 #'   integers), the sum is built by walking outward from a representative atom
 #'   via `discretes::next_discrete()` / `prev_discrete()`, truncating once the
-#'   tail is negligible (see [walk_sum()]).
+#'   tail is negligible (see `walk_sum()`).
 #' - With a *finite* (interior) sink --- a point the atoms accumulate towards,
 #'   such as `1/n -> 0` --- a spatial walk would stall at the sink and never
 #'   reach atoms on the far side. Instead the line is partitioned at the finite
-#'   sinks and each segment summed by [sum_segment()], which queries
+#'   sinks and each segment summed by `sum_segment()`, which queries
 #'   `discretes::get_discretes_in()` over windows that grow towards (but never
 #'   reach) each sink.
 #'

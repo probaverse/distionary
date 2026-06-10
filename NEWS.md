@@ -1,5 +1,10 @@
 # distionary (development version)
 
+- `dst_pearson3()` (and the underlying `ppearson3()`, `dpearson3()`,
+  `qpearson3()`, `rpearson3()`) now accept a negative `shape`, giving the
+  Pearson Type III distribution reflected about `location` --- the
+  negatively-skewed, upper-bounded form.
+
 - New support objects describe where a distribution places probability,
   tracking discrete atoms explicitly: `discrete()`, `continuous()` (a union of
   intervals), and `mixed()`. Pass one to `distribution()` via the new

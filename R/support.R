@@ -336,8 +336,8 @@ normalize_intervals <- function(m) {
   if (anyNA(m)) {
     stop("Interval endpoints must not be `NA`.")
   }
-  if (any(m[, 1L] > m[, 2L])) {
-    stop("Each interval must have `lower <= upper`.")
+  if (any(m[, 1L] >= m[, 2L])) {
+    stop("Each interval must have `lower < upper`.")
   }
   # Drop degenerate intervals `[a, a]`: a continuous part on a single point has
   # measure zero (no probability mass), so it is not part of the canonical form.

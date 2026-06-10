@@ -3,20 +3,24 @@
 #' Makes a Pearson Type III distribution, which is a Gamma distribution,
 #' but shifted.
 #'
-#' @param location Location parameter, specifying how to shift the
-#' Gamma distribution; single numeric.
+#' @param location Location parameter, specifying the boundary of the
+#' distribution; single numeric. It is the left endpoint when `shape` is
+#' positive and the right endpoint when `shape` is negative.
 #' @param scale Scale parameter of the Gamma distribution;
 #' single positive numeric.
-#' @param shape Shape parameter of the Gamma distribution;
-#' single positive numeric.
+#' @param shape Shape parameter of the Gamma distribution; single numeric.
+#' A negative value gives the distribution reflected about `location`: the
+#' Pearson Type III with negative skewness, upper-bounded at `location`.
 #' @returns A Pearson Type III distribution.
 #' @examples
 #' dst_pearson3(1, 1, 1)
+#' # A negative shape reflects the distribution about `location`:
+#' dst_pearson3(1, 1, -1)
 #' @export
 dst_pearson3 <- function(location, scale, shape) {
   checkmate::assert_numeric(location, len = 1)
   checkmate::assert_numeric(scale, 0, len = 1)
-  checkmate::assert_numeric(shape, 0, len = 1)
+  checkmate::assert_numeric(shape, len = 1)
   if (is.na(location) || is.na(scale) || is.na(shape)) {
     return(dst_null())
   }
@@ -46,10 +50,14 @@ dst_pearson3 <- function(location, scale, shape) {
       rpearson3(n, location = location, scale = scale, shape = shape)
     },
     mean = location + scale * shape,
-    variance = shape * scale^2,
-    skewness = 2 / sqrt(shape),
-    kurtosis_exc = 6 / shape,
+    variance = abs(shape) * scale^2,
+    skewness = 2 * sign(shape) / sqrt(abs(shape)),
+    kurtosis_exc = 6 / abs(shape),
     .name = "Pearson Type III",
-    .support = continuous(c(location, Inf))
+    .support = if (shape >= 0) {
+      continuous(c(location, Inf))
+    } else {
+      continuous(c(-Inf, location))
+    }
   )
 }
