@@ -14,10 +14,9 @@
 #' treated as `discrete()`). The variable type ([vtype()]) is derived from it.
 #' Preferred over `.vtype`.
 #' @param .vtype `r lifecycle::badge("superseded")` Superseded by `.support`.
-#' The variable type, typically "discrete" or "continuous". Accepts a support
-#' object (treated as `.support`), or, for backward compatibility, a length-1
-#' character vector that is converted to lowercase with `tolower()` for
-#' compliance with known types.
+#' The variable type, typically "discrete" or "continuous"; a length-1
+#' character vector, converted to lowercase with `tolower()` for compliance
+#' with known types.
 #' @param .name A name to give to the distribution.
 #' Can be any character vector of length 1.
 #' @param .parameters A named list with one entry per distribution parameter,
@@ -87,14 +86,9 @@ distribution <- function(...,
                          .vtype = NULL,
                          .name = NULL,
                          .parameters = list()) {
-  # Resolve the support. `.support` is canonical; a support (or `discretes`)
-  # object passed to the soft-deprecated `.vtype` is bridged to it.
   support <- NULL
   if (!is.null(.support)) {
     support <- as_support(.support)
-  } else if (!is.null(.vtype) &&
-    (is_support(.vtype) || inherits(.vtype, "discretes"))) {
-    support <- as_support(.vtype)
   }
   # Derive the variable type. From the support when we have one; otherwise from
   # the legacy `.vtype` string (status quo, including typo detection).
@@ -106,6 +100,12 @@ distribution <- function(...,
       what = "distribution(.vtype)",
       with = "distribution(.support)"
     )
+    if (is_support(.vtype) || inherits(.vtype, "discretes")) {
+      stop(
+        "`.vtype` accepts only a character variable type. ",
+        "Pass support objects to `.support` instead."
+      )
+    }
     .vtype <- tolower(as.character(.vtype))
     checkmate::assert_character(.vtype, len = 1)
     # Typo detection for variable type.

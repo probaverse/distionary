@@ -78,3 +78,53 @@ test_that("Legacy continuous distributions (no support) still compute moments.",
   expect_equal(mean(d), 0, tolerance = 1e-6)
   expect_equal(variance(d), 1, tolerance = 1e-6)
 })
+
+test_that("Atoms accumulating at an interior sink from both sides are summed.", {
+  # Atoms 5 - 2^(-n) and 5 + 2^(-n), n = 1, 2, ...: sinks at 5 from both
+  # sides. A naive outward walk would stall at 5 and miss the far side.
+  below <- discretes::dsct_transform(
+    natural1(),
+    fun = function(n) 5 - 2^(-n), inv = function(y) -log2(5 - y),
+    domain = c(0, Inf), range = c(4, 5), dir = "increasing"
+  )
+  above <- discretes::dsct_transform(
+    natural1(),
+    fun = function(n) 5 + 2^(-n), inv = function(y) -log2(y - 5),
+    domain = c(0, Inf), range = c(5, 6), dir = "decreasing"
+  )
+  both <- discretes::dsct_union(below, above)
+  # Mass 0.5 * 2^(-n) on each side's n-th atom; sums to 1 overall.
+  pmf <- function(x) {
+    n <- ifelse(x < 5, -log2(5 - x), -log2(x - 5))
+    0.5 * 2^(-round(n))
+  }
+  total <- sum_over_atoms(both, pmf, function(x) rep(1, length(x)))
+  expect_equal(total, 1, tolerance = 1e-6)
+  mu <- sum_over_atoms(both, pmf, function(x) x)
+  expect_equal(mu, 5, tolerance = 1e-6) # Symmetric about the sink.
+  # E[(X - 5)^2] = sum_n 2^(-n) * 4^(-n) = sum_n 8^(-n) = 1/7.
+  v <- sum_over_atoms(both, pmf, function(x) (x - 5)^2)
+  expect_equal(v, 1 / 7, tolerance = 1e-6)
+})
+
+test_that("A divergent numerical moment gives NaN.", {
+  # Continuous, both tails diverge (the Cauchy mean).
+  expect_true(
+    is.nan(suppressMessages(eval_mean_from_network(dst_cauchy(0, 1))))
+  )
+  # Continuous, a single tail diverges (a half-Cauchy on [0, Inf)).
+  half_cauchy <- distribution(
+    density = function(x) ifelse(x >= 0, 2 * stats::dcauchy(x), 0),
+    cdf = function(x) ifelse(x < 0, 0, 2 * (stats::pcauchy(x) - 0.5)),
+    .support = continuous(c(0, Inf))
+  )
+  expect_true(is.nan(suppressMessages(mean(half_cauchy))))
+  # Discrete heavy tail: pmf 1/(k (k + 1)) on k = 1, 2, ... sums to 1
+  # (telescoping), but the mean sum_k 1/(k + 1) does not converge.
+  heavy <- distribution(
+    pmf = function(x) ifelse(x >= 1 & x == round(x), 1 / (x * (x + 1)), 0),
+    cdf = function(x) ifelse(x < 1, 0, 1 - 1 / (floor(x) + 1)),
+    .support = discrete(natural1())
+  )
+  expect_true(is.nan(suppressMessages(mean(heavy))))
+})

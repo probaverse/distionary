@@ -82,30 +82,30 @@ expect_over_support <- function(distribution, g, tol = 1e-9, ...) {
 #' Sum `g(x) p(x)` over the atoms of a discretes series
 #'
 #' A finite series is enumerated and summed directly. An infinite series is
-#' handled according to its accumulation points (sinks):
+#' summed by walking it with batched `discretes::next_discrete()` /
+#' `discretes::prev_discrete()` calls, accumulating incrementally and
+#' truncating a tail once its terms are negligible.
 #'
-#' - With sinks only at +/-Inf (the usual case --- Poisson, geometric, the
-#'   integers), the sum is built by walking outward from a representative atom
-#'   via `discretes::next_discrete()` / `prev_discrete()`, truncating once the
-#'   tail is negligible (see `walk_sum()`).
-#' - With a *finite* (interior) sink --- a point the atoms accumulate towards,
-#'   such as `1/n -> 0` --- a spatial walk would stall at the sink and never
-#'   reach atoms on the far side. Instead the line is partitioned at the finite
-#'   sinks and each segment summed by `sum_segment()`, which queries
-#'   `discretes::get_discretes_in()` over windows that grow towards (but never
-#'   reach) each sink.
+#' Walks cannot pass an accumulation point (a sink), so the line is
+#' partitioned at the finite sinks and each segment is walked outward from an
+#' interior anchor atom; the segment sums, plus any atoms sitting exactly on a
+#' sink, are added together. With no finite sinks --- Poisson, geometric, the
+#' integers --- there is a single segment, walked outward from a
+#' representative atom.
 #'
 #' @param series A `discretes` object (the atomic support).
 #' @param pmf Probability mass function (vectorised).
 #' @param g Function whose expectation is being accumulated (vectorised).
 #' @param tol Tolerance for the tail-truncation test.
-#' @param max_iter Cap on steps; exceeding it returns `NaN` (non-convergence,
-#' e.g. a divergent moment).
-#' @param patience Number of consecutive negligible steps required to stop.
-#' @returns A single numeric, or `NaN` if the sum did not converge.
+#' @param max_atoms Cap on atoms visited per walk direction; see
+#' `walk_atoms()` for what happens when it is exceeded.
+#' @param batch Number of atoms stepped per `next_discrete()` /
+#' `prev_discrete()` call; `g` and `pmf` are evaluated vectorised over each
+#' batch.
+#' @returns A single numeric, or `NaN` if the sum does not converge.
 #' @noRd
-sum_over_atoms <- function(series, pmf, g, tol = 1e-9, max_iter = 1e5L,
-                           patience = 5L) {
+sum_over_atoms <- function(series, pmf, g, tol = 1e-9, max_atoms = 1e5L,
+                           batch = 100L) {
   n <- discretes::num_discretes(series)
   if (n == 0) {
     return(0)
@@ -115,21 +115,18 @@ sum_over_atoms <- function(series, pmf, g, tol = 1e-9, max_iter = 1e5L,
     return(sum(g(xs) * pmf(xs)))
   }
   finite_sinks <- finite_sink_locations(series)
-  if (length(finite_sinks) == 0) {
-    return(walk_sum(series, pmf, g, tol, max_iter, patience))
-  }
-  # Partition the line at the finite sinks; sum each open segment, plus any
-  # atoms that happen to sit exactly on a sink location.
   breaks <- c(-Inf, finite_sinks, Inf)
   total <- 0
   for (i in seq_len(length(breaks) - 1L)) {
-    total <- total + sum_segment(
-      series, pmf, g, breaks[i], breaks[i + 1L], tol, max_iter, patience
+    total <- total + sum_atoms_between(
+      series, pmf, g, breaks[i], breaks[i + 1L], tol, max_atoms, batch
     )
   }
-  on_sink <- finite_sinks[discretes::has_discretes(series, finite_sinks)]
-  if (length(on_sink) > 0) {
-    total <- total + sum(g(on_sink) * pmf(on_sink))
+  if (length(finite_sinks) > 0) {
+    on_sink <- finite_sinks[discretes::has_discretes(series, finite_sinks)]
+    if (length(on_sink) > 0) {
+      total <- total + sum(g(on_sink) * pmf(on_sink))
+    }
   }
   total
 }
@@ -145,105 +142,103 @@ finite_sink_locations <- function(series) {
   sort(unique(loc[is.finite(loc)]))
 }
 
-#' Sum `g(x) p(x)` over the atoms in an open segment `(a, b)` whose only
-#' accumulation points are its endpoints (each a finite sink or +/-Inf).
-#'
-#' A window `[l, r]` strictly inside `(a, b)` is grown towards each endpoint
-#' (geometrically towards a finite sink, by doubling towards an infinite one).
-#' Because no sink lies strictly inside the window, `get_discretes_in()` returns
-#' a finite atom set, which is summed. The window never reaches a sink, so the
-#' sum converges from below; it stops once newly admitted atoms contribute less
-#' than `tol` for `patience` consecutive steps.
+#' Sum `g(x) p(x)` over the atoms strictly between consecutive sinks `a` and
+#' `b` (each a finite accumulation point or +/-Inf), by walking outward in
+#' both directions from an anchor atom inside the segment. Atoms exactly at
+#' `a` or `b` are excluded; the caller accounts for atoms sitting on a sink.
 #' @noRd
-sum_segment <- function(series, pmf, g, a, b, tol, max_iter, patience) {
-  anchor <- if (is.finite(a) && is.finite(b)) {
+sum_atoms_between <- function(series, pmf, g, a, b, tol, max_atoms, batch) {
+  anchor <- find_anchor(series, a, b)
+  if (is.null(anchor)) {
+    return(0) # No atoms in this segment.
+  }
+  g(anchor) * pmf(anchor) +
+    walk_atoms(
+      series, anchor, discretes::next_discrete, pmf, g,
+      bound = b, upward = TRUE, tol = tol, max_atoms = max_atoms,
+      batch = batch
+    ) +
+    walk_atoms(
+      series, anchor, discretes::prev_discrete, pmf, g,
+      bound = a, upward = FALSE, tol = tol, max_atoms = max_atoms,
+      batch = batch
+    )
+}
+
+#' Find an atom of `series` strictly inside `(a, b)`, or `NULL` if none.
+#'
+#' Probes outward from an interior point `m`: the smallest atom at or above
+#' `m`, then the largest atom below `m`. Between them the two probes see every
+#' atom in the segment, so if both fail the segment is empty.
+#' @noRd
+find_anchor <- function(series, a, b) {
+  if (is.infinite(a) && is.infinite(b)) {
+    return(discretes::representative(series))
+  }
+  m <- if (is.finite(a) && is.finite(b)) {
     (a + b) / 2
   } else if (is.finite(a)) {
     a + 1
-  } else if (is.finite(b)) {
-    b - 1
   } else {
-    0
+    b - 1
   }
-  prev_sum <- 0
-  small <- 0L
-  for (k in seq_len(max_iter)) {
-    l <- if (is.finite(a)) a + (anchor - a) * 2^(-k) else anchor - 2^k
-    r <- if (is.finite(b)) b - (b - anchor) * 2^(-k) else anchor + 2^k
-    # Underflow towards a finite sink: the window can grow no further.
-    if ((is.finite(a) && l <= a) || (is.finite(b) && r >= b)) {
-      return(prev_sum)
-    }
-    # `get_discretes_in()` can error on some derived series (e.g. a union whose
-    # window falls outside one component's range). Rather than crash or silently
-    # truncate, report the moment as not computable.
-    xs <- tryCatch(
-      discretes::get_discretes_in(series, from = l, to = r),
-      error = function(e) NULL
-    )
-    if (is.null(xs)) {
-      return(NaN)
-    }
-    this_sum <- if (length(xs) == 0L) 0 else sum(g(xs) * pmf(xs))
-    delta <- this_sum - prev_sum
-    if (is.finite(delta) && abs(delta) < tol) {
-      small <- small + 1L
-      if (small >= patience) {
-        return(this_sum)
-      }
-    } else {
-      small <- 0L
-    }
-    prev_sum <- this_sum
+  up <- discretes::next_discrete(series, m, include_from = TRUE)
+  if (length(up) == 1 && !is.na(up) && up > a && up < b) {
+    return(up)
   }
-  NaN
+  down <- discretes::prev_discrete(series, m)
+  if (length(down) == 1 && !is.na(down) && down > a && down < b) {
+    return(down)
+  }
+  NULL
 }
 
-#' Sum over an infinite series whose only sinks are at +/-Inf, by walking
-#' outward from a representative atom in each direction.
+#' Walk the atoms of a series in one direction, accumulating `g(x) p(x)`
 #'
-#' A term contributes negligibly when both its mass `p(x)` and its contribution
-#' `g(x) p(x)` fall below `tol` for `patience` consecutive atoms. Requiring the
-#' mass to be small avoids stopping early at an interior atom where `g` happens
-#' to vanish; requiring the contribution to be small avoids stopping early when
-#' `g` grows fast enough to offset a small mass.
+#' Atoms are visited in batches via `step_fn` (`discretes::next_discrete()` or
+#' `prev_discrete()`), with `g` and `pmf` evaluated vectorised over each batch
+#' and the sum accumulated incrementally. The walk stops when:
+#'
+#' - the series ends in this direction (a step returns no atoms), or the walk
+#'   meets `bound` (a neighbouring sink --- atoms beyond it belong to the next
+#'   segment and are excluded);
+#' - a whole batch is negligible: every mass `p(x) < tol` *and* every term
+#'   `|g(x) p(x)| < tol`. Requiring small mass avoids stopping where `g`
+#'   happens to vanish; requiring a small term avoids stopping where `g` grows
+#'   fast enough to offset a small mass;
+#' - `max_atoms` atoms have been visited without the tail going quiet, in which
+#'   case the sum is deemed not to converge and `NaN` is returned.
 #' @noRd
-walk_sum <- function(series, pmf, g, tol, max_iter, patience) {
-  start <- discretes::representative(series)
-  total <- g(start) * pmf(start)
-  up <- walk_atoms(series, start, discretes::next_discrete, pmf, g,
-                   tol, max_iter, patience)
-  down <- walk_atoms(series, start, discretes::prev_discrete, pmf, g,
-                     tol, max_iter, patience)
-  total + up + down
-}
-
-#' Walk the atoms in one direction, accumulating `g(x) p(x)`
-#' @returns Accumulated contribution; `0` if the direction ends immediately at a
-#' finite boundary; `NaN` if it did not converge within `max_iter`.
-#' @noRd
-walk_atoms <- function(series, from, step_fn, pmf, g, tol, max_iter, patience) {
-  x <- from
+walk_atoms <- function(series, from, step_fn, pmf, g, bound, upward,
+                       tol, max_atoms, batch) {
   acc <- 0
-  small <- 0L
-  for (i in seq_len(max_iter)) {
-    x <- step_fn(series, x)
-    if (length(x) == 0L || is.na(x) || is.infinite(x)) {
-      return(acc) # Reached a finite end of the series in this direction.
+  visited <- 0L
+  x <- from
+  repeat {
+    xs <- step_fn(series, x, n = batch)
+    xs <- xs[is.finite(xs)]
+    if (length(xs) == 0L) {
+      return(acc) # Series ends in this direction.
     }
-    p <- pmf(x)
-    term <- g(x) * p
-    acc <- acc + term
-    negligible <- is.finite(p) && p < tol &&
-      is.finite(term) && abs(term) < tol
-    if (negligible) {
-      small <- small + 1L
-      if (small >= patience) {
+    inside <- if (upward) xs < bound else xs > bound
+    met_bound <- !all(inside)
+    xs <- xs[inside]
+    if (length(xs) > 0L) {
+      p <- pmf(xs)
+      terms <- g(xs) * p
+      acc <- acc + sum(terms)
+      visited <- visited + length(xs)
+      quiet <- isTRUE(all(p < tol)) && isTRUE(all(abs(terms) < tol))
+      if (quiet) {
         return(acc)
       }
-    } else {
-      small <- 0L
     }
+    if (met_bound) {
+      return(acc)
+    }
+    if (visited >= max_atoms) {
+      return(NaN)
+    }
+    x <- if (upward) max(xs) else min(xs)
   }
-  NaN
 }

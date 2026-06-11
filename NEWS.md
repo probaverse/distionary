@@ -22,8 +22,10 @@
   now computed numerically for discrete and mixed distributions, not only
   continuous ones, when not supplied analytically. The computation uses the
   support: a sum over the atoms plus integration of the density over the
-  continuous part. Infinite atomic supports are summed by walking outward until
-  the tail is negligible (returning `NaN` if the moment does not converge).
+  continuous part. Infinite atomic supports are walked in batches until the
+  tail is negligible, partitioning at any finite accumulation points so that
+  atoms on the far side of an accumulation point are still counted. A moment
+  that does not converge returns `NaN`.
 
 - Re-exported the `discretes` series constructors used to specify atomic
   supports, so they are available without attaching the package: `natural0()`,

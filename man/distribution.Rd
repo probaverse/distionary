@@ -27,10 +27,9 @@ treated as \code{discrete()}). The variable type (\code{\link[=vtype]{vtype()}})
 Preferred over \code{.vtype}.}
 
 \item{.vtype}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Superseded by \code{.support}.
-The variable type, typically "discrete" or "continuous". Accepts a support
-object (treated as \code{.support}), or, for backward compatibility, a length-1
-character vector that is converted to lowercase with \code{tolower()} for
-compliance with known types.}
+The variable type, typically "discrete" or "continuous"; a length-1
+character vector, converted to lowercase with \code{tolower()} for compliance
+with known types.}
 
 \item{.name}{A name to give to the distribution.
 Can be any character vector of length 1.}

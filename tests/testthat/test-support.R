@@ -90,13 +90,22 @@ test_that("A bare numeric .support is rejected (range vs atoms ambiguity).", {
   )
 })
 
-test_that("A support object passed to legacy .vtype is bridged to .support.", {
-  d <- distribution(
-    cdf = function(x) x, pmf = function(x) 1,
-    .vtype = discrete(discretes::natural0())
+test_that("A support object passed to legacy .vtype is rejected.", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+  expect_error(
+    distribution(
+      cdf = function(x) x, pmf = function(x) 1,
+      .vtype = discrete(discretes::natural0())
+    ),
+    "Pass support objects to `.support`"
   )
-  expect_equal(vtype(d), "discrete")
-  expect_false(is.null(support(d)))
+  expect_error(
+    distribution(
+      cdf = function(x) x, pmf = function(x) 1,
+      .vtype = discretes::natural0()
+    ),
+    "Pass support objects to `.support`"
+  )
 })
 
 test_that("Legacy .vtype strings still work and carry no structured support.", {
@@ -111,10 +120,6 @@ test_that("Legacy .vtype strings still work and carry no structured support.", {
 test_that(".vtype is soft-deprecated in favour of .support.", {
   lifecycle::expect_deprecated(
     distribution(cdf = function(x) x, density = function(x) 1, .vtype = "continuous")
-  )
-  # A support object passed to .vtype is bridged and does not warn.
-  expect_no_warning(
-    distribution(cdf = function(x) x, pmf = function(x) 1, .vtype = discrete(0))
   )
 })
 
