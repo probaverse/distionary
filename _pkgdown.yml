@@ -21,6 +21,12 @@ reference:
 - subtitle: General Distribution Creation
   contents:
   - distribution
+- subtitle: Support
+  contents:
+  - support-construction
+  - support
+  - atoms
+  - is_support
 - subtitle: Distribution Characteristics
   contents:
   - parameters
@@ -53,3 +59,5 @@ reference:
   contents:
   - ends_with("gev")
   - ends_with("gp")
+  - ends_with("pearson3")
+  - ends_with("lp3")
