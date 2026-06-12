@@ -10,19 +10,20 @@
 #' enframe_quantile(d, at = 1:9 / 10)
 #' @family distributional representations
 #' @details When a quantile function does not exist, an algorithm is
-#' deployed that calculates the left inverse of the CDF. This algorithm
-#' works by progressively cutting the specified range in half, moving
-#' into the left or right half depending on where the solution is.
-#' The algorithm is not currently fast and is subject to improvement,
-#' and is a simple idea that has been passed around on the internet
-#' here and there. Tolerance is less than 1e-9, unless the maximum
-#' number of iterations (200) is reached.
+#' deployed that calculates the left inverse of the CDF by bisection:
+#' an interval known to contain the solution is progressively cut in
+#' half, moving into whichever half still contains it. The whole vector
+#' of requested probabilities is solved together (one vectorized CDF
+#' evaluation per step rather than one per probability), so evaluating
+#' many quantiles at once is considerably faster than one at a time.
 #'
-#' The algorithm is not new, and is rather simple.
-#' The algorithm works by progressively
-#' cutting an initially wide range in half, moving into the left or right
-#' half depending on where the solution is. I found the idea on Stack
-#' Overflow somewhere, but unfortunately cannot find the location anymore.
+#' For a distribution with a structured support (see [support()]), the
+#' algorithm is aware of where the atoms (discrete mass points) are. A
+#' probability that lands inside an atom's jump in the CDF is returned
+#' as that atom exactly, rather than approximately, and the boundary
+#' quantiles (at probability 0 and 1) are read straight from the
+#' support. Tolerance is roughly 1e-9 in the quantile value, unless the
+#' maximum number of iterations (200) is reached.
 #' @rdname quantile
 #' @export
 eval_quantile <- function(distribution, at) {
