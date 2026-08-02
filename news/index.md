@@ -1,5 +1,11 @@
 # Changelog
 
+## distionary (development version)
+
+- [`dst_lp3()`](https://distionary.probaverse.com/reference/dst_lp3.md)
+  now supports negative skew on the log scale. Zero skew is treated as a
+  log-normal distribution.
+
 ## distionary 0.1.1
 
 CRAN release: 2026-04-27

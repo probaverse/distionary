@@ -303,6 +303,8 @@ contributing to this project, you agree to abide by its terms.
   : Generalised Extreme Value Distribution
 - [`dst_gp()`](https://distionary.probaverse.com/reference/dst_gp.md) :
   Generalised Pareto Distribution
+- [`dst_gumbel()`](https://distionary.probaverse.com/reference/dst_gumbel.md)
+  : Gumbel Distribution
 - [`dst_hyper()`](https://distionary.probaverse.com/reference/dst_hyper.md)
   : Hypergeometric Distribution
 - [`dst_lnorm()`](https://distionary.probaverse.com/reference/dst_lnorm.md)
@@ -424,6 +426,20 @@ Distributional representations not found in the `stats` package.
   [`qgp()`](https://distionary.probaverse.com/reference/gp_raw.md)
   [`dgp()`](https://distionary.probaverse.com/reference/gp_raw.md) :
   Representations of the Generalized Pareto Distribution
+- [`dst_lp3()`](https://distionary.probaverse.com/reference/dst_lp3.md)
+  : Log Pearson Type III distribution
+- [`plp3()`](https://distionary.probaverse.com/reference/lp3_raw.md)
+  [`dlp3()`](https://distionary.probaverse.com/reference/lp3_raw.md)
+  [`qlp3()`](https://distionary.probaverse.com/reference/lp3_raw.md)
+  [`rlp3()`](https://distionary.probaverse.com/reference/lp3_raw.md) :
+  Representations of the Log Pearson Type III Distribution
+- [`dst_pearson3()`](https://distionary.probaverse.com/reference/dst_pearson3.md)
+  : Pearson Type III distribution
+- [`ppearson3()`](https://distionary.probaverse.com/reference/pearson3_raw.md)
+  [`dpearson3()`](https://distionary.probaverse.com/reference/pearson3_raw.md)
+  [`qpearson3()`](https://distionary.probaverse.com/reference/pearson3_raw.md)
+  [`rpearson3()`](https://distionary.probaverse.com/reference/pearson3_raw.md)
+  : Representations of the Pearson Type III Distribution
 
 # Articles
 

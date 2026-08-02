@@ -33,6 +33,7 @@
 <url><loc>https://distionary.probaverse.com/reference/dst_geom.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/dst_gev.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/dst_gp.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/dst_gumbel.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/dst_hyper.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/dst_lnorm.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/dst_lp3.html</loc></url>
@@ -50,10 +51,12 @@
 <url><loc>https://distionary.probaverse.com/reference/gp_raw.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/hazard.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/index.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/lp3_raw.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/median.dst.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/moments.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/odds.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/parameters.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/pearson3_raw.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/plot.dst.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/pmf.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/pretty_name.html</loc></url>
