@@ -25,25 +25,21 @@ dst_pearson3 <- function(location, scale, shape) {
       location = location, scale = scale, shape = shape
     ),
     cdf = function(x) {
-      ppearson3(x, location = location, scale = scale, shape = shape)
+      stats::pgamma(x - location, scale = scale, shape = shape)
     },
     survival = function(x) {
-      ppearson3(
-        x,
-        location = location,
-        scale = scale,
-        shape = shape,
-        lower.tail = FALSE
+      stats::pgamma(
+        x - location, scale = scale, shape = shape, lower.tail = FALSE
       )
     },
     density = function(x) {
-      dpearson3(x, location = location, scale = scale, shape = shape)
+      stats::dgamma(x - location, scale = scale, shape = shape)
     },
     quantile = function(p) {
-      qpearson3(p, location = location, scale = scale, shape = shape)
+      location + stats::qgamma(p, shape = shape, scale = scale)
     },
     realise = function(n) {
-      rpearson3(n, location = location, scale = scale, shape = shape)
+      location + stats::rgamma(n, shape = shape, scale = scale)
     },
     mean = location + scale * shape,
     variance = shape * scale^2,

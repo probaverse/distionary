@@ -20,5 +20,3 @@ jobs:
       issues: write
     steps:
       - uses: ropensci-review-tools/pkgcheck-action@main
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
