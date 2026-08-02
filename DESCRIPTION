@@ -1,6 +1,6 @@
 Package: distionary
 Title: Create and Evaluate Probability Distributions
-Version: 0.1.0.9000
+Version: 0.1.1.9000
 Authors@R: c(
     person("Vincenzo", "Coia", , "vincenzo.coia@gmail.com", 
            role = c("aut", "cre", "cph")),
@@ -34,4 +34,4 @@ VignetteBuilder: knitr
 URL: https://distionary.probaverse.com/, https://github.com/probaverse/distionary
 BugReports: https://github.com/probaverse/distionary/issues
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5)

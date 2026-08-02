@@ -1,3 +1,8 @@
+# distionary (development version)
+
+- `dst_lp3()` now supports negative skew on the log scale.
+  Zero skew is treated as a log-normal distribution.
+
 # distionary 0.1.1
 
 * Replaced usage of the deprecated `ellipsis` package with `rlang`
