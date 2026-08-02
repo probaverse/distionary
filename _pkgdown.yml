@@ -53,3 +53,5 @@ reference:
   contents:
   - ends_with("gev")
   - ends_with("gp")
+  - ends_with("lp3")
+  - ends_with("pearson3")
