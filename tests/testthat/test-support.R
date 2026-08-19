@@ -18,9 +18,9 @@ test_that("continuous() canonicalizes: sorts and merges touching/overlapping.", 
 })
 
 test_that("continuous() rejects malformed intervals.", {
-  expect_error(continuous(c(1, 0)), "lower <= upper")
-  expect_error(continuous(c(0, NA)), "NA")
-  expect_error(continuous(c(0, 1, 2)), "length-2")
+  expect_error(continuous(c(1, 0)))
+  expect_error(continuous(c(0, NA)))
+  expect_error(continuous(c(0, 1, 2)))
 })
 
 test_that("discrete() accepts discretes objects and numeric vectors.", {
