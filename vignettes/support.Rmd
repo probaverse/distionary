@@ -1,0 +1,257 @@
+---
+title: "The Support of a Distribution"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{The Support of a Distribution}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(distionary)
+```
+
+This vignette explains what a distribution's _support_ is in `distionary`, how to build one, and why it's worth telling the package about it.
+
+## What a Support Is
+
+A distribution's **support** is the set on which it places probability. Every distribution splits that set into two parts:
+
+- an **atomic** part -- individual points, each carrying positive probability mass; and
+- a **continuous** part -- one or more intervals, over which probability is spread as a density.
+
+This split is the Lebesgue decomposition, and it's the reason a distribution is called discrete (atoms only), continuous (intervals only), or mixed (both). In `distionary`, a support is an object holding these two parts, and the variable type is _derived_ from it rather than declared.
+
+The reason to carry this structure around is practical: numeric routines need to know where the atoms are. A quantile function has to land exactly on an atom rather than near it, and a mean has to sum over atoms rather than integrate across them. Recording the support means these calculations can be done correctly without having to guess.
+
+## Building a Support
+
+Three constructors build supports, one for each variable type.
+
+### Continuous supports
+
+`continuous()` takes intervals, each a length-2 numeric vector `c(lower, upper)`.
+
+```{r}
+continuous(c(0, Inf))
+```
+
+With no arguments at all, it defaults to the whole real line.
+
+```{r}
+continuous()
+```
+
+Several intervals give a union, which is sorted and merged into a canonical form. Notice that the overlapping pieces below collapse into one:
+
+```{r}
+continuous(c(3, 4), c(0, 1), c(0.5, 2))
+```
+
+Intervals are written as closed, but their endpoints carry no probability either way, a single point having measure zero. An interval is really neither open nor closed. A point that genuinely carries mass is an atom, and belongs in the atomic part instead. Each interval must have `lower < upper`.
+
+### Discrete supports
+
+`discrete()` takes the atoms. Finitely many atoms can be given as a plain numeric vector, which is sorted for you.
+
+```{r}
+discrete(c(3.5, 1.2, 6.7))
+```
+
+Distributions like the Poisson have infinitely many atoms, which can't be written out as a vector. These come from the `discretes` package, whose series constructors `distionary` re-exports for convenience.
+
+```{r}
+discrete(natural0())
+```
+
+```{r}
+discrete(integers())
+```
+
+`arithmetic()` describes evenly spaced atoms, given a representative point and a spacing. It runs forever in both directions unless you say otherwise:
+
+```{r}
+discrete(arithmetic(0, 0.5))
+```
+
+```{r}
+discrete(arithmetic(0, 0.5, n_left = 0, n_right = 4))
+```
+
+### Mixed supports
+
+`mixed()` takes both parts, named. Here is an atom at zero sitting at the edge of a continuous tail:
+
+```{r}
+mixed(atoms = 0, continuous = c(0, Inf))
+```
+
+An atom is allowed to coincide with an interval endpoint, as it does here -- the atom is simply tracked separately, and its mass is not double-counted against the density. Because the variable type is derived from the parts, `mixed()` insists that _both_ of them be non-empty; use `discrete()` or `continuous()` for the pure cases.
+
+### The empty support
+
+There is a fourth constructor, for a support with nothing in it at all.
+
+```{r}
+empty_support()
+```
+
+No distribution has an empty support -- probability has to go somewhere -- and `distribution()` refuses one.
+
+```{r, error = TRUE}
+distribution(cdf = stats::pnorm, .support = empty_support())
+```
+
+It exists so that operations on supports are _closed_. Restricting a support to a region it doesn't reach has to return something, and the empty support is that something. Without it, every operation that can come up empty would need a special case, and the thing it returned in that case would have to mean something else.
+
+Its variable type, shown when it prints, is `"empty"`. That's a different claim from `"unknown"`: empty says there is nowhere to place probability, whereas unknown says nobody specified where, which is what a distribution defined without a support reports. Distinguishing the two is the reason `distribution()` can reject the first while still accepting the second.
+
+```{r}
+is_empty_support(empty_support())
+```
+
+## Retrieving a Support
+
+The built-in families all carry a support, which `support()` retrieves.
+
+```{r}
+support(dst_pois(3))
+support(dst_gamma(shape = 2, rate = 1))
+```
+
+The two parts can be pulled out individually. `atoms()` returns a `discretes` object, and `continuous_part()` returns a two-column matrix of intervals.
+
+```{r}
+atoms(mixed(atoms = 0, continuous = c(0, Inf)))
+continuous_part(continuous(c(0, 1), c(3, 4)))
+```
+
+Both accept a distribution as well as a support, so there's no need to unwrap first.
+
+```{r}
+atoms(dst_binom(5, 0.3))
+```
+
+The variable type and the range are both derived from the support, so they always agree with it.
+
+```{r}
+vtype(dst_pois(3))
+range(dst_pois(3))
+```
+
+A support has a range of its own, being the two outermost points it reaches.
+
+```{r}
+range(continuous(c(0, 1), c(3, 4)))
+```
+
+Gaps aren't represented there. The support above places no probability between 1 and 3, but its range spans that stretch all the same.
+
+Finally, `is_support()` tests whether an object is a support.
+
+```{r}
+is_support(continuous(c(0, 1)))
+```
+
+## Giving a Distribution a Support
+
+Supports are attached to user-defined distributions through the `.support` argument of `distribution()`, described in the [Specifying Your Own Distribution](./specify-user-defined.html) vignette.
+
+```{r}
+my_normal <- distribution(
+  cdf = stats::pnorm,
+  density = stats::dnorm,
+  .support = continuous(c(-Inf, Inf))
+)
+vtype(my_normal)
+```
+
+One rule is worth knowing about. A bare numeric vector is not accepted as a support, because it is ambiguous: `c(0, Inf)` could just as easily mean an interval from zero to infinity as it could mean two atoms. You have to name which one you mean.
+
+```{r, error = TRUE}
+distribution(cdf = stats::pnorm, .support = c(0, Inf))
+```
+
+Inside `discrete()` and `mixed()` the ambiguity is already resolved by the argument name, which is why a bare vector is fine there.
+
+The older `.vtype` argument, which took a string such as `"continuous"`, is superseded by `.support`. It still works, and warns to that effect. A distribution defined that way has no structured support, though, and `support()` reports as much.
+
+```{r}
+legacy <- distribution(
+  cdf = stats::pnorm,
+  density = stats::dnorm,
+  .vtype = "continuous"
+)
+support(legacy)
+```
+
+Such a distribution still evaluates, but the routines described in the next section fall back to their older, continuous-only behaviour.
+
+## Why It Matters
+
+The payoff shows up on distributions that have atoms. Consider a model for daily rainfall: no rain at all with probability 0.3, and an exponential amount otherwise. This is a genuinely mixed distribution, with an atom at zero and a density on the positive half-line.
+
+```{r}
+p0 <- 0.3
+rate <- 1 / 5
+rainfall <- distribution(
+  cdf = function(x) {
+    ifelse(x < 0, 0, p0 + (1 - p0) * stats::pexp(x, rate))
+  },
+  density = function(x) {
+    ifelse(x <= 0, 0, (1 - p0) * stats::dexp(x, rate))
+  },
+  pmf = function(x) {
+    ifelse(x == 0, p0, 0)
+  },
+  .support = mixed(atoms = 0, continuous = c(0, Inf)),
+  .name = "Rainfall"
+)
+vtype(rainfall)
+```
+
+Only the CDF, density, and PMF were specified. The quantile function is derived, and because the support says there is an atom at zero, it lands on zero exactly for every probability at or below 0.3 instead of returning something merely close.
+
+```{r}
+eval_quantile(rainfall, at = c(0.1, 0.3, 0.5, 0.9))
+```
+
+The mean is derived too, by summing over the atoms and integrating over the intervals separately. Here the answer is `(1 - p0) / rate`, which is 3.5.
+
+```{r}
+mean(rainfall)
+variance(rainfall)
+```
+
+The same applies to a purely discrete distribution defined only by its CDF and PMF. Quantiles come back as exact atoms:
+
+```{r}
+my_poisson <- distribution(
+  cdf = function(x) stats::ppois(x, 2.5),
+  pmf = function(x) stats::dpois(x, 2.5),
+  .support = discrete(natural0()),
+  .name = "My Poisson"
+)
+eval_quantile(my_poisson, at = c(0.05, 0.3, 0.5, 0.9, 0.99))
+```
+
+Note that the support here has infinitely many atoms, and the mean is still computed, by walking outward through the atoms until the remaining contributions are negligible.
+
+```{r}
+mean(my_poisson)
+```
+
+## Current Scope
+
+Two things are worth knowing about where supports stand today.
+
+A support describes a distribution on the real line. Multivariate supports would be composed from univariate ones, and the object already reserves a place to record its dimension, but that composition isn't built yet.
+
+Supports can also be built and inspected, but not modified. There is no way to transform, restrict, or combine them directly. Something like this does happen behind the scenes when `distplyr` manipulates a distribution -- shifting a distribution shifts its support along with it -- but it isn't exposed to you, in `distplyr` or here. A future version aims to make supports manipulable in their own right.
