@@ -28,6 +28,13 @@ reference:
   - support
   - atoms
   - is_support
+- subtitle: Support Algebra
+  contents:
+  - support_union
+  - support_restrict
+  - support_transform
+  - support_add_atoms
+  - support_contains
 - subtitle: Distribution Characteristics
   contents:
   - parameters
