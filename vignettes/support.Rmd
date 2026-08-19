@@ -160,6 +160,81 @@ Finally, `is_support()` tests whether an object is a support.
 is_support(continuous(c(0, 1)))
 ```
 
+## Manipulating a Support
+
+Supports can be combined, cut down, and mapped through functions. Every one of these operations takes supports and gives back a support, so they compose freely.
+
+Two supports can be unioned. Overlapping or touching intervals are merged, and the atoms pooled.
+
+```{r}
+support_union(continuous(c(0, 1)), continuous(c(0.5, 3)))
+```
+
+An atom lying inside another support's continuous part stays an atom. The two carry different kinds of probability, and neither absorbs the other.
+
+```{r}
+support_union(discrete(3), continuous(c(0, 10)))
+```
+
+`support_restrict()` cuts a support down to an interval. The `include_from` and `include_to` arguments apply to the atoms only, since an interval endpoint carries no probability either way.
+
+```{r}
+support_restrict(discrete(natural0()), to = 4)
+```
+
+```{r}
+support_restrict(discrete(natural0()), to = 4, include_to = FALSE)
+```
+
+Restricting to somewhere the support doesn't reach is where the empty support earns its keep.
+
+```{r}
+support_restrict(continuous(c(0, 1)), from = 5, to = 6)
+```
+
+A support can also be pushed through a strictly monotonic function. Shifting and scaling are common enough to have their own forms.
+
+```{r}
+support_shift(continuous(c(0, 1)), by = 5)
+support_scale(discrete(natural0()), by = 2)
+```
+
+A decreasing map reverses each interval, which is taken care of for you.
+
+```{r}
+support_scale(continuous(c(1, 2)), by = -1)
+```
+
+Reciprocals are worth a closer look, because `1 / x` isn't monotonic across zero. Each side of zero is mapped separately and the two results unioned, which is why the support below comes back in two pieces.
+
+```{r}
+support_reciprocal(continuous(c(-2, 4)))
+```
+
+For anything else, `support_transform()` takes the map together with its inverse.
+
+```{r}
+support_transform(
+  continuous(c(0, Inf)),
+  fun = exp, inv = log,
+  domain = c(0, Inf), range = c(1, Inf)
+)
+```
+
+Atoms can be added and removed one at a time. This leaves the continuous part alone, so removing an atom that sits on an interval leaves the interval whole.
+
+```{r}
+support_add_atoms(continuous(c(0, Inf)), 0)
+```
+
+Finally, two functions ask whether a value belongs to a support. `support_contains()` counts both parts, whereas `support_has_atom()` counts only the atoms --- making it the one to reach for when what matters is whether a point carries positive probability.
+
+```{r}
+s <- mixed(atoms = 0, continuous = c(2, 5))
+support_contains(s, at = c(0, 1, 3, 9))
+support_has_atom(s, at = c(0, 1, 3, 9))
+```
+
 ## Giving a Distribution a Support
 
 Supports are attached to user-defined distributions through the `.support` argument of `distribution()`, described in the [Specifying Your Own Distribution](./specify-user-defined.html) vignette.
@@ -254,4 +329,4 @@ Two things are worth knowing about where supports stand today.
 
 A support describes a distribution on the real line. Multivariate supports would be composed from univariate ones, and the object already reserves a place to record its dimension, but that composition isn't built yet.
 
-Supports can also be built and inspected, but not modified. There is no way to transform, restrict, or combine them directly. Something like this does happen behind the scenes when `distplyr` manipulates a distribution -- shifting a distribution shifts its support along with it -- but it isn't exposed to you, in `distplyr` or here. A future version aims to make supports manipulable in their own right.
+There is no intersection. It hasn't been needed --- `support_restrict()` already covers cutting a support down to an interval, which is the case that comes up in practice --- so it waits until something calls for it.
