@@ -27,6 +27,7 @@ support(distribution(.support = continuous(c(0, Inf))))
 
 Other Support: 
 \code{\link{atoms}()},
+\code{\link{empty_support}()},
 \code{\link{is_support}()},
 \code{\link{support-construction}}
 }

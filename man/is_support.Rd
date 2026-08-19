@@ -2,9 +2,12 @@
 % Please edit documentation in R/support.R
 \name{is_support}
 \alias{is_support}
+\alias{is_empty_support}
 \title{Test for a Support Object}
 \usage{
 is_support(x)
+
+is_empty_support(x)
 }
 \arguments{
 \item{x}{Object to test.}
@@ -13,11 +16,13 @@ is_support(x)
 \code{TRUE} if \code{x} is a support object, otherwise \code{FALSE}.
 }
 \description{
-Test for a Support Object
+\code{is_empty_support()} tests whether a support is the empty one: no atoms and
+no continuous part. It is \code{FALSE} for anything that is not a support.
 }
 \seealso{
 Other Support: 
 \code{\link{atoms}()},
+\code{\link{empty_support}()},
 \code{\link{support}()},
 \code{\link{support-construction}}
 }

@@ -89,6 +89,13 @@ distribution <- function(...,
   support <- NULL
   if (!is.null(.support)) {
     support <- as_support(.support)
+    if (is_empty_support(support)) {
+      stop(
+        "A distribution cannot have an empty support, because it has to ",
+        "place probability somewhere. The empty support exists so that ",
+        "operations on supports are closed; it is not itself a distribution."
+      )
+    }
   }
   # Derive the variable type. From the support when we have one; otherwise from
   # the legacy `.vtype` string (status quo, including typo detection).

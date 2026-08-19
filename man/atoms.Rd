@@ -26,6 +26,7 @@ continuous_part(continuous(c(0, 1), c(3, 4)))
 }
 \seealso{
 Other Support: 
+\code{\link{empty_support}()},
 \code{\link{is_support}()},
 \code{\link{support}()},
 \code{\link{support-construction}}

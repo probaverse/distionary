@@ -24,6 +24,7 @@ reference:
 - subtitle: Support
   contents:
   - support-construction
+  - empty_support
   - support
   - atoms
   - is_support

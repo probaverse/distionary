@@ -79,6 +79,36 @@ mixed <- function(atoms, continuous) {
   new_support(atoms = a, continuous = ci)
 }
 
+#' The Empty Support
+#'
+#' A support containing nothing: no atoms and no continuous part.
+#'
+#' @details
+#' No distribution has an empty support --- probability has to go somewhere ---
+#' and [distribution()] rejects one. It exists so that operations on supports
+#' are *closed*: restricting a support to a region it does not reach has to
+#' return something, and that something is the empty support. It is also the
+#' identity for taking unions.
+#'
+#' Its variable type is `"empty"`, which is a different claim from
+#' `"unknown"`. Empty says there is nowhere to place probability; unknown says
+#' nobody specified where.
+#' @returns A support object (class `"support"`) with both parts empty.
+#' @seealso [is_empty_support()] to test for it, [discrete()],
+#' [continuous()], and [mixed()] for supports a distribution can actually have.
+#' @examples
+#' empty_support()
+#' is_empty_support(empty_support())
+#'
+#' # The empty support is what falls out of an impossible restriction, and it
+#' # is what `continuous()` returns when given no intervals at all.
+#' continuous(numeric(0))
+#' @family Support
+#' @export
+empty_support <- function() {
+  new_support()
+}
+
 #' Low-Level Support Constructor
 #'
 #' Builds a support object from its already-validated parts. The atomic part is
@@ -140,6 +170,18 @@ as_support <- function(x) {
 #' @export
 is_support <- function(x) {
   inherits(x, "support")
+}
+
+#' @description
+#' `is_empty_support()` tests whether a support is the empty one: no atoms and
+#' no continuous part. It is `FALSE` for anything that is not a support.
+#' @rdname is_support
+#' @export
+is_empty_support <- function(x) {
+  if (!is_support(x)) {
+    return(FALSE)
+  }
+  discretes::num_discretes(x[["atoms"]]) == 0 && nrow(x[["continuous"]]) == 0
 }
 
 #' Retrieve the Support of a Distribution
@@ -218,7 +260,9 @@ vtype_of_support <- function(support) {
   if (has_cont) {
     return("continuous")
   }
-  "unknown"
+  # Neither part is present: the support is empty. This is a different claim
+  # from "unknown", which is what a distribution reports when nobody said.
+  "empty"
 }
 
 #' The hull (min, max) of a support, used to derive a distribution's range.

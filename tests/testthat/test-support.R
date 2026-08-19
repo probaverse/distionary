@@ -131,3 +131,65 @@ test_that("Support accessors error on legacy distributions and non-supports.", {
   expect_error(atoms(d), "no structured support")
   expect_error(atoms(1:10), "support object or a distribution")
 })
+
+test_that("empty_support() is empty, and knows it.", {
+  e <- empty_support()
+  expect_true(is_support(e))
+  expect_true(is_empty_support(e))
+  expect_equal(discretes::num_discretes(atoms(e)), 0)
+  expect_equal(nrow(continuous_part(e)), 0)
+})
+
+test_that("the empty support's variable type is 'empty', not 'unknown'.", {
+  expect_equal(distionary:::vtype_of_support(empty_support()), "empty")
+  expect_output(print(empty_support()), "empty")
+})
+
+test_that("is_empty_support() is FALSE for non-empty supports and non-supports.", {
+  expect_false(is_empty_support(continuous(c(0, 1))))
+  expect_false(is_empty_support(discrete(1:3)))
+  expect_false(is_empty_support(mixed(atoms = 0, continuous = c(0, 1))))
+  expect_false(is_empty_support(1:10))
+  expect_false(is_empty_support(NULL))
+  expect_false(is_empty_support(dst_norm(0, 1)))
+})
+
+test_that("continuous() with no intervals gives the empty support.", {
+  expect_true(is_empty_support(continuous(numeric(0))))
+  # But `continuous()` with no arguments at all is the whole real line.
+  expect_false(is_empty_support(continuous()))
+})
+
+test_that("a distribution cannot be given an empty support.", {
+  expect_error(
+    distribution(cdf = stats::pnorm, .support = empty_support()),
+    "cannot have an empty support"
+  )
+  expect_error(
+    distribution(cdf = stats::pnorm, .support = continuous(numeric(0))),
+    "cannot have an empty support"
+  )
+})
+
+test_that("range() of a support gives its outermost points.", {
+  expect_equal(range(continuous(c(0, 1), c(3, 4))), c(0, 4))
+  expect_equal(range(mixed(atoms = -1, continuous = c(0, Inf))), c(-1, Inf))
+  expect_equal(range(discrete(c(2, 5, 9))), c(2, 9))
+  expect_equal(range(continuous()), c(-Inf, Inf))
+})
+
+test_that("range() of the empty support is NA, without warning.", {
+  expect_equal(range(empty_support()), c(NA_real_, NA_real_))
+  expect_silent(range(empty_support()))
+})
+
+test_that("range() of a support rejects stray arguments.", {
+  expect_error(range(continuous(c(0, 1)), 5), "expecting no arguments")
+})
+
+test_that("range() of a support agrees with range() of its distribution.", {
+  d <- dst_pois(3)
+  expect_equal(range(support(d)), range(d))
+  d2 <- dst_unif(2, 7)
+  expect_equal(range(support(d2)), range(d2))
+})
