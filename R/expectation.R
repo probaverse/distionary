@@ -96,8 +96,9 @@ expect_over_support <- function(distribution, g, tol = 1e-9, ...) {
 #' batch.
 #' @returns A single numeric, or `NaN` if the sum does not converge.
 #' @noRd
-sum_over_atoms <- function(series, pmf, g, tol = 1e-9, max_atoms = 1e5L,
-                           batch = 100L) {
+sum_over_atoms <- function(
+  series, pmf, g, tol = 1e-9, max_atoms = 1e5L, batch = 100L
+) {
   n <- discretes::num_discretes(series)
   if (n == 0) {
     return(0)
@@ -201,8 +202,9 @@ find_anchor <- function(series, a, b) {
 #' - `max_atoms` atoms have been visited without the tail going quiet, in which
 #'   case the sum is deemed not to converge and `NaN` is returned.
 #' @noRd
-walk_atoms <- function(series, from, step_fn, pmf, g, bound, upward,
-                       tol, max_atoms, batch) {
+walk_atoms <- function(
+  series, from, step_fn, pmf, g, bound, upward, tol, max_atoms, batch
+) {
   acc <- 0
   visited <- 0L
   x <- from

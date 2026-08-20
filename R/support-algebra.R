@@ -89,12 +89,14 @@ support_union <- function(...) {
 #' support_restrict(continuous(c(0, 1)), from = 5, to = 6)
 #' @family Support algebra
 #' @export
-support_restrict <- function(support,
-                             ...,
-                             from = -Inf,
-                             to = Inf,
-                             include_from = TRUE,
-                             include_to = TRUE) {
+support_restrict <- function(
+  support,
+  ...,
+  from = -Inf,
+  to = Inf,
+  include_from = TRUE,
+  include_to = TRUE
+) {
   rlang::check_dots_empty()
   s <- as_support_arg(support)
   checkmate::assert_number(from)
@@ -167,13 +169,15 @@ support_restrict <- function(support,
 #' )
 #' @family Support algebra
 #' @export
-support_transform <- function(support,
-                              fun,
-                              inv,
-                              ...,
-                              increasing = TRUE,
-                              domain = c(-Inf, Inf),
-                              range = c(-Inf, Inf)) {
+support_transform <- function(
+  support,
+  fun,
+  inv,
+  ...,
+  increasing = TRUE,
+  domain = c(-Inf, Inf),
+  range = c(-Inf, Inf)
+) {
   rlang::check_dots_empty()
   s <- as_support_arg(support)
   checkmate::assert_function(fun)

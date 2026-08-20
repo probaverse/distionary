@@ -63,15 +63,17 @@
 #' @returns The inverse at each element of `at`, a numeric vector the same
 #' length as `at`. `NA` in gives `NA` out.
 #' @noRd
-invert_cdf <- function(cdf,
-                       at,
-                       hull,
-                       ...,
-                       atoms = NULL,
-                       pmf = NULL,
-                       side = c("left", "right"),
-                       tol = 1e-9,
-                       maxiter = 200) {
+invert_cdf <- function(
+  cdf,
+  at,
+  hull,
+  ...,
+  atoms = NULL,
+  pmf = NULL,
+  side = c("left", "right"),
+  tol = 1e-9,
+  maxiter = 200
+) {
   rlang::check_dots_empty()
   checkmate::assert_function(cdf)
   checkmate::assert_numeric(at, 0, 1)
@@ -129,11 +131,13 @@ invert_cdf <- function(cdf,
 #' @returns The `at`-quantiles of the distribution. Numeric vector the same
 #' length as `at`.
 #' @noRd
-eval_quantile_from_network <- function(distribution,
-                                       at,
-                                       side = c("left", "right"),
-                                       tol = 1e-9,
-                                       maxiter = 200) {
+eval_quantile_from_network <- function(
+  distribution,
+  at,
+  side = c("left", "right"),
+  tol = 1e-9,
+  maxiter = 200
+) {
   checkmate::assert_class(distribution, "dst")
   side <- rlang::arg_match(side)
   s <- support(distribution)

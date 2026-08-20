@@ -95,11 +95,13 @@
 #' plot(linear)
 #' @family Distribution Construction
 #' @export
-distribution <- function(...,
-                         .support = NULL,
-                         .vtype = NULL,
-                         .name = NULL,
-                         .parameters = list()) {
+distribution <- function(
+  ...,
+  .support = NULL,
+  .vtype = NULL,
+  .name = NULL,
+  .parameters = list()
+) {
   # Checked before the support, so that old code passing `.vtype` gets the
   # message naming its replacement rather than the generic one below.
   if (!is.null(.vtype)) {

@@ -124,9 +124,11 @@ empty_support <- function() {
 #' record their dimension.
 #' @returns A support object (class `"support"`).
 #' @noRd
-new_support <- function(atoms = discretes::empty_series(),
-                        continuous = empty_intervals(),
-                        ndim = 1L) {
+new_support <- function(
+  atoms = discretes::empty_series(),
+  continuous = empty_intervals(),
+  ndim = 1L
+) {
   structure(
     list(atoms = atoms, continuous = continuous),
     ndim = ndim,
