@@ -49,10 +49,7 @@
 #' inverse gives `a` and the right gives the next atom. Where density resumes
 #' immediately after the atom, as in a mixed distribution, there is again no
 #' stretch and both inverses give `a`.
-#'
-#' That last case is currently exact for the left inverse only. The right
-#' inverse returns `a` to within `tol` rather than landing on it, because the
-#' snap that recovers atoms exactly does not fire at the top of a jump.
+
 #'
 #' **`side` does not apply at `at == 0` and `at == 1`,** where the answer is the
 #' corresponding end of `hull` either way. This is not the two inverses
@@ -110,7 +107,9 @@ invert_cdf <- function(cdf,
     if (is.null(pmf)) {
       stop("`pmf` is required when `atoms` are supplied.")
     }
-    value <- snap_to_atoms(cdf, pmf, atoms, p, value = value, side = side)
+    value <- snap_to_atoms(
+      cdf, pmf, atoms, p, value = value, side = side, tol = tol
+    )
   }
   out[is_interior] <- value
   out
@@ -271,9 +270,11 @@ bisect_quantile <- function(cdf, p, lo, hi, side, tol, maxiter) {
 #' @param p Vector of probabilities.
 #' @param value Bisection estimates, returned unchanged where no atom is hit.
 #' @param side Which inverse is being taken.
+#' @param tol The bisection's tolerance, used to recognise an estimate that has
+#' converged onto an atom.
 #' @returns The `value` vector with atom-hitting entries replaced by the atoms.
 #' @noRd
-snap_to_atoms <- function(cdf, pmf, atoms_obj, p, value, side) {
+snap_to_atoms <- function(cdf, pmf, atoms_obj, p, value, side, tol) {
   n <- length(p)
   # The candidate atom bracketing `value` on each side; NA where the support
   # has no atom on that side.
@@ -310,10 +311,18 @@ snap_to_atoms <- function(cdf, pmf, atoms_obj, p, value, side) {
     } else {
       # The right inverse closes the *lower* end, and that is the end computed
       # by subtraction, so this is the one comparison a rounding error can
-      # flip. `p < f_a` needs no such care: it is already strict.
-      !is.na(cand) &
-        (f_lower[j] < p | near_probability(f_lower[j], p)) &
-        (p < f_a[j])
+      # flip.
+      lower_ok <- f_lower[j] < p | near_probability(f_lower[j], p)
+      # At the top of the jump, `p == F(a)`, the atom is still the answer when
+      # nothing flat follows it -- density resuming immediately, as in a mixed
+      # distribution. When a gap follows instead, the answer is the next point
+      # of increase, and the bisection will have converged there rather than
+      # here, so requiring the estimate to have landed on `a` separates the two
+      # without needing to know which case it is.
+      converged_on_atom <- near_probability(p, f_a[j]) &
+        abs(value - cand) <= tol * pmax(1, abs(value), abs(cand))
+      converged_on_atom[is.na(converged_on_atom)] <- FALSE
+      !is.na(cand) & lower_ok & (p < f_a[j] | converged_on_atom)
     }
     in_jump[is.na(in_jump)] <- FALSE
     value[in_jump] <- cand[in_jump]

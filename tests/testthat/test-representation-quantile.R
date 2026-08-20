@@ -171,3 +171,36 @@ test_that("The Null distribution still answers quantiles with NA.", {
   expect_null(support(n))
   expect_identical(eval_quantile(n, at = c(0, 0.5, 1)), rep(NA_real_, 3))
 })
+
+test_that("At the top of a jump, the right inverse lands on the atom.", {
+  # An atom at 0 with density resuming immediately after it, so nothing flat
+  # follows the jump. `Q+(F(0))` is 0 exactly, not 0 plus a tolerance.
+  p0 <- 0.3
+  rate <- 1 / 5
+  mx <- distribution(
+    cdf = function(x) ifelse(x < 0, 0, p0 + (1 - p0) * stats::pexp(x, rate)),
+    density = function(x) ifelse(x <= 0, 0, (1 - p0) * stats::dexp(x, rate)),
+    pmf = function(x) ifelse(x == 0, p0, 0),
+    .support = mixed(atoms = 0, continuous = c(0, Inf))
+  )
+  expect_identical(
+    eval_quantile_from_network(mx, p0, side = "right"), 0
+  )
+  expect_identical(
+    eval_quantile_from_network(mx, p0, side = "left"), 0
+  )
+  # Strictly inside the jump both inverses give the atom, as the cdf skips
+  # that level entirely.
+  expect_identical(
+    eval_quantile_from_network(mx, 0.15, side = "right"), 0
+  )
+})
+
+test_that("A gap after the atom still sends the right inverse onward.", {
+  # The contrast: a Poisson has nothing between its atoms, so the cdf is flat
+  # across the gap and the two inverses take opposite ends of it.
+  d <- dst_pois(3)
+  p1 <- ppois(1, 3)
+  expect_identical(eval_quantile_from_network(d, p1, side = "left"), 1)
+  expect_identical(eval_quantile_from_network(d, p1, side = "right"), 2)
+})
