@@ -193,3 +193,22 @@ test_that("range() of a support agrees with range() of its distribution.", {
   d2 <- dst_unif(2, 7)
   expect_equal(range(support(d2)), range(d2))
 })
+
+test_that("The Null distribution has no support, and says so.", {
+  n <- dst_null()
+  expect_null(support(n))
+  expect_identical(vtype(n), NA_character_)
+  expect_equal(range(n), c(NA_real_, NA_real_))
+  # It is the missing value of the distribution world: every query is NA.
+  expect_identical(mean(n), NA_real_)
+  expect_identical(eval_cdf(n, at = 1:3), rep(NA_real_, 3))
+})
+
+test_that("The Null distribution is built without `distribution()`.", {
+  # It cannot declare a support, so it bypasses the user-facing constructor.
+  # The bypass is internal, so `distribution()` remains the only public way in.
+  rlang::local_options(lifecycle_verbosity = "warning")
+  expect_no_warning(dst_null())
+  # Two Nulls are the same object, which is what lets verbs compare against it.
+  expect_equal(dst_null(), dst_null())
+})
