@@ -13,9 +13,19 @@
 #'
 #' @param cdf The function to invert. Must be vectorized.
 #' @param at Probabilities at which to invert, each in `[0, 1]`.
-#' @param hull Length-2 numeric `c(lower, upper)`: the outermost points the
-#' solution can reach. Used to start the bracket, and to answer `at == 0` and
-#' `at == 1` directly.
+#' @param hull Length-2 numeric `c(lower, upper)`: the outermost points of the
+#' set the solution lives in --- for a distribution, the two ends of its
+#' support. Either endpoint may be infinite, and both usually are for an
+#' unbounded distribution.
+#'
+#' It has two jobs, and only one of them is forgiving. For interior
+#' probabilities it is merely where the bracket starts: the search widens or
+#' narrows from there as needed, so a hull that is too wide, or too narrow,
+#' still gives the right answer. For `at == 0` and `at == 1` it *is* the
+#' answer, returned as given. A hull that does not match the true support will
+#' therefore return quietly wrong boundary values while every interior value
+#' stays correct, which is a nasty way to be wrong --- so it should be the
+#' support's own ends, not an approximation of them.
 #' @param ... Not used; must be empty. Present so that the arguments below are
 #' matched by name.
 #' @param atoms The points carrying positive probability, as a `discretes`
@@ -24,9 +34,25 @@
 #' the atoms' jumps.
 #' @param side Which inverse to take: `"left"` (the usual quantile function) is
 #' the smallest `x` with `cdf(x) >= p`; `"right"` is the smallest `x` with
-#' `cdf(x) > p`. The two differ only where the CDF is flat or jumps --- over a
-#' gap, where the left inverse gives the lower end and the right inverse the
-#' upper, and at a probability landing exactly on the top of an atom's jump.
+#' `cdf(x) > p`.
+#'
+#' The two differ only where the CDF is **flat at level `p` over a stretch of
+#' positive length** --- where `p` is a value the CDF takes and then holds. The
+#' left inverse gives the start of that stretch, the right inverse its end.
+#'
+#' A jump is *not* such a case, which is worth being explicit about. A
+#' probability landing strictly inside an atom's jump is a level the CDF skips
+#' over entirely, so there is no stretch to choose an end of, and both inverses
+#' return that atom. The two can part company only at `p = cdf(a)` exactly, the
+#' top of the jump, and then only if a flat stretch follows the atom: a gap
+#' before the next mass, as between the atoms of a Poisson, where the left
+#' inverse gives `a` and the right gives the next atom. Where density resumes
+#' immediately after the atom, as in a mixed distribution, there is again no
+#' stretch and both inverses give `a`.
+#'
+#' That last case is currently exact for the left inverse only. The right
+#' inverse returns `a` to within `tol` rather than landing on it, because the
+#' snap that recovers atoms exactly does not fire at the top of a jump.
 #'
 #' **`side` does not apply at `at == 0` and `at == 1`,** where the answer is the
 #' corresponding end of `hull` either way. This is not the two inverses
