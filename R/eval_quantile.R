@@ -21,9 +21,12 @@
 #' algorithm is aware of where the atoms (discrete mass points) are. A
 #' probability that lands inside an atom's jump in the CDF is returned
 #' as that atom exactly, rather than approximately, and the boundary
-#' quantiles (at probability 0 and 1) are read straight from the
-#' support. Tolerance is roughly 1e-9 in the quantile value, unless the
-#' maximum number of iterations (200) is reached.
+#' quantiles are read straight from the support: the 0-quantile is the
+#' support's lower end and the 1-quantile its upper end, which for an
+#' unbounded distribution means `-Inf` and `Inf` rather than a large
+#' finite number found by searching the tail. Tolerance is roughly 1e-9
+#' in the quantile value, unless the maximum number of iterations (200)
+#' is reached.
 #' @rdname quantile
 #' @export
 eval_quantile <- function(distribution, at) {

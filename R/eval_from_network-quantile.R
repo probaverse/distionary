@@ -21,6 +21,16 @@
 #' gives the lower end and the right inverse the upper, and at a probability
 #' landing exactly on the top of an atom's jump. [eval_quantile()] always takes
 #' the left inverse; `side` is not yet exposed there.
+#'
+#' **`side` applies to interior probabilities only.** At `p = 0` and `p = 1`
+#' the result is the corresponding end of the support whichever side is asked
+#' for. This is not the two inverses agreeing --- it is a convention overriding
+#' both, and it is the only useful one available, because each inverse is
+#' degenerate at one end: the left inverse of 0 is `-Inf` for every
+#' distribution (the CDF is everywhere at least 0), and the right inverse of 1
+#' is `Inf` for every distribution (the CDF never exceeds 1). Taking the right
+#' inverse at 0 and the left inverse at 1 is what makes the boundary quantiles
+#' the ends of the support.
 #' @param tol,maxiter Tolerance (a small positive number) and maximum number
 #' of iterations (at least 1); length 1 vectors.
 #' @returns The `at`-quantiles of the distribution. Numeric vector the same
@@ -77,8 +87,12 @@ quantile_from_support <- function(distribution, s, at, side, tol, maxiter) {
   # bisecting into the numerical tails) gives the exact endpoints, including
   # -Inf / Inf for unbounded supports. We read the support *directly* and never
   # call range(), which would recurse back here for legacy distributions.
-  # Both inverses agree here, by the usual convention that Q(0) and Q(1) are
-  # the ends of the support.
+  #
+  # `side` is deliberately not consulted. The two inverses do not agree here;
+  # the convention overrides them, because each is degenerate at one end
+  # (left-inverse-of-0 is always -Inf, right-inverse-of-1 always Inf). So this
+  # takes the right inverse at 0 and the left inverse at 1, the only pairing
+  # that lands on the support.
   out[is_zero] <- hull[1L]
   out[is_one] <- hull[2L]
   if (any(is_interior)) {
@@ -304,8 +318,9 @@ near_probability <- function(a, b) {
 #' for the ends of the support, and without a support there is nothing to read
 #' them from, so the bisection walks into the numerical tail and reports a large
 #' finite number where the true answer is `-Inf` or `Inf`. They are *not*
-#' returned as `NA`, tempting though that is, because `eval_range_from_network()`
-#' falls back to `eval_quantile(at = 0:1)` for exactly these distributions --- so
+#' returned as `NA`, tempting though that is, because
+#' `eval_range_from_network()` falls back to `eval_quantile(at = 0:1)` for
+#' exactly these distributions --- so
 #' `NA` here would take out `range()`, and with it the moments that integrate
 #' over the range. Give the distribution a `.support` to get exact endpoints.
 #'
