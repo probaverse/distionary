@@ -29,18 +29,11 @@ expect_over_support <- function(distribution, g, tol = 1e-9, ...) {
   checkmate::assert_class(distribution, "dst")
   support <- attributes(distribution)[["support"]]
   if (is.null(support)) {
-    # Legacy fallback: no structured support to decompose.
-    if (identical(vtype(distribution), "continuous")) {
-      dens <- representation_as_function(distribution, "density")
-      r <- range(distribution)
-      return(distionary_integrate(
-        function(x) g(x) * dens(x),
-        lower = r[1], upper = r[2], tol = tol, ...
-      ))
-    }
+    # Unreachable in practice: `distribution()` requires a support, and the one
+    # distribution without one (Null) supplies its own moments.
     stop(
-      "Numerical computation for non-continuous distributions requires a ",
-      "structured support. Specify `.support` in the distribution."
+      "Numerical computation requires the distribution's support. ",
+      "Specify `.support` when building the distribution."
     )
   }
   total <- 0

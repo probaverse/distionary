@@ -111,7 +111,7 @@ distribution(cdf = stats::pnorm, .support = empty_support())
 
 It exists so that operations on supports are _closed_. Restricting a support to a region it doesn't reach has to return something, and the empty support is that something. Without it, every operation that can come up empty would need a special case, and the thing it returned in that case would have to mean something else.
 
-Its variable type, shown when it prints, is `"empty"`. That's a different claim from `"unknown"`: empty says there is nowhere to place probability, whereas unknown says nobody specified where, which is what a distribution defined without a support reports. Distinguishing the two is the reason `distribution()` can reject the first while still accepting the second.
+Its variable type, shown when it prints, is `"empty"`, which says there is nowhere to place probability at all. That is a different thing from a distribution simply not saying where its probability lives, which `distribution()` no longer permits.
 
 ```{r}
 is_empty_support(empty_support())
@@ -256,18 +256,13 @@ distribution(cdf = stats::pnorm, .support = c(0, Inf))
 
 Inside `discrete()` and `mixed()` the ambiguity is already resolved by the argument name, which is why a bare vector is fine there.
 
-The older `.vtype` argument, which took a string such as `"continuous"`, is superseded by `.support`. It still works, and warns to that effect. A distribution defined that way has no structured support, though, and `support()` reports as much.
+A support is not optional. It is the one thing `distionary` cannot work out from the representations you give it: a CDF says how much probability lies below a point, but not where the atoms are, nor where the distribution ends.
 
-```{r}
-legacy <- distribution(
-  cdf = stats::pnorm,
-  density = stats::dnorm,
-  .vtype = "continuous"
-)
-support(legacy)
+```{r, error = TRUE}
+distribution(cdf = stats::pnorm, density = stats::dnorm)
 ```
 
-Such a distribution still evaluates, but the routines described in the next section fall back to their older, continuous-only behaviour.
+The older `.vtype` argument, which took a string such as `"continuous"`, is superseded and now has no effect: the variable type is always derived from the support. Naming a type was never the same as saying where the probability is, which is why it cannot stand in for one.
 
 ## Why It Matters
 

@@ -187,8 +187,9 @@ is_empty_support <- function(x) {
 #' Retrieve the Support of a Distribution
 #'
 #' Returns the structured support of a distribution: its atomic part and its
-#' continuous part. Distributions defined with a legacy `.vtype` *string* (and
-#' no `.support`) have no structured support and return `NULL`.
+#' continuous part. Every distribution has one, because [distribution()]
+#' requires it --- the single exception being [dst_null()], which has nothing to
+#' place anywhere and returns `NULL`.
 #'
 #' @param distribution Distribution object.
 #' @returns A support object, or `NULL` if the distribution has no structured
@@ -324,8 +325,8 @@ as_support_arg <- function(x) {
     s <- support(x)
     if (is.null(s)) {
       stop(
-        "This distribution has no structured support; it was defined with a ",
-        "legacy `.vtype` string rather than `.support`."
+        "This distribution has no structured support. Only the Null ",
+        "distribution has none; every other distribution declares one."
       )
     }
     return(s)

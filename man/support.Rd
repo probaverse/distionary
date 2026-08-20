@@ -15,8 +15,9 @@ support.
 }
 \description{
 Returns the structured support of a distribution: its atomic part and its
-continuous part. Distributions defined with a legacy \code{.vtype} \emph{string} (and
-no \code{.support}) have no structured support and return \code{NULL}.
+continuous part. Every distribution has one, because \code{\link[=distribution]{distribution()}}
+requires it --- the single exception being \code{\link[=dst_null]{dst_null()}}, which has nothing to
+place anywhere and returns \code{NULL}.
 }
 \examples{
 support(distribution(.support = continuous(c(0, Inf))))

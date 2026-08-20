@@ -1,63 +1,83 @@
 
 test_that("Object is a distribution.", {
-  expect_true(is_distribution(suppressWarnings(distribution())))
+  expect_true(is_distribution(
+    distribution(cdf = pnorm, density = dnorm, .support = continuous())
+  ))
+})
+
+test_that("distribution() requires a support.", {
+  expect_error(distribution(cdf = pnorm, density = dnorm), "needs a support")
+  # A variable type is not a substitute: it says what kind of probability
+  # there is, not where it lives.
+  rlang::local_options(lifecycle_verbosity = "quiet")
+  expect_error(
+    distribution(cdf = pnorm, density = dnorm, .vtype = "continuous"),
+    "needs a support"
+  )
+  # An empty support is a support, but not one a distribution can have.
+  expect_error(
+    distribution(cdf = pnorm, density = dnorm, .support = empty_support()),
+    "cannot have an empty support"
+  )
 })
 
 test_that("distribution() edge cases satisfied.", {
+  s <- continuous()
   suppressWarnings({
-    expect_true(is_distribution(distribution()))
-    expect_error(distribution(1:10))
-    expect_error(distribution(.parameters = "foofy"))
-    expect_error(distribution(.parameters = list("foofy")))
-    expect_error(distribution(.parameters = c(alpha = 4)))
-    expect_error(distribution(.name = c("my", "name", "is")))
-    expect_error(distribution(.name = character(0)))
-    expect_error(distribution(.vtype = c("my", "name", "is")))
-    expect_error(distribution(.vtype = character(0)))
+    expect_error(distribution(1:10, .support = s))
+    expect_error(distribution(.parameters = "foofy", .support = s))
+    expect_error(distribution(.parameters = list("foofy"), .support = s))
+    expect_error(distribution(.parameters = c(alpha = 4), .support = s))
+    expect_error(distribution(.name = c("my", "name", "is"), .support = s))
+    expect_error(distribution(.name = character(0), .support = s))
   })
 })
 
-test_that("Typo warning works: vtype", {
-  # Silence the `.vtype` soft-deprecation so only the typo warning is under test.
+test_that("`.vtype` is superseded, and now has no effect.", {
+  # The variable type is derived from the support, so whatever `.vtype` says
+  # -- including nonsense -- is ignored rather than corrected or complained
+  # about. It warns only that the argument itself is on its way out.
   rlang::local_options(lifecycle_verbosity = "quiet")
-  expect_warning(
-    distribution(cdf = pnorm, density = dnorm, .vtype = "discreet")
+  d <- distribution(
+    cdf = pnorm, density = dnorm,
+    .support = discrete(1:3),
+    .vtype = "continuous"
   )
-  expect_warning(
-    distribution(cdf = pnorm, density = dnorm, .vtype = "continus")
-  )
-  expect_warning(
-    distribution(cdf = pnorm, density = dnorm, .vtype = "mixedd")
-  )
-  expect_warning(
-    distribution(cdf = pnorm, density = dnorm, .vtype = "categorcal")
-  )
-  expect_warning(
-    distribution(cdf = pnorm, density = dnorm, .vtype = "ordinale")
-  )
-  expect_no_warning(
-    distribution(cdf = pnorm, density = dnorm, .vtype = "discrete")
-  )
-  expect_no_warning(
-    distribution(cdf = pnorm, density = dnorm, .vtype = "my_type")
+  expect_equal(vtype(d), "discrete")
+  expect_no_error(
+    distribution(
+      cdf = pnorm, density = dnorm,
+      .support = continuous(), .vtype = "contnuous"
+    )
   )
 })
 
+test_that("`.vtype` still refuses a support object.", {
+  rlang::local_options(lifecycle_verbosity = "quiet")
+  expect_error(
+    distribution(
+      cdf = pnorm, density = dnorm,
+      .support = continuous(), .vtype = continuous()
+    ),
+    "accepts only a character"
+  )
+})
 
 test_that("Warning when cdf and pmf/density missing.", {
+  s <- continuous()
   expect_warning(
-    distribution()
+    distribution(.support = s)
   )
   expect_warning(
-    distribution(pmf = dpois, quantile = qpois)
+    distribution(pmf = dpois, quantile = qpois, .support = s)
   )
   expect_warning(
-    distribution(density = dnorm, quantile = qnorm)
+    distribution(density = dnorm, quantile = qnorm, .support = s)
   )
   expect_no_warning(
-    distribution(cdf = pnorm, density = dnorm)
+    distribution(cdf = pnorm, density = dnorm, .support = s)
   )
   expect_no_warning(
-    distribution(cdf = pnorm, pmf = dpois)
+    distribution(cdf = pnorm, pmf = dpois, .support = s)
   )
 })

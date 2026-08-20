@@ -4,7 +4,7 @@ test_that("Network is invoked in priority: kurtosis", {
     density = stats::dnorm,
     range = c(-Inf, Inf),
     kurtosis_exc = 100 - 3, # deliberately incorrect
-    .vtype = "continuous"
+    .support = continuous(c(-Inf, Inf))
   ))
   expect_equal(kurtosis(d), 100)
   expect_equal(eval_kurtosis_from_network(d), 100)

@@ -5,6 +5,27 @@
   Pearson Type III distribution reflected about `location` --- the
   negatively-skewed, upper-bounded form.
 
+- **Breaking:** `distribution()` now requires a `.support`. A distribution has
+  to say where it places probability, because that is the one thing distionary
+  cannot work out from the representations it is given: a CDF says how much
+  probability lies below a point, but not where the atoms are, nor where the
+  distribution ends. Without it, quantiles at probability 0 and 1 had to be
+  found by searching into the numerical tail --- returning a large finite
+  number where the answer was infinite --- atoms could not be located at all,
+  and moments could not be decomposed. It is the same bargain as declaring
+  atoms: a little more to say up front, in exchange for exact answers instead
+  of approximate ones.
+
+  The one distribution without a support is `dst_null()`, which has nothing to
+  place anywhere; `support()` returns `NULL` for it and nothing else.
+
+  As a consequence there is now a single quantile algorithm rather than two.
+  The separate routine for distributions lacking a support is gone, along with
+  its restriction to continuous distributions, and the inverter itself no
+  longer reaches into a distribution: it takes the function to invert and the
+  facts it needs about the answer's shape. The 0- and 1-quantiles are settled
+  by `eval_quantile()` from the support and never reach an algorithm at all.
+
 - New support objects describe where a distribution places probability,
   tracking discrete atoms explicitly: `discrete()`, `continuous()` (a union of
   intervals), and `mixed()`. Pass one to `distribution()` via the new
@@ -17,8 +38,9 @@
   always have something to return. Its variable type is `"empty"`, which is a
   different claim from `"unknown"` --- empty says there is nowhere to place
   probability, unknown says nobody specified where. The `.vtype` argument is
-  soft-deprecated in favour of `.support`: passing a string to it still works
-  but now signals a (soft) deprecation warning when used directly.
+  superseded by `.support` and now has no effect at all: the variable type is
+  always derived from the support. Passing it warns and is otherwise ignored,
+  so the typo detection it used to do has gone with it.
 
 - Supports can now be manipulated, not only built. `support_union()`,
   `support_restrict()`, and `support_transform()` combine, cut down, and map a

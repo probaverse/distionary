@@ -95,6 +95,7 @@ test_that("A support object passed to legacy .vtype is rejected.", {
   expect_error(
     distribution(
       cdf = function(x) x, pmf = function(x) 1,
+      .support = discrete(1:3),
       .vtype = discrete(discretes::natural0())
     ),
     "Pass support objects to `.support`"
@@ -102,33 +103,34 @@ test_that("A support object passed to legacy .vtype is rejected.", {
   expect_error(
     distribution(
       cdf = function(x) x, pmf = function(x) 1,
+      .support = discrete(1:3),
       .vtype = discretes::natural0()
     ),
     "Pass support objects to `.support`"
   )
 })
 
-test_that("Legacy .vtype strings still work and carry no structured support.", {
-  rlang::local_options(lifecycle_verbosity = "quiet")
+test_that("Every distribution built by distribution() carries a support.", {
   d <- distribution(
-    cdf = function(x) x, density = function(x) 1, .vtype = "continuous"
+    cdf = function(x) x, density = function(x) 1,
+    .support = continuous(c(0, 1))
   )
+  expect_false(is.null(support(d)))
   expect_equal(vtype(d), "continuous")
-  expect_null(support(d))
 })
 
 test_that(".vtype is soft-deprecated in favour of .support.", {
   lifecycle::expect_deprecated(
-    distribution(cdf = function(x) x, density = function(x) 1, .vtype = "continuous")
+    distribution(
+      cdf = function(x) x, density = function(x) 1,
+      .support = continuous(), .vtype = "continuous"
+    )
   )
 })
 
-test_that("Support accessors error on legacy distributions and non-supports.", {
-  rlang::local_options(lifecycle_verbosity = "quiet")
-  d <- distribution(
-    cdf = function(x) x, density = function(x) 1, .vtype = "continuous"
-  )
-  expect_error(atoms(d), "no structured support")
+test_that("Support accessors error on Null and on non-supports.", {
+  # The Null distribution is the only one without a support to take apart.
+  expect_error(atoms(dst_null()), "no structured support")
   expect_error(atoms(1:10), "support object or a distribution")
 })
 

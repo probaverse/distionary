@@ -153,17 +153,21 @@ test_that("Boundary quantiles are the support's ends, whichever side.", {
                c(2, 7))
 })
 
-test_that("Without a support, boundary quantiles stay numeric.", {
-  # They are only approximate -- the ends of the support cannot be read off
-  # when there is no support -- but they must not become `NA`, because
-  # `range()` falls back to the 0- and 1-quantiles for these distributions,
-  # and the numerical moments integrate over that range.
-  legacy <- suppressWarnings(
-    distribution(cdf = stats::pnorm, density = stats::dnorm,
-                 .vtype = "continuous")
+test_that("Boundary quantiles never reach the inverter.", {
+  # `eval_quantile()` settles 0 and 1 from the support, so a cdf that would
+  # blow up if it were called is never called for them.
+  exploding <- distribution(
+    cdf = function(x) stop("the inverter should not have run"),
+    density = stats::dnorm,
+    .support = continuous(c(-4, 9))
   )
-  q <- eval_quantile_from_network(legacy, c(0, 1))
-  expect_true(all(!is.na(q)))
-  expect_true(all(is.finite(range(legacy))))
-  expect_equal(mean(legacy), 0, tolerance = 1e-6)
+  expect_equal(eval_quantile(exploding, at = c(0, 1)), c(-4, 9))
+})
+
+test_that("The Null distribution still answers quantiles with NA.", {
+  # It is the one distribution with no support, and it brings its own
+  # quantile function rather than going near the inverter.
+  n <- dst_null()
+  expect_null(support(n))
+  expect_identical(eval_quantile(n, at = c(0, 0.5, 1)), rep(NA_real_, 3))
 })

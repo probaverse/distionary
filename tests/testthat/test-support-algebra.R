@@ -199,11 +199,9 @@ test_that("the algebra rejects stray arguments and non-supports.", {
   expect_error(support_union(continuous(c(0, 1)), 1:5), "Expected a support")
 })
 
-test_that("the algebra refuses distributions with no structured support.", {
-  legacy <- suppressWarnings(
-    distribution(cdf = stats::pnorm, .vtype = "continuous")
-  )
-  expect_error(support_restrict(legacy, from = 0), "no structured support")
+test_that("the algebra refuses a distribution with no structured support.", {
+  # Only the Null distribution qualifies now that a support is required.
+  expect_error(support_restrict(dst_null(), from = 0), "no structured support")
 })
 
 test_that("shifting a support agrees with shifting its range.", {

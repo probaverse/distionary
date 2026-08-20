@@ -1,38 +1,106 @@
+#' Invert a CDF
+#'
+#' Solves for the inverse of a cumulative distribution function at a vector of
+#' probabilities. This is a numerical routine and nothing more: it takes the
+#' function to invert and the facts it needs about the shape of the answer, and
+#' it does not reach into a distribution object.
+#'
+#' A single bisection advances every requested probability at once, so one
+#' (vectorized) call to `cdf` serves the whole vector per iteration rather than
+#' one call per probability. Where atoms are supplied, a probability landing
+#' inside an atom's jump is returned as that atom *exactly*, which bisection
+#' alone cannot do.
+#'
+#' @param cdf The function to invert. Must be vectorized.
+#' @param at Probabilities at which to invert, each in `[0, 1]`.
+#' @param hull Length-2 numeric `c(lower, upper)`: the outermost points the
+#' solution can reach. Used to start the bracket, and to answer `at == 0` and
+#' `at == 1` directly.
+#' @param ... Not used; must be empty. Present so that the arguments below are
+#' matched by name.
+#' @param atoms The points carrying positive probability, as a `discretes`
+#' object, or `NULL` if there are none. When supplied, `pmf` is required.
+#' @param pmf The probability mass function, vectorized. Needed only to size
+#' the atoms' jumps.
+#' @param side Which inverse to take: `"left"` (the usual quantile function) is
+#' the smallest `x` with `cdf(x) >= p`; `"right"` is the smallest `x` with
+#' `cdf(x) > p`. The two differ only where the CDF is flat or jumps --- over a
+#' gap, where the left inverse gives the lower end and the right inverse the
+#' upper, and at a probability landing exactly on the top of an atom's jump.
+#'
+#' **`side` does not apply at `at == 0` and `at == 1`,** where the answer is the
+#' corresponding end of `hull` either way. This is not the two inverses
+#' agreeing; a convention overrides both, because each is degenerate at one end:
+#' the left inverse of 0 is `-Inf` for every distribution (a CDF is everywhere
+#' at least 0) and the right inverse of 1 is `Inf` for every distribution (a CDF
+#' never exceeds 1). Taking the right inverse at 0 and the left inverse at 1 is
+#' what puts the boundary answers on the support.
+#' @param tol,maxiter Tolerance (a small positive number) and maximum number of
+#' iterations (at least 1); length 1 vectors.
+#' @returns The inverse at each element of `at`, a numeric vector the same
+#' length as `at`. `NA` in gives `NA` out.
+#' @noRd
+invert_cdf <- function(cdf,
+                       at,
+                       hull,
+                       ...,
+                       atoms = NULL,
+                       pmf = NULL,
+                       side = c("left", "right"),
+                       tol = 1e-9,
+                       maxiter = 200) {
+  rlang::check_dots_empty()
+  checkmate::assert_function(cdf)
+  checkmate::assert_numeric(at, 0, 1)
+  checkmate::assert_numeric(hull, len = 2)
+  side <- rlang::arg_match(side)
+  checkmate::assert_numeric(tol, 0, len = 1)
+  checkmate::assert_integerish(maxiter, lower = 1, len = 1)
+  n <- length(at)
+  if (n == 0) {
+    return(numeric(0L))
+  }
+  out <- rep(NaN, n)
+  # Preserve NA (and NaN) inputs as-is.
+  out[is.na(at)] <- at[is.na(at)]
+  ok <- !is.na(at)
+  # The boundaries come straight off the hull; see `side` above for why they
+  # ignore it. `eval_quantile()` normally settles these before calling, so this
+  # is here to keep the routine correct at any entry point, not for speed.
+  out[ok & at == 0] <- hull[[1L]]
+  out[ok & at == 1] <- hull[[2L]]
+  is_interior <- ok & at > 0 & at < 1
+  if (!any(is_interior)) {
+    return(out)
+  }
+  p <- at[is_interior]
+  br <- quantile_bracket(cdf, hull, p, side = side)
+  sol <- bisect_quantile(
+    cdf, p,
+    lo = br[["lo"]], hi = br[["hi"]], side = side, tol = tol, maxiter = maxiter
+  )
+  value <- sol[["value"]]
+  if (!is.null(atoms) && discretes::num_discretes(atoms) > 0) {
+    if (is.null(pmf)) {
+      stop("`pmf` is required when `atoms` are supplied.")
+    }
+    value <- snap_to_atoms(cdf, pmf, atoms, p, value = value, side = side)
+  }
+  out[is_interior] <- value
+  out
+}
+
 #' Evaluate Quantiles from a CDF
 #'
-#' Pulls together all the pieces needed to calculate the left inverse
-#' of the CDF (the quantile function). Intended for internal use only.
-#'
-#' When the distribution carries a structured support (see [support()]), a fast
-#' vectorized algorithm is used: a single bisection advances every requested
-#' probability at once, the support hull supplies the boundary quantiles
-#' (`p == 0` and `p == 1`) directly, and any probability that lands inside an
-#' atom's CDF jump is returned as that atom *exactly*. Distributions defined
-#' with a legacy `.vtype` string (no structured support) fall back to the older
-#' per-probability bisection in `quantile_legacy()`, which is restricted to
-#' continuous distributions (atoms cannot be located without a support).
+#' The network's quantile entry point: pulls the CDF, the support hull, and the
+#' atoms off the distribution and hands them to [invert_cdf()], which does the
+#' work. Every distribution carries a support, so there is only one algorithm.
 #'
 #' @param distribution A distribution having access to a cdf.
-#' @param at A vector of values for which to evaluate the quantile function.
-#' @param side Which inverse of the CDF to take: `"left"` (the default, and
-#' the usual quantile function) is the smallest `x` with `F(x) >= p`; `"right"`
-#' is the smallest `x` with `F(x) > p`. The two differ only where the CDF is
-#' flat or jumps --- that is, over a gap in the support, where the left inverse
-#' gives the lower end and the right inverse the upper, and at a probability
-#' landing exactly on the top of an atom's jump. [eval_quantile()] always takes
-#' the left inverse; `side` is not yet exposed there.
-#'
-#' **`side` applies to interior probabilities only.** At `p = 0` and `p = 1`
-#' the result is the corresponding end of the support whichever side is asked
-#' for. This is not the two inverses agreeing --- it is a convention overriding
-#' both, and it is the only useful one available, because each inverse is
-#' degenerate at one end: the left inverse of 0 is `-Inf` for every
-#' distribution (the CDF is everywhere at least 0), and the right inverse of 1
-#' is `Inf` for every distribution (the CDF never exceeds 1). Taking the right
-#' inverse at 0 and the left inverse at 1 is what makes the boundary quantiles
-#' the ends of the support.
-#' @param tol,maxiter Tolerance (a small positive number) and maximum number
-#' of iterations (at least 1); length 1 vectors.
+#' @param at A vector of probabilities at which to evaluate the quantile.
+#' @param side Passed to [invert_cdf()]. [eval_quantile()] always takes the
+#' left inverse; `side` is not yet exposed there.
+#' @param tol,maxiter Passed to [invert_cdf()].
 #' @returns The `at`-quantiles of the distribution. Numeric vector the same
 #' length as `at`.
 #' @noRd
@@ -42,103 +110,49 @@ eval_quantile_from_network <- function(distribution,
                                        tol = 1e-9,
                                        maxiter = 200) {
   checkmate::assert_class(distribution, "dst")
-  checkmate::assert_numeric(at, 0, 1)
   side <- rlang::arg_match(side)
-  checkmate::assert_numeric(tol, 0, len = 1)
-  checkmate::assert_integerish(maxiter, lower = 1, len = 1)
-  if (length(at) == 0) {
-    return(numeric(0L))
-  }
   s <- support(distribution)
   if (is.null(s)) {
-    return(
-      quantile_legacy(distribution, at, side = side, tol = tol,
-                      maxiter = maxiter)
+    # Unreachable in practice: `distribution()` requires a support, and the one
+    # distribution without one (Null) supplies its own quantile function.
+    stop(
+      "Deriving quantiles requires the distribution's support. ",
+      "Specify `.support` when building the distribution."
     )
   }
-  quantile_from_support(
-    distribution, s, at, side = side, tol = tol, maxiter = maxiter
+  invert_cdf(
+    cdf = function(x) eval_cdf(distribution, at = x),
+    at = at,
+    hull = support_hull(s),
+    atoms = s[["atoms"]],
+    pmf = function(x) eval_pmf(distribution, at = x),
+    side = side,
+    tol = tol,
+    maxiter = maxiter
   )
-}
-
-#' Quantiles via a Structured Support
-#'
-#' The fast path used when a distribution has a structured support. Boundary
-#' probabilities come from the support hull; interior probabilities are solved
-#' by a vectorized bisection and then snapped onto atoms where they fall inside
-#' a CDF jump.
-#'
-#' @param s The distribution's support (a `support` object, not `NULL`).
-#' @inheritParams eval_quantile_from_network
-#' @returns The `at`-quantiles, a numeric vector the same length as `at`.
-#' @noRd
-quantile_from_support <- function(distribution, s, at, side, tol, maxiter) {
-  n <- length(at)
-  out <- rep(NaN, n)
-  # Preserve NA (and NaN) inputs as-is; `at` is otherwise within [0, 1].
-  out[is.na(at)] <- at[is.na(at)]
-  ok <- !is.na(at)
-  hull <- support_hull(s)
-  is_zero <- ok & at == 0
-  is_one <- ok & at == 1
-  is_interior <- ok & at > 0 & at < 1
-  # The boundary quantiles are the ends of the support: Q(0) is the infimum of
-  # the support, Q(1) the supremum. Reading them from the hull (rather than
-  # bisecting into the numerical tails) gives the exact endpoints, including
-  # -Inf / Inf for unbounded supports. We read the support *directly* and never
-  # call range(), which would recurse back here for legacy distributions.
-  #
-  # `side` is deliberately not consulted. The two inverses do not agree here;
-  # the convention overrides them, because each is degenerate at one end
-  # (left-inverse-of-0 is always -Inf, right-inverse-of-1 always Inf). So this
-  # takes the right inverse at 0 and the left inverse at 1, the only pairing
-  # that lands on the support.
-  out[is_zero] <- hull[1L]
-  out[is_one] <- hull[2L]
-  if (any(is_interior)) {
-    p <- at[is_interior]
-    br <- quantile_bracket(distribution, hull, p, side = side)
-    sol <- bisect_quantile(
-      distribution, p,
-      lo = br[["lo"]], hi = br[["hi"]], side = side, tol = tol,
-      maxiter = maxiter
-    )
-    value <- sol[["value"]]
-    if (discretes::num_discretes(s[["atoms"]]) > 0) {
-      value <- snap_to_atoms(
-        distribution, s[["atoms"]], p,
-        lo = sol[["lo"]], hi = sol[["hi"]], value = value, side = side
-      )
-    }
-    out[is_interior] <- value
-  }
-  out
 }
 
 #' Bracket the Interior Quantiles
 #'
 #' Finds a single `[lo, hi]` interval guaranteed to contain every interior
-#' quantile, with `F(lo) < min(p)` and `F(hi) >= max(p)` so the left-inverse
-#' bisection invariant holds for all probabilities. Finite support endpoints are
-#' used as-is; infinite ones are replaced by an outward search that doubles away
-#' from the support until the CDF clears the probability range.
+#' solution, so the bisection invariant holds for all probabilities at once.
+#' Finite hull endpoints are used as-is; infinite ones are replaced by an
+#' outward search that doubles away until the CDF clears the probability range.
 #'
-#' @param hull Length-2 numeric `c(lower, upper)` support hull.
+#' @param cdf The function being inverted.
+#' @param hull Length-2 numeric `c(lower, upper)`.
 #' @param p Vector of interior probabilities (strictly between 0 and 1).
-#' @returns A list with scalar entries `lo` and `hi`, recycled to the length of
-#' `p` by the caller.
-#' @inheritParams eval_quantile_from_network
+#' @param side Which inverse is being taken.
+#' @returns A list with entries `lo` and `hi`, each recycled to `length(p)`.
 #' @noRd
-quantile_bracket <- function(distribution, hull, p, side) {
+quantile_bracket <- function(cdf, hull, p, side) {
   p_min <- min(p)
   p_max <- max(p)
-  left <- if (is.finite(hull[1L])) hull[1L] else -1
-  # Move below the support until F(left) < p_min. For a finite hull with an atom
-  # at the lower endpoint, F(lower) can exceed p_min, so we still step down (no
-  # mass lives below the support, so the CDF drops to 0 there). For negative
-  # `left`, subtracting its magnitude doubles it, matching the classic outward
-  # search; for a positive finite endpoint it walks down toward 0 and beyond.
-  while (eval_cdf(distribution, left) >= p_min) {
+  left <- if (is.finite(hull[[1L]])) hull[[1L]] else -1
+  # Move below the support until `cdf(left) < p_min`. For a finite hull with an
+  # atom at the lower endpoint, `cdf(lower)` can exceed `p_min`, so we still
+  # step down (no mass lives below the support, so the CDF drops to 0 there).
+  while (cdf(left) >= p_min) {
     if (left == 0) {
       left <- -1
     } else {
@@ -149,11 +163,11 @@ quantile_bracket <- function(distribution, hull, p, side) {
       break
     }
   }
-  right <- if (is.finite(hull[2L])) hull[2L] else 1
-  # The left inverse needs `F(right) >= p_max`; the right inverse needs the
-  # strict `F(right) > p_max`, so it may have to step one notch further out.
+  right <- if (is.finite(hull[[2L]])) hull[[2L]] else 1
+  # The left inverse needs `cdf(right) >= p_max`; the right inverse needs the
+  # strict `cdf(right) > p_max`, so it may step one notch further out.
   below_max <- if (side == "left") `<` else `<=`
-  while (below_max(eval_cdf(distribution, right), p_max)) {
+  while (below_max(cdf(right), p_max)) {
     if (right == 0) {
       right <- 1
     } else {
@@ -168,31 +182,34 @@ quantile_bracket <- function(distribution, hull, p, side) {
   list(lo = rep(left, np), hi = rep(right, np))
 }
 
-#' Vectorized Left-Inverse Bisection
+#' Vectorized Bisection
 #'
-#' Solves the left inverse of the CDF for an entire vector of probabilities at
-#' once. The bracket invariant `F(lo) < p <= F(hi)` is maintained per element;
-#' each iteration evaluates the CDF a single (vectorized) time, at the
-#' midpoints, and moves the appropriate endpoint of every element together.
+#' Solves the inverse for an entire vector of probabilities at once. The
+#' bracket invariant is maintained per element --- `cdf(lo) < p <= cdf(hi)` for
+#' the left inverse, `cdf(lo) <= p < cdf(hi)` for the right --- and each
+#' iteration evaluates `cdf` a single (vectorized) time, at the midpoints,
+#' moving the appropriate endpoint of every element together.
 #'
 #' Convergence is on the *x-width* `hi - lo` falling below a combined
 #' absolute/relative tolerance `tol * max(1, |lo|, |hi|)`, which targets a fixed
-#' precision in the quantile itself (the returned x-value) and behaves well
-#' across tiny to very large magnitudes.
+#' precision in the answer itself rather than in the probability, and behaves
+#' well across tiny to very large magnitudes.
 #'
-#' Elements over a flat part of the CDF (a continuous gap, or the plateau above
-#' an atom) shrink their x-width normally; an exact atom is then recovered by
-#' the trailing snap. The midpoint guard (`mid > lo & mid < hi`) is a
-#' floating-point floor so the loop always terminates even if `tol` is below the
-#' representable spacing.
+#' Elements over a flat part of the CDF (a gap, or the plateau above an atom)
+#' shrink their x-width normally; an exact atom is then recovered by the
+#' trailing snap. The midpoint guard (`mid > lo & mid < hi`) is a floating-point
+#' floor so the loop always terminates even if `tol` is below the representable
+#' spacing.
 #'
+#' @param cdf The function being inverted.
 #' @param p Vector of probabilities, each strictly between 0 and 1.
 #' @param lo,hi Numeric vectors (same length as `p`) bracketing the solutions.
+#' @param side Which inverse is being taken.
+#' @param tol,maxiter Tolerance and iteration cap.
 #' @returns A list with `value` (the midpoint estimate), `lo`, and `hi`, each a
 #' numeric vector the same length as `p`.
-#' @inheritParams eval_quantile_from_network
 #' @noRd
-bisect_quantile <- function(distribution, p, lo, hi, side, tol, maxiter) {
+bisect_quantile <- function(cdf, p, lo, hi, side, tol, maxiter) {
   for (i in seq_len(maxiter)) {
     mid <- (lo + hi) / 2
     x_tol <- tol * pmax(1, abs(lo), abs(hi))
@@ -200,9 +217,8 @@ bisect_quantile <- function(distribution, p, lo, hi, side, tol, maxiter) {
     if (!any(active)) {
       break
     }
-    f_mid <- eval_cdf(distribution, mid)
-    # Left inverse keeps `F(lo) < p <= F(hi)`; right inverse keeps
-    # `F(lo) <= p < F(hi)`. Only this comparison differs.
+    f_mid <- cdf(mid)
+    # Only this comparison differs between the two inverses.
     go_left <- if (side == "left") p <= f_mid else p < f_mid
     move_hi <- active & go_left
     move_lo <- active & !go_left
@@ -214,30 +230,27 @@ bisect_quantile <- function(distribution, p, lo, hi, side, tol, maxiter) {
 
 #' Snap Quantiles onto Atoms
 #'
-#' Where the quantile of `p` is an atom `a`, the bisection only *approaches*
-#' `a`; worse, common discrete CDFs (e.g. `ppois()`) fuzz their input by ~1e-7,
-#' so the bracket can converge a hair below the true atom. This replaces such
+#' Where the answer for `p` is an atom `a`, the bisection only *approaches* `a`;
+#' worse, common discrete CDFs (e.g. `ppois()`) fuzz their input by ~1e-7, so
+#' the bracket can converge a hair below the true atom. This replaces such
 #' estimates with the atom exactly. For each probability the two nearest atoms
 #' (the largest `<= value` and the smallest `>= value`) are candidates, and one
-#' is accepted precisely when `p` lies inside its CDF jump,
-#' `F(a) - pmf(a) < p <= F(a)`. That jump test is exact and the jumps are
-#' disjoint in `p`, so at most one candidate is ever accepted and a
-#' continuous-part `p` (whose `value` is genuinely between atoms) is never
-#' snapped.
+#' is accepted precisely when `p` lies inside its jump. The jumps are disjoint
+#' in `p`, so at most one candidate is ever accepted, and a `p` whose `value` is
+#' genuinely between atoms is never snapped.
 #'
+#' @param cdf,pmf The functions being inverted and their mass function.
 #' @param atoms_obj The atomic part of the support (a `discretes` object with at
 #' least one atom).
 #' @param p Vector of probabilities.
-#' @param lo,hi Converged brackets from `bisect_quantile()` (unused directly;
-#' the search is anchored on `value`, which lies within them).
 #' @param value Bisection estimates, returned unchanged where no atom is hit.
+#' @param side Which inverse is being taken.
 #' @returns The `value` vector with atom-hitting entries replaced by the atoms.
-#' @inheritParams eval_quantile_from_network
 #' @noRd
-snap_to_atoms <- function(distribution, atoms_obj, p, lo, hi, value, side) {
+snap_to_atoms <- function(cdf, pmf, atoms_obj, p, value, side) {
   n <- length(p)
-  # The candidate atom bracketing `value` on each side; NA where the support has
-  # no atom on that side.
+  # The candidate atom bracketing `value` on each side; NA where the support
+  # has no atom on that side.
   below <- rep(NA_real_, n)
   above <- rep(NA_real_, n)
   for (k in seq_len(n)) {
@@ -255,20 +268,15 @@ snap_to_atoms <- function(distribution, atoms_obj, p, lo, hi, value, side) {
   if (length(uniq) == 0L) {
     return(value)
   }
-  f_a <- eval_cdf(distribution, uniq)
-  pmf_a <- eval_pmf(distribution, uniq)
+  f_a <- cdf(uniq)
+  pmf_a <- pmf(uniq)
   f_lower <- f_a - pmf_a
-  # Test each side's candidate against the exact jump condition and snap to
-  # whichever atom's jump contains `p` (at most one can).
+  # Test each side's candidate against the jump condition and snap to whichever
+  # atom's jump contains `p` (at most one can).
   for (cand in list(above, below)) {
     j <- match(cand, uniq)
     # The atom `a` is the left inverse for `p` in `(F(a-), F(a)]`, and the
-    # right inverse for `p` in `[F(a-), F(a))`. Which end of the jump is closed
-    # is the whole difference between the two, so a `p` landing exactly on an
-    # endpoint has to be classified deliberately rather than left to floating
-    # point: `F(a) - pmf(a)` and `F(a-)` are the same number mathematically but
-    # can differ in the last bits, which would otherwise put `p` on the wrong
-    # side of a closed end.
+    # right inverse for `p` in `[F(a-), F(a))`.
     in_jump <- if (side == "left") {
       # Both comparisons are strict on the side that matters, so an exact `p`
       # falls out correctly without any tolerance.
@@ -276,7 +284,7 @@ snap_to_atoms <- function(distribution, atoms_obj, p, lo, hi, value, side) {
     } else {
       # The right inverse closes the *lower* end, and that is the end computed
       # by subtraction, so this is the one comparison a rounding error can
-      # flip. `p <= f_a` needs no such care: it is already strict.
+      # flip. `p < f_a` needs no such care: it is already strict.
       !is.na(cand) &
         (f_lower[j] < p | near_probability(f_lower[j], p)) &
         (p < f_a[j])
@@ -304,209 +312,4 @@ snap_to_atoms <- function(distribution, atoms_obj, p, lo, hi, value, side) {
 #' @noRd
 near_probability <- function(a, b) {
   !is.na(a) & !is.na(b) & abs(a - b) <= 1e-12 * pmax(1, abs(a), abs(b))
-}
-
-#' Legacy Quantile Algorithm (no structured support)
-#'
-#' The per-probability bisection used for distributions defined with a legacy
-#' `.vtype` string and no structured support. Without a support the locations of
-#' any atoms are unknown, so this path is restricted to continuous distributions
-#' (as it has always been). Calls `encapsulate_p()` to bracket the solutions and
-#' `directional_inverse()` to run the bisection.
-#'
-#' `p == 0` and `p == 1` are approximate here, and cannot be otherwise: they ask
-#' for the ends of the support, and without a support there is nothing to read
-#' them from, so the bisection walks into the numerical tail and reports a large
-#' finite number where the true answer is `-Inf` or `Inf`. They are *not*
-#' returned as `NA`, tempting though that is, because
-#' `eval_range_from_network()` falls back to `eval_quantile(at = 0:1)` for
-#' exactly these distributions --- so
-#' `NA` here would take out `range()`, and with it the moments that integrate
-#' over the range. Give the distribution a `.support` to get exact endpoints.
-#'
-#' @inheritParams eval_quantile_from_network
-#' @returns The `at`-quantiles, a numeric vector the same length as `at`.
-#' @noRd
-quantile_legacy <- function(distribution, at, side, tol, maxiter) {
-  if (vtype(distribution) != "continuous") {
-    stop(
-      "The current quantile algorithm can suffer from low precision with ",
-      "non-continuous distributions that lack a structured support, so this ",
-      "functionality is disabled for now."
-    )
-  }
-  n <- length(at)
-  ord <- order(at)
-  at <- at[ord]
-  x <- at
-  i_na <- which(is.na(at))
-  i_zero <- which(at == 0)
-  n_zero <- length(i_zero)
-  i_positive <- which(at > 0 & at <= 1)
-  i_other <- setdiff(seq_len(n), c(i_na, i_zero, i_positive))
-  x[i_other] <- NaN
-  if (n_zero > 0) {
-    r <- encapsulate_p(distribution, p = 0, direction = "right")
-    if (is.infinite(r[1L])) {
-      x[i_zero] <- r[1L]
-    } else {
-      x[i_zero] <- directional_inverse(
-        distribution,
-        p = 0, low = r[1L], high = r[2L], tol = tol,
-        maxiter = maxiter, direction = "right"
-      )
-    }
-  }
-  r <- encapsulate_p(distribution, p = at[i_positive], direction = side)
-  low <- rep(r[1L], n)
-  for (i in i_positive) {
-    p <- at[i]
-    if (isTRUE(p == at[i - 1L])) {
-      x[i] <- low[i + 1L] <- x[i - 1L]
-    } else {
-      x[i] <- low[i + 1L] <- directional_inverse(
-        distribution,
-        p = p, low = low[i], high = r[2L], tol = tol,
-        maxiter = maxiter, direction = side
-      )
-    }
-  }
-  x[ord] <- x
-  x
-}
-
-#' Find a range of possible outcomes
-#'
-#' In order to run the directional inverse algorithm, we need to know
-#' approximately where the solution lies. This function
-#' finds a range of possible outcomes where the cdf evaluates to values
-#' (probabilities) contain the vector `p`, and therefore should come
-#' before the inversion algorithm begins.
-#'
-#' @param p Vector of values between 0 and 1 (inclusive).
-#' @param direction One of `"left"` for calculating left-inverse, or
-#' `"right"` for calculating right-inverse.
-#' @note If 0 or 1 are included in the vector `p`, one of the endpoints might
-#' be infinite.
-#' @returns A range of values containing the solutions to the left
-#' inverse of the CDF at `p`.
-#' @noRd
-#' @inheritParams eval_quantile_from_network
-encapsulate_p <- function(distribution, p, direction) {
-  if (length(p) == 0) {
-    return(c(NA, NA))
-  }
-  p_min <- min(p)
-  p_max <- max(p)
-  if (direction == "left") {
-    cdf_gt <- `>=`
-    cdf_lt <- `<`
-    survival_gt <- `>`
-  } else if (direction == "right") {
-    cdf_gt <- `>`
-    cdf_lt <- `<=`
-    survival_gt <- `>=`
-  } else {
-    stop(
-      "`direction` must be one of 'left' or 'right'. Received '",
-      direction, "'."
-    )
-  }
-  left <- -1
-  right <- 1
-  cdf_p <- eval_cdf(distribution, at = p)
-  cdf_left <- eval_cdf(distribution, at = left)
-  while (cdf_gt(cdf_left, p_min)) {
-    left <- 2 * left
-    cdf_left <- eval_cdf(distribution, at = left)
-  }
-  if (p_max >= 0.9 && !is.null(distribution$survival)) {
-    survival_right <- eval_survival(distribution, at = right)
-    while (survival_gt(survival_right, 1 - p_max)) {
-      right <- 2 * right
-      survival_right <- eval_survival(distribution, at = right)
-    }
-  } else {
-    cdf_right <- eval_cdf(distribution, at = right)
-    while (cdf_lt(cdf_right, p_max)) {
-      right <- 2 * right
-      cdf_right <- eval_cdf(distribution, at = right)
-    }
-  }
-  if (p_min > 0 && is.infinite(left)) {
-    left <- -.Machine$double.xmax
-  }
-  if (p_max < 1 && is.infinite(right)) {
-    right <- .Machine$double.xmax
-  }
-  c(left, right)
-}
-
-
-#' Algorithm to Compute a Directional Inverse
-#'
-#' Calculates the smallest value for which a function `f`
-#' evaluates to be greater than or equal to `y` -- that is,
-#' the left inverse of `f` at `y`.
-#' @param p Single value for which to calculate the left inverse.
-#' @param low,high Single numeric values forming a range
-#' within which to search for the solution.
-#' @param tol,maxiter Tolerance (a small positive number) and maximum number
-#' of iterations
-#' @details This algorithm works by progressively
-#' cutting the specified range in half, moving into the left or right
-#' half depending on where the solution is.
-#' @returns The left inverse of the CDF evaluated at `p`.
-#' @noRd
-#' @inheritParams encapsulate_p
-directional_inverse <- function(distribution, p, low, high, tol, maxiter,
-                                direction) {
-  stopifnot(low <= high)
-  if (is.na(p)) {
-    return(p)
-  }
-  if (direction == "left") {
-    ineq <- `<=`
-  } else if (direction == "right") {
-    ineq <- `<`
-  } else {
-    stop(
-      "`direction` must be one of 'left' or 'right'. Received '",
-      direction, "'."
-    )
-  }
-  max_tol <- tol
-  w <- .Machine$double.xmax
-  i <- 0L
-  slope <- 1
-  mid <- (high + low) / 2
-  while (w > tol && i <= maxiter) {
-    i <- i + 1L
-    cdf_low <- eval_cdf(distribution, at = low)
-    cdf_mid <- eval_cdf(distribution, at = mid)
-    cdf_high <- eval_cdf(distribution, at = high)
-    slope_left <- (cdf_mid - cdf_low) / w * 2
-    slope_right <- (cdf_high - cdf_mid) / w * 2
-    slope <- max(slope, min(slope_left, slope_right, na.rm = TRUE),
-      na.rm = TRUE
-    )
-    tol <- min(max_tol / slope, tol, na.rm = TRUE)
-    if (ineq(p, cdf_mid)) {
-      high <- mid
-    } else {
-      low <- mid
-    }
-    if (low == high) {
-      return(low)
-    }
-    w <- high - low
-    mid <- (high + low) / 2
-  }
-  if (i == maxiter && w > tol) {
-    warning(
-      "Maximum number of iterations reached before ",
-      "tolerance was achieved."
-    )
-  }
-  mid
 }

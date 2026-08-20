@@ -68,15 +68,27 @@ test_that("A union-of-intervals continuous part integrates over each piece.", {
   expect_equal(mean(d), 1.5, tolerance = 1e-6)
 })
 
-test_that("Legacy continuous distributions (no support) still compute moments.", {
-  rlang::local_options(lifecycle_verbosity = "quiet")
+test_that("Moments integrate over the support that was declared.", {
   d <- distribution(
     density = function(x) stats::dnorm(x),
     cdf = function(x) stats::pnorm(x),
-    .vtype = "continuous"
+    .support = continuous(c(-Inf, Inf))
   )
   expect_equal(mean(d), 0, tolerance = 1e-6)
   expect_equal(variance(d), 1, tolerance = 1e-6)
+})
+
+test_that("Numerical moments require a support.", {
+  # Unreachable through `distribution()`, which insists on one; checked
+  # directly so the guard does not rot.
+  bare <- distionary:::new_distribution(
+    list(density = stats::dnorm, cdf = stats::pnorm),
+    vtype = "continuous", name = "Bare"
+  )
+  expect_error(
+    distionary:::expect_over_support(bare, function(x) x),
+    "requires the distribution's support"
+  )
 })
 
 test_that("Atoms accumulating at an interior sink from both sides are summed.", {

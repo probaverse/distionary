@@ -9,14 +9,22 @@
 #' A list of these representations can be found in the details.
 #'
 #' @param ... Name-value pairs for defining the distribution.
-#' @param .support The support of the distribution, built with [discrete()],
-#' [continuous()], or [mixed()] (a bare `discretes` object is also accepted and
-#' treated as `discrete()`). The variable type ([vtype()]) is derived from it.
-#' Preferred over `.vtype`.
-#' @param .vtype `r lifecycle::badge("superseded")` Superseded by `.support`.
-#' The variable type, typically "discrete" or "continuous"; a length-1
-#' character vector, converted to lowercase with `tolower()` for compliance
-#' with known types.
+#' @param .support **Required.** The support of the distribution, built with
+#' [discrete()], [continuous()], or [mixed()] (a bare `discretes` object is
+#' also accepted and treated as `discrete()`). The variable type ([vtype()])
+#' and the [range()] are derived from it.
+#'
+#' Every distribution has to declare where it places probability. It is the one
+#' thing distionary cannot work out from the representations: a CDF says how
+#' much probability lies below a point, but not where the atoms are, nor where
+#' the distribution ends. Without it, quantiles at probability 0 and 1 have to
+#' be found by searching into the numerical tail, atoms cannot be located at
+#' all, and moments cannot be decomposed. Declaring it is the same bargain as
+#' declaring atoms: a little more to say up front, in exchange for exact
+#' answers rather than approximate ones.
+#' @param .vtype `r lifecycle::badge("superseded")` Superseded by `.support`,
+#' and now ignored: the variable type is always derived from the support.
+#' Supplying it warns and has no effect.
 #' @param .name A name to give to the distribution.
 #' Can be any character vector of length 1.
 #' @param .parameters A named list with one entry per distribution parameter,
@@ -86,22 +94,27 @@ distribution <- function(...,
                          .vtype = NULL,
                          .name = NULL,
                          .parameters = list()) {
-  support <- NULL
-  if (!is.null(.support)) {
-    support <- as_support(.support)
-    if (is_empty_support(support)) {
-      stop(
-        "A distribution cannot have an empty support, because it has to ",
-        "place probability somewhere. The empty support exists so that ",
-        "operations on supports are closed; it is not itself a distribution."
-      )
-    }
+  if (is.null(.support)) {
+    stop(
+      "A distribution needs a support: the set on which it places ",
+      "probability. Specify `.support` with `continuous()`, `discrete()`, ",
+      "or `mixed()`.\n",
+      "Knowing the support is what lets distionary locate atoms exactly, ",
+      "report the true endpoints of a distribution, and integrate over the ",
+      "right region. A variable type alone (`.vtype`) does not say where the ",
+      "probability is, and is no longer enough."
+    )
   }
-  # Derive the variable type. From the support when we have one; otherwise from
-  # the legacy `.vtype` string (status quo, including typo detection).
-  if (!is.null(support)) {
-    .vtype <- vtype_of_support(support)
-  } else if (!is.null(.vtype)) {
+  support <- as_support(.support)
+  if (is_empty_support(support)) {
+    stop(
+      "A distribution cannot have an empty support, because it has to ",
+      "place probability somewhere. The empty support exists so that ",
+      "operations on supports are closed; it is not itself a distribution."
+    )
+  }
+  # The variable type is always derived from the support now.
+  if (!is.null(.vtype)) {
     lifecycle::deprecate_soft(
       when = "0.2.0",
       what = "distribution(.vtype)",
@@ -113,20 +126,8 @@ distribution <- function(...,
         "Pass support objects to `.support` instead."
       )
     }
-    .vtype <- tolower(as.character(.vtype))
-    checkmate::assert_character(.vtype, len = 1)
-    # Typo detection for variable type.
-    vtypes <- c("discrete", "continuous", "ordinal", "categorical", "mixed")
-    vtype_match <- agrep(.vtype, vtypes, max.distance = 0.1, value = TRUE)
-    if (length(vtype_match) > 0 && !(.vtype %in% vtype_match)) {
-      warning(paste0(
-        "The .vtype '", .vtype, "' looks similar to ",
-        paste(vtype_match, collapse = ", "), "."
-      ))
-    }
-  } else {
-    .vtype <- "unknown"
   }
+  .vtype <- vtype_of_support(support)
   if (!is.null(.name)) {
     .name <- as.character(.name)
   } else {

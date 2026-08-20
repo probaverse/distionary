@@ -7,7 +7,7 @@ test_that("Network is invoked in priority: variance", {
     },
     range = c(-Inf, Inf),
     stdev = 10, # deliberately incorrect
-    .vtype = "continuous"
+    .support = continuous(c(-Inf, Inf))
   ))
   expect_equal(variance(d), 100)
   expect_equal(eval_variance_from_network(d), 100)

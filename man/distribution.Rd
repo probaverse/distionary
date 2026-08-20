@@ -21,15 +21,23 @@ is.distribution(object)
 \arguments{
 \item{...}{Name-value pairs for defining the distribution.}
 
-\item{.support}{The support of the distribution, built with \code{\link[=discrete]{discrete()}},
-\code{\link[=continuous]{continuous()}}, or \code{\link[=mixed]{mixed()}} (a bare \code{discretes} object is also accepted and
-treated as \code{discrete()}). The variable type (\code{\link[=vtype]{vtype()}}) is derived from it.
-Preferred over \code{.vtype}.}
+\item{.support}{\strong{Required.} The support of the distribution, built with
+\code{\link[=discrete]{discrete()}}, \code{\link[=continuous]{continuous()}}, or \code{\link[=mixed]{mixed()}} (a bare \code{discretes} object is
+also accepted and treated as \code{discrete()}). The variable type (\code{\link[=vtype]{vtype()}})
+and the \code{\link[=range]{range()}} are derived from it.
 
-\item{.vtype}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Superseded by \code{.support}.
-The variable type, typically "discrete" or "continuous"; a length-1
-character vector, converted to lowercase with \code{tolower()} for compliance
-with known types.}
+Every distribution has to declare where it places probability. It is the one
+thing distionary cannot work out from the representations: a CDF says how
+much probability lies below a point, but not where the atoms are, nor where
+the distribution ends. Without it, quantiles at probability 0 and 1 have to
+be found by searching into the numerical tail, atoms cannot be located at
+all, and moments cannot be decomposed. Declaring it is the same bargain as
+declaring atoms: a little more to say up front, in exchange for exact
+answers rather than approximate ones.}
+
+\item{.vtype}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Superseded by \code{.support},
+and now ignored: the variable type is always derived from the support.
+Supplying it warns and has no effect.}
 
 \item{.name}{A name to give to the distribution.
 Can be any character vector of length 1.}
