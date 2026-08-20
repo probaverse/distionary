@@ -194,3 +194,43 @@ test_that("The Null distribution is built without `distribution()`.", {
   # Two Nulls are the same object, which is what lets verbs compare against it.
   expect_equal(dst_null(), dst_null())
 })
+
+test_that("`range` cannot be given as a property.", {
+  # It is read from the support, so a stated one could only disagree -- and
+  # would win, being consulted first. There is no argument to deprecate, the
+  # name living among `...`, so it is rejected by name.
+  expect_error(
+    distribution(
+      cdf = function(x) stats::punif(x),
+      density = stats::dunif,
+      range = c(-99, 99),
+      .support = continuous(c(0, 1))
+    ),
+    "can't be given as a property"
+  )
+})
+
+test_that("range() reads the support, and agrees with the quantiles.", {
+  d <- distribution(
+    cdf = function(x) stats::punif(x),
+    density = stats::dunif,
+    .support = continuous(c(0, 1))
+  )
+  expect_equal(range(d), c(0, 1))
+  # The two ways of asking where a distribution ends must not disagree.
+  expect_equal(range(d), eval_quantile(d, at = c(0, 1)))
+  expect_equal(range(dst_pois(3)), eval_quantile(dst_pois(3), at = c(0, 1)))
+  expect_equal(range(dst_norm(0, 1)), c(-Inf, Inf))
+})
+
+test_that("range() of the Null distribution is NA.", {
+  expect_equal(range(dst_null()), c(NA_real_, NA_real_))
+})
+
+test_that("`range` is derived, not a property, as `vtype` is.", {
+  # Neither is reachable through the property network; both come off the
+  # support instead.
+  d <- dst_norm(0, 1)
+  expect_null(eval_property(d, "range"))
+  expect_null(eval_property(d, "vtype"))
+})

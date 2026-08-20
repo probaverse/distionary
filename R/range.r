@@ -5,9 +5,15 @@
 #'
 #' @param distribution Distribution to compute range from.
 #' @param ... Not used; vestige of the `base::range()` S3 generic.
-#' @details If there are no methods for the distribution's class,
-#' the range is calculated
-#' using `eval_quantile()` at 0 and at 1.
+#' @details
+#' The range is read from the distribution's support (see [support()]), which
+#' is where a distribution says what values it reaches. It is not something a
+#' distribution can state separately, and specifying a `range` when building
+#' one is an error --- there is no room for a second answer to differ from the
+#' first. In this it behaves like [vtype()], which is also derived rather than
+#' declared.
+#'
+#' The Null distribution has no support, and its range is `NA`.
 #' @returns Vector of length two, containing the minimum and maximum
 #' values of a distribution.
 #' @examples
@@ -29,7 +35,12 @@ range.dst <- function(distribution, ...) {
       "Did you accidentally misspell 'distribution'?"
     )
   }
-  eval_property(distribution, "range")
+  s <- support(distribution)
+  if (is.null(s)) {
+    # Only the Null distribution has no support, and it reaches nothing.
+    return(c(NA_real_, NA_real_))
+  }
+  support_hull(s)
 }
 
 #' @description

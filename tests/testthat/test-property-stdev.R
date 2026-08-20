@@ -5,7 +5,6 @@ test_that("Network is invoked in priority: stdev", {
     density = function(x) {
       stats::dnorm(x, sd = 3)
     },
-    range = c(-Inf, Inf),
     variance = 100, # deliberately incorrect
     .support = continuous(c(-Inf, Inf))
   ))

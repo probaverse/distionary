@@ -40,13 +40,12 @@ dst_norm = function(mean, sd):
       density = function(x) dnorm(x, mean = mean, sd = sd),
       realise = function(n) rnorm(n, mean = mean, sd = sd),
       ...,
-      range = [-Inf, Inf],
       mean = mean,
       stdev = sd,
       skewness = 0,
       ...
     ],
-    vtype = "continuous"
+    support = continuous([-Inf, Inf])
   )
 ```
 
@@ -70,9 +69,18 @@ functions of the same name:
 ```
 mean = function(distribution):
   eval_property(distribution, name = "mean")
+```
+
+Two things are *not* properties, and do not go through this machinery at
+all: the variable type and the range. Both are read off the distribution's
+support, which is the one thing every distribution has to declare.
+
+```
+vtype = function(distribution):
+  vtype_of_support(support(distribution))
 
 range = function(distribution):
-  eval_property(distribution, name = "range")
+  support_hull(support(distribution))
 ```
 
 Properties that are functions are prefixed with `eval_` to indicate they

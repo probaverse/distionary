@@ -146,6 +146,19 @@ distribution <- function(
   checkmate::assert_list(.parameters, names = "named", null.ok = TRUE)
   dots <- rlang::enquos(...)
   checkmate::assert_list(dots, names = "named", null.ok = TRUE)
+  # `range` used to be given here, back when a distribution stated its own
+  # endpoints. The support states them now, so a `range` entry could only
+  # disagree with it --- and it would win, since a stated property is consulted
+  # before a derived one. There is no `range` argument to deprecate, this being
+  # a name among `...`, so it is rejected by name.
+  if ("range" %in% names(dots)) {
+    stop(
+      "`range` can't be given as a property: it is read from the ",
+      "distribution's support, which already says what values the ",
+      "distribution reaches.\n",
+      "Drop it, and let `.support` say where the probability is."
+    )
+  }
   representations <- lapply(dots, rlang::eval_tidy)
   # Check for required properties.
   reps_missing <- is.null(representations$cdf) ||
