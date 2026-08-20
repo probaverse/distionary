@@ -17,3 +17,4 @@
 ^\.positai$
 ^\.claude$
 ^CODE_STANDARDS\.md$
+^figure$
