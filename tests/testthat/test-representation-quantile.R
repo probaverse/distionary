@@ -91,3 +91,79 @@ test_that("Network quantiles take boundary p from the support hull", {
   expect_equal(eval_quantile_from_network(db, at = c(0, 1)), c(0, 10))
   expect_identical(eval_quantile_from_network(d, at = NA_real_), NA_real_)
 })
+
+test_that("The right inverse takes the far side of a flat region.", {
+  # Support [1, 2] U [4, 5], so the cdf sits at 0.5 right across the gap.
+  d <- distribution(
+    cdf = function(x) 0.5 * punif(x, 1, 2) + 0.5 * punif(x, 4, 5),
+    density = function(x) 0.5 * dunif(x, 1, 2) + 0.5 * dunif(x, 4, 5),
+    .support = continuous(c(1, 2), c(4, 5))
+  )
+  expect_equal(eval_quantile_from_network(d, 0.5, side = "left"), 2)
+  expect_equal(eval_quantile_from_network(d, 0.5, side = "right"), 4)
+})
+
+test_that("The two inverses split an atom's jump at its endpoints.", {
+  d <- dst_pois(3)
+  # `p` exactly on top of a jump: the left inverse keeps that atom, the right
+  # inverse moves on to the next one. This is the tie that floating point gets
+  # wrong if the comparison is left to it.
+  p0 <- ppois(0, 3)
+  p1 <- ppois(1, 3)
+  expect_identical(
+    eval_quantile_from_network(d, c(p0, p1), side = "left"), c(0, 1)
+  )
+  expect_identical(
+    eval_quantile_from_network(d, c(p0, p1), side = "right"), c(1, 2)
+  )
+  # Strictly inside a jump, the two agree.
+  expect_equal(eval_quantile_from_network(d, 0.1, side = "left"), 1)
+  expect_equal(eval_quantile_from_network(d, 0.1, side = "right"), 1)
+})
+
+test_that("The two inverses agree on a strictly increasing cdf.", {
+  d <- dst_norm(0, 1)
+  p <- 1:99 / 100
+  expect_equal(
+    eval_quantile_from_network(d, p, side = "left"),
+    eval_quantile_from_network(d, p, side = "right"),
+    tolerance = 1e-6
+  )
+})
+
+test_that("`side` defaults to the left inverse, as eval_quantile() uses.", {
+  d <- dst_pois(3)
+  p <- 1:99 / 100
+  expect_identical(
+    eval_quantile_from_network(d, p),
+    eval_quantile_from_network(d, p, side = "left")
+  )
+  expect_equal(eval_quantile_from_network(d, p), eval_quantile(d, at = p))
+  expect_error(eval_quantile_from_network(d, 0.5, side = "middle"))
+})
+
+test_that("Boundary quantiles are the support's ends, whichever side.", {
+  d <- dst_pois(3)
+  expect_equal(eval_quantile_from_network(d, c(0, 1), side = "left"),
+               c(0, Inf))
+  expect_equal(eval_quantile_from_network(d, c(0, 1), side = "right"),
+               c(0, Inf))
+  b <- dst_unif(2, 7)
+  expect_equal(eval_quantile_from_network(b, c(0, 1), side = "right"),
+               c(2, 7))
+})
+
+test_that("Without a support, boundary quantiles stay numeric.", {
+  # They are only approximate -- the ends of the support cannot be read off
+  # when there is no support -- but they must not become `NA`, because
+  # `range()` falls back to the 0- and 1-quantiles for these distributions,
+  # and the numerical moments integrate over that range.
+  legacy <- suppressWarnings(
+    distribution(cdf = stats::pnorm, density = stats::dnorm,
+                 .vtype = "continuous")
+  )
+  q <- eval_quantile_from_network(legacy, c(0, 1))
+  expect_true(all(!is.na(q)))
+  expect_true(all(is.finite(range(legacy))))
+  expect_equal(mean(legacy), 0, tolerance = 1e-6)
+})

@@ -14,6 +14,13 @@
 #'
 #' @param distribution A distribution having access to a cdf.
 #' @param at A vector of values for which to evaluate the quantile function.
+#' @param side Which inverse of the CDF to take: `"left"` (the default, and
+#' the usual quantile function) is the smallest `x` with `F(x) >= p`; `"right"`
+#' is the smallest `x` with `F(x) > p`. The two differ only where the CDF is
+#' flat or jumps --- that is, over a gap in the support, where the left inverse
+#' gives the lower end and the right inverse the upper, and at a probability
+#' landing exactly on the top of an atom's jump. [eval_quantile()] always takes
+#' the left inverse; `side` is not yet exposed there.
 #' @param tol,maxiter Tolerance (a small positive number) and maximum number
 #' of iterations (at least 1); length 1 vectors.
 #' @returns The `at`-quantiles of the distribution. Numeric vector the same
@@ -21,10 +28,12 @@
 #' @noRd
 eval_quantile_from_network <- function(distribution,
                                        at,
+                                       side = c("left", "right"),
                                        tol = 1e-9,
                                        maxiter = 200) {
   checkmate::assert_class(distribution, "dst")
   checkmate::assert_numeric(at, 0, 1)
+  side <- rlang::arg_match(side)
   checkmate::assert_numeric(tol, 0, len = 1)
   checkmate::assert_integerish(maxiter, lower = 1, len = 1)
   if (length(at) == 0) {
@@ -32,9 +41,14 @@ eval_quantile_from_network <- function(distribution,
   }
   s <- support(distribution)
   if (is.null(s)) {
-    return(quantile_legacy(distribution, at, tol = tol, maxiter = maxiter))
+    return(
+      quantile_legacy(distribution, at, side = side, tol = tol,
+                      maxiter = maxiter)
+    )
   }
-  quantile_from_support(distribution, s, at, tol = tol, maxiter = maxiter)
+  quantile_from_support(
+    distribution, s, at, side = side, tol = tol, maxiter = maxiter
+  )
 }
 
 #' Quantiles via a Structured Support
@@ -48,7 +62,7 @@ eval_quantile_from_network <- function(distribution,
 #' @inheritParams eval_quantile_from_network
 #' @returns The `at`-quantiles, a numeric vector the same length as `at`.
 #' @noRd
-quantile_from_support <- function(distribution, s, at, tol, maxiter) {
+quantile_from_support <- function(distribution, s, at, side, tol, maxiter) {
   n <- length(at)
   out <- rep(NaN, n)
   # Preserve NA (and NaN) inputs as-is; `at` is otherwise within [0, 1].
@@ -63,20 +77,23 @@ quantile_from_support <- function(distribution, s, at, tol, maxiter) {
   # bisecting into the numerical tails) gives the exact endpoints, including
   # -Inf / Inf for unbounded supports. We read the support *directly* and never
   # call range(), which would recurse back here for legacy distributions.
+  # Both inverses agree here, by the usual convention that Q(0) and Q(1) are
+  # the ends of the support.
   out[is_zero] <- hull[1L]
   out[is_one] <- hull[2L]
   if (any(is_interior)) {
     p <- at[is_interior]
-    br <- quantile_bracket(distribution, hull, p)
+    br <- quantile_bracket(distribution, hull, p, side = side)
     sol <- bisect_quantile(
       distribution, p,
-      lo = br[["lo"]], hi = br[["hi"]], tol = tol, maxiter = maxiter
+      lo = br[["lo"]], hi = br[["hi"]], side = side, tol = tol,
+      maxiter = maxiter
     )
     value <- sol[["value"]]
     if (discretes::num_discretes(s[["atoms"]]) > 0) {
       value <- snap_to_atoms(
         distribution, s[["atoms"]], p,
-        lo = sol[["lo"]], hi = sol[["hi"]], value = value
+        lo = sol[["lo"]], hi = sol[["hi"]], value = value, side = side
       )
     }
     out[is_interior] <- value
@@ -98,7 +115,7 @@ quantile_from_support <- function(distribution, s, at, tol, maxiter) {
 #' `p` by the caller.
 #' @inheritParams eval_quantile_from_network
 #' @noRd
-quantile_bracket <- function(distribution, hull, p) {
+quantile_bracket <- function(distribution, hull, p, side) {
   p_min <- min(p)
   p_max <- max(p)
   left <- if (is.finite(hull[1L])) hull[1L] else -1
@@ -119,7 +136,10 @@ quantile_bracket <- function(distribution, hull, p) {
     }
   }
   right <- if (is.finite(hull[2L])) hull[2L] else 1
-  while (eval_cdf(distribution, right) < p_max) {
+  # The left inverse needs `F(right) >= p_max`; the right inverse needs the
+  # strict `F(right) > p_max`, so it may have to step one notch further out.
+  below_max <- if (side == "left") `<` else `<=`
+  while (below_max(eval_cdf(distribution, right), p_max)) {
     if (right == 0) {
       right <- 1
     } else {
@@ -158,7 +178,7 @@ quantile_bracket <- function(distribution, hull, p) {
 #' numeric vector the same length as `p`.
 #' @inheritParams eval_quantile_from_network
 #' @noRd
-bisect_quantile <- function(distribution, p, lo, hi, tol, maxiter) {
+bisect_quantile <- function(distribution, p, lo, hi, side, tol, maxiter) {
   for (i in seq_len(maxiter)) {
     mid <- (lo + hi) / 2
     x_tol <- tol * pmax(1, abs(lo), abs(hi))
@@ -167,7 +187,9 @@ bisect_quantile <- function(distribution, p, lo, hi, tol, maxiter) {
       break
     }
     f_mid <- eval_cdf(distribution, mid)
-    go_left <- p <= f_mid
+    # Left inverse keeps `F(lo) < p <= F(hi)`; right inverse keeps
+    # `F(lo) <= p < F(hi)`. Only this comparison differs.
+    go_left <- if (side == "left") p <= f_mid else p < f_mid
     move_hi <- active & go_left
     move_lo <- active & !go_left
     hi[move_hi] <- mid[move_hi]
@@ -198,7 +220,7 @@ bisect_quantile <- function(distribution, p, lo, hi, tol, maxiter) {
 #' @returns The `value` vector with atom-hitting entries replaced by the atoms.
 #' @inheritParams eval_quantile_from_network
 #' @noRd
-snap_to_atoms <- function(distribution, atoms_obj, p, lo, hi, value) {
+snap_to_atoms <- function(distribution, atoms_obj, p, lo, hi, value, side) {
   n <- length(p)
   # The candidate atom bracketing `value` on each side; NA where the support has
   # no atom on that side.
@@ -226,11 +248,48 @@ snap_to_atoms <- function(distribution, atoms_obj, p, lo, hi, value) {
   # whichever atom's jump contains `p` (at most one can).
   for (cand in list(above, below)) {
     j <- match(cand, uniq)
-    in_jump <- !is.na(cand) & (f_lower[j] < p) & (p <= f_a[j])
+    # The atom `a` is the left inverse for `p` in `(F(a-), F(a)]`, and the
+    # right inverse for `p` in `[F(a-), F(a))`. Which end of the jump is closed
+    # is the whole difference between the two, so a `p` landing exactly on an
+    # endpoint has to be classified deliberately rather than left to floating
+    # point: `F(a) - pmf(a)` and `F(a-)` are the same number mathematically but
+    # can differ in the last bits, which would otherwise put `p` on the wrong
+    # side of a closed end.
+    in_jump <- if (side == "left") {
+      # Both comparisons are strict on the side that matters, so an exact `p`
+      # falls out correctly without any tolerance.
+      !is.na(cand) & (f_lower[j] < p) & (p <= f_a[j])
+    } else {
+      # The right inverse closes the *lower* end, and that is the end computed
+      # by subtraction, so this is the one comparison a rounding error can
+      # flip. `p <= f_a` needs no such care: it is already strict.
+      !is.na(cand) &
+        (f_lower[j] < p | near_probability(f_lower[j], p)) &
+        (p < f_a[j])
+    }
     in_jump[is.na(in_jump)] <- FALSE
     value[in_jump] <- cand[in_jump]
   }
   value
+}
+
+#' Are Two Probabilities the Same Number?
+#'
+#' A tie test for the lower end of an atom's jump in `snap_to_atoms()`, used by
+#' the right inverse only. `F(a) - pmf(a)` is `F(a-)` mathematically, but the
+#' subtraction loses the last bits, so the two can disagree by a few units in
+#' the last place --- enough to put a `p` sitting exactly on `F(a-)` on the
+#' wrong side of a comparison the right inverse treats as closed.
+#'
+#' The tolerance is deliberately tight. It has to be looser than that rounding
+#' error and tighter than any genuine gap between distinct probabilities, and
+#' distributions with very many atoms put real jump endpoints close together.
+#'
+#' @param a,b Numeric vectors of probabilities.
+#' @returns A logical vector.
+#' @noRd
+near_probability <- function(a, b) {
+  !is.na(a) & !is.na(b) & abs(a - b) <= 1e-12 * pmax(1, abs(a), abs(b))
 }
 
 #' Legacy Quantile Algorithm (no structured support)
@@ -241,10 +300,19 @@ snap_to_atoms <- function(distribution, atoms_obj, p, lo, hi, value) {
 #' (as it has always been). Calls `encapsulate_p()` to bracket the solutions and
 #' `directional_inverse()` to run the bisection.
 #'
+#' `p == 0` and `p == 1` are approximate here, and cannot be otherwise: they ask
+#' for the ends of the support, and without a support there is nothing to read
+#' them from, so the bisection walks into the numerical tail and reports a large
+#' finite number where the true answer is `-Inf` or `Inf`. They are *not*
+#' returned as `NA`, tempting though that is, because `eval_range_from_network()`
+#' falls back to `eval_quantile(at = 0:1)` for exactly these distributions --- so
+#' `NA` here would take out `range()`, and with it the moments that integrate
+#' over the range. Give the distribution a `.support` to get exact endpoints.
+#'
 #' @inheritParams eval_quantile_from_network
 #' @returns The `at`-quantiles, a numeric vector the same length as `at`.
 #' @noRd
-quantile_legacy <- function(distribution, at, tol, maxiter) {
+quantile_legacy <- function(distribution, at, side, tol, maxiter) {
   if (vtype(distribution) != "continuous") {
     stop(
       "The current quantile algorithm can suffer from low precision with ",
@@ -274,7 +342,7 @@ quantile_legacy <- function(distribution, at, tol, maxiter) {
       )
     }
   }
-  r <- encapsulate_p(distribution, p = at[i_positive], direction = "left")
+  r <- encapsulate_p(distribution, p = at[i_positive], direction = side)
   low <- rep(r[1L], n)
   for (i in i_positive) {
     p <- at[i]
@@ -284,7 +352,7 @@ quantile_legacy <- function(distribution, at, tol, maxiter) {
       x[i] <- low[i + 1L] <- directional_inverse(
         distribution,
         p = p, low = low[i], high = r[2L], tol = tol,
-        maxiter = maxiter, direction = "left"
+        maxiter = maxiter, direction = side
       )
     }
   }
