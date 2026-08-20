@@ -35,9 +35,15 @@ all, and moments cannot be decomposed. Declaring it is the same bargain as
 declaring atoms: a little more to say up front, in exchange for exact
 answers rather than approximate ones.}
 
-\item{.vtype}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#superseded}{\figure{lifecycle-superseded.svg}{options: alt='[Superseded]'}}}{\strong{[Superseded]}} Superseded by \code{.support},
-and now ignored: the variable type is always derived from the support.
-Supplying it warns and has no effect.}
+\item{.vtype}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Removed in favour of
+\code{.support}, and now an error.
+
+A variable type cannot stand in for a support. \code{"discrete"} does not say
+\emph{which} points carry mass, and \code{"continuous"} does not say over what region
+--- so there is no way to translate one into the other, and guessing would
+quietly give wrong answers rather than an error. The argument is kept only
+so that old code gets a message saying what to do instead of
+\verb{unused argument}.}
 
 \item{.name}{A name to give to the distribution.
 Can be any character vector of length 1.}

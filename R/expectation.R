@@ -12,10 +12,9 @@
 #' as a Poisson's are handled); each interval of the continuous part is
 #' integrated with `distionary_integrate()`.
 #'
-#' If the distribution has no structured support (a legacy distribution defined
-#' with a `.vtype` string), this falls back to the previous behaviour:
-#' integrating the density over the distribution's range for continuous
-#' distributions, and erroring otherwise.
+#' Every distribution declares a support, so there is no fallback: a
+#' distribution without one is an error. The single exception, [dst_null()],
+#' supplies its own moments and never reaches here.
 #'
 #' @param distribution Distribution object.
 #' @param g Function; the quantity whose expectation is taken (vectorised).

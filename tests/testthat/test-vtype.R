@@ -42,15 +42,12 @@ test_that("Variable type is derived from the support that was given", {
       )),
       "mixed"
     )
-    # Whatever `.vtype` claims is ignored in favour of the support.
-    rlang::local_options(lifecycle_verbosity = "quiet")
-    expect_identical(
-      vtype(distribution(
-        cdf = f, density = f, .support = discrete(1:3), .vtype = "foofy"
-      )),
-      "discrete"
-    )
   })
+  # There is no other way to set it: `.vtype` is defunct.
+  lifecycle::expect_defunct(
+    distribution(cdf = f, density = f, .support = discrete(1:3),
+                 .vtype = "foofy")
+  )
 })
 
 test_that("The Null distribution has no variable type", {

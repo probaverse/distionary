@@ -262,7 +262,7 @@ A support is not optional. It is the one thing `distionary` cannot work out from
 distribution(cdf = stats::pnorm, density = stats::dnorm)
 ```
 
-The older `.vtype` argument, which took a string such as `"continuous"`, is superseded and now has no effect: the variable type is always derived from the support. Naming a type was never the same as saying where the probability is, which is why it cannot stand in for one.
+The older `.vtype` argument, which took a string such as `"continuous"`, is defunct: it errors, pointing at `.support`. Naming a type was never the same as saying where the probability is. `"discrete"` doesn't say which points carry mass, and `"continuous"` doesn't say over what region, so there is no way to translate one into the other --- and guessing would give wrong answers rather than an error.
 
 ## Why It Matters
 

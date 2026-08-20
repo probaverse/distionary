@@ -79,7 +79,7 @@ lapply(properties, function(x) eval_property(my_normal, x))
 
 Distribution metadata are stored as attributes, and are those arguments prefixed by `.` in the `distribution()` function.
 
-- `.support`, as seen in the example starting this vignette, specifies the distribution's support -- the set on which it places probability -- using `continuous()`, `discrete()`, or `mixed()`. The variable type (continuous, discrete, or mixed) and the range are *derived* from it. (The older `.vtype` argument, which took a string such as `"continuous"`, is superseded by `.support`.)
+- `.support`, as seen in the example starting this vignette, specifies the distribution's support -- the set on which it places probability -- using `continuous()`, `discrete()`, or `mixed()`. Every distribution needs one; the variable type (continuous, discrete, or mixed) and the range are *derived* from it. (The older `.vtype` argument, which took a string such as `"continuous"`, is defunct: a type does not say where the probability is, so it cannot stand in for a support. See the [The Support of a Distribution](./support.html) vignette.)
 - `.name` allows you to give the distribution a name.
 - `.parameters` allows you to specify values for the distribution's parameters as a list, if applicable. This version of `distionary` does not draw from these values, so it currently serves a similar function as the distribution's name.
 

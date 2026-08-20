@@ -38,9 +38,13 @@
   always have something to return. Its variable type is `"empty"`, which is a
   different claim from `"unknown"` --- empty says there is nowhere to place
   probability, unknown says nobody specified where. The `.vtype` argument is
-  superseded by `.support` and now has no effect at all: the variable type is
-  always derived from the support. Passing it warns and is otherwise ignored,
-  so the typo detection it used to do has gone with it.
+  defunct, and errors with a message pointing at `.support`. A variable type
+  cannot stand in for a support: `"discrete"` does not say *which* points carry
+  mass and `"continuous"` does not say over what region, so there is no way to
+  translate one into the other, and guessing would give quietly wrong answers
+  rather than an error. The argument is kept in the signature only so that old
+  code gets that message rather than `unused argument`. Its typo detection has
+  gone with it, there being nothing left to typo.
 
 - Supports can now be manipulated, not only built. `support_union()`,
   `support_restrict()`, and `support_transform()` combine, cut down, and map a

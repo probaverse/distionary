@@ -93,14 +93,14 @@ invert_cdf <- function(cdf,
 #' Evaluate Quantiles from a CDF
 #'
 #' The network's quantile entry point: pulls the CDF, the support hull, and the
-#' atoms off the distribution and hands them to [invert_cdf()], which does the
+#' atoms off the distribution and hands them to `invert_cdf()`, which does the
 #' work. Every distribution carries a support, so there is only one algorithm.
 #'
 #' @param distribution A distribution having access to a cdf.
 #' @param at A vector of probabilities at which to evaluate the quantile.
-#' @param side Passed to [invert_cdf()]. [eval_quantile()] always takes the
+#' @param side Passed to `invert_cdf()`. [eval_quantile()] always takes the
 #' left inverse; `side` is not yet exposed there.
-#' @param tol,maxiter Passed to [invert_cdf()].
+#' @param tol,maxiter Passed to `invert_cdf()`.
 #' @returns The `at`-quantiles of the distribution. Numeric vector the same
 #' length as `at`.
 #' @noRd

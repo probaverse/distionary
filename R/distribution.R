@@ -22,9 +22,15 @@
 #' all, and moments cannot be decomposed. Declaring it is the same bargain as
 #' declaring atoms: a little more to say up front, in exchange for exact
 #' answers rather than approximate ones.
-#' @param .vtype `r lifecycle::badge("superseded")` Superseded by `.support`,
-#' and now ignored: the variable type is always derived from the support.
-#' Supplying it warns and has no effect.
+#' @param .vtype `r lifecycle::badge("defunct")` Removed in favour of
+#' `.support`, and now an error.
+#'
+#' A variable type cannot stand in for a support. `"discrete"` does not say
+#' *which* points carry mass, and `"continuous"` does not say over what region
+#' --- so there is no way to translate one into the other, and guessing would
+#' quietly give wrong answers rather than an error. The argument is kept only
+#' so that old code gets a message saying what to do instead of
+#' `unused argument`.
 #' @param .name A name to give to the distribution.
 #' Can be any character vector of length 1.
 #' @param .parameters A named list with one entry per distribution parameter,
@@ -94,6 +100,22 @@ distribution <- function(...,
                          .vtype = NULL,
                          .name = NULL,
                          .parameters = list()) {
+  # Checked before the support, so that old code passing `.vtype` gets the
+  # message naming its replacement rather than the generic one below.
+  if (!is.null(.vtype)) {
+    lifecycle::deprecate_stop(
+      when = "0.2.0",
+      what = "distribution(.vtype)",
+      with = "distribution(.support)",
+      details = c(
+        i = paste(
+          "A variable type cannot stand in for a support: it says what kind",
+          "of probability there is, not where it lives."
+        ),
+        i = "Build one with `continuous()`, `discrete()`, or `mixed()`."
+      )
+    )
+  }
   if (is.null(.support)) {
     stop(
       "A distribution needs a support: the set on which it places ",
@@ -101,8 +123,7 @@ distribution <- function(...,
       "or `mixed()`.\n",
       "Knowing the support is what lets distionary locate atoms exactly, ",
       "report the true endpoints of a distribution, and integrate over the ",
-      "right region. A variable type alone (`.vtype`) does not say where the ",
-      "probability is, and is no longer enough."
+      "right region."
     )
   }
   support <- as_support(.support)
@@ -112,20 +133,6 @@ distribution <- function(...,
       "place probability somewhere. The empty support exists so that ",
       "operations on supports are closed; it is not itself a distribution."
     )
-  }
-  # The variable type is always derived from the support now.
-  if (!is.null(.vtype)) {
-    lifecycle::deprecate_soft(
-      when = "0.2.0",
-      what = "distribution(.vtype)",
-      with = "distribution(.support)"
-    )
-    if (is_support(.vtype) || inherits(.vtype, "discretes")) {
-      stop(
-        "`.vtype` accepts only a character variable type. ",
-        "Pass support objects to `.support` instead."
-      )
-    }
   }
   .vtype <- vtype_of_support(support)
   if (!is.null(.name)) {

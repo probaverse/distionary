@@ -90,26 +90,6 @@ test_that("A bare numeric .support is rejected (range vs atoms ambiguity).", {
   )
 })
 
-test_that("A support object passed to legacy .vtype is rejected.", {
-  rlang::local_options(lifecycle_verbosity = "quiet")
-  expect_error(
-    distribution(
-      cdf = function(x) x, pmf = function(x) 1,
-      .support = discrete(1:3),
-      .vtype = discrete(discretes::natural0())
-    ),
-    "Pass support objects to `.support`"
-  )
-  expect_error(
-    distribution(
-      cdf = function(x) x, pmf = function(x) 1,
-      .support = discrete(1:3),
-      .vtype = discretes::natural0()
-    ),
-    "Pass support objects to `.support`"
-  )
-})
-
 test_that("Every distribution built by distribution() carries a support.", {
   d <- distribution(
     cdf = function(x) x, density = function(x) 1,
@@ -119,8 +99,8 @@ test_that("Every distribution built by distribution() carries a support.", {
   expect_equal(vtype(d), "continuous")
 })
 
-test_that(".vtype is soft-deprecated in favour of .support.", {
-  lifecycle::expect_deprecated(
+test_that(".vtype is defunct in favour of .support.", {
+  lifecycle::expect_defunct(
     distribution(
       cdf = function(x) x, density = function(x) 1,
       .support = continuous(), .vtype = "continuous"
