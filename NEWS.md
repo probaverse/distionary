@@ -10,9 +10,26 @@
   intervals), and `mixed()`. Pass one to `distribution()` via the new
   `.support` argument; the variable type (`vtype()`) and `range()` are derived
   from it. Retrieve a distribution's support with `support()`, and its parts
-  with `atoms()` and `continuous_part()`. The `.vtype` argument is
+  with `atoms()` and `continuous_part()`. Test an object with `is_support()`,
+  and get a support's outermost points with `range()`. There is also an
+  `empty_support()`, tested by `is_empty_support()`: no distribution has one,
+  and `distribution()` rejects it, but it exists so that operations on supports
+  always have something to return. Its variable type is `"empty"`, which is a
+  different claim from `"unknown"` --- empty says there is nowhere to place
+  probability, unknown says nobody specified where. The `.vtype` argument is
   soft-deprecated in favour of `.support`: passing a string to it still works
   but now signals a (soft) deprecation warning when used directly.
+
+- Supports can now be manipulated, not only built. `support_union()`,
+  `support_restrict()`, and `support_transform()` combine, cut down, and map a
+  support, with `support_shift()`, `support_scale()`, and
+  `support_reciprocal()` covering the common maps without having to supply an
+  inverse by hand. `support_add_atoms()` and `support_drop_atoms()` edit the
+  atomic part, and `support_contains()` and `support_has_atom()` test whether a
+  value belongs to a support at all or carries positive probability
+  specifically. Every operation returns a support, so they compose: one that
+  removes everything gives `empty_support()`. There is deliberately no
+  intersection, which has not been needed.
 
 - All built-in `dst_*()` families now carry a structured `.support` (replacing
   their `range`/`.vtype` specification), so `support()` works on them and their
@@ -27,12 +44,31 @@
   atoms on the far side of an accumulation point are still counted. A moment
   that does not converge returns `NaN`.
 
+- Quantiles computed through the network --- that is, for a distribution with
+  no quantile function of its own --- are considerably faster, now solving
+  every requested probability in one vectorised bisection rather than running
+  a separate search for each. They also use the support: a probability landing
+  inside an atom's jump returns that atom *exactly*, and `p = 0` and `p = 1`
+  are read from the ends of the support, so an unbounded distribution gives
+  `-Inf` and `Inf` rather than a large finite number from the numerical tail.
+  Discrete and mixed distributions raised an error on this path before, since
+  their atoms could not be located; they are now exact. Distributions given a
+  `.vtype` string and no support keep the previous per-probability algorithm,
+  which remains restricted to continuous distributions and approximate at
+  `p = 0` and `p = 1`. Internally the algorithm can now take either inverse of
+  the CDF, the right as well as the left; `eval_quantile()` continues to give
+  the left inverse, and the choice is not yet exposed there.
+
 - Re-exported the `discretes` series constructors used to specify atomic
   supports, so they are available without attaching the package: `natural0()`,
   `natural1()`, `integers()`, `arithmetic()`, and `as_discretes()`.
 
 - `dst_lp3()` now supports negative skew on the log scale.
   Zero skew is treated as a log-normal distribution.
+
+- New vignette, "The Support of a Distribution", covering what a support is,
+  how to build, inspect, and manipulate one, and what tracking atoms buys when
+  evaluating a distribution.
 
 # distionary 0.1.1
 
