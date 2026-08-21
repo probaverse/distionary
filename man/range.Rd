@@ -31,11 +31,12 @@ support, both are \code{NA}.
 }
 \details{
 The range is read from the distribution's support (see \code{\link[=support]{support()}}), which
-is where a distribution says what values it reaches. It is not something a
-distribution can state separately, and specifying a \code{range} when building
-one is an error --- there is no room for a second answer to differ from the
-first. In this it behaves like \code{\link[=vtype]{vtype()}}, which is also derived rather than
-declared.
+is where a distribution says what values it reaches. In this it behaves like
+\code{\link[=vtype]{vtype()}}: derived, not declared.
+
+\code{range} is therefore not one of the property names distionary recognises. A
+\code{range} entry given to \code{\link[=distribution]{distribution()}} is kept, like any other name it does
+not know, but nothing consults it --- this function included.
 
 The Null distribution has no support, and its range is \code{NA}.
 }

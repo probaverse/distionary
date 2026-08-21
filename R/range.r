@@ -7,11 +7,12 @@
 #' @param ... Not used; vestige of the `base::range()` S3 generic.
 #' @details
 #' The range is read from the distribution's support (see [support()]), which
-#' is where a distribution says what values it reaches. It is not something a
-#' distribution can state separately, and specifying a `range` when building
-#' one is an error --- there is no room for a second answer to differ from the
-#' first. In this it behaves like [vtype()], which is also derived rather than
-#' declared.
+#' is where a distribution says what values it reaches. In this it behaves like
+#' [vtype()]: derived, not declared.
+#'
+#' `range` is therefore not one of the property names distionary recognises. A
+#' `range` entry given to [distribution()] is kept, like any other name it does
+#' not know, but nothing consults it --- this function included.
 #'
 #' The Null distribution has no support, and its range is `NA`.
 #' @returns Vector of length two, containing the minimum and maximum

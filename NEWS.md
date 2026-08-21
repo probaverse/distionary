@@ -5,15 +5,18 @@
   Pearson Type III distribution reflected about `location` --- the
   negatively-skewed, upper-bounded form.
 
-- **Breaking:** `range` can no longer be given as a distribution property. It
-  is read from the support, so a stated one could only disagree with it --- and
-  it would win, since a stated property is consulted before a derived one, so
-  `range()` and `eval_quantile()` at 0 and 1 could report different endpoints
-  for the same distribution. `distribution()` now rejects the name.
+- **Breaking:** `range` is no longer one of the property names distionary
+  recognises. It is read from the support, as `vtype()` is --- both are derived
+  from where a distribution places probability, rather than being stated
+  alongside it.
 
-  `range()` and `vtype()` are now alike: both read off the support rather than
-  going through the property network, and neither is reachable through
-  `eval_property()`.
+  Previously a stated `range` won, a given property being consulted before a
+  derived one, so `range()` and `eval_quantile()` at 0 and 1 could report
+  different endpoints for the same distribution. Now `range()` reads the
+  support and nothing else.
+
+  A `range` entry passed to `distribution()` is still kept, as any name
+  distionary does not recognise is kept, but nothing consults it.
 
 - **Breaking:** `distribution()` now requires a `.support`. A distribution has
   to say where it places probability, because that is the one thing distionary
