@@ -210,6 +210,45 @@ To regenerate: Rscript man/figures/network_diagram.R
 knitr::include_graphics("network_diagram.png")
 ```
 
+## Providing Variants
+
+Some representations come in more than one variant, described in the [Evaluate a Distribution](./evaluate.html) vignette: the quantile function has a left and a right inverse, the CDF can count the point it is evaluated at or leave it out, and so on.
+
+A representation given as a plain function, as in every example above, provides its representation in the canonical variant -- `quantile` is the left inverse of the CDF, `return` gives the levels of exceedance events. Any other variant is derived from whatever else the distribution has, the same way a quantile function is derived from a CDF when none was given. So every variant is available on every distribution, without anybody having to say anything.
+
+A distribution that knows a better route to a variant can say so with `variants()`. The two inverses of a Poisson's CDF differ only where the probability lands exactly on top of one of its jumps, and there the right inverse is the next atom up -- so it can be written in terms of the quantile function, which is cheaper than inverting the CDF numerically, as distionary would otherwise have to.
+
+```{r}
+poisson5 <- distribution(
+  cdf = function(x) ppois(x, lambda = 5),
+  pmf = function(x) dpois(x, lambda = 5),
+  quantile = variants(
+    function(p) qpois(p, lambda = 5),
+    right = function(p) {
+      q <- qpois(p, lambda = 5)
+      # A step up only where `p` lands exactly on top of a jump;
+      # anywhere else the two inverses agree.
+      q + (ppois(q, lambda = 5) <= p)
+    }
+  ),
+  .support = discrete(natural0()),
+  .name = "Poisson"
+)
+eval_quantile(poisson5, at = c(0.2, 0.5))
+eval_quantile(poisson5, at = c(0.2, 0.5), side = "right")
+```
+
+Each function in `variants()` is named by the variant it provides. Those names are checked against the representation as the distribution is built, so a variant that does not exist is an error at `distribution()` rather than a function that is silently never called.
+
+```{r, error = TRUE}
+distribution(
+  cdf = pnorm,
+  density = dnorm,
+  quantile = variants(qnorm, sideways = qnorm),
+  .support = continuous()
+)
+```
+
 ## Making your own properties
 
 Some properties are easy to make yourself. Here is an example of a function that calculates interquartile range.

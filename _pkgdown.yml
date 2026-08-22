@@ -21,6 +21,7 @@ reference:
 - subtitle: General Distribution Creation
   contents:
   - distribution
+  - variants
 - subtitle: Support
   contents:
   - support-construction

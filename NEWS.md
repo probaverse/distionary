@@ -1,5 +1,63 @@
 # distionary (development version)
 
+- Representations can now be evaluated in more than one *variant*: the
+  `eval_` and `enframe_` functions take arguments for the versions of a
+  representation that answer a different question about the same
+  distribution.
+
+  - `eval_quantile()` takes `side`, choosing which inverse of the cdf to
+    take. The left inverse, the usual quantile function, remains the default;
+    the right inverse is the other end of a stretch the cdf is flat over,
+    which is where the two differ.
+  - `eval_cdf()` and `eval_survival()` take `inequality`, choosing whether
+    the point itself is counted. The defaults are the conventional ones ---
+    the cdf weak, the survival function strict --- so that the two continue
+    to sum to 1. They differ only at an atom.
+  - `eval_return()` takes `event`, choosing whether the event of interest is
+    an exceedance of the return level (the default) or a shortfall below it,
+    and `obs_per_period`, for quoting return periods in something other than
+    observations of the variable: 365 to quote them in years for a variable
+    observed daily, and so on. The rescaling counts an event occurring
+    somewhere within a period, and assumes the observations are independent
+    of one another; it is not a conversion of the variable itself to a
+    coarser time scale.
+  - `eval_density()` and `eval_pmf()` take `definition`, choosing whether the
+    representation must exist in the full sense (`"strict"`, which only a
+    continuous or a discrete distribution respectively can satisfy) or may be
+    read off the cdf (`"extended"`, the default and the existing behaviour).
+
+- New `variants()` declares the variants a distribution can provide itself,
+  for use in `distribution()`:
+
+  ``` r
+  quantile = variants(function(p) qpois(p, 5), right = my_right_inverse)
+  ```
+
+  A representation given to `distribution()` as a plain function provides the
+  canonical variant, and only that. Any other variant is derived from the
+  distribution's other representations --- so every variant is available on
+  every distribution, and declaring one says only that there is a better
+  route to it than the one distionary would find on its own.
+
+- `eval_property()` gains a `variant` argument, holding whatever departs from
+  the canonical representation, such as `list(side = "right")`. Its `...` is
+  unchanged, and still forwards to the representation as it always did.
+
+- **Breaking:** `prob_left()` and `prob_right()` are deprecated in favour of
+  `eval_prob_left()` and `eval_prob_right()`, which join the rest of the
+  `eval_` family: they take `at` rather than `of`, they have `enframe_`
+  counterparts, and they take the `inequality` argument described above
+  rather than a logical `inclusive`. They are the cdf and the survival
+  function under names that say which way they point.
+
+- `eval_density()` of a distribution with nothing but atoms now returns the
+  derivative of its cdf --- 0 between the atoms, `NaN` on them --- where it
+  previously refused for want of a density function. This is the extended
+  reading described above, and mirrors what `eval_pmf()` has always done for
+  a continuous distribution. A mixed distribution with no density supplied
+  still refuses, since the height it spreads probability at over its
+  continuous part is genuinely unknown.
+
 - `dst_pearson3()` (and the underlying `ppearson3()`, `dpearson3()`,
   `qpearson3()`, `rpearson3()`) now accept a negative `shape`, giving the
   Pearson Type III distribution reflected about `location` --- the
