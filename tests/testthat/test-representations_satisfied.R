@@ -83,8 +83,8 @@ test_that("Each representation satisfies its definition.", {
           xx <- parameters(d)$outcomes
           ## From CDF
           pmf_evald <- eval_pmf(d, at = xx)
-          pmf_derived <- prob_left(d, of = xx, inclusive = TRUE) -
-            prob_left(d, of = xx, inclusive = FALSE)
+          pmf_derived <- eval_prob_left(d, at = xx) -
+            eval_prob_left(d, at = xx, inequality = "strict")
           expect_equal(pmf_derived, pmf_evald)
           ## Sum to 1
           pmf_sum <- sum(pmf_evald)
@@ -97,8 +97,8 @@ test_that("Each representation satisfies its definition.", {
           }
           ## From CDF
           pmf_evald <- eval_pmf(d, at = xx)
-          pmf_derived <- prob_left(d, of = xx, inclusive = TRUE) -
-            prob_left(d, of = xx, inclusive = FALSE)
+          pmf_derived <- eval_prob_left(d, at = xx) -
+            eval_prob_left(d, at = xx, inequality = "strict")
           expect_equal(pmf_derived, pmf_evald)
           ## Sum to 1
           pmf_sum <- sum(pmf_evald)

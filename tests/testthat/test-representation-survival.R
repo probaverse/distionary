@@ -20,3 +20,27 @@ test_that("Survival function calculated thru network matches known vals", {
     }
   }
 })
+
+
+test_that("The survival function takes either inequality", {
+  d <- dst_pois(5)
+  expect_equal(eval_survival(d, at = 0:3), 1 - ppois(0:3, 5))
+  expect_equal(
+    eval_survival(d, at = 0:3, inequality = "weak"),
+    1 - ppois(0:3, 5) + dpois(0:3, 5)
+  )
+  # The mass on the point is exactly what separates them.
+  expect_equal(
+    eval_survival(d, at = 0:3, inequality = "weak") -
+      eval_survival(d, at = 0:3),
+    eval_pmf(d, at = 0:3)
+  )
+})
+
+test_that("The inequality carries through to `enframe_survival()`", {
+  d <- dst_pois(5)
+  expect_equal(
+    enframe_survival(d, at = 0:3, inequality = "weak")[["survival"]],
+    eval_survival(d, at = 0:3, inequality = "weak")
+  )
+})

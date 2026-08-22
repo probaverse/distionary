@@ -92,6 +92,12 @@ where events are exceedances.
 
 All functions should be vectorized.
 
+A representation given as a plain function provides that representation in
+its canonical variant: \code{quantile} is the left inverse of the CDF, \code{return}
+gives the levels of exceedance events. To provide more than that --- the
+right inverse as well as the left, say --- wrap the functions with
+\code{\link[=variants]{variants()}}.
+
 Other properties that are understood by \code{distionary} include:
 \itemize{
 \item \code{mean}, \code{stdev}, \code{variance}, \code{skewness}, \code{median} are self-explanatory.
@@ -124,5 +130,9 @@ linear
 
 # Plot
 plot(linear)
+}
+\seealso{
+Other Distribution Construction: 
+\code{\link{variants}()}
 }
 \concept{Distribution Construction}

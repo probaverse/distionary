@@ -5,15 +5,30 @@
 \alias{enframe_cdf}
 \title{Cumulative Distribution Function}
 \usage{
-eval_cdf(distribution, at)
+eval_cdf(distribution, at, ..., inequality = c("weak", "strict"))
 
-enframe_cdf(..., at, arg_name = ".arg", fn_prefix = "cdf", sep = "_")
+enframe_cdf(
+  ...,
+  at,
+  inequality = "weak",
+  arg_name = ".arg",
+  fn_prefix = "cdf",
+  sep = "_"
+)
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
 \item{at}{Vector of values to evaluate the representation at.}
+
+\item{inequality}{Which inequality the probability is taken over:
+\code{"weak"}, the usual cdf, is the probability of \code{X <= at}; \code{"strict"} is the
+probability of \code{X < at}.
+
+The two differ only where \code{at} is an atom, since only there does the point
+itself carry probability. For a distribution with no atoms they agree
+everywhere, and the argument makes no difference.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments. Length 1 character vector.}
@@ -52,14 +67,21 @@ enframe_cdf(model1 = d1, model2 = d2, at = 0:4)
 enframe_cdf(
   model1 = d1, model2 = d2, at = 0:4, arg_name = "value"
 )
+
+# The Poisson has atoms, so the two inequalities differ there.
+eval_cdf(d2, at = 0:4, inequality = "strict")
 }
 \seealso{
+\code{\link[=eval_prob_left]{eval_prob_left()}}, which is this function said the other way
+around, for when the direction matters more than the name.
+
 Other distributional representations: 
 \code{\link{eval_chf}()},
 \code{\link{eval_density}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
 \code{\link{eval_pmf}()},
+\code{\link{eval_prob_left}()},
 \code{\link{eval_quantile}()},
 \code{\link{eval_return}()},
 \code{\link{eval_survival}()}

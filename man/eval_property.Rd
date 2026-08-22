@@ -4,7 +4,7 @@
 \alias{eval_property}
 \title{Evaluate a distribution}
 \usage{
-eval_property(distribution, entry, ...)
+eval_property(distribution, entry, ..., variant = list())
 }
 \arguments{
 \item{distribution}{Distribution object.}
@@ -15,6 +15,14 @@ eval_property(distribution, entry, ...)
 \item{...}{If the property is a function, arguments to the
 function go here. Need not be named; inserted in the order they
 appear.}
+
+\item{variant}{Which variant of the representation to evaluate, as a named
+list holding only what departs from the canonical variant --- so
+\code{list(side = "right")} for the right inverse of the CDF, and the default
+\code{list()} for the representation as ordinarily understood. The \code{eval_}
+functions assemble this from their own arguments, and calling one of them
+is the usual way to reach a variant; see \code{\link[=eval_quantile]{eval_quantile()}} for an example
+and \code{\link[=variants]{variants()}} for how a distribution provides its own.}
 }
 \value{
 The distribution's property, evaluated. If cannot be
@@ -26,6 +34,13 @@ is first searched for the property, and if it can't
 be found, will attempt to calculate the property
 from other entries.
 }
+\details{
+A representation stored as a plain function is taken to provide the
+canonical variant, and only that. Asking for any other variant leaves it
+untouched and derives the answer from the distribution's other
+representations --- correct either way, if sometimes slower than a
+representation that provides the variant itself.
+}
 \examples{
 d <- distribution(
   cdf = function(x) {
@@ -36,6 +51,7 @@ d <- distribution(
 )
 eval_property(d, "g")
 eval_property(d, "quantile", 1:9 / 10)
+eval_property(d, "quantile", 1:9 / 10, variant = list(side = "right"))
 eval_property(d, "mean")
 eval_property(d, "realise", 10)
 eval_property(d, "foofy")

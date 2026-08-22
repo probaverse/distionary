@@ -204,3 +204,42 @@ test_that("A gap after the atom still sends the right inverse onward.", {
   expect_identical(eval_quantile_from_network(d, p1, side = "left"), 1)
   expect_identical(eval_quantile_from_network(d, p1, side = "right"), 2)
 })
+
+
+test_that("The quantile function takes either inverse of the cdf", {
+  d <- dst_pois(5)
+  p <- eval_cdf(d, at = 3)
+  # Between two atoms the cdf is flat, so the inverses land either side.
+  expect_equal(eval_quantile(d, at = p), 3)
+  expect_equal(eval_quantile(d, at = p, side = "right"), 4)
+  # Inside an atom's jump there is no flat stretch to choose an end of.
+  p_inside <- (eval_cdf(d, at = 2) + eval_cdf(d, at = 3)) / 2
+  expect_equal(eval_quantile(d, at = p_inside), 3)
+  expect_equal(eval_quantile(d, at = p_inside, side = "right"), 3)
+})
+
+test_that("The two inverses agree on a strictly increasing cdf", {
+  d <- dst_norm(0, 1)
+  expect_equal(
+    eval_quantile(d, at = 1:9 / 10, side = "right"),
+    eval_quantile(d, at = 1:9 / 10),
+    tolerance = 1e-6
+  )
+})
+
+test_that("`side` does not apply at the ends of the support", {
+  d <- dst_unif(0, 4)
+  expect_equal(eval_quantile(d, at = c(0, 1), side = "right"), c(0, 4))
+  expect_equal(eval_quantile(d, at = c(0, 1)), c(0, 4))
+  n <- dst_norm(0, 1)
+  expect_equal(eval_quantile(n, at = c(0, 1), side = "right"), c(-Inf, Inf))
+})
+
+test_that("`side` carries through to `enframe_quantile()`", {
+  d <- dst_pois(5)
+  p <- eval_cdf(d, at = 3)
+  expect_equal(
+    enframe_quantile(d, at = p, side = "right")[["quantile"]],
+    eval_quantile(d, at = p, side = "right")
+  )
+})

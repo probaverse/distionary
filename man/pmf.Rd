@@ -5,15 +5,34 @@
 \alias{enframe_pmf}
 \title{Probability Mass Function}
 \usage{
-eval_pmf(distribution, at)
+eval_pmf(distribution, at, ..., definition = c("extended", "strict"))
 
-enframe_pmf(..., at, arg_name = ".arg", fn_prefix = "pmf", sep = "_")
+enframe_pmf(
+  ...,
+  at,
+  definition = "extended",
+  arg_name = ".arg",
+  fn_prefix = "pmf",
+  sep = "_"
+)
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
 \item{at}{Vector of values to evaluate the representation at.}
+
+\item{definition}{Which definition of a mass function to hold the
+distribution to. Under \code{"extended"}, the default, the mass at a point is
+the size of the cdf's jump there, which is an answer any distribution can
+give --- zero, for a point carrying no probability. Under \code{"strict"}, it
+is a mass function in the full sense --- masses that account for all of
+the distribution's probability --- which only a discrete distribution has,
+and asking a distribution with a continuous part for one is an error.
+
+This is a question about the distribution, not about which function to
+evaluate: where both definitions apply they give the same numbers, and
+\code{"strict"} only refuses where a mass function does not exist.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments. Length 1 character vector.}
@@ -46,7 +65,11 @@ Access a distribution's probability mass function (pmf).
 d <- dst_pois(5)
 eval_pmf(d, at = c(1, 2, 2.5))
 enframe_pmf(d, at = 0:4)
+
+# A continuous distribution puts no probability on any one point,
+# so it has no mass function in the strict sense.
 eval_pmf(dst_norm(0, 1), at = -3:3)
+try(eval_pmf(dst_norm(0, 1), at = -3:3, definition = "strict"))
 }
 \seealso{
 Other distributional representations: 
@@ -55,6 +78,7 @@ Other distributional representations:
 \code{\link{eval_density}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
+\code{\link{eval_prob_left}()},
 \code{\link{eval_quantile}()},
 \code{\link{eval_return}()},
 \code{\link{eval_survival}()}
