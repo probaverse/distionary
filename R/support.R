@@ -374,6 +374,43 @@ collect_intervals <- function(dots) {
   do.call(rbind, rows)
 }
 
+#' Explain why an interval is not one.
+#'
+#' Three different mistakes all fail `lower < upper`, and they want different
+#' things said about them. Naming the offending endpoints matters most when the
+#' interval was computed rather than typed --- a family working out its own
+#' support from its parameters, say --- because then the numbers are the only
+#' clue to what went wrong.
+#'
+#' @param lo,hi The offending endpoints.
+#' @returns A character string, to be passed to `stop()`.
+#' @noRd
+interval_complaint <- function(lo, hi) {
+  shown <- sprintf("[%g, %g]", lo, hi)
+  if (lo > hi) {
+    return(paste0(
+      "An interval must run from lower to upper, and ", shown,
+      " runs backwards."
+    ))
+  }
+  # Equal endpoints from here on.
+  if (is.infinite(lo)) {
+    return(paste0(
+      "The interval ", shown, " has both ends at the same infinity, so it ",
+      "describes no values at all.\n",
+      "An endpoint computed from parameters lands here when it overflows: ",
+      "a number too large for a double becomes `Inf`, and both ends of the ",
+      "interval collapse onto it. Check whether the parameters put the ",
+      "distribution beyond the range double precision can represent."
+    ))
+  }
+  paste0(
+    "The interval ", shown, " is a single point, which carries no ",
+    "probability as a continuous part.\n",
+    "Use `discrete(", format(lo), ")` for an atom there instead."
+  )
+}
+
 #' Validate, sort, and merge an interval matrix into a canonical disjoint form.
 #' @noRd
 normalize_intervals <- function(m) {
@@ -383,8 +420,12 @@ normalize_intervals <- function(m) {
   if (anyNA(m)) {
     stop("Interval endpoints must not be `NA`.")
   }
-  if (any(m[, 1L] >= m[, 2L])) {
-    stop("Each interval must have `lower < upper`.")
+  bad <- which(m[, 1L] >= m[, 2L])
+  if (length(bad) > 0) {
+    i <- bad[[1L]]
+    lo <- m[i, 1L]
+    hi <- m[i, 2L]
+    stop(interval_complaint(lo, hi))
   }
   # Drop degenerate intervals `[a, a]`: a continuous part on a single point has
   # measure zero (no probability mass), so it is not part of the canonical form.

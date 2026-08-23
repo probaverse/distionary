@@ -236,3 +236,14 @@ test_that("`range` is derived, not a property, as `vtype` is.", {
   expect_null(eval_property(d, "range"))
   expect_null(eval_property(d, "vtype"))
 })
+
+test_that("A malformed interval says which kind of malformed it is.", {
+  expect_error(continuous(c(3, 1)), "runs backwards")
+  expect_error(continuous(c(2, 2)), "single point")
+  # An endpoint computed from parameters can overflow to `Inf`, collapsing
+  # both ends onto it. Worth its own message: nothing is backwards, and it is
+  # not a point either.
+  expect_error(continuous(c(Inf, Inf)), "same infinity")
+  expect_error(continuous(c(-Inf, -Inf)), "same infinity")
+  expect_error(dst_lp3(1000, 0.1, 4), "same infinity")
+})
