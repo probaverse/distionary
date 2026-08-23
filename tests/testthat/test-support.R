@@ -192,11 +192,14 @@ test_that("range() of a support rejects stray arguments.", {
   expect_error(range(continuous(c(0, 1)), 5), "expecting no arguments")
 })
 
-test_that("range() of a support agrees with range() of its distribution.", {
-  d <- dst_pois(3)
-  expect_equal(range(support(d)), range(d))
-  d2 <- dst_unif(2, 7)
-  expect_equal(range(support(d2)), range(d2))
+test_that("range() of a support reaches the ends the support declares.", {
+  # Asking a distribution and asking its support are the same call underneath,
+  # both reading the hull, so comparing the two proves nothing. Compare
+  # against the ends themselves.
+  expect_equal(range(support(dst_pois(3))), c(0, Inf))
+  expect_equal(range(support(dst_unif(2, 7))), c(2, 7))
+  expect_equal(range(support(dst_norm(0, 1))), c(-Inf, Inf))
+  expect_equal(range(support(dst_binom(5, 0.3))), c(0, 5))
 })
 
 test_that("The Null distribution has no support, and says so.", {
@@ -242,10 +245,12 @@ test_that("range() reads the support, and agrees with the quantiles.", {
     .support = continuous(c(0, 1))
   )
   expect_equal(range(d), c(0, 1))
-  # The two ways of asking where a distribution ends must not disagree.
-  expect_equal(range(d), eval_quantile(d, at = c(0, 1)))
-  expect_equal(range(dst_pois(3)), eval_quantile(dst_pois(3), at = c(0, 1)))
   expect_equal(range(dst_norm(0, 1)), c(-Inf, Inf))
+  # `eval_quantile()` settles 0 and 1 off the hull as well, so it is the same
+  # call underneath and agreement with `range()` is guaranteed rather than
+  # tested. Check it lands on the right values instead.
+  expect_equal(eval_quantile(d, at = c(0, 1)), c(0, 1))
+  expect_equal(eval_quantile(dst_pois(3), at = c(0, 1)), c(0, Inf))
 })
 
 test_that("range() of the Null distribution is NA.", {
