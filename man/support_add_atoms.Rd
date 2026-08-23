@@ -33,7 +33,7 @@ support_add_atoms(continuous(c(0, Inf)), 0)
 support_drop_atoms(discrete(c(1, 2, 3)), 2)
 
 # Removing an atom leaves the continuous part alone.
-support_drop_atoms(mixed(atoms = 0, continuous = c(0, 1)), 0)
+support_drop_atoms(mixed(discrete = 0, continuous = c(0, 1)), 0)
 }
 \seealso{
 Other Support algebra: 

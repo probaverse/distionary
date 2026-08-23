@@ -11,25 +11,23 @@ discrete(atoms)
 
 continuous(...)
 
-mixed(atoms, continuous)
+mixed(discrete, continuous)
 }
 \arguments{
-\item{atoms}{The atomic (discrete) part of the support: either a \code{discretes}
-object (see the \pkg{discretes} package, e.g. \code{\link[discretes:integers]{discretes::natural0()}}) or a
-numeric vector of finitely many atoms, which is coerced with
-\code{\link[discretes:as_discretes]{discretes::as_discretes()}}. A numeric vector is unambiguous here because the
-argument names the intent (contrast with passing a bare vector to
-\code{.support}, which is rejected).}
+\item{atoms}{For \code{discrete()}, the points carrying mass: a \code{discretes}
+object (see the \pkg{discretes} package, e.g. \code{\link[discretes:integers]{discretes::natural0()}}), a
+numeric vector of finitely many atoms, or a purely discrete support. A bare
+numeric vector is unambiguous here because the argument names the intent
+(contrast with passing one to \code{.support}, which is rejected).}
 
-\item{...}{For \code{continuous()}, one or more intervals, each a length-2 numeric
-\code{c(lower, upper)}. With no arguments, \code{continuous()} defaults to the whole
-real line, \code{c(-Inf, Inf)}. Overlapping or touching intervals are merged and
-sorted into a canonical form.}
+\item{...}{For \code{continuous()}, one or more regions, each given as a length-2
+numeric \code{c(lower, upper)}. With no arguments, \code{continuous()} defaults to the
+whole real line, \code{c(-Inf, Inf)}. Overlapping or touching regions are merged
+and sorted into a canonical form.}
 
-\item{continuous}{The continuous part of the support, as a union of closed
-intervals. Provide one interval as a length-2 numeric \code{c(lower, upper)}, a
-union as several such vectors, or a continuous support built by
-\code{continuous()}.}
+\item{discrete, continuous}{For \code{mixed()}, the two halves. Each takes the
+same things its own constructor takes, or a support already built by it:
+\code{discrete} as for \code{atoms} above, \code{continuous} as for \code{...} below.}
 }
 \value{
 A support object (class \code{"support"}).
@@ -47,16 +45,17 @@ only atoms is \code{"discrete"}, only a continuous part is \code{"continuous"}, 
 both is \code{"mixed"}. \code{mixed()} therefore requires \emph{both} parts to be non-empty;
 use \code{discrete()} or \code{continuous()} for the pure cases.
 
-Intervals are treated as closed. Endpoints of a continuous part are
-measure-zero, so open/closed makes no probabilistic difference there; an atom
-that happens to sit on an interval boundary is simply tracked as an atom.
+A region is written as a closed interval, but its endpoints carry no
+probability either way, a single point having measure zero, so open against
+closed makes no difference there. An atom that happens to sit on a region's
+boundary is simply tracked as an atom.
 }
 \examples{
 discrete(discretes::natural0())   # e.g. the support of a Poisson
 discrete(c(3.5, 1.2, 6.7))        # finitely many atoms
 continuous(c(0, Inf))             # e.g. the support of a Gamma
-continuous(c(0, 1), c(3, 4))      # a union of intervals
-mixed(atoms = 0, continuous = c(0, Inf))  # an atom at 0 plus a tail
+continuous(c(0, 1), c(3, 4))      # a union of regions
+mixed(discrete = 0, continuous = c(0, Inf))  # an atom, plus a tail
 }
 \seealso{
 \code{\link[=support]{support()}} to retrieve a distribution's support, \code{\link[=vtype]{vtype()}} for the

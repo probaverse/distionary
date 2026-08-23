@@ -35,24 +35,47 @@ test_that("discrete() requires at least one atom.", {
 })
 
 test_that("mixed() requires both parts and accepts terse or rich continuous.", {
-  s <- mixed(atoms = 0, continuous = c(0, Inf))
+  s <- mixed(discrete = 0, continuous = c(0, Inf))
   expect_equal(vtype_of_support(s), "mixed")
   expect_equal(as.double(atoms(s)), 0)
   expect_equal(unname(regions(s)), matrix(c(0, Inf), nrow = 1))
   # Rich continuous via continuous().
-  s2 <- mixed(atoms = discretes::natural0(), continuous = continuous(c(0, 1), c(3, 4)))
+  s2 <- mixed(
+    discrete = discretes::natural0(),
+    continuous = continuous(c(0, 1), c(3, 4))
+  )
   expect_equal(nrow(regions(s2)), 2)
 })
 
 test_that("mixed() errors when either part is empty.", {
-  expect_error(mixed(atoms = numeric(0), continuous = c(0, 1)), "atomic part")
-  expect_error(mixed(atoms = 0, continuous = numeric(0)), "continuous part")
+  expect_error(
+    mixed(discrete = numeric(0), continuous = c(0, 1)), "discrete part"
+  )
+  expect_error(mixed(discrete = 0, continuous = numeric(0)), "continuous part")
 })
 
-test_that("mixed() rejects a non-continuous support as its continuous part.", {
+test_that("mixed() takes either half as raw parts or as a support.", {
+  # The two arguments accept the same kinds of thing, each mirroring its own
+  # constructor, so neither half is second class.
+  built <- mixed(
+    discrete = discrete(c(0, 5)),
+    continuous = continuous(c(0, 10))
+  )
+  raw <- mixed(discrete = c(0, 5), continuous = c(0, 10))
+  expect_equal(built, raw)
+  expect_equal(
+    mixed(discrete = discrete(c(0, 5)), continuous = c(0, 10)), raw
+  )
+})
+
+test_that("mixed() rejects a support of the wrong kind for either half.", {
   expect_error(
-    mixed(atoms = 0, continuous = discrete(c(1, 2))),
+    mixed(discrete = 0, continuous = discrete(c(1, 2))),
     "purely continuous"
+  )
+  expect_error(
+    mixed(discrete = continuous(c(0, 1)), continuous = c(0, 1)),
+    "purely discrete"
   )
 })
 
@@ -130,7 +153,7 @@ test_that("the empty support's variable type is 'empty', not 'unknown'.", {
 test_that("is_empty_support() is FALSE for non-empty supports and non-supports.", {
   expect_false(is_empty_support(continuous(c(0, 1))))
   expect_false(is_empty_support(discrete(1:3)))
-  expect_false(is_empty_support(mixed(atoms = 0, continuous = c(0, 1))))
+  expect_false(is_empty_support(mixed(discrete = 0, continuous = c(0, 1))))
   expect_false(is_empty_support(1:10))
   expect_false(is_empty_support(NULL))
   expect_false(is_empty_support(dst_norm(0, 1)))
@@ -155,7 +178,7 @@ test_that("a distribution cannot be given an empty support.", {
 
 test_that("range() of a support gives its outermost points.", {
   expect_equal(range(continuous(c(0, 1), c(3, 4))), c(0, 4))
-  expect_equal(range(mixed(atoms = -1, continuous = c(0, Inf))), c(-1, Inf))
+  expect_equal(range(mixed(discrete = -1, continuous = c(0, Inf))), c(-1, Inf))
   expect_equal(range(discrete(c(2, 5, 9))), c(2, 9))
   expect_equal(range(continuous()), c(-Inf, Inf))
 })

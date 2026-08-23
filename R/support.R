@@ -6,29 +6,28 @@
 #' part --- a region carrying a density. `discrete()`, `continuous()`, and
 #' `mixed()` construct a support from these pieces.
 #'
-#' @param atoms The atomic (discrete) part of the support: either a `discretes`
-#' object (see the \pkg{discretes} package, e.g. [discretes::natural0()]) or a
-#' numeric vector of finitely many atoms, which is coerced with
-#' [discretes::as_discretes()]. A numeric vector is unambiguous here because the
-#' argument names the intent (contrast with passing a bare vector to
-#' `.support`, which is rejected).
-#' @param continuous The continuous part of the support, as a union of closed
-#' intervals. Provide one interval as a length-2 numeric `c(lower, upper)`, a
-#' union as several such vectors, or a continuous support built by
-#' `continuous()`.
-#' @param ... For `continuous()`, one or more intervals, each a length-2 numeric
-#' `c(lower, upper)`. With no arguments, `continuous()` defaults to the whole
-#' real line, `c(-Inf, Inf)`. Overlapping or touching intervals are merged and
-#' sorted into a canonical form.
+#' @param atoms For `discrete()`, the points carrying mass: a `discretes`
+#' object (see the \pkg{discretes} package, e.g. [discretes::natural0()]), a
+#' numeric vector of finitely many atoms, or a purely discrete support. A bare
+#' numeric vector is unambiguous here because the argument names the intent
+#' (contrast with passing one to `.support`, which is rejected).
+#' @param discrete,continuous For `mixed()`, the two halves. Each takes the
+#' same things its own constructor takes, or a support already built by it:
+#' `discrete` as for `atoms` above, `continuous` as for `...` below.
+#' @param ... For `continuous()`, one or more regions, each given as a length-2
+#' numeric `c(lower, upper)`. With no arguments, `continuous()` defaults to the
+#' whole real line, `c(-Inf, Inf)`. Overlapping or touching regions are merged
+#' and sorted into a canonical form.
 #' @details
 #' The variable type ([vtype()]) is *derived* from the support: a support with
 #' only atoms is `"discrete"`, only a continuous part is `"continuous"`, and
 #' both is `"mixed"`. `mixed()` therefore requires *both* parts to be non-empty;
 #' use `discrete()` or `continuous()` for the pure cases.
 #'
-#' Intervals are treated as closed. Endpoints of a continuous part are
-#' measure-zero, so open/closed makes no probabilistic difference there; an atom
-#' that happens to sit on an interval boundary is simply tracked as an atom.
+#' A region is written as a closed interval, but its endpoints carry no
+#' probability either way, a single point having measure zero, so open against
+#' closed makes no difference there. An atom that happens to sit on a region's
+#' boundary is simply tracked as an atom.
 #' @returns A support object (class `"support"`).
 #' @seealso [support()] to retrieve a distribution's support, [vtype()] for the
 #' derived variable type.
@@ -36,8 +35,8 @@
 #' discrete(discretes::natural0())   # e.g. the support of a Poisson
 #' discrete(c(3.5, 1.2, 6.7))        # finitely many atoms
 #' continuous(c(0, Inf))             # e.g. the support of a Gamma
-#' continuous(c(0, 1), c(3, 4))      # a union of intervals
-#' mixed(atoms = 0, continuous = c(0, Inf))  # an atom at 0 plus a tail
+#' continuous(c(0, 1), c(3, 4))      # a union of regions
+#' mixed(discrete = 0, continuous = c(0, Inf))  # an atom, plus a tail
 #' @family Support
 #' @name support-construction
 #' @export
@@ -56,23 +55,23 @@ continuous <- function(...) {
   if (length(dots) == 0) {
     dots <- list(c(-Inf, Inf))
   }
-  new_support(continuous = normalize_intervals(collect_intervals(dots)))
+  new_support(continuous = normalize_regions(collect_regions(dots)))
 }
 
 #' @rdname support-construction
 #' @export
-mixed <- function(atoms, continuous) {
-  a <- as_atoms(atoms)
-  ci <- as_intervals(continuous)
+mixed <- function(discrete, continuous) {
+  a <- as_atoms(discrete)
+  ci <- as_regions(continuous)
   if (discretes::num_discretes(a) == 0) {
     stop(
-      "`mixed()` requires a non-empty atomic part. ",
+      "`mixed()` needs a non-empty discrete part.\n",
       "Use `continuous()` for a purely continuous support."
     )
   }
   if (nrow(ci) == 0) {
     stop(
-      "`mixed()` requires a non-empty continuous part. ",
+      "`mixed()` needs a non-empty continuous part.\n",
       "Use `discrete()` for a purely discrete support."
     )
   }
@@ -126,7 +125,7 @@ empty_support <- function() {
 #' @noRd
 new_support <- function(
   atoms = discretes::empty_series(),
-  continuous = empty_intervals(),
+  continuous = empty_regions(),
   ndim = 1L
 ) {
   structure(
@@ -226,11 +225,11 @@ support <- function(distribution) {
 #' nothing, and one with no continuous part returns a matrix of no rows, so
 #' neither has to be guarded against before being used.
 #' @examples
-#' atoms(mixed(atoms = 0, continuous = c(0, Inf)))
+#' atoms(mixed(discrete = 0, continuous = c(0, Inf)))
 #' regions(continuous(c(0, 1), c(3, 4)))
 #'
 #' # Either part can be put back together into a support of its own.
-#' s <- mixed(atoms = c(0, 5), continuous = c(0, 10))
+#' s <- mixed(discrete = c(0, 5), continuous = c(0, 10))
 #' discrete(atoms(s))
 #' continuous(regions(s))
 #' @family Support
@@ -306,30 +305,42 @@ support_hull <- function(support) {
 #' Coerce atoms input (a discretes object or numeric) to a discretes object.
 #' @noRd
 as_atoms <- function(x) {
+  if (is_support(x)) {
+    if (nrow(x[["continuous"]]) > 0) {
+      stop(
+        "The `discrete` part must be a purely discrete support,\n",
+        "not a continuous or mixed one."
+      )
+    }
+    return(x[["atoms"]])
+  }
   if (inherits(x, "discretes")) {
     return(x)
   }
   if (is.numeric(x)) {
     return(discretes::as_discretes(x))
   }
-  stop("Atoms must be a `discretes` object or a numeric vector.")
+  stop(
+    "The discrete part must be a `discretes` object, a numeric\n",
+    "vector, or a purely discrete support."
+  )
 }
 
 #' Coerce a `continuous` argument (intervals or a continuous support) to a
 #' canonical interval matrix.
 #' @noRd
-as_intervals <- function(x) {
+as_regions <- function(x) {
   if (is_support(x)) {
     if (discretes::num_discretes(x[["atoms"]]) > 0) {
       stop(
-        "The `continuous` part must be a purely continuous support, ",
+        "The `continuous` part must be a purely continuous support,\n",
         "not a discrete or mixed one."
       )
     }
     return(x[["continuous"]])
   }
   dots <- if (is.list(x) && !is.matrix(x)) x else list(x)
-  normalize_intervals(collect_intervals(dots))
+  normalize_regions(collect_regions(dots))
 }
 
 #' Accept a support or a distribution, returning the support.
@@ -353,7 +364,7 @@ as_support_arg <- function(x) {
 
 #' An empty continuous part: a 0-row interval matrix.
 #' @noRd
-empty_intervals <- function() {
+empty_regions <- function() {
   m <- matrix(numeric(0), ncol = 2L)
   colnames(m) <- c("lower", "upper")
   m
@@ -361,7 +372,7 @@ empty_intervals <- function() {
 
 #' Gather `...`-style interval inputs into a two-column matrix.
 #' @noRd
-collect_intervals <- function(dots) {
+collect_regions <- function(dots) {
   # A single list-of-intervals argument: unwrap it.
   if (length(dots) == 1L && is.list(dots[[1L]]) && !is.matrix(dots[[1L]])) {
     dots <- dots[[1L]]
@@ -378,7 +389,7 @@ collect_intervals <- function(dots) {
   # representable; callers decide whether that is allowed.
   dots <- Filter(function(v) !(is.numeric(v) && length(v) == 0L), dots)
   if (length(dots) == 0L) {
-    return(empty_intervals())
+    return(empty_regions())
   }
   rows <- lapply(dots, function(v) {
     if (!is.numeric(v) || length(v) != 2L) {
@@ -425,9 +436,9 @@ interval_complaint <- function(lo, hi) {
 
 #' Validate, sort, and merge an interval matrix into a canonical disjoint form.
 #' @noRd
-normalize_intervals <- function(m) {
+normalize_regions <- function(m) {
   if (nrow(m) == 0) {
-    return(empty_intervals())
+    return(empty_regions())
   }
   if (anyNA(m)) {
     stop("Interval endpoints must not be `NA`.")
@@ -443,7 +454,7 @@ normalize_intervals <- function(m) {
   # measure zero (no probability mass), so it is not part of the canonical form.
   m <- m[m[, 1L] < m[, 2L], , drop = FALSE]
   if (nrow(m) == 0) {
-    return(empty_intervals())
+    return(empty_regions())
   }
   ord <- order(m[, 1L], m[, 2L])
   m <- m[ord, , drop = FALSE]

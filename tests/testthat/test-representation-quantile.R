@@ -70,7 +70,7 @@ test_that("Network quantiles of a mixed distribution snap only on the jump", {
   d <- distribution(
     cdf = cdf,
     pmf = function(x) ifelse(x == 1, 0.4, 0),
-    .support = mixed(atoms = 1, continuous = c(0, 2))
+    .support = mixed(discrete = 1, continuous = c(0, 2))
   )
   p_below <- c(0.1, 0.2)
   p_atom <- c(0.31, 0.5, 0.7)
@@ -181,7 +181,7 @@ test_that("At the top of a jump, the right inverse lands on the atom.", {
     cdf = function(x) ifelse(x < 0, 0, p0 + (1 - p0) * stats::pexp(x, rate)),
     density = function(x) ifelse(x <= 0, 0, (1 - p0) * stats::dexp(x, rate)),
     pmf = function(x) ifelse(x == 0, p0, 0),
-    .support = mixed(atoms = 0, continuous = c(0, Inf))
+    .support = mixed(discrete = 0, continuous = c(0, Inf))
   )
   expect_identical(
     eval_quantile_from_network(mx, p0, side = "right"), 0

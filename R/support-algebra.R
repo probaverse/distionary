@@ -55,9 +55,9 @@ support_union <- function(...) {
     lapply(supports, function(s) s[["continuous"]])
   )
   if (is.null(intervals)) {
-    intervals <- empty_intervals()
+    intervals <- empty_regions()
   }
-  new_support(atoms = a, continuous = normalize_intervals(intervals))
+  new_support(atoms = a, continuous = normalize_regions(intervals))
 }
 
 #' Restrict a Support to an Interval
@@ -118,7 +118,7 @@ support_restrict <- function(
     # A clipped interval `[a, a]` has measure zero, and an interval lying
     # entirely outside `[from, to]` gives `lo > hi`. Both are dropped.
     keep <- lo < hi
-    intervals <- normalize_intervals(
+    intervals <- normalize_regions(
       cbind(lower = unname(lo[keep]), upper = unname(hi[keep]))
     )
   }
@@ -204,7 +204,7 @@ support_transform <- function(
       cbind(lower = unname(hi), upper = unname(lo))
     }
     # A decreasing map reverses the order of the intervals, so re-canonicalize.
-    intervals <- normalize_intervals(intervals)
+    intervals <- normalize_regions(intervals)
   }
   new_support(atoms = a, continuous = intervals)
 }
@@ -283,7 +283,7 @@ reciprocal_half <- function(support, negative) {
     # An endpoint at zero maps to the signed infinity of its own side.
     lo <- ifelse(intervals[, "upper"] == 0, -Inf, 1 / intervals[, "upper"])
     hi <- ifelse(intervals[, "lower"] == 0, Inf, 1 / intervals[, "lower"])
-    intervals <- normalize_intervals(
+    intervals <- normalize_regions(
       cbind(lower = unname(lo), upper = unname(hi))
     )
   }
@@ -309,7 +309,7 @@ reciprocal_half <- function(support, negative) {
 #' support_drop_atoms(discrete(c(1, 2, 3)), 2)
 #'
 #' # Removing an atom leaves the continuous part alone.
-#' support_drop_atoms(mixed(atoms = 0, continuous = c(0, 1)), 0)
+#' support_drop_atoms(mixed(discrete = 0, continuous = c(0, 1)), 0)
 #' @family Support algebra
 #' @export
 support_add_atoms <- function(support, atoms) {
@@ -378,7 +378,7 @@ atoms_to_drop <- function(atoms) {
 #' two functions.
 #' @returns A logical vector the same length as `at`.
 #' @examples
-#' s <- mixed(atoms = 0, continuous = c(2, 5))
+#' s <- mixed(discrete = 0, continuous = c(2, 5))
 #' support_contains(s, at = c(0, 1, 3, 9))
 #' support_has_atom(s, at = c(0, 1, 3, 9))
 #'

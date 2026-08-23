@@ -69,7 +69,7 @@ test_that("support_restrict() out of reach gives the empty support.", {
 
 test_that("support_restrict() handles a mixed support.", {
   s <- support_restrict(
-    mixed(atoms = c(0, 7), continuous = c(0, 10)),
+    mixed(discrete = c(0, 7), continuous = c(0, 10)),
     from = 1, to = 8
   )
   expect_false(support_has_atom(s, 0))
@@ -114,7 +114,7 @@ test_that("support_reciprocal() maps each side of zero separately.", {
 
 test_that("support_reciprocal() rejects an atom at zero.", {
   expect_error(
-    support_reciprocal(mixed(atoms = 0, continuous = c(1, 2))),
+    support_reciprocal(mixed(discrete = 0, continuous = c(1, 2))),
     "atom at zero"
   )
   # Zero inside a continuous part is fine: a point carries no mass there.
@@ -146,7 +146,7 @@ test_that("support_drop_atoms() removes atoms and leaves intervals alone.", {
   expect_false(support_has_atom(s, 2))
   expect_true(support_has_atom(s, c(1)))
   # The continuous part is untouched, so a mixed support can become continuous.
-  m <- support_drop_atoms(mixed(atoms = 0, continuous = c(0, 1)), 0)
+  m <- support_drop_atoms(mixed(discrete = 0, continuous = c(0, 1)), 0)
   expect_true(is_support(m))
   expect_equal(regions(m), regions(continuous(c(0, 1))))
   # Removing an absent atom leaves the set alone.
@@ -162,7 +162,7 @@ test_that("support_drop_atoms() refuses infinitely many atoms.", {
 })
 
 test_that("support_contains() covers intervals too, has_atom only atoms.", {
-  s <- mixed(atoms = 0, continuous = c(2, 5))
+  s <- mixed(discrete = 0, continuous = c(2, 5))
   expect_equal(support_contains(s, at = c(0, 1, 3, 9)),
                c(TRUE, FALSE, TRUE, FALSE))
   expect_equal(support_has_atom(s, at = c(0, 1, 3, 9)),
@@ -205,6 +205,6 @@ test_that("the algebra refuses a distribution with no structured support.", {
 })
 
 test_that("shifting a support agrees with shifting its range.", {
-  s <- mixed(atoms = -1, continuous = c(0, 4))
+  s <- mixed(discrete = -1, continuous = c(0, 4))
   expect_equal(range(support_shift(s, by = 10)), range(s) + 10)
 })

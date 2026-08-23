@@ -90,7 +90,7 @@ discrete(arithmetic(0, 0.5, n_left = 0, n_right = 4))
 `mixed()` takes both parts, named. Here is an atom at zero sitting at the edge of a continuous tail:
 
 ```{r}
-mixed(atoms = 0, continuous = c(0, Inf))
+mixed(discrete = 0, continuous = c(0, Inf))
 ```
 
 An atom is allowed to coincide with an interval endpoint, as it does here -- the atom is simply tracked separately, and its mass is not double-counted against the density. Because the variable type is derived from the parts, `mixed()` insists that _both_ of them be non-empty; use `discrete()` or `continuous()` for the pure cases.
@@ -129,7 +129,7 @@ support(dst_gamma(shape = 2, rate = 1))
 The two parts can be pulled out individually. `atoms()` returns a `discretes` object, and `regions()` returns a two-column matrix of intervals.
 
 ```{r}
-atoms(mixed(atoms = 0, continuous = c(0, Inf)))
+atoms(mixed(discrete = 0, continuous = c(0, Inf)))
 regions(continuous(c(0, 1), c(3, 4)))
 ```
 
@@ -230,7 +230,7 @@ support_add_atoms(continuous(c(0, Inf)), 0)
 Finally, two functions ask whether a value belongs to a support. `support_contains()` counts both parts, whereas `support_has_atom()` counts only the atoms --- making it the one to reach for when what matters is whether a point carries positive probability.
 
 ```{r}
-s <- mixed(atoms = 0, continuous = c(2, 5))
+s <- mixed(discrete = 0, continuous = c(2, 5))
 support_contains(s, at = c(0, 1, 3, 9))
 support_has_atom(s, at = c(0, 1, 3, 9))
 ```
@@ -281,7 +281,7 @@ rainfall <- distribution(
   pmf = function(x) {
     ifelse(x == 0, p0, 0)
   },
-  .support = mixed(atoms = 0, continuous = c(0, Inf)),
+  .support = mixed(discrete = 0, continuous = c(0, Inf)),
   .name = "Rainfall"
 )
 vtype(rainfall)

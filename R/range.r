@@ -53,7 +53,7 @@ range.dst <- function(distribution, ...) {
 #' @param support A support object.
 #' @examples
 #' range(continuous(c(0, 1), c(3, 4)))
-#' range(mixed(atoms = -1, continuous = c(0, Inf)))
+#' range(mixed(discrete = -1, continuous = c(0, Inf)))
 #' range(empty_support())
 #' @rdname range
 #' @export

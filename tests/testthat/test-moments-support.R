@@ -47,7 +47,7 @@ test_that("Mixed-distribution moments combine atom-sum and quadrature.", {
     pmf = function(x) ifelse(x == 0, 0.3, 0),
     density = function(x) ifelse(x > 0 & x <= 1, 0.7, 0),
     cdf = function(x) 0.3 * (x >= 0) + 0.7 * pmin(pmax(x, 0), 1),
-    .support = mixed(atoms = 0, continuous = c(0, 1))
+    .support = mixed(discrete = 0, continuous = c(0, 1))
   )
   expect_equal(vtype(d), "mixed")
   # E[X] = 0 * 0.3 + integral_0^1 x * 0.7 dx = 0.35

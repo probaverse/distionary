@@ -32,11 +32,11 @@ nothing, and one with no continuous part returns a matrix of no rows, so
 neither has to be guarded against before being used.
 }
 \examples{
-atoms(mixed(atoms = 0, continuous = c(0, Inf)))
+atoms(mixed(discrete = 0, continuous = c(0, Inf)))
 regions(continuous(c(0, 1), c(3, 4)))
 
 # Either part can be put back together into a support of its own.
-s <- mixed(atoms = c(0, 5), continuous = c(0, 10))
+s <- mixed(discrete = c(0, 5), continuous = c(0, 10))
 discrete(atoms(s))
 continuous(regions(s))
 }
