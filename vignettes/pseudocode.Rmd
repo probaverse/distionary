@@ -72,12 +72,13 @@ mean = function(distribution):
 ```
 
 Two properties do not go through this machinery: the variable type and the
-range. They are properties like any other --- both are determined by the
-distribution, and either could in principle be worked out from a CDF, by
-finding where it jumps and where it stops moving. What they cannot be is
-*stated by name*, because doing that reliably from a CDF is a numerical
-problem rather than a mathematical one. So the distribution declares its
-support instead, and both are read off that.
+range. They are properties like any other; what differs is where they come
+from. A distribution is not generally asked to supply anything in
+particular --- the network works out what it can from whatever it is given.
+The support is the exception, being the one thing every distribution has to
+declare. And once it has been declared, the variable type and the range are
+already contained in it, so stating either of them separately would be
+saying the same thing twice, and the second saying would go unused.
 
 ```
 vtype = function(distribution):

@@ -56,6 +56,10 @@ Some of the specified properties are special because they correspond to a proper
 
 See the [Evaluate a Distribution](./evaluate.html) vignette for more details on these evaluation functions and the network of relationships between the understood properties. Note that, in the current version, specifying a `cdf` along with a `density` or `pmf` (probability mass function) is required for evaluating non-explicit properties.
 
+That requirement is less arbitrary than it looks. Some properties carry the *whole* distribution: hand `distionary` a CDF and nothing has been lost, so everything else can be worked out from it. A property that does this is called a **representation**. Others keep only a piece. A mean of 1.5 is true of endlessly many distributions, and there is no route back from it to the one you meant.
+
+Being a representation is a role a property plays, not a separate kind of thing. `cdf` is a property of a distribution and also a representation of it; `mean` is a property and nothing more. The network shown below is really a map of which properties keep enough to reach the others --- which is why its arrows leave the representations, and why a distribution described only by its mean can tell you so little.
+
 In general, properties can be invoked by the more general function `eval_property()`, which is useful for accessing entries that are not known to `distionary`. For example, the user-defined property `g` can be accessed in this way.
 
 ```{r}
