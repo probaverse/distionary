@@ -82,8 +82,11 @@
   support: a sum over the atoms plus integration of the density over the
   continuous part. Infinite atomic supports are walked in batches until the
   tail is negligible, partitioning at any finite accumulation points so that
-  atoms on the far side of an accumulation point are still counted. A moment
-  that does not converge returns `NaN`.
+  atoms on the far side of an accumulation point are still counted. A sum
+  that never goes quiet returns `NaN`. Note that going quiet is read off the
+  atoms just visited, so a distribution whose probability thins out and then
+  picks up again is cut off early --- see the limitations in the
+  "Specifying Your Own Distribution" vignette.
 
 - Quantiles computed through the network --- that is, for a distribution with
   no quantile function of its own --- are considerably faster, now solving
