@@ -110,12 +110,33 @@ test_that("Atoms accumulating at an interior sink from both sides are summed.", 
     n <- ifelse(x < 5, -log2(5 - x), -log2(x - 5))
     0.5 * 2^(-round(n))
   }
-  total <- sum_over_atoms(both, pmf, function(x) rep(1, length(x)))
+  # The walk also needs to know how much probability is still ahead of it,
+  # which is what the cdf says. Below 5 the first N atoms have been passed,
+  # where N = floor(-log2(5 - x)); at or above 5 every atom below has been,
+  # plus the above-side atoms from M = ceiling(-log2(x - 5)) onward.
+  cdfun <- function(x) {
+    vapply(x, function(z) {
+      if (z < 4.5) {
+        return(0)
+      }
+      if (z < 5) {
+        n <- floor(-log2(5 - z))
+        return(0.5 * (1 - 2^(-n)))
+      }
+      m <- ceiling(-log2(z - 5))
+      0.5 + if (is.finite(m) && m > 0) 2^(-m) else 0.5
+    }, numeric(1))
+  }
+  # Check the cdf against the masses it is supposed to accumulate.
+  expect_equal(cdfun(4.9), 0.5 * (1 - 2^(-floor(-log2(0.1)))), tolerance = 1e-9)
+  expect_equal(cdfun(6), 1, tolerance = 1e-9)
+
+  total <- sum_over_atoms(both, pmf, cdfun, function(x) rep(1, length(x)))
   expect_equal(total, 1, tolerance = 1e-6)
-  mu <- sum_over_atoms(both, pmf, function(x) x)
+  mu <- sum_over_atoms(both, pmf, cdfun, function(x) x)
   expect_equal(mu, 5, tolerance = 1e-6) # Symmetric about the sink.
   # E[(X - 5)^2] = sum_n 2^(-n) * 4^(-n) = sum_n 8^(-n) = 1/7.
-  v <- sum_over_atoms(both, pmf, function(x) (x - 5)^2)
+  v <- sum_over_atoms(both, pmf, cdfun, function(x) (x - 5)^2)
   expect_equal(v, 1 / 7, tolerance = 1e-6)
 })
 
@@ -139,4 +160,31 @@ test_that("A divergent numerical moment gives NaN.", {
     .support = discrete(natural1())
   )
   expect_true(is.nan(suppressMessages(mean(heavy))))
+})
+
+test_that("The walk does not stop while probability is still ahead.", {
+  # 0.8 of the probability at zero, then a long stretch of atoms each below
+  # tolerance in both mass and contribution, then 0.2 beyond the stretch.
+  # Judging by the atoms underfoot alone, the walk goes quiet in the gap and
+  # never reaches the mass past it.
+  tiny <- 1e-12
+  far <- 201
+  pm <- function(x) {
+    out <- numeric(length(x))
+    out[x == 0] <- 0.8
+    out[x >= 1 & x <= 200] <- tiny
+    out[x == far] <- 0.2 - 200 * tiny
+    out
+  }
+  cdfun <- function(x) {
+    vapply(x, function(z) {
+      if (z < 0) {
+        return(0)
+      }
+      sum(pm(0:max(0, floor(z))))
+    }, numeric(1))
+  }
+  d <- distribution(pmf = pm, cdf = cdfun, .support = discrete(natural0()))
+  expect_equal(mean(d), sum((0:far) * pm(0:far)), tolerance = 1e-6)
+  expect_equal(mean(d), 40.2, tolerance = 1e-6)
 })

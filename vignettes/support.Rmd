@@ -312,9 +312,9 @@ my_poisson <- distribution(
 eval_quantile(my_poisson, at = c(0.05, 0.3, 0.5, 0.9, 0.99))
 ```
 
-Note that the support here has infinitely many atoms, and the mean is still computed. The atoms are walked outward in batches, and the walk stops once a whole batch has gone quiet --- every atom in it carrying a negligible amount of probability, and adding a negligible amount to the running total.
+Note that the support here has infinitely many atoms, and the mean is still computed. The atoms are walked outward in batches, and the walk stops only when two things are true at once: the probability still ahead of it has been spent, and the atoms underfoot are adding next to nothing to the running total.
 
-That is a judgement about the atoms just visited, not a guarantee about the ones past them. It suits a distribution whose probability thins out steadily, as a Poisson's does. A distribution that falls quiet for a stretch and then picks up again would be cut off early, and without complaint --- see the limitations in the [Specifying Your Own Distribution](./specify-user-defined.html) vignette.
+The first of those is what makes it safe. How much probability lies beyond a point is exactly what the CDF says, so the walk never stops while there is mass waiting further out --- not even if it happens to be crossing a long stretch of atoms too small to notice.
 
 ```{r}
 mean(my_poisson)
