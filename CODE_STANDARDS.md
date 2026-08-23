@@ -12,6 +12,33 @@ conventions are settled.
   are at most **72** characters. These are indented or boxed when rendered, so
   the tighter limit keeps them from overflowing.
 
+### Error messages
+
+Break an error message so that no line exceeds **67** characters.
+
+Errors get rendered inside a code chunk in vignettes and on pkgdown reference
+pages, where the widest line the box holds is 72, and R prefixes the first
+line of a condition with `#> ! ` and the rest with `#> `. Five characters of
+prefix against a 72-character box leaves 67.
+
+`stop()` joins its arguments before it looks for newlines, so three tidy
+60-character fragments become one 180-character line. Put a `\n` at the end of
+every fragment that is meant to be its own line:
+
+``` r
+# Yes                                # No
+stop(                                stop(
+  "A distribution needs a           "A distribution needs a ",
+   support.\n",                      "support. Pass `.support` a ",
+  "Pass `.support` a                 "`continuous()` set."
+   `continuous()` set."             )
+)
+```
+
+Say what is wrong and what to do about it. Why it matters belongs in the
+documentation, which the reader can go to; an error is read in the middle of
+being interrupted.
+
 ### Breaking a call across lines
 
 When a call or a function signature does not fit on one line, break it so that
