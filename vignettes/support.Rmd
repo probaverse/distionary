@@ -312,7 +312,9 @@ my_poisson <- distribution(
 eval_quantile(my_poisson, at = c(0.05, 0.3, 0.5, 0.9, 0.99))
 ```
 
-Note that the support here has infinitely many atoms, and the mean is still computed. The atoms are walked outward in batches, and the walk stops once a whole batch is negligible in *both* senses --- every atom's probability below tolerance, and every atom's contribution to the sum below it too. Requiring both matters: a stretch of tiny contributions is not on its own evidence that the probability has run out, since `g` could be small there while mass remains.
+Note that the support here has infinitely many atoms, and the mean is still computed. The atoms are walked outward in batches, and a batch has to fall quiet in two separate ways before the walk stops: every atom in it must carry a negligible amount of probability, *and* every atom must add a negligible amount to the running total.
+
+Asking for both is what keeps it honest. An atom sitting close to zero adds almost nothing to a mean however much probability it carries, so a stretch of tiny additions is not on its own a sign that the probability has run out.
 
 ```{r}
 mean(my_poisson)
