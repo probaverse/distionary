@@ -14,14 +14,18 @@
 #' also accepted and treated as `discrete()`). The variable type ([vtype()])
 #' and the [range()] are derived from it.
 #'
-#' Every distribution has to declare where it places probability. It is the one
-#' thing distionary cannot work out from the representations: a CDF says how
-#' much probability lies below a point, but not where the atoms are, nor where
-#' the distribution ends. Without it, quantiles at probability 0 and 1 have to
-#' be found by searching into the numerical tail, atoms cannot be located at
-#' all, and moments cannot be decomposed. Declaring it is the same bargain as
-#' declaring atoms: a little more to say up front, in exchange for exact
-#' answers rather than approximate ones.
+#' Every distribution has to declare where it places probability. This is the
+#' one thing distionary asks for rather than working it out: a CDF does hold
+#' the answer, its jumps being the atoms and its flattening out marking where
+#' the distribution ends, but recovering that numerically means hunting for
+#' discontinuities in a function that can only be sampled. The estimate would
+#' be worst for small atoms and long tails --- the cases where it matters most.
+#'
+#' Declared instead, it is exact, and the difference shows: quantiles at
+#' probability 0 and 1 are read off rather than searched for in the numerical
+#' tail, atoms are located exactly, and moments can be decomposed. It is the
+#' same bargain as declaring atoms --- a little more to say up front, in
+#' exchange for exact answers rather than approximate ones.
 #' @param .vtype `r lifecycle::badge("defunct")` Removed in favour of
 #' `.support`, and now an error.
 #'

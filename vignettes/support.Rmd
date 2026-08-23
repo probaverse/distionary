@@ -256,7 +256,7 @@ distribution(cdf = stats::pnorm, .support = c(0, Inf))
 
 Inside `discrete()` and `mixed()` the ambiguity is already resolved by the argument name, which is why a bare vector is fine there.
 
-A support is not optional. It is the one thing `distionary` cannot work out from the representations you give it: a CDF says how much probability lies below a point, but not where the atoms are, nor where the distribution ends.
+A support is not optional. It is the one thing `distionary` asks you to state rather than work out for you. In principle it could: a CDF holds the answer, since its jumps are the atoms and it stops moving where the distribution ends. But finding those numerically means hunting for discontinuities in a function that can only be sampled, and the answer would be an estimate --- least reliable, as it happens, for the small atoms and the long tails where being exact matters most. Rather than guess well most of the time, `distionary` asks.
 
 ```{r, error = TRUE}
 distribution(cdf = stats::pnorm, density = stats::dnorm)
