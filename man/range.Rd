@@ -38,7 +38,8 @@ is where a distribution says what values it reaches. In this it behaves like
 \code{range} entry given to \code{\link[=distribution]{distribution()}} is kept, like any other name it does
 not know, but nothing consults it --- this function included.
 
-The Null distribution has no support, and its range is \code{NA}.
+The Null distribution has no support, so neither end is known. Its range
+is still a vector of length two, \code{c(NA, NA)}, rather than a single \code{NA}.
 }
 \examples{
 a <- dst_gp(1, 0.5)

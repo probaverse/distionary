@@ -14,7 +14,8 @@
 #' `range` entry given to [distribution()] is kept, like any other name it does
 #' not know, but nothing consults it --- this function included.
 #'
-#' The Null distribution has no support, and its range is `NA`.
+#' The Null distribution has no support, so neither end is known. Its range
+#' is still a vector of length two, `c(NA, NA)`, rather than a single `NA`.
 #' @returns Vector of length two, containing the minimum and maximum
 #' values of a distribution.
 #' @examples
