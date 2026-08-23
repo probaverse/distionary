@@ -111,9 +111,11 @@ test_that("Atoms accumulating at an interior sink from both sides are summed.", 
     0.5 * 2^(-round(n))
   }
   # The walk also needs to know how much probability is still ahead of it,
-  # which is what the cdf says. Below 5 the first N atoms have been passed,
-  # where N = floor(-log2(5 - x)); at or above 5 every atom below has been,
-  # plus the above-side atoms from M = ceiling(-log2(x - 5)) onward.
+  # which is what the cdf says. Below 5, the atoms passed are the first N,
+  # where N = floor(-log2(5 - x)). Above 5, every atom below has been passed,
+  # plus the above-side atoms from M = ceiling(-log2(x - 5)) onward. At 5
+  # itself only the below side counts: 5 is where the atoms pile up, not one
+  # of them.
   cdfun <- function(x) {
     vapply(x, function(z) {
       if (z < 4.5) {
@@ -123,13 +125,25 @@ test_that("Atoms accumulating at an interior sink from both sides are summed.", 
         n <- floor(-log2(5 - z))
         return(0.5 * (1 - 2^(-n)))
       }
+      if (z == 5) {
+        return(0.5)
+      }
       m <- ceiling(-log2(z - 5))
-      0.5 + if (is.finite(m) && m > 0) 2^(-m) else 0.5
+      0.5 + if (m > 0) 2^(-m) else 0.5
     }, numeric(1))
   }
-  # Check the cdf against the masses it is supposed to accumulate.
-  expect_equal(cdfun(4.9), 0.5 * (1 - 2^(-floor(-log2(0.1)))), tolerance = 1e-9)
-  expect_equal(cdfun(6), 1, tolerance = 1e-9)
+  # Check that cdf against the masses it is meant to be accumulating, by
+  # adding up the pmf over the atoms that actually lie at or below a point.
+  # Comparing it against its own formula would prove nothing.
+  atoms_below <- 5 - 2^(-(1:40))
+  atoms_above <- 5 + 2^(-(1:40))
+  by_summing <- function(z) {
+    sum(pmf(atoms_below[atoms_below <= z])) +
+      sum(pmf(atoms_above[atoms_above <= z]))
+  }
+  for (z in c(4.6, 4.9, 4.99, 5, 5.2, 5.5, 6)) {
+    expect_equal(cdfun(z), by_summing(z), tolerance = 1e-9)
+  }
 
   total <- sum_over_atoms(both, pmf, cdfun, function(x) rep(1, length(x)))
   expect_equal(total, 1, tolerance = 1e-6)
