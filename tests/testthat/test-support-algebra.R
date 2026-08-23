@@ -1,13 +1,13 @@
 test_that("support_union() merges continuous parts into canonical form.", {
   expect_equal(
-    continuous_part(support_union(continuous(c(0, 1)), continuous(c(0.5, 3)))),
-    continuous_part(continuous(c(0, 3)))
+    regions(support_union(continuous(c(0, 1)), continuous(c(0.5, 3)))),
+    regions(continuous(c(0, 3)))
   )
   # Touching intervals merge; disjoint ones do not.
-  expect_equal(nrow(continuous_part(
+  expect_equal(nrow(regions(
     support_union(continuous(c(0, 1)), continuous(c(1, 2)))
   )), 1)
-  expect_equal(nrow(continuous_part(
+  expect_equal(nrow(regions(
     support_union(continuous(c(0, 1)), continuous(c(2, 3)))
   )), 2)
 })
@@ -15,14 +15,14 @@ test_that("support_union() merges continuous parts into canonical form.", {
 test_that("support_union() combines the two kinds of part.", {
   s <- support_union(discrete(c(1, 2)), continuous(c(5, 6)))
   expect_true(support_has_atom(s, 1))
-  expect_equal(continuous_part(s), continuous_part(continuous(c(5, 6))))
+  expect_equal(regions(s), regions(continuous(c(5, 6))))
 })
 
 test_that("support_union() keeps an atom lying inside a continuous part.", {
   # Atoms and densities carry different probability; neither absorbs the other.
   s <- support_union(discrete(3), continuous(c(0, 10)))
   expect_true(support_has_atom(s, 3))
-  expect_equal(continuous_part(s), continuous_part(continuous(c(0, 10))))
+  expect_equal(regions(s), regions(continuous(c(0, 10))))
 })
 
 test_that("the empty support is the identity for union.", {
@@ -74,7 +74,7 @@ test_that("support_restrict() handles a mixed support.", {
   )
   expect_false(support_has_atom(s, 0))
   expect_true(support_has_atom(s, 7))
-  expect_equal(continuous_part(s), continuous_part(continuous(c(1, 8))))
+  expect_equal(regions(s), regions(continuous(c(1, 8))))
 })
 
 test_that("support_shift() moves a support without reshaping it.", {
@@ -134,7 +134,7 @@ test_that("support_transform() applies a general monotonic map.", {
 test_that("support_add_atoms() adds without touching the continuous part.", {
   s <- support_add_atoms(continuous(c(0, Inf)), 0)
   expect_true(support_has_atom(s, 0))
-  expect_equal(continuous_part(s), continuous_part(continuous(c(0, Inf))))
+  expect_equal(regions(s), regions(continuous(c(0, Inf))))
   # Adding an atom that is already there changes the set not at all, though
   # the series records it as a union.
   again <- support_add_atoms(discrete(c(1, 2)), 2)
@@ -148,7 +148,7 @@ test_that("support_drop_atoms() removes atoms and leaves intervals alone.", {
   # The continuous part is untouched, so a mixed support can become continuous.
   m <- support_drop_atoms(mixed(atoms = 0, continuous = c(0, 1)), 0)
   expect_true(is_support(m))
-  expect_equal(continuous_part(m), continuous_part(continuous(c(0, 1))))
+  expect_equal(regions(m), regions(continuous(c(0, 1))))
   # Removing an absent atom leaves the set alone.
   intact <- support_drop_atoms(discrete(c(1, 2)), 9)
   expect_equal(support_has_atom(intact, c(1, 2)), c(TRUE, TRUE))

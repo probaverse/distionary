@@ -44,7 +44,8 @@
   intervals), and `mixed()`. Pass one to `distribution()` via the new
   `.support` argument; the variable type (`vtype()`) and `range()` are derived
   from it. Retrieve a distribution's support with `support()`, and its parts
-  with `atoms()` and `continuous_part()`. Test an object with `is_support()`,
+  with `atoms()` and `regions()` --- the points it places mass on, and the
+  intervals it spreads mass across. Test an object with `is_support()`,
   and get a support's outermost points with `range()`. There is also an
   `empty_support()`, tested by `is_empty_support()`: no distribution has one,
   and `distribution()` rejects it, but it exists so that operations on supports

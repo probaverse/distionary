@@ -126,11 +126,11 @@ support(dst_pois(3))
 support(dst_gamma(shape = 2, rate = 1))
 ```
 
-The two parts can be pulled out individually. `atoms()` returns a `discretes` object, and `continuous_part()` returns a two-column matrix of intervals.
+The two parts can be pulled out individually. `atoms()` returns a `discretes` object, and `regions()` returns a two-column matrix of intervals.
 
 ```{r}
 atoms(mixed(atoms = 0, continuous = c(0, Inf)))
-continuous_part(continuous(c(0, 1), c(3, 4)))
+regions(continuous(c(0, 1), c(3, 4)))
 ```
 
 Both accept a distribution as well as a support, so there's no need to unwrap first.

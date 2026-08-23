@@ -207,17 +207,32 @@ support <- function(distribution) {
   attributes(distribution)[["support"]]
 }
 
-#' Atomic and Continuous Parts of a Support
+#' What a Support Is Made Of
 #'
-#' Extract the atomic (discrete) part or the continuous part of a support. Each
-#' accepts either a support object or a distribution.
+#' Take a support apart: `atoms()` gives the points it places mass on, and
+#' `regions()` gives the intervals it spreads mass across. Each accepts a
+#' support object or a distribution.
 #'
 #' @param x A support object or a distribution.
-#' @returns For `atoms()`, a `discretes` object. For `continuous_part()`, a
-#' two-column numeric matrix of intervals (`lower`, `upper`).
+#' @returns For `atoms()`, a `discretes` object. For `regions()`, a two-column
+#' numeric matrix of intervals (`lower`, `upper`), one row each.
+#' @details
+#' These are the inverses of the constructors. `discrete()` builds a support
+#' out of atoms and `atoms()` gives them back; `continuous()` builds one out of
+#' regions and `regions()` gives those back. So the discrete part of a support
+#' is `discrete(atoms(x))`, and its continuous part is `continuous(regions(x))`.
+#'
+#' A support with no atoms returns an empty `discretes` object rather than
+#' nothing, and one with no continuous part returns a matrix of no rows, so
+#' neither has to be guarded against before being used.
 #' @examples
 #' atoms(mixed(atoms = 0, continuous = c(0, Inf)))
-#' continuous_part(continuous(c(0, 1), c(3, 4)))
+#' regions(continuous(c(0, 1), c(3, 4)))
+#'
+#' # Either part can be put back together into a support of its own.
+#' s <- mixed(atoms = c(0, 5), continuous = c(0, 10))
+#' discrete(atoms(s))
+#' continuous(regions(s))
 #' @family Support
 #' @export
 atoms <- function(x) {
@@ -226,7 +241,7 @@ atoms <- function(x) {
 
 #' @rdname atoms
 #' @export
-continuous_part <- function(x) {
+regions <- function(x) {
   as_support_arg(x)[["continuous"]]
 }
 

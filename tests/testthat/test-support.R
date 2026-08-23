@@ -2,17 +2,17 @@ test_that("continuous() builds a continuous support, defaulting to the line.", {
   s <- continuous()
   expect_true(is_support(s))
   expect_equal(vtype_of_support(s), "continuous")
-  expect_equal(unname(continuous_part(s)), matrix(c(-Inf, Inf), nrow = 1))
+  expect_equal(unname(regions(s)), matrix(c(-Inf, Inf), nrow = 1))
 })
 
 test_that("continuous() canonicalizes: sorts and merges touching/overlapping.", {
   expect_equal(
-    unname(continuous_part(continuous(c(3, 4), c(0, 1), c(0.5, 2)))),
+    unname(regions(continuous(c(3, 4), c(0, 1), c(0.5, 2)))),
     matrix(c(0, 3, 2, 4), nrow = 2)
   )
   # Touching closed intervals merge.
   expect_equal(
-    unname(continuous_part(continuous(c(0, 1), c(1, 2)))),
+    unname(regions(continuous(c(0, 1), c(1, 2)))),
     matrix(c(0, 2), nrow = 1)
   )
 })
@@ -38,10 +38,10 @@ test_that("mixed() requires both parts and accepts terse or rich continuous.", {
   s <- mixed(atoms = 0, continuous = c(0, Inf))
   expect_equal(vtype_of_support(s), "mixed")
   expect_equal(as.double(atoms(s)), 0)
-  expect_equal(unname(continuous_part(s)), matrix(c(0, Inf), nrow = 1))
+  expect_equal(unname(regions(s)), matrix(c(0, Inf), nrow = 1))
   # Rich continuous via continuous().
   s2 <- mixed(atoms = discretes::natural0(), continuous = continuous(c(0, 1), c(3, 4)))
-  expect_equal(nrow(continuous_part(s2)), 2)
+  expect_equal(nrow(regions(s2)), 2)
 })
 
 test_that("mixed() errors when either part is empty.", {
@@ -119,7 +119,7 @@ test_that("empty_support() is empty, and knows it.", {
   expect_true(is_support(e))
   expect_true(is_empty_support(e))
   expect_equal(discretes::num_discretes(atoms(e)), 0)
-  expect_equal(nrow(continuous_part(e)), 0)
+  expect_equal(nrow(regions(e)), 0)
 })
 
 test_that("the empty support's variable type is 'empty', not 'unknown'.", {

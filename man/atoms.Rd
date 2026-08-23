@@ -2,27 +2,43 @@
 % Please edit documentation in R/support.R
 \name{atoms}
 \alias{atoms}
-\alias{continuous_part}
-\title{Atomic and Continuous Parts of a Support}
+\alias{regions}
+\title{What a Support Is Made Of}
 \usage{
 atoms(x)
 
-continuous_part(x)
+regions(x)
 }
 \arguments{
 \item{x}{A support object or a distribution.}
 }
 \value{
-For \code{atoms()}, a \code{discretes} object. For \code{continuous_part()}, a
-two-column numeric matrix of intervals (\code{lower}, \code{upper}).
+For \code{atoms()}, a \code{discretes} object. For \code{regions()}, a two-column
+numeric matrix of intervals (\code{lower}, \code{upper}), one row each.
 }
 \description{
-Extract the atomic (discrete) part or the continuous part of a support. Each
-accepts either a support object or a distribution.
+Take a support apart: \code{atoms()} gives the points it places mass on, and
+\code{regions()} gives the intervals it spreads mass across. Each accepts a
+support object or a distribution.
+}
+\details{
+These are the inverses of the constructors. \code{discrete()} builds a support
+out of atoms and \code{atoms()} gives them back; \code{continuous()} builds one out of
+regions and \code{regions()} gives those back. So the discrete part of a support
+is \code{discrete(atoms(x))}, and its continuous part is \code{continuous(regions(x))}.
+
+A support with no atoms returns an empty \code{discretes} object rather than
+nothing, and one with no continuous part returns a matrix of no rows, so
+neither has to be guarded against before being used.
 }
 \examples{
 atoms(mixed(atoms = 0, continuous = c(0, Inf)))
-continuous_part(continuous(c(0, 1), c(3, 4)))
+regions(continuous(c(0, 1), c(3, 4)))
+
+# Either part can be put back together into a support of its own.
+s <- mixed(atoms = c(0, 5), continuous = c(0, 10))
+discrete(atoms(s))
+continuous(regions(s))
 }
 \seealso{
 Other Support: 
