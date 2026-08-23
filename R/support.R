@@ -156,9 +156,9 @@ as_support <- function(x) {
   }
   if (is.numeric(x)) {
     stop(
-      "Can't interpret a bare numeric vector as a support, because ",
-      "`c(0, Inf)` is ambiguous. Did you mean `discrete()` (atoms) or ",
-      "`continuous()` (a range / intervals)?"
+      "A bare numeric vector is ambiguous as a support: `c(0, Inf)`\n",
+      "could be two atoms, or one interval.\n",
+      "Use `discrete()` for atoms, or `continuous()` for intervals."
     )
   }
   stop("`.support` must be a support object or a `discretes` object.")
@@ -342,8 +342,8 @@ as_support_arg <- function(x) {
     s <- support(x)
     if (is.null(s)) {
       stop(
-        "This distribution has no structured support. Only the Null ",
-        "distribution has none; every other distribution declares one."
+        "The Null distribution has no support to take apart.\n",
+        "Every other distribution declares one."
       )
     }
     return(s)
@@ -411,18 +411,15 @@ interval_complaint <- function(lo, hi) {
   # Equal endpoints from here on.
   if (is.infinite(lo)) {
     return(paste0(
-      "The interval ", shown, " has both ends at the same infinity, so it ",
-      "describes no values at all.\n",
-      "An endpoint computed from parameters lands here when it overflows: ",
-      "a number too large for a double becomes `Inf`, and both ends of the ",
-      "interval collapse onto it. Check whether the parameters put the ",
-      "distribution beyond the range double precision can represent."
+      shown, " describes no values: both ends are the same infinity.\n",
+      "A computed endpoint lands here when it overflows: a number\n",
+      "too large for a double becomes `Inf`.\n",
+      "Check whether the parameters reach past double precision."
     ))
   }
   paste0(
-    "The interval ", shown, " is a single point, which carries no ",
-    "probability as a continuous part.\n",
-    "Use `discrete(", format(lo), ")` for an atom there instead."
+    shown, " is a single point, so carries no probability.\n",
+    "Use `discrete(", format(lo), ")` for an atom there."
   )
 }
 

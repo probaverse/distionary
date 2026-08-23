@@ -227,8 +227,9 @@ support_scale <- function(support, by) {
   checkmate::assert_number(by, finite = TRUE)
   if (by == 0) {
     stop(
-      "Can't scale a support by zero: the result is a single point, which ",
-      "is not a monotonic image of the original. Use `discrete(0)`."
+      "Can't scale a support by zero: the result is a single point,\n",
+      "not a monotonic image of the original.\n",
+      "Use `discrete(0)` if that is what you meant."
     )
   }
   support_transform(
@@ -245,8 +246,7 @@ support_reciprocal <- function(support) {
   s <- as_support_arg(support)
   if (isTRUE(support_has_atom(s, 0))) {
     stop(
-      "Can't take the reciprocal of a support with an atom at zero, ",
-      "because `1 / 0` is undefined."
+      "Can't take the reciprocal of a support with an atom at zero."
     )
   }
   halves <- list(
@@ -347,9 +347,8 @@ atoms_to_drop <- function(atoms) {
     n <- discretes::num_discretes(atoms)
     if (!is.finite(n)) {
       stop(
-        "Can't remove infinitely many atoms, because they have to be ",
-        "enumerated. Use `support_restrict()` to cut a support down by ",
-        "region instead."
+        "Can't remove infinitely many atoms: they have to be listed.\n",
+        "Use `support_restrict()` to cut a support down by region."
       )
     }
     if (n == 0) {

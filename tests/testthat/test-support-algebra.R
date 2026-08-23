@@ -201,7 +201,7 @@ test_that("the algebra rejects stray arguments and non-supports.", {
 
 test_that("the algebra refuses a distribution with no structured support.", {
   # Only the Null distribution qualifies now that a support is required.
-  expect_error(support_restrict(dst_null(), from = 0), "no structured support")
+  expect_error(support_restrict(dst_null(), from = 0), "no support to take apart")
 })
 
 test_that("shifting a support agrees with shifting its range.", {

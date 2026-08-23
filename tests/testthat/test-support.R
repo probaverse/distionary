@@ -110,7 +110,7 @@ test_that(".vtype is defunct in favour of .support.", {
 
 test_that("Support accessors error on Null and on non-supports.", {
   # The Null distribution is the only one without a support to take apart.
-  expect_error(atoms(dst_null()), "no structured support")
+  expect_error(atoms(dst_null()), "no support to take apart")
   expect_error(atoms(1:10), "support object or a distribution")
 })
 

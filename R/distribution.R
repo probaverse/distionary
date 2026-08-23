@@ -124,20 +124,15 @@ distribution <- function(
   }
   if (is.null(.support)) {
     stop(
-      "A distribution needs a support: the set on which it places ",
-      "probability. Specify `.support` with `continuous()`, `discrete()`, ",
-      "or `mixed()`.\n",
-      "Knowing the support is what lets distionary locate atoms exactly, ",
-      "report the true endpoints of a distribution, and integrate over the ",
-      "right region."
+      "A distribution needs a support.\n",
+      "Pass `.support` a `continuous()`, `discrete()`, or `mixed()` set."
     )
   }
   support <- as_support(.support)
   if (is_empty_support(support)) {
     stop(
-      "A distribution cannot have an empty support, because it has to ",
-      "place probability somewhere. The empty support exists so that ",
-      "operations on supports are closed; it is not itself a distribution."
+      "A distribution cannot have an empty support.\n",
+      "It has to place its probability somewhere; see `?empty_support`."
     )
   }
   .vtype <- vtype_of_support(support)
