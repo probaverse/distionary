@@ -237,7 +237,7 @@ support_has_atom(s, at = c(0, 1, 3, 9))
 
 ## Giving a Distribution a Support
 
-Supports are attached to user-defined distributions through the `.support` argument of `distribution()`, described in the [Specifying Your Own Distribution](./specify-user-defined.html) vignette.
+Supports are attached to user-defined distributions through the `.support` argument of `distribution()`, described in the [Specifying Your Own Distribution](https://distionary.probaverse.com/articles/specify-user-defined.html) vignette.
 
 ```{r}
 my_normal <- distribution(
