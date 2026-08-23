@@ -1,4 +1,10 @@
 url: https://distionary.probaverse.com/
+
+# Keep the published site on the released version. A development
+# version (one with a fourth number) builds to /dev/ instead, so the
+# documentation people read never runs ahead of the release they have.
+development:
+  mode: auto
 template:
   bootstrap: 5
   includes:
