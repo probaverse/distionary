@@ -202,3 +202,43 @@ test_that("The walk does not stop while probability is still ahead.", {
   expect_equal(mean(d), sum((0:far) * pm(0:far)), tolerance = 1e-6)
   expect_equal(mean(d), 40.2, tolerance = 1e-6)
 })
+
+test_that("The walk is held open in whichever direction still has mass.", {
+  # The mirror of the trap above, and then both at once. Each direction is
+  # walked separately and bounded by its own share of the probability, so
+  # neither can be stopped early by the other having finished.
+  tiny <- 1e-12
+  pm <- function(x) {
+    out <- numeric(length(x))
+    out[x == 0] <- 0.4
+    out[abs(x) >= 1 & abs(x) <= 100] <- tiny
+    out[x == 201] <- 0.3 - 100 * tiny
+    out[x == -101] <- 0.3 - 100 * tiny
+    out
+  }
+  cdfun <- function(x) {
+    vapply(x, function(z) {
+      if (z < -101) {
+        return(0)
+      }
+      sum(pm(-101:min(201, floor(z))))
+    }, numeric(1))
+  }
+  d <- distribution(pmf = pm, cdf = cdfun, .support = discrete(integers()))
+  # 201 * 0.3 - 101 * 0.3 = 30, so a failure on either side moves the answer.
+  expect_equal(mean(d), sum((-101:201) * pm(-101:201)), tolerance = 1e-6)
+  expect_equal(mean(d), 30, tolerance = 1e-6)
+})
+
+test_that("A direction with no mass in it stops rather than exhausting.", {
+  # Everything at 0 and 5, but a support that runs both ways. Walking down
+  # finds nothing, and should say so at once instead of running to the atom
+  # cap and giving up with NaN.
+  pm <- function(x) ifelse(x == 0, 0.5, ifelse(x == 5, 0.5, 0))
+  cdfun <- function(x) {
+    vapply(x, function(z) if (z < 0) 0 else if (z < 5) 0.5 else 1, numeric(1))
+  }
+  d <- distribution(pmf = pm, cdf = cdfun, .support = discrete(integers()))
+  expect_equal(mean(d), 2.5, tolerance = 1e-6)
+  expect_false(is.nan(mean(d)))
+})
