@@ -30,8 +30,15 @@ test_that("discrete() accepts discretes objects and numeric vectors.", {
   expect_equal(as.double(atoms(s)), c(1.2, 3.5, 6.7))
 })
 
-test_that("discrete() requires at least one atom.", {
-  expect_error(discrete(numeric(0)), "at least one atom")
+test_that("all three constructors give the empty support from nothing.", {
+  # None of them insists on being handed something: describing nothing is a
+  # coherent thing to describe, and they agree on what it is.
+  expect_identical(discrete(numeric(0)), empty_support())
+  expect_identical(discrete(), empty_support())
+  expect_identical(continuous(numeric(0)), empty_support())
+  expect_identical(mixed(), empty_support())
+  # `continuous()` with no argument is still the whole line, not nothing.
+  expect_false(is_empty_support(continuous()))
 })
 
 test_that("mixed() builds a mixed support from terse or rich parts.", {

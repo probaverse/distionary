@@ -27,9 +27,10 @@ nobody specified where.
 empty_support()
 is_empty_support(empty_support())
 
-# The empty support is what falls out of an impossible restriction, and it
-# is what `continuous()` returns when given no intervals at all.
+# It is also what any of the constructors gives when handed nothing.
 continuous(numeric(0))
+discrete(numeric(0))
+mixed()
 }
 \seealso{
 \code{\link[=is_empty_support]{is_empty_support()}} to test for it, \code{\link[=discrete]{discrete()}},
