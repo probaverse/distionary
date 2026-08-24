@@ -212,9 +212,15 @@ support <- function(distribution) {
 #' regions and `regions()` gives those back. So the discrete part of a support
 #' is `discrete(atoms(x))`, and its continuous part is `continuous(regions(x))`.
 #'
-#' A support with no atoms returns an empty `discretes` object rather than
-#' nothing, and one with no continuous part returns a matrix of no rows, so
-#' neither has to be guarded against before being used.
+#' A support with no atoms gives an empty `discretes` object rather than
+#' nothing, and one with no regions gives a matrix of no rows, so neither has
+#' to be guarded against before being used. That is a definite answer: the
+#' support says there is no part of that kind.
+#'
+#' [dst_null()] is different. It has no support at all, so there is nothing to
+#' take apart and nothing is known --- both give `NULL`, as [support()] does
+#' for it, rather than claiming it has no atoms. This mirrors [range()], which
+#' answers `c(NA, NA)` for it instead of refusing.
 #' @examples
 #' atoms(mixed(discrete = 0, continuous = c(0, Inf)))
 #' regions(continuous(c(0, 1), c(3, 4)))
@@ -226,13 +232,21 @@ support <- function(distribution) {
 #' @family Support
 #' @export
 atoms <- function(x) {
-  as_support_arg(x)[["atoms"]]
+  s <- as_support_arg(x, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
+  s[["atoms"]]
 }
 
 #' @rdname atoms
 #' @export
 regions <- function(x) {
-  as_support_arg(x)[["continuous"]]
+  s <- as_support_arg(x, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
+  s[["continuous"]]
 }
 
 #' @export
@@ -335,14 +349,26 @@ as_regions <- function(x) {
 }
 
 #' Accept a support or a distribution, returning the support.
+#'
+#' The Null distribution has no support, so there is nothing to hand back for
+#' it. Which answer that deserves depends on the caller. Something asking a
+#' question about a support can answer that it does not know, the way
+#' [range()] gives `c(NA, NA)`; something that has to *return* a support has
+#' nothing to return and should say so.
+#'
+#' @param x A support object or a distribution.
+#' @param absent What to do when there is no support: `"error"`, or `"null"`
+#' to hand back `NULL` and let the caller decide.
+#' @returns A support object, or `NULL`.
 #' @noRd
-as_support_arg <- function(x) {
+as_support_arg <- function(x, absent = c("error", "null")) {
+  absent <- rlang::arg_match(absent)
   if (is_support(x)) {
     return(x)
   }
   if (inherits(x, "dst")) {
     s <- support(x)
-    if (is.null(s)) {
+    if (is.null(s) && absent == "error") {
       stop(
         "The Null distribution has no support to take apart.\n",
         "Every other distribution declares one."

@@ -146,10 +146,37 @@ test_that(".vtype is defunct in favour of .support.", {
   )
 })
 
-test_that("Support accessors error on Null and on non-supports.", {
-  # The Null distribution is the only one without a support to take apart.
-  expect_error(atoms(dst_null()), "no support to take apart")
+test_that("Support accessors answer for Null rather than refusing.", {
+  # The Null distribution is the only one without a support. Asking about its
+  # parts is a fair question with a known answer -- nothing is known -- so it
+  # answers, as `range()` does with `c(NA, NA)` and `mean()` with `NA`.
+  n <- dst_null()
+  expect_null(atoms(n))
+  expect_null(regions(n))
+  expect_equal(support_contains(n, 1:3), rep(NA, 3))
+  expect_equal(support_has_atom(n, 1:3), rep(NA, 3))
+  # Something that is not a support or a distribution is still an error: that
+  # is a wrong argument, not an unanswerable question.
   expect_error(atoms(1:10), "support object or a distribution")
+  expect_error(regions("x"), "support object or a distribution")
+})
+
+test_that("An empty support answers definitely, not with NA.", {
+  # It is a support that says there is nowhere to place probability, which is
+  # a claim. The Null distribution makes no claim at all, and the two must
+  # not read the same.
+  e <- empty_support()
+  expect_equal(discretes::num_discretes(atoms(e)), 0)
+  expect_equal(nrow(regions(e)), 0)
+  expect_equal(support_contains(e, 1:2), c(FALSE, FALSE))
+  expect_false(is.null(atoms(e)))
+})
+
+test_that("Operations that must return a support still refuse Null.", {
+  # An accessor can answer that it does not know; an operation whose result
+  # has to be a support has nothing to hand back.
+  expect_error(support_restrict(dst_null(), from = 0), "no support")
+  expect_error(support_shift(dst_null(), by = 1), "no support")
 })
 
 test_that("empty_support() is empty, and knows it.", {

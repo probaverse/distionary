@@ -386,8 +386,11 @@ atoms_to_drop <- function(atoms) {
 #' @family Support algebra
 #' @export
 support_contains <- function(support, at) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
   checkmate::assert_numeric(at)
+  if (is.null(s)) {
+    return(rep(NA, length(at)))
+  }
   res <- support_has_atom(s, at)
   intervals <- s[["continuous"]]
   for (i in seq_len(nrow(intervals))) {
@@ -400,8 +403,11 @@ support_contains <- function(support, at) {
 #' @rdname support_contains
 #' @export
 support_has_atom <- function(support, at) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
   checkmate::assert_numeric(at)
+  if (is.null(s)) {
+    return(rep(NA, length(at)))
+  }
   if (discretes::num_discretes(s[["atoms"]]) == 0) {
     return(rep(FALSE, length(at)))
   }

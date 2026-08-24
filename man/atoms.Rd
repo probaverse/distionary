@@ -27,9 +27,15 @@ out of atoms and \code{atoms()} gives them back; \code{continuous()} builds one 
 regions and \code{regions()} gives those back. So the discrete part of a support
 is \code{discrete(atoms(x))}, and its continuous part is \code{continuous(regions(x))}.
 
-A support with no atoms returns an empty \code{discretes} object rather than
-nothing, and one with no continuous part returns a matrix of no rows, so
-neither has to be guarded against before being used.
+A support with no atoms gives an empty \code{discretes} object rather than
+nothing, and one with no regions gives a matrix of no rows, so neither has
+to be guarded against before being used. That is a definite answer: the
+support says there is no part of that kind.
+
+\code{\link[=dst_null]{dst_null()}} is different. It has no support at all, so there is nothing to
+take apart and nothing is known --- both give \code{NULL}, as \code{\link[=support]{support()}} does
+for it, rather than claiming it has no atoms. This mirrors \code{\link[=range]{range()}}, which
+answers \code{c(NA, NA)} for it instead of refusing.
 }
 \examples{
 atoms(mixed(discrete = 0, continuous = c(0, Inf)))
