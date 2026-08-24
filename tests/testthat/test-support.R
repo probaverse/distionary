@@ -172,11 +172,30 @@ test_that("An empty support answers definitely, not with NA.", {
   expect_false(is.null(atoms(e)))
 })
 
-test_that("Operations that must return a support still refuse Null.", {
-  # An accessor can answer that it does not know; an operation whose result
-  # has to be a support has nothing to hand back.
-  expect_error(support_restrict(dst_null(), from = 0), "no support")
-  expect_error(support_shift(dst_null(), by = 1), "no support")
+test_that("The algebra carries a missing support rather than refusing.", {
+  # Restricting with no bounds is the identity, and the identity applied to a
+  # Null distribution should give back what a Null distribution has: nothing.
+  # The rest follow it.
+  n <- dst_null()
+  expect_null(support_restrict(n))
+  expect_null(support_restrict(n, from = 0))
+  expect_null(support_shift(n, by = 1))
+  expect_null(support_scale(n, by = 2))
+  expect_null(support_reciprocal(n))
+  expect_null(support_add_atoms(n, 1))
+  expect_null(support_drop_atoms(n, 1))
+  # Absent anywhere in a union means absent overall: the answer cannot be
+  # known if one of the things being combined is not.
+  expect_null(support_union(n, continuous()))
+})
+
+test_that("A bare NULL carries too, so a chain does not break at step two.", {
+  # `support()` gives `NULL` for a Null distribution, and feeding that onward
+  # has to work or the absence is useless.
+  expect_null(support_shift(support(dst_null()), by = 3))
+  expect_null(support_union(NULL, continuous()))
+  # A wrong argument is still a wrong argument.
+  expect_error(support_shift("banana", by = 1), "support object or a")
 })
 
 test_that("empty_support() is empty, and knows it.", {

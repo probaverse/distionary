@@ -371,6 +371,14 @@ as_support_arg <- function(x, absent = c("error", "null")) {
   if (is_support(x)) {
     return(x)
   }
+  # A `NULL` is what "no support" already looks like, from `support()` or from
+  # an earlier step of a chain, so it is carried rather than rejected.
+  if (is.null(x)) {
+    if (absent == "error") {
+      stop("Expected a support object or a distribution, not `NULL`.")
+    }
+    return(NULL)
+  }
   if (inherits(x, "dst")) {
     s <- support(x)
     if (is.null(s) && absent == "error") {

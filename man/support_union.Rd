@@ -9,7 +9,11 @@ support_union(...)
 \arguments{
 \item{...}{Supports to combine, or a single list of them. Distributions are
 accepted in place of supports. With no arguments, the result is
-\code{\link[=empty_support]{empty_support()}}, which is the identity for this operation.}
+\code{\link[=empty_support]{empty_support()}}, which is the identity for this operation.
+
+If any of them has no support --- a \code{NULL}, or \code{\link[=dst_null]{dst_null()}} --- the result
+is \code{NULL}. A union cannot be known when one of the things being combined
+is not.}
 }
 \value{
 A support object.

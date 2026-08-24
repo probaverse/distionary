@@ -6,8 +6,12 @@
 # `max(X, Y)` carries mass depends on the distributions, not just their
 # supports).
 #
-# Every operation is closed: an operation that removes everything returns
-# `empty_support()` rather than a sentinel.
+# Given supports, every operation returns a support: one that removes
+# everything returns `empty_support()` rather than a sentinel. Removing
+# everything and having nothing to remove it from are different, though. The
+# Null distribution has no support, and `NULL` -- what `support()` gives for
+# it -- is carried through rather than refused, so an absence stays an absence
+# instead of becoming an error partway down a chain.
 
 #' Combine Supports
 #'
@@ -16,6 +20,10 @@
 #' @param ... Supports to combine, or a single list of them. Distributions are
 #' accepted in place of supports. With no arguments, the result is
 #' [empty_support()], which is the identity for this operation.
+#'
+#' If any of them has no support --- a `NULL`, or [dst_null()] --- the result
+#' is `NULL`. A union cannot be known when one of the things being combined
+#' is not.
 #' @details
 #' The atomic parts are unioned as series, and the continuous parts are pooled
 #' and merged back into canonical form, so touching or overlapping intervals
@@ -45,7 +53,10 @@ support_union <- function(...) {
   if (length(dots) == 0L) {
     return(empty_support())
   }
-  supports <- lapply(dots, as_support_arg)
+  supports <- lapply(dots, as_support_arg, absent = "null")
+  if (any(vapply(supports, is.null, logical(1L)))) {
+    return(NULL)
+  }
   a <- do.call(
     discretes::dsct_union,
     lapply(supports, function(s) s[["atoms"]])
@@ -98,7 +109,10 @@ support_restrict <- function(
   include_to = TRUE
 ) {
   rlang::check_dots_empty()
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   checkmate::assert_number(from)
   checkmate::assert_number(to)
   a <- s[["atoms"]]
@@ -179,7 +193,10 @@ support_transform <- function(
   range = c(-Inf, Inf)
 ) {
   rlang::check_dots_empty()
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   checkmate::assert_function(fun)
   checkmate::assert_function(inv)
   checkmate::assert_flag(increasing)
@@ -243,7 +260,10 @@ support_scale <- function(support, by) {
 #' @rdname support_transform
 #' @export
 support_reciprocal <- function(support) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   if (isTRUE(support_has_atom(s, 0))) {
     stop(
       "Can't take the reciprocal of a support with an atom at zero."
@@ -313,7 +333,10 @@ reciprocal_half <- function(support, negative) {
 #' @family Support algebra
 #' @export
 support_add_atoms <- function(support, atoms) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   a <- as_atoms(atoms)
   new_support(
     atoms = discretes::dsct_union(s[["atoms"]], a),
@@ -324,7 +347,10 @@ support_add_atoms <- function(support, atoms) {
 #' @rdname support_add_atoms
 #' @export
 support_drop_atoms <- function(support, atoms) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   values <- atoms_to_drop(atoms)
   a <- s[["atoms"]]
   for (v in values) {
