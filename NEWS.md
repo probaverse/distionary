@@ -9,9 +9,9 @@
 - `.vtype` is defunct, and errors with a message pointing at `.support`. The
   variable type is derived from the support.
 
-- `range` is no longer a property name distionary recognises; it is read from
-  the support, as `vtype()` is. A `range` entry given to `distribution()` is
-  kept, as any unrecognised name is, but nothing consults it.
+- `range` and `vtype` are derived from the support rather than stated, and
+  `distribution()` refuses them as entries. Both remain properties, reachable
+  through `eval_property()` like any other.
 
 ## Supports
 

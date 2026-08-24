@@ -145,6 +145,18 @@ distribution <- function(
   checkmate::assert_list(.parameters, names = "named", null.ok = TRUE)
   dots <- rlang::enquos(...)
   checkmate::assert_list(dots, names = "named", null.ok = TRUE)
+  # `range` and `vtype` are properties of the distribution, but derived ones:
+  # the support determines both. A stated entry would be consulted ahead of
+  # the derived value and could disagree with it, so it is refused rather
+  # than kept and ignored.
+  derived <- intersect(c("range", "vtype"), names(dots))
+  if (length(derived) > 0) {
+    nm <- derived[[1L]]
+    stop(
+      "`", nm, "` is derived from the support, not stated.\n",
+      "Drop it; `.support` determines it, and `", nm, "()` reads it."
+    )
+  }
   representations <- lapply(dots, rlang::eval_tidy)
   # Check for required properties.
   reps_missing <- is.null(representations$cdf) ||

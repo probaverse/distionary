@@ -10,9 +10,11 @@
 #' is where a distribution says what values it reaches. In this it behaves like
 #' [vtype()]: derived, not declared.
 #'
-#' `range` is therefore not one of the property names distionary recognises. A
-#' `range` entry given to [distribution()] is kept, like any other name it does
-#' not know, but nothing consults it --- this function included.
+#' It is still a property, and [eval_property()] reaches it like any other, so
+#' code walking a list of property names need not know which are stored and
+#' which are worked out. What it cannot be is *stated*: [distribution()]
+#' refuses a `range` entry, since a stated one would be consulted ahead of the
+#' derived value and could disagree with it.
 #'
 #' The Null distribution is a different case: it has no support at all, so
 #' neither end is *known*, and its range is `c(NA, NA)` --- still a vector of
@@ -69,4 +71,18 @@ range.support <- function(support, ...) {
     stop("`range()` is expecting no arguments in `...`.")
   }
   support_hull(support)
+}
+
+#' Range, for the property network.
+#'
+#' `range` is a property, so `eval_property()` should reach it like any other.
+#' It is a *derived* one --- the support determines it --- so there is nothing
+#' stored to find and this computes it. `distribution()` refuses a stated
+#' `range`, which is what stops a stored entry shadowing this.
+#'
+#' @param distribution Distribution object.
+#' @returns Length-2 numeric.
+#' @noRd
+eval_range_from_network <- function(distribution) {
+  range(distribution)
 }

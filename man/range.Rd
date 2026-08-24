@@ -37,9 +37,11 @@ The range is read from the distribution's support (see \code{\link[=support]{sup
 is where a distribution says what values it reaches. In this it behaves like
 \code{\link[=vtype]{vtype()}}: derived, not declared.
 
-\code{range} is therefore not one of the property names distionary recognises. A
-\code{range} entry given to \code{\link[=distribution]{distribution()}} is kept, like any other name it does
-not know, but nothing consults it --- this function included.
+It is still a property, and \code{\link[=eval_property]{eval_property()}} reaches it like any other, so
+code walking a list of property names need not know which are stored and
+which are worked out. What it cannot be is \emph{stated}: \code{\link[=distribution]{distribution()}}
+refuses a \code{range} entry, since a stated one would be consulted ahead of the
+derived value and could disagree with it.
 
 The Null distribution is a different case: it has no support at all, so
 neither end is \emph{known}, and its range is \code{c(NA, NA)} --- still a vector of

@@ -296,20 +296,29 @@ test_that("The Null distribution is built without `distribution()`.", {
   expect_equal(dst_null(), dst_null())
 })
 
-test_that("`range` is not a name distionary recognises.", {
-  # It is read from the support, so nothing consults a `range` entry. It is
-  # kept, as any unrecognised name is, and is no more meaningful than one the
-  # user invented.
+test_that("`range` and `vtype` are derived, so they cannot be stated.", {
+  # A stated entry would be consulted ahead of the derived value, and could
+  # disagree with it. Names distionary does not know are still kept.
+  expect_error(
+    distribution(
+      cdf = function(x) stats::punif(x), density = stats::dunif,
+      range = c(-99, 99), .support = continuous(c(0, 1))
+    ),
+    "derived from the support"
+  )
+  expect_error(
+    distribution(
+      cdf = function(x) stats::punif(x), density = stats::dunif,
+      vtype = "discrete", .support = continuous(c(0, 1))
+    ),
+    "derived from the support"
+  )
   d <- distribution(
     cdf = function(x) stats::punif(x),
     density = stats::dunif,
-    range = c(-99, 99),
     my_object = 42,
     .support = continuous(c(0, 1))
   )
-  expect_true(is_distribution(d))
-  expect_equal(range(d), c(0, 1))
-  expect_equal(eval_property(d, "range"), c(-99, 99))
   expect_equal(eval_property(d, "my_object"), 42)
 })
 
@@ -332,12 +341,23 @@ test_that("range() of the Null distribution is NA.", {
   expect_equal(range(dst_null()), c(NA_real_, NA_real_))
 })
 
-test_that("`range` is derived, not a property, as `vtype` is.", {
-  # Neither is reachable through the property network; both come off the
-  # support instead.
-  d <- dst_norm(0, 1)
-  expect_null(eval_property(d, "range"))
-  expect_null(eval_property(d, "vtype"))
+test_that("`eval_property()` reaches every property, derived ones included.", {
+  # Someone walking a list of property names should not have to know which
+  # are stored and which are worked out from the support.
+  d <- dst_pois(3)
+  expect_equal(eval_property(d, "range"), c(0, Inf))
+  expect_equal(eval_property(d, "vtype"), "discrete")
+  expect_equal(eval_property(d, "mean"), 3)
+  # Metadata about the object is not a property of the distribution, and is
+  # still reached by its own accessor rather than through the network.
+  expect_null(eval_property(d, "parameters"))
+  expect_null(eval_property(d, "name"))
+})
+
+test_that("The Null distribution answers those too.", {
+  n <- dst_null()
+  expect_equal(eval_property(n, "range"), c(NA_real_, NA_real_))
+  expect_identical(eval_property(n, "vtype"), NA_character_)
 })
 
 test_that("A malformed interval says which kind of malformed it is.", {
