@@ -26,8 +26,11 @@ values of the (support of the) distribution.
 
 The \code{support} method gives the smallest and largest values the support
 reaches --- its two outermost points, taking the atoms and the continuous
-intervals together. Gaps in between are not represented. For the empty
-support, both are \code{NA}.
+regions together. Gaps in between are not represented.
+
+An empty support reaches nothing, and its range is \code{c(Inf, -Inf)} --- what
+R gives for the range of nothing, and reversed on purpose, being the
+identity for combining ranges.
 }
 \details{
 The range is read from the distribution's support (see \code{\link[=support]{support()}}), which
@@ -38,8 +41,10 @@ is where a distribution says what values it reaches. In this it behaves like
 \code{range} entry given to \code{\link[=distribution]{distribution()}} is kept, like any other name it does
 not know, but nothing consults it --- this function included.
 
-The Null distribution has no support, so neither end is known. Its range
-is still a vector of length two, \code{c(NA, NA)}, rather than a single \code{NA}.
+The Null distribution is a different case: it has no support at all, so
+neither end is \emph{known}, and its range is \code{c(NA, NA)} --- still a vector of
+length two, rather than a single \code{NA}. An empty support says there is
+nothing to reach; the Null distribution says nothing at all.
 }
 \examples{
 a <- dst_gp(1, 0.5)

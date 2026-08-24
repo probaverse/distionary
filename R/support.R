@@ -302,7 +302,12 @@ support_hull <- function(support) {
     his <- c(his, max(support[["continuous"]][, "upper"]))
   }
   if (length(los) == 0) {
-    return(c(NA_real_, NA_real_))
+    # An empty support reaches nothing, and R's answer for the range of
+    # nothing is `c(Inf, -Inf)`. Reversed on purpose: it is the identity for
+    # combining ranges, since `min(x, Inf)` and `max(x, -Inf)` are both `x`.
+    # Built directly rather than by taking `min()` of nothing, so it does not
+    # carry that call's warnings.
+    return(c(Inf, -Inf))
   }
   c(min(los), max(his))
 }

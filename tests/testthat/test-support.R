@@ -225,9 +225,23 @@ test_that("range() of a support gives its outermost points.", {
   expect_equal(range(continuous()), c(-Inf, Inf))
 })
 
-test_that("range() of the empty support is NA, without warning.", {
-  expect_equal(range(empty_support()), c(NA_real_, NA_real_))
+test_that("range() of the empty support follows R's own convention.", {
+  # `range(numeric(0))` is `c(Inf, -Inf)`, and an empty support reaches
+  # nothing in just the same way. Built rather than computed by `min()` of
+  # nothing, so it does not carry that call's warnings.
+  expect_equal(range(empty_support()), c(Inf, -Inf))
   expect_silent(range(empty_support()))
+  # Reversed on purpose: it leaves another range alone when the two combine.
+  other <- range(continuous(c(3, 9)))
+  e <- range(empty_support())
+  expect_equal(c(min(other[1], e[1]), max(other[2], e[2])), other)
+})
+
+test_that("An empty support and the Null distribution give different ranges.", {
+  # Reaching nothing is a claim; the Null distribution makes none.
+  expect_equal(range(empty_support()), c(Inf, -Inf))
+  expect_equal(range(dst_null()), c(NA_real_, NA_real_))
+  expect_false(identical(range(empty_support()), range(dst_null())))
 })
 
 test_that("range() of a support rejects stray arguments.", {
