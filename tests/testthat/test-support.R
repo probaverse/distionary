@@ -34,7 +34,7 @@ test_that("discrete() requires at least one atom.", {
   expect_error(discrete(numeric(0)), "at least one atom")
 })
 
-test_that("mixed() requires both parts and accepts terse or rich continuous.", {
+test_that("mixed() builds a mixed support from terse or rich parts.", {
   s <- mixed(discrete = 0, continuous = c(0, Inf))
   expect_equal(vtype_of_support(s), "mixed")
   expect_equal(as.double(atoms(s)), 0)
@@ -47,11 +47,19 @@ test_that("mixed() requires both parts and accepts terse or rich continuous.", {
   expect_equal(nrow(regions(s2)), 2)
 })
 
-test_that("mixed() errors when either part is empty.", {
-  expect_error(
-    mixed(discrete = numeric(0), continuous = c(0, 1)), "discrete part"
-  )
-  expect_error(mixed(discrete = 0, continuous = numeric(0)), "continuous part")
+test_that("mixed() builds whatever the parts describe, empty halves and all.", {
+  # The variable type is derived, so there is nothing to insist on. An empty
+  # half just means the support does not have that kind of part, which is
+  # what makes `mixed()` usable when the parts are computed rather than typed.
+  expect_identical(mixed(continuous = continuous()), continuous())
+  expect_identical(mixed(discrete = discrete(1:3)), discrete(1:3))
+  expect_identical(mixed(discrete = numeric(0), continuous = c(0, 1)),
+                   continuous(c(0, 1)))
+  expect_identical(mixed(discrete = 1:3, continuous = numeric(0)),
+                   discrete(1:3))
+  # Neither half is the empty support, which is legal to build and refused
+  # only when handed to a distribution.
+  expect_true(is_empty_support(mixed()))
 })
 
 test_that("mixed() takes either half as raw parts or as a support.", {

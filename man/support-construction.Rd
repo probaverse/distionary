@@ -11,7 +11,7 @@ discrete(atoms)
 
 continuous(...)
 
-mixed(discrete, continuous)
+mixed(discrete = numeric(0), continuous = numeric(0))
 }
 \arguments{
 \item{atoms}{For \code{discrete()}, the points carrying mass: a \code{discretes}
@@ -41,9 +41,16 @@ part --- a region carrying a density. \code{discrete()}, \code{continuous()}, an
 }
 \details{
 The variable type (\code{\link[=vtype]{vtype()}}) is \emph{derived} from the support: a support with
-only atoms is \code{"discrete"}, only a continuous part is \code{"continuous"}, and
-both is \code{"mixed"}. \code{mixed()} therefore requires \emph{both} parts to be non-empty;
-use \code{discrete()} or \code{continuous()} for the pure cases.
+only atoms is \code{"discrete"}, only a continuous part is \code{"continuous"}, both
+is \code{"mixed"}, and neither is \code{"empty"}.
+
+Because the type is derived, \code{mixed()} does not insist on being handed two
+non-empty halves. It builds whatever the parts describe, so
+\code{mixed(continuous = continuous())} is the whole real line and
+\code{mixed(discrete = 1:3)} is those three atoms. That makes it the general
+constructor, useful when the parts are computed rather than typed and
+either may come out empty; \code{discrete()} and \code{continuous()} are the direct
+way to say one on its own.
 
 A region is written as a closed interval, but its endpoints carry no
 probability either way, a single point having measure zero, so open against

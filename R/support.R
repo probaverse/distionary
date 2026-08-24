@@ -20,9 +20,16 @@
 #' and sorted into a canonical form.
 #' @details
 #' The variable type ([vtype()]) is *derived* from the support: a support with
-#' only atoms is `"discrete"`, only a continuous part is `"continuous"`, and
-#' both is `"mixed"`. `mixed()` therefore requires *both* parts to be non-empty;
-#' use `discrete()` or `continuous()` for the pure cases.
+#' only atoms is `"discrete"`, only a continuous part is `"continuous"`, both
+#' is `"mixed"`, and neither is `"empty"`.
+#'
+#' Because the type is derived, `mixed()` does not insist on being handed two
+#' non-empty halves. It builds whatever the parts describe, so
+#' `mixed(continuous = continuous())` is the whole real line and
+#' `mixed(discrete = 1:3)` is those three atoms. That makes it the general
+#' constructor, useful when the parts are computed rather than typed and
+#' either may come out empty; `discrete()` and `continuous()` are the direct
+#' way to say one on its own.
 #'
 #' A region is written as a closed interval, but its endpoints carry no
 #' probability either way, a single point having measure zero, so open against
@@ -60,22 +67,8 @@ continuous <- function(...) {
 
 #' @rdname support-construction
 #' @export
-mixed <- function(discrete, continuous) {
-  a <- as_atoms(discrete)
-  ci <- as_regions(continuous)
-  if (discretes::num_discretes(a) == 0) {
-    stop(
-      "`mixed()` needs a non-empty discrete part.\n",
-      "Use `continuous()` for a purely continuous support."
-    )
-  }
-  if (nrow(ci) == 0) {
-    stop(
-      "`mixed()` needs a non-empty continuous part.\n",
-      "Use `discrete()` for a purely discrete support."
-    )
-  }
-  new_support(atoms = a, continuous = ci)
+mixed <- function(discrete = numeric(0), continuous = numeric(0)) {
+  new_support(atoms = as_atoms(discrete), continuous = as_regions(continuous))
 }
 
 #' The Empty Support

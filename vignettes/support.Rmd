@@ -93,7 +93,15 @@ discrete(arithmetic(0, 0.5, n_left = 0, n_right = 4))
 mixed(discrete = 0, continuous = c(0, Inf))
 ```
 
-An atom is allowed to coincide with an interval endpoint, as it does here -- the atom is simply tracked separately, and its mass is not double-counted against the density. Because the variable type is derived from the parts, `mixed()` insists that _both_ of them be non-empty; use `discrete()` or `continuous()` for the pure cases.
+An atom is allowed to coincide with a region's endpoint, as it does here -- the atom is simply tracked separately, and its mass is not double-counted against the density.
+
+Because the variable type is derived from the parts, `mixed()` has nothing to insist on. Hand it one half and you get a support of that kind back, which makes it the one to reach for when the parts are worked out by code rather than typed, and either might come out empty.
+
+```{r}
+mixed(continuous = continuous(c(0, 1)))
+```
+
+`discrete()` and `continuous()` remain the direct way to say one on its own.
 
 ### The empty support
 
