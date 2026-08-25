@@ -1,5 +1,11 @@
 # distionary (development version)
 
+This cycle adds support objects: a distribution now says where it places its
+probability, and the routines computing from it --- quantiles and moments ---
+use that to handle atoms exactly rather than approximately. Code that uses the
+built-in `dst_*()` distributions is unaffected. The breaking changes are all
+in `distribution()`, so they reach only distributions built by hand.
+
 ## Breaking changes
 
 - `distribution()` now requires a `.support`, saying where the distribution
