@@ -24,12 +24,32 @@ test_that("Variable type specified correctly.", {
   expect_equal(vtype(dst_weibull(1, 1)), "continuous")
 })
 
-test_that("Variable type matches manual distribution input", {
+test_that("Variable type is derived from the support that was given", {
+  f <- function(x) x
   suppressWarnings({
-    expect_identical(vtype(distribution(.vtype = "foofy")), "foofy")
-    expect_identical(vtype(distribution(.vtype = "FoOFy")), "foofy")
-    expect_identical(vtype(distribution()), "unknown")
-    expect_identical(vtype(distribution()), vtype(distribution(.vtype = NULL)))
-    expect_identical(vtype(distribution(.vtype = NA_character_)), NA_character_)
+    expect_identical(
+      vtype(distribution(cdf = f, density = f, .support = continuous())),
+      "continuous"
+    )
+    expect_identical(
+      vtype(distribution(cdf = f, pmf = f, .support = discrete(1:3))),
+      "discrete"
+    )
+    expect_identical(
+      vtype(distribution(
+        cdf = f, density = f,
+        .support = mixed(discrete = 0, continuous = c(0, 1))
+      )),
+      "mixed"
+    )
   })
+  # There is no other way to set it: `.vtype` is defunct.
+  lifecycle::expect_defunct(
+    distribution(cdf = f, density = f, .support = discrete(1:3),
+                 .vtype = "foofy")
+  )
+})
+
+test_that("The Null distribution has no variable type", {
+  expect_identical(vtype(dst_null()), NA_character_)
 })

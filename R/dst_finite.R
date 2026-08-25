@@ -69,8 +69,7 @@ dst_finite <- function(outcomes, probs) {
     variance = ss,
     skewness = sum(probs * ((outcomes - mu) / sigma)^3),
     kurtosis_exc = sum(probs * ((outcomes - mu) / sigma)^4) - 3,
-    range = range(outcomes),
-    .vtype = "discrete",
+    .support = discrete(outcomes),
     .name = "Finite"
   )
 }

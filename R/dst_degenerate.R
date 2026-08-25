@@ -39,6 +39,6 @@ dst_degenerate <- function(location) {
     skewness = NaN,
     kurtosis_exc = NaN,
     .name = "Degenerate",
-    .vtype = "discrete"
+    .support = discrete(location)
   )
 }

@@ -18,14 +18,17 @@ rpearson3(n, location, scale, shape)
 \arguments{
 \item{x}{Vector of quantiles.}
 
-\item{location}{Parameter representing the left-endpoint of the distribution;
-numeric. Vectors are allowed except for \code{rpearson3()}.}
+\item{location}{Parameter representing the boundary (endpoint) of the
+distribution; numeric. This is the left endpoint when \code{shape} is positive and
+the right endpoint when \code{shape} is negative.
+Vectors are allowed except for \code{rpearson3()}.}
 
 \item{scale}{Scale parameter; positive numeric.
 Vectors are allowed except for \code{rpearson3()}.}
 
-\item{shape}{Shape parameter; positive numeric.
-Vectors are allowed except for \code{rpearson3()}.}
+\item{shape}{Shape parameter; numeric. A negative value gives the
+distribution reflected about \code{location} (an upper-bounded, left-skewed
+distribution). Vectors are allowed except for \code{rpearson3()}.}
 
 \item{lower.tail}{Logical; if \code{TRUE} (default), probabilities are
 \code{P(X <= x)}, otherwise, \code{P(X > x)}.}

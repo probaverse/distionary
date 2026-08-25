@@ -47,8 +47,7 @@ dst_weibull <- function(shape, scale) {
       (-6 * g1^4 + 12 * g1^2 * g2 - 3 * g2^2 - 4 * g1 * g3 + g4) /
         (g2 - g1^2)^2
     },
-    range = c(0, Inf),
     .name = "Weibull",
-    .vtype = "continuous"
+    .support = continuous(c(0, Inf))
   )
 }

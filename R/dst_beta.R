@@ -35,8 +35,7 @@ dst_beta <- function(shape1, shape2) {
       (shape1 + shape2 + 1),
     skewness = 2 * (shape2 - shape1) * sqrt(shape1 + shape2 + 1) /
       (shape1 + shape2 + 2) / sqrt(shape1 * shape2),
-    range = c(0, 1),
-    .vtype = "continuous",
+    .support = continuous(c(0, 1)),
     .name = "Beta"
   )
 }

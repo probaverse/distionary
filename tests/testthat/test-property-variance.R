@@ -5,9 +5,8 @@ test_that("Network is invoked in priority: variance", {
     density = function(x) {
       stats::dnorm(x, sd = 3)
     },
-    range = c(-Inf, Inf),
     stdev = 10, # deliberately incorrect
-    .vtype = "continuous"
+    .support = continuous(c(-Inf, Inf))
   ))
   expect_equal(variance(d), 100)
   expect_equal(eval_variance_from_network(d), 100)
@@ -49,7 +48,7 @@ test_that("Variance algorithm matches known vals", {
           c("Hypergeometric", "Bernoulli", "Binomial", "Finite")
         ) {
           # Finite support.
-          expect_error(algorithm_variance(d))
+          expect_equal(suppressMessages(algorithm_variance(d)), supposed_var, tolerance = 1e-6)
           r <- range(d)
           x <- seq(r[1], r[2], by = 1L)
           if (pretty_name(d) == "Finite") {
@@ -65,7 +64,7 @@ test_that("Variance algorithm matches known vals", {
           c("Negative Binomial", "Poisson", "Geometric")
         ) {
           # Infinite support.
-          expect_error(algorithm_variance(d))
+          expect_equal(suppressMessages(algorithm_variance(d)), supposed_var, tolerance = 1e-6)
           mu <- mean(d)
           to_add <- Inf
           i <- 0

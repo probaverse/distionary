@@ -1,4 +1,10 @@
 url: https://distionary.probaverse.com/
+
+# Keep the published site on the released version. A development
+# version (one with a fourth number) builds to /dev/ instead, so the
+# documentation people read never runs ahead of the release they have.
+development:
+  mode: auto
 template:
   bootstrap: 5
   includes:
@@ -21,6 +27,20 @@ reference:
 - subtitle: General Distribution Creation
   contents:
   - distribution
+- subtitle: Support
+  contents:
+  - support-construction
+  - empty_support
+  - support
+  - atoms
+  - is_support
+- subtitle: Support Algebra
+  contents:
+  - support_union
+  - support_restrict
+  - support_transform
+  - support_add_atoms
+  - support_contains
 - subtitle: Distribution Characteristics
   contents:
   - parameters

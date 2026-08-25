@@ -34,8 +34,7 @@ dst_chisq <- function(df) {
     variance = 2 * df,
     skewness = sqrt(8 / df),
     kurtosis_exc = 12 / df,
-    range = c(0, Inf),
     .name = "Chi-Squared",
-    .vtype = "continuous"
+    .support = continuous(c(0, Inf))
   )
 }

@@ -39,8 +39,7 @@ dst_unif <- function(min, max) {
     variance = (min - max)^2 / 12,
     skewness = 0,
     kurtosis_exc = -6 / 5,
-    range = c(min, max),
     .name = "Uniform",
-    .vtype = "continuous"
+    .support = continuous(c(min, max))
   )
 }

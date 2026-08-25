@@ -34,8 +34,7 @@ dst_exp <- function(rate) {
     variance = 1 / rate^2,
     skewness = 2,
     kurtosis_exc = 6,
-    range = c(0, Inf),
     .name = "Exponential",
-    .vtype = "continuous"
+    .support = continuous(c(0, Inf))
   )
 }

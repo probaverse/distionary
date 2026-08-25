@@ -38,7 +38,7 @@ test_that("Mean calculated thru network matches known vals", {
           c("Hypergeometric", "Bernoulli", "Binomial", "Finite")
         ) {
           # Finite support.
-          expect_error(eval_mean_from_network(d))
+          expect_equal(suppressMessages(eval_mean_from_network(d)), supposed_mean, tolerance = 1e-6)
           r <- range(d)
           x <- seq(r[1], r[2], by = 1L)
           if (pretty_name(d) == "Finite") {
@@ -52,7 +52,7 @@ test_that("Mean calculated thru network matches known vals", {
           c("Negative Binomial", "Poisson", "Geometric")
         ) {
           # Infinite support.
-          expect_error(eval_mean_from_network(d))
+          expect_equal(suppressMessages(eval_mean_from_network(d)), supposed_mean, tolerance = 1e-6)
           to_add <- Inf
           i <- 0
           mean <- 0

@@ -61,8 +61,7 @@ dst_gp <- function(scale, shape) {
         ((1 - 3 * shape) * (1 - 4 * shape)) - 3,
       Inf
     ),
-    range = c(0, gp_upper(scale = scale, shape = shape)),
     .name = "Generalised Pareto",
-    .vtype = "continuous"
+    .support = continuous(c(0, gp_upper(scale = scale, shape = shape)))
   )
 }

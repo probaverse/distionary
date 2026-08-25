@@ -5,9 +5,21 @@
 #'
 #' @param distribution Distribution to compute range from.
 #' @param ... Not used; vestige of the `base::range()` S3 generic.
-#' @details If there are no methods for the distribution's class,
-#' the range is calculated
-#' using `eval_quantile()` at 0 and at 1.
+#' @details
+#' The range is read from the distribution's support (see [support()]), which
+#' is where a distribution says what values it reaches. In this it behaves like
+#' [vtype()]: derived, not declared.
+#'
+#' It is still a property, and [eval_property()] reaches it like any other, so
+#' code walking a list of property names need not know which are stored and
+#' which are worked out. What it cannot be is *stated*: [distribution()]
+#' refuses a `range` entry, since a stated one would be consulted ahead of the
+#' derived value and could disagree with it.
+#'
+#' The Null distribution is a different case: it has no support at all, so
+#' neither end is *known*, and its range is `c(NA, NA)` --- still a vector of
+#' length two, rather than a single `NA`. An empty support says there is
+#' nothing to reach; the Null distribution says nothing at all.
 #' @returns Vector of length two, containing the minimum and maximum
 #' values of a distribution.
 #' @examples
@@ -29,5 +41,48 @@ range.dst <- function(distribution, ...) {
       "Did you accidentally misspell 'distribution'?"
     )
   }
-  eval_property(distribution, "range")
+  s <- support(distribution)
+  if (is.null(s)) {
+    # Only the Null distribution has no support, and it reaches nothing.
+    return(c(NA_real_, NA_real_))
+  }
+  support_hull(s)
+}
+
+#' @description
+#' The `support` method gives the smallest and largest values the support
+#' reaches --- its two outermost points, taking the atoms and the continuous
+#' regions together. Gaps in between are not represented.
+#'
+#' An empty support reaches nothing, and its range is `c(Inf, -Inf)` --- what
+#' R gives for the range of nothing, and reversed on purpose, being the
+#' identity for combining ranges.
+#' @param support A support object.
+#' @examples
+#' range(continuous(c(0, 1), c(3, 4)))
+#' range(mixed(discrete = -1, continuous = c(0, Inf)))
+#' range(empty_support())
+#' @rdname range
+#' @export
+range.support <- function(support, ...) {
+  dots <- rlang::enexprs(...)
+  dots[["na.rm"]] <- NULL
+  if (length(dots) > 0) {
+    stop("`range()` is expecting no arguments in `...`.")
+  }
+  support_hull(support)
+}
+
+#' Range, for the property network.
+#'
+#' `range` is a property, so `eval_property()` should reach it like any other.
+#' It is a *derived* one --- the support determines it --- so there is nothing
+#' stored to find and this computes it. `distribution()` refuses a stated
+#' `range`, which is what stops a stored entry shadowing this.
+#'
+#' @param distribution Distribution object.
+#' @returns Length-2 numeric.
+#' @noRd
+eval_range_from_network <- function(distribution) {
+  range(distribution)
 }

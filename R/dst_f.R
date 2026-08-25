@@ -49,8 +49,7 @@ dst_f <- function(df1, df2) {
         (df1 * (df2 - 6) * (df2 - 8) * (df1 + df2 - 2)),
       NaN
     ),
-    range = c(0, Inf),
     .name = "F",
-    .vtype = "continuous"
+    .support = continuous(c(0, Inf))
   )
 }

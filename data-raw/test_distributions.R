@@ -251,12 +251,12 @@ test_distributions <- list(
   pearson3 = list(
     distribution = "dst_pearson3",
     invalid = list(
-      list(location = 0, scale = -1, shape = 1),
-      list(location = 0, scale = 1, shape = -1)
+      list(location = 0, scale = -1, shape = 1)
     ),
     valid = list(
       list(location = 1.1, scale = 2.2, shape = 3.3),
-      list(location = 0, scale = 1, shape = 1)
+      list(location = 0, scale = 1, shape = 1),
+      list(location = 0, scale = 1, shape = -1)
     )
   ),
   pois = list(

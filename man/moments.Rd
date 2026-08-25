@@ -39,15 +39,16 @@ If these quantities are not supplied in the
 distribution's definition, a numerical algorithm may be used.
 }
 \details{
-If there is no method associated with a subclass of
-\code{x}, then moments are calculated using
-\code{stats::integrate()} from the density function.
+If a moment is not supplied in the distribution's definition, it is
+computed numerically over the distribution's support: a sum over the atoms
+(the discrete part) plus integration of the density over the continuous part.
+An infinite atomic support (such as a Poisson's) is summed by walking outward
+through its atoms until the tail contribution is negligible.
 }
 \note{
-Beware that if a quantity is being calculated numerically
-for a non-continuous (e.g., discrete) distribution, the calculation
-could be highly approximate. An upcoming version of distionary will
-resolve this issue.
+When a moment is computed numerically and the underlying sum or
+integral does not converge --- for example, a heavy-tailed distribution
+whose moment is not finite --- the result is \code{NaN}.
 }
 \examples{
 a <- dst_gp(1, 0.5)

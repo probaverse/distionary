@@ -19,7 +19,7 @@
 #'     (x > 0) * pmin(x^2, 1)
 #'   },
 #'   g = 9.81,
-#'   .vtype = "continuous"
+#'   .support = continuous(c(0, 1))
 #' )
 #' eval_property(d, "g")
 #' eval_property(d, "quantile", 1:9 / 10)
