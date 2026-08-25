@@ -1,10 +1,11 @@
 # Support algebra -------------------------------------------------------------
 #
-# Operations on supports alone: supports in, supports out. No distribution is
-# involved, which is what separates these from the support *inference* that
-# belongs with the verbs that manipulate distributions (whether the boundary of
-# `max(X, Y)` carries mass depends on the distributions, not just their
-# supports).
+# Operations that depend on nothing but the support. A distribution is accepted
+# wherever a support is, as a convenience: its support is taken and nothing
+# else about it is ever consulted. That is what separates these from support
+# *inference*, which belongs with the verbs that manipulate distributions --
+# whether the boundary of `max(X, Y)` carries mass depends on the
+# distributions themselves, not only on their supports.
 #
 # Given supports, every operation returns a support: one that removes
 # everything returns `empty_support()` rather than a sentinel. Removing
