@@ -47,7 +47,7 @@ test_that("Mixed-distribution moments combine atom-sum and quadrature.", {
     pmf = function(x) ifelse(x == 0, 0.3, 0),
     density = function(x) ifelse(x > 0 & x <= 1, 0.7, 0),
     cdf = function(x) 0.3 * (x >= 0) + 0.7 * pmin(pmax(x, 0), 1),
-    .support = mixed(atoms = 0, continuous = c(0, 1))
+    .support = mixed(discrete = 0, continuous = c(0, 1))
   )
   expect_equal(vtype(d), "mixed")
   # E[X] = 0 * 0.3 + integral_0^1 x * 0.7 dx = 0.35
@@ -110,12 +110,47 @@ test_that("Atoms accumulating at an interior sink from both sides are summed.", 
     n <- ifelse(x < 5, -log2(5 - x), -log2(x - 5))
     0.5 * 2^(-round(n))
   }
-  total <- sum_over_atoms(both, pmf, function(x) rep(1, length(x)))
+  # The walk also needs to know how much probability is still ahead of it,
+  # which is what the cdf says. Below 5, the atoms passed are the first N,
+  # where N = floor(-log2(5 - x)). Above 5, every atom below has been passed,
+  # plus the above-side atoms from M = ceiling(-log2(x - 5)) onward. At 5
+  # itself only the below side counts: 5 is where the atoms pile up, not one
+  # of them.
+  cdfun <- function(x) {
+    vapply(x, function(z) {
+      if (z < 4.5) {
+        return(0)
+      }
+      if (z < 5) {
+        n <- floor(-log2(5 - z))
+        return(0.5 * (1 - 2^(-n)))
+      }
+      if (z == 5) {
+        return(0.5)
+      }
+      m <- ceiling(-log2(z - 5))
+      0.5 + if (m > 0) 2^(-m) else 0.5
+    }, numeric(1))
+  }
+  # Check that cdf against the masses it is meant to be accumulating, by
+  # adding up the pmf over the atoms that actually lie at or below a point.
+  # Comparing it against its own formula would prove nothing.
+  atoms_below <- 5 - 2^(-(1:40))
+  atoms_above <- 5 + 2^(-(1:40))
+  by_summing <- function(z) {
+    sum(pmf(atoms_below[atoms_below <= z])) +
+      sum(pmf(atoms_above[atoms_above <= z]))
+  }
+  for (z in c(4.6, 4.9, 4.99, 5, 5.2, 5.5, 6)) {
+    expect_equal(cdfun(z), by_summing(z), tolerance = 1e-9)
+  }
+
+  total <- sum_over_atoms(both, pmf, cdfun, function(x) rep(1, length(x)))
   expect_equal(total, 1, tolerance = 1e-6)
-  mu <- sum_over_atoms(both, pmf, function(x) x)
+  mu <- sum_over_atoms(both, pmf, cdfun, function(x) x)
   expect_equal(mu, 5, tolerance = 1e-6) # Symmetric about the sink.
   # E[(X - 5)^2] = sum_n 2^(-n) * 4^(-n) = sum_n 8^(-n) = 1/7.
-  v <- sum_over_atoms(both, pmf, function(x) (x - 5)^2)
+  v <- sum_over_atoms(both, pmf, cdfun, function(x) (x - 5)^2)
   expect_equal(v, 1 / 7, tolerance = 1e-6)
 })
 
@@ -139,4 +174,71 @@ test_that("A divergent numerical moment gives NaN.", {
     .support = discrete(natural1())
   )
   expect_true(is.nan(suppressMessages(mean(heavy))))
+})
+
+test_that("The walk does not stop while probability is still ahead.", {
+  # 0.8 of the probability at zero, then a long stretch of atoms each below
+  # tolerance in both mass and contribution, then 0.2 beyond the stretch.
+  # Judging by the atoms underfoot alone, the walk goes quiet in the gap and
+  # never reaches the mass past it.
+  tiny <- 1e-12
+  far <- 201
+  pm <- function(x) {
+    out <- numeric(length(x))
+    out[x == 0] <- 0.8
+    out[x >= 1 & x <= 200] <- tiny
+    out[x == far] <- 0.2 - 200 * tiny
+    out
+  }
+  cdfun <- function(x) {
+    vapply(x, function(z) {
+      if (z < 0) {
+        return(0)
+      }
+      sum(pm(0:max(0, floor(z))))
+    }, numeric(1))
+  }
+  d <- distribution(pmf = pm, cdf = cdfun, .support = discrete(natural0()))
+  expect_equal(mean(d), sum((0:far) * pm(0:far)), tolerance = 1e-6)
+  expect_equal(mean(d), 40.2, tolerance = 1e-6)
+})
+
+test_that("The walk is held open in whichever direction still has mass.", {
+  # The mirror of the trap above, and then both at once. Each direction is
+  # walked separately and bounded by its own share of the probability, so
+  # neither can be stopped early by the other having finished.
+  tiny <- 1e-12
+  pm <- function(x) {
+    out <- numeric(length(x))
+    out[x == 0] <- 0.4
+    out[abs(x) >= 1 & abs(x) <= 100] <- tiny
+    out[x == 201] <- 0.3 - 100 * tiny
+    out[x == -101] <- 0.3 - 100 * tiny
+    out
+  }
+  cdfun <- function(x) {
+    vapply(x, function(z) {
+      if (z < -101) {
+        return(0)
+      }
+      sum(pm(-101:min(201, floor(z))))
+    }, numeric(1))
+  }
+  d <- distribution(pmf = pm, cdf = cdfun, .support = discrete(integers()))
+  # 201 * 0.3 - 101 * 0.3 = 30, so a failure on either side moves the answer.
+  expect_equal(mean(d), sum((-101:201) * pm(-101:201)), tolerance = 1e-6)
+  expect_equal(mean(d), 30, tolerance = 1e-6)
+})
+
+test_that("A direction with no mass in it stops rather than exhausting.", {
+  # Everything at 0 and 5, but a support that runs both ways. Walking down
+  # finds nothing, and should say so at once instead of running to the atom
+  # cap and giving up with NaN.
+  pm <- function(x) ifelse(x == 0, 0.5, ifelse(x == 5, 0.5, 0))
+  cdfun <- function(x) {
+    vapply(x, function(z) if (z < 0) 0 else if (z < 5) 0.5 else 1, numeric(1))
+  }
+  d <- distribution(pmf = pm, cdf = cdfun, .support = discrete(integers()))
+  expect_equal(mean(d), 2.5, tolerance = 1e-6)
+  expect_false(is.nan(mean(d)))
 })

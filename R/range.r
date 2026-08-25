@@ -10,11 +10,16 @@
 #' is where a distribution says what values it reaches. In this it behaves like
 #' [vtype()]: derived, not declared.
 #'
-#' `range` is therefore not one of the property names distionary recognises. A
-#' `range` entry given to [distribution()] is kept, like any other name it does
-#' not know, but nothing consults it --- this function included.
+#' It is still a property, and [eval_property()] reaches it like any other, so
+#' code walking a list of property names need not know which are stored and
+#' which are worked out. What it cannot be is *stated*: [distribution()]
+#' refuses a `range` entry, since a stated one would be consulted ahead of the
+#' derived value and could disagree with it.
 #'
-#' The Null distribution has no support, and its range is `NA`.
+#' The Null distribution is a different case: it has no support at all, so
+#' neither end is *known*, and its range is `c(NA, NA)` --- still a vector of
+#' length two, rather than a single `NA`. An empty support says there is
+#' nothing to reach; the Null distribution says nothing at all.
 #' @returns Vector of length two, containing the minimum and maximum
 #' values of a distribution.
 #' @examples
@@ -47,12 +52,15 @@ range.dst <- function(distribution, ...) {
 #' @description
 #' The `support` method gives the smallest and largest values the support
 #' reaches --- its two outermost points, taking the atoms and the continuous
-#' intervals together. Gaps in between are not represented. For the empty
-#' support, both are `NA`.
+#' regions together. Gaps in between are not represented.
+#'
+#' An empty support reaches nothing, and its range is `c(Inf, -Inf)` --- what
+#' R gives for the range of nothing, and reversed on purpose, being the
+#' identity for combining ranges.
 #' @param support A support object.
 #' @examples
 #' range(continuous(c(0, 1), c(3, 4)))
-#' range(mixed(atoms = -1, continuous = c(0, Inf)))
+#' range(mixed(discrete = -1, continuous = c(0, Inf)))
 #' range(empty_support())
 #' @rdname range
 #' @export
@@ -63,4 +71,18 @@ range.support <- function(support, ...) {
     stop("`range()` is expecting no arguments in `...`.")
   }
   support_hull(support)
+}
+
+#' Range, for the property network.
+#'
+#' `range` is a property, so `eval_property()` should reach it like any other.
+#' It is a *derived* one --- the support determines it --- so there is nothing
+#' stored to find and this computes it. `distribution()` refuses a stated
+#' `range`, which is what stops a stored entry shadowing this.
+#'
+#' @param distribution Distribution object.
+#' @returns Length-2 numeric.
+#' @noRd
+eval_range_from_network <- function(distribution) {
+  range(distribution)
 }

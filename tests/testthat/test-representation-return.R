@@ -44,8 +44,8 @@ test_that("Return periods can be quoted in periods of many observations", {
 
 test_that("`obs_per_period` has to be a positive number", {
   d <- dst_norm(0, 1)
-  expect_error(eval_return(d, at = 2, obs_per_period = 0), "has to be")
-  expect_error(eval_return(d, at = 2, obs_per_period = -5), "has to be")
+  expect_error(eval_return(d, at = 2, obs_per_period = 0), "must be")
+  expect_error(eval_return(d, at = 2, obs_per_period = -5), "must be")
   expect_error(eval_return(d, at = 2, obs_per_period = c(1, 2)))
 })
 

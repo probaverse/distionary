@@ -1,7 +1,7 @@
 #' Expectation of a function over a distribution's support
 #'
-#' Computes `E[g(X)]` by splitting the distribution into its atomic and
-#' continuous parts (its Lebesgue decomposition, recorded in the support):
+#' Computes `E[g(X)]` by splitting the distribution into the mass on its atoms
+#' and the density over its regions, which is what the support records:
 #'
 #' \deqn{E[g(X)] = \sum_{x \in atoms} g(x) \, p(x)
 #'                 + \sum_{intervals} \int g(x) \, f(x) \, dx,}
@@ -39,7 +39,8 @@ expect_over_support <- function(distribution, g, tol = 1e-9, ...) {
   atoms <- support[["atoms"]]
   if (discretes::num_discretes(atoms) > 0) {
     pmf <- representation_as_function(distribution, "pmf")
-    total <- total + sum_over_atoms(atoms, pmf, g, tol = tol)
+    cdf <- representation_as_function(distribution, "cdf")
+    total <- total + sum_over_atoms(atoms, pmf, cdf, g, tol = tol)
   }
   intervals <- support[["continuous"]]
   if (nrow(intervals) > 0) {
@@ -97,7 +98,7 @@ expect_over_support <- function(distribution, g, tol = 1e-9, ...) {
 #' @returns A single numeric, or `NaN` if the sum does not converge.
 #' @noRd
 sum_over_atoms <- function(
-  series, pmf, g, tol = 1e-9, max_atoms = 1e5L, batch = 100L
+  series, pmf, cdf, g, tol = 1e-9, max_atoms = 1e5L, batch = 100L
 ) {
   n <- discretes::num_discretes(series)
   if (n == 0) {
@@ -112,7 +113,7 @@ sum_over_atoms <- function(
   total <- 0
   for (i in seq_len(length(breaks) - 1L)) {
     total <- total + sum_atoms_between(
-      series, pmf, g, breaks[i], breaks[i + 1L], tol, max_atoms, batch
+      series, pmf, cdf, g, breaks[i], breaks[i + 1L], tol, max_atoms, batch
     )
   }
   if (length(finite_sinks) > 0) {
@@ -140,21 +141,32 @@ finite_sink_locations <- function(series) {
 #' both directions from an anchor atom inside the segment. Atoms exactly at
 #' `a` or `b` are excluded; the caller accounts for atoms sitting on a sink.
 #' @noRd
-sum_atoms_between <- function(series, pmf, g, a, b, tol, max_atoms, batch) {
+sum_atoms_between <- function(
+  series, pmf, cdf, g, a, b, tol, max_atoms, batch
+) {
   anchor <- find_anchor(series, a, b)
   if (is.null(anchor)) {
     return(0) # No atoms in this segment.
   }
+  # How much probability this segment holds beyond a point, in each direction.
+  # Bounded to the segment rather than to the whole line: a segment ending at
+  # an accumulation point is never stepped past, so a walk inside it has to be
+  # able to go quiet on its own, and the mass sitting in other segments must
+  # not hold it open.
+  f_a <- if (is.infinite(a)) 0 else cdf(a)
+  f_b <- if (is.infinite(b)) 1 else cdf(b) - pmf(b)
+  above <- function(x) max(0, f_b - cdf(x))
+  below <- function(x) max(0, (cdf(x) - pmf(x)) - f_a)
   g(anchor) * pmf(anchor) +
     walk_atoms(
       series, anchor, discretes::next_discrete, pmf, g,
-      bound = b, upward = TRUE, tol = tol, max_atoms = max_atoms,
-      batch = batch
+      bound = b, upward = TRUE, remaining = above, tol = tol,
+      max_atoms = max_atoms, batch = batch
     ) +
     walk_atoms(
       series, anchor, discretes::prev_discrete, pmf, g,
-      bound = a, upward = FALSE, tol = tol, max_atoms = max_atoms,
-      batch = batch
+      bound = a, upward = FALSE, remaining = below, tol = tol,
+      max_atoms = max_atoms, batch = batch
     )
 }
 
@@ -203,7 +215,8 @@ find_anchor <- function(series, a, b) {
 #'   case the sum is deemed not to converge and `NaN` is returned.
 #' @noRd
 walk_atoms <- function(
-  series, from, step_fn, pmf, g, bound, upward, tol, max_atoms, batch
+  series, from, step_fn, pmf, g, bound, upward, remaining, tol, max_atoms,
+  batch
 ) {
   acc <- 0
   visited <- 0L
@@ -222,7 +235,15 @@ walk_atoms <- function(
       terms <- g(xs) * p
       acc <- acc + sum(terms)
       visited <- visited + length(xs)
-      quiet <- isTRUE(all(p < tol)) && isTRUE(all(abs(terms) < tol))
+      frontier <- if (upward) max(xs) else min(xs)
+      # Two different things have to be true to stop, and neither implies the
+      # other. That the atoms underfoot are small says the walk is not in the
+      # middle of the mass; that the probability ahead is spent says there is
+      # no more of it waiting further out. Without the second, a distribution
+      # that thins to nothing and then resumes is cut off in the gap.
+      quiet <- isTRUE(all(p < tol)) &&
+        isTRUE(all(abs(terms) < tol)) &&
+        isTRUE(remaining(frontier) < tol)
       if (quiet) {
         return(acc)
       }

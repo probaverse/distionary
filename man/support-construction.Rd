@@ -7,56 +7,79 @@
 \alias{mixed}
 \title{Specify the Support of a Distribution}
 \usage{
-discrete(atoms)
+discrete(atoms = numeric(0))
 
 continuous(...)
 
-mixed(atoms, continuous)
+mixed(discrete = numeric(0), continuous = numeric(0))
 }
 \arguments{
-\item{atoms}{The atomic (discrete) part of the support: either a \code{discretes}
-object (see the \pkg{discretes} package, e.g. \code{\link[discretes:integers]{discretes::natural0()}}) or a
-numeric vector of finitely many atoms, which is coerced with
-\code{\link[discretes:as_discretes]{discretes::as_discretes()}}. A numeric vector is unambiguous here because the
-argument names the intent (contrast with passing a bare vector to
-\code{.support}, which is rejected).}
+\item{atoms}{For \code{discrete()}, the points carrying mass: a \code{discretes}
+object (see the \pkg{discretes} package, e.g. \code{\link[discretes:integers]{discretes::natural0()}}), a
+numeric vector of finitely many atoms, or a purely discrete support. A bare
+numeric vector is unambiguous here because the argument names the intent
+(contrast with passing one to \code{.support}, which is rejected).}
 
-\item{...}{For \code{continuous()}, one or more intervals, each a length-2 numeric
-\code{c(lower, upper)}. With no arguments, \code{continuous()} defaults to the whole
-real line, \code{c(-Inf, Inf)}. Overlapping or touching intervals are merged and
-sorted into a canonical form.}
+\item{...}{For \code{continuous()}, one or more regions, each given as a length-2
+numeric \code{c(lower, upper)}. With no arguments, \code{continuous()} defaults to the
+whole real line, \code{c(-Inf, Inf)}. Overlapping or touching regions are merged
+and sorted into a canonical form.}
 
-\item{continuous}{The continuous part of the support, as a union of closed
-intervals. Provide one interval as a length-2 numeric \code{c(lower, upper)}, a
-union as several such vectors, or a continuous support built by
-\code{continuous()}.}
+\item{discrete, continuous}{For \code{mixed()}, the two halves. Each takes the
+same things its own constructor takes, or a support already built by it:
+\code{discrete} as for \code{atoms} above, \code{continuous} as for \code{...} below.}
 }
 \value{
 A support object (class \code{"support"}).
 }
 \description{
-A distribution's \emph{support} is the set on which it places probability.
-It decomposes (the Lebesgue decomposition) into an \emph{atomic} part --- a set
-of points each carrying positive probability mass --- and a \emph{continuous}
-part --- a region carrying a density. \code{discrete()}, \code{continuous()}, and
-\code{mixed()} construct a support from these pieces.
+A support says where a distribution's probability lives, and in what form.
+Probability comes in two forms: \emph{mass}, which sits on single points, and
+\emph{density}, which is spread over regions. A support records both --- the
+points carrying mass, its \emph{atoms}, and the \emph{regions} carrying density ---
+and \code{discrete()}, \code{continuous()} and \code{mixed()} build one from those pieces.
 }
 \details{
 The variable type (\code{\link[=vtype]{vtype()}}) is \emph{derived} from the support: a support with
-only atoms is \code{"discrete"}, only a continuous part is \code{"continuous"}, and
-both is \code{"mixed"}. \code{mixed()} therefore requires \emph{both} parts to be non-empty;
-use \code{discrete()} or \code{continuous()} for the pure cases.
+only atoms is \code{"discrete"}, only a continuous part is \code{"continuous"}, both
+is \code{"mixed"}, and neither is \code{"empty"}.
 
-Intervals are treated as closed. Endpoints of a continuous part are
-measure-zero, so open/closed makes no probabilistic difference there; an atom
-that happens to sit on an interval boundary is simply tracked as an atom.
+Because the type is derived, none of the three insists on being handed
+something non-empty. Each builds whatever the parts describe, and describing
+nothing gives \code{\link[=empty_support]{empty_support()}}. So \code{mixed(continuous = continuous())} is
+the whole real line, \code{discrete(numeric(0))} is empty, and \code{mixed()} is empty
+too. This is what makes them usable when the parts are computed rather than
+typed and may come out empty; \code{mixed()} is then the general constructor,
+with \code{discrete()} and \code{continuous()} the direct way to say one kind on its
+own.
+
+A region is written as a closed interval, but its endpoints carry no
+probability either way, a single point having no width, so open against
+closed makes no difference there. An atom that happens to sit on a region's
+boundary is simply tracked as an atom.
+
+Recording where the mass is and where the density is are two pieces of
+information, not one. Knowing which values are possible is not enough:
+\code{continuous(c(0, 1))} and \code{mixed(discrete = 0, continuous = c(0, 1))} cover
+the same values, but they are different supports and the distributions over
+them differ: one has \code{P(X = 0) = 0}, the other does not. This is why an
+atom lying inside a region is kept rather than absorbed into it.
+\subsection{The third kind}{
+
+Strictly, a measure on the real line splits into three parts, not two: mass
+on points, density over regions, and a third kind with neither --- all of
+its probability on a set of zero total length, none of it sitting on any
+point. The Cantor distribution is the usual example. This is the Lebesgue
+decomposition, and the third part is called singular continuous. A support
+here has no way to describe one, so such distributions are out of reach.
+}
 }
 \examples{
 discrete(discretes::natural0())   # e.g. the support of a Poisson
 discrete(c(3.5, 1.2, 6.7))        # finitely many atoms
 continuous(c(0, Inf))             # e.g. the support of a Gamma
-continuous(c(0, 1), c(3, 4))      # a union of intervals
-mixed(atoms = 0, continuous = c(0, Inf))  # an atom at 0 plus a tail
+continuous(c(0, 1), c(3, 4))      # a union of regions
+mixed(discrete = 0, continuous = c(0, Inf))  # an atom, plus a tail
 }
 \seealso{
 \code{\link[=support]{support()}} to retrieve a distribution's support, \code{\link[=vtype]{vtype()}} for the

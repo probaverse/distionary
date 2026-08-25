@@ -49,7 +49,6 @@
 #' inverse gives `a` and the right gives the next atom. Where density resumes
 #' immediately after the atom, as in a mixed distribution, there is again no
 #' stretch and both inverses give `a`.
-
 #'
 #' **`side` does not apply at `at == 0` and `at == 1`,** where the answer is the
 #' corresponding end of `hull` either way. This is not the two inverses

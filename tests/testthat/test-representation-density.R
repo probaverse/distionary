@@ -50,7 +50,7 @@ half_atom <- function() {
     pmf = function(x) {
       0.5 * (x == 0)
     },
-    .support = mixed(atoms = 0, continuous = c(0, 1)),
+    .support = mixed(discrete = 0, continuous = c(0, 1)),
     .name = "Half atom"
   )
 }
@@ -62,11 +62,11 @@ test_that("The strict definition of a density needs a continuous variable", {
   )
   expect_error(
     eval_density(dst_pois(5), at = 0:3, definition = "strict"),
-    "no density function in the strict sense"
+    "has no density function"
   )
   expect_error(
     eval_density(half_atom(), at = 0.5, definition = "strict"),
-    "no density function in the strict sense"
+    "has no density function"
   )
 })
 
@@ -91,6 +91,6 @@ test_that("The definition carries through to `enframe_density()`", {
   )
   expect_error(
     enframe_density(dst_pois(5), at = 0:3, definition = "strict"),
-    "strict sense"
+    "has no density function"
   )
 })

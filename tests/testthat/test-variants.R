@@ -84,7 +84,7 @@ test_that("A representation is callable as its canonical variant", {
 
 test_that("A representation with no canonical variant says so", {
   q <- variants(right = function(p) rep(-99, length(p)), .name = "quantile")
-  expect_error(q(0.4), "declares only variants")
+  expect_error(q(0.4), "provides no canonical variant")
   d <- poisson_pieces(quantile = q)
   # The canonical variant is derived, and the declared one is used.
   expect_equal(eval_quantile(d, at = 0.5), 5)
@@ -110,7 +110,7 @@ test_that("`eval_property()` takes a variant, and refuses nonsense ones", {
   )
   expect_error(
     eval_property(d, "foofy", 1:10, variant = list(side = "right")),
-    "does not know how to derive it"
+    "cannot derive it"
   )
 })
 

@@ -93,7 +93,7 @@ eval_cdf(d3, at = 3)
 eval_cdf(d3, at = 3, inequality = "strict")
 ```
 
-The variants each representation has are documented with it. Every one of them is available on every distribution, whether or not the distribution was given a function for it: a variant nobody supplied is derived from the representations that were, in the same way a quantile function is derived from a CDF. See the [Specifying Your Own Distribution](./specify-user-defined.html) vignette for how a distribution supplies its own.
+The variants each representation has are documented with it. Every one of them is available on every distribution, whether or not the distribution was given a function for it: a variant nobody supplied is derived from the representations that were, in the same way a quantile function is derived from a CDF. See the [Specifying Your Own Distribution](https://distionary.probaverse.com/articles/specify-user-defined.html) vignette for how a distribution supplies its own.
 
 ## Drawing a random sample
 

@@ -9,28 +9,11 @@
 #' A list of these representations can be found in the details.
 #'
 #' @param ... Name-value pairs for defining the distribution.
-#' @param .support **Required.** The support of the distribution, built with
-#' [discrete()], [continuous()], or [mixed()] (a bare `discretes` object is
-#' also accepted and treated as `discrete()`). The variable type ([vtype()])
-#' and the [range()] are derived from it.
-#'
-#' Every distribution has to declare where it places probability. It is the one
-#' thing distionary cannot work out from the representations: a CDF says how
-#' much probability lies below a point, but not where the atoms are, nor where
-#' the distribution ends. Without it, quantiles at probability 0 and 1 have to
-#' be found by searching into the numerical tail, atoms cannot be located at
-#' all, and moments cannot be decomposed. Declaring it is the same bargain as
-#' declaring atoms: a little more to say up front, in exchange for exact
-#' answers rather than approximate ones.
+#' @param .support **Required.** Where the distribution places probability,
+#' built with [discrete()], [continuous()] or [mixed()]. A bare `discretes`
+#' object is also accepted, and treated as [discrete()]. See Details.
 #' @param .vtype `r lifecycle::badge("defunct")` Removed in favour of
-#' `.support`, and now an error.
-#'
-#' A variable type cannot stand in for a support. `"discrete"` does not say
-#' *which* points carry mass, and `"continuous"` does not say over what region
-#' --- so there is no way to translate one into the other, and guessing would
-#' quietly give wrong answers rather than an error. The argument is kept only
-#' so that old code gets a message saying what to do instead of
-#' `unused argument`.
+#' `.support`, and now an error. See Details.
 #' @param .name A name to give to the distribution.
 #' Can be any character vector of length 1.
 #' @param .parameters A named list with one entry per distribution parameter,
@@ -41,6 +24,36 @@
 #' a future version of distionary.
 #' @return A distribution object.
 #' @details
+#' ## The support
+#'
+#' Every distribution has to say where it places probability, and `.support`
+#' is how. It is the one thing distionary asks for rather than working out: a
+#' CDF does hold the answer, its jumps being the atoms and its flattening out
+#' marking where the distribution ends, but recovering that numerically means
+#' hunting for discontinuities in a function that can only be sampled. The
+#' estimate would be worst for small atoms and long tails, which are the cases
+#' where it matters most.
+#'
+#' Declared instead, it is exact, and the difference shows: quantiles at
+#' probability 0 and 1 are read off rather than searched for in the numerical
+#' tail, atoms are located exactly, and moments can be decomposed. It is the
+#' same bargain as declaring atoms --- a little more to say up front, in
+#' exchange for exact answers rather than approximate ones. The
+#' "The Support of a Distribution" vignette covers what a support is and how
+#' to build one.
+#'
+#' The variable type ([vtype()]) and the [range()] follow from the support, so
+#' neither can be given here; see the property list below.
+#'
+#' `.vtype` used to take a string such as `"continuous"` and is now defunct. A
+#' variable type cannot stand in for a support: `"discrete"` does not say
+#' *which* points carry mass, and `"continuous"` does not say over what
+#' region, so there is no translating one into the other, and a guess would be
+#' quietly wrong rather than an error. The argument is kept only so that old
+#' code gets a message saying what to do, rather than `unused argument`.
+#'
+#' ## Properties
+#'
 #' Currently, the CDF (`cdf`) is required to be specified, along with the PMF
 #' (`pmf`) for discrete distributions and density (`density`) for continuous
 #' distributions. Otherwise, the full extent of distribution properties will
@@ -74,8 +87,11 @@
 #' - `mean`, `stdev`, `variance`, `skewness`, `median` are self-explanatory.
 #' - `kurtosis_exc` and `kurtosis` are the distribution's excess
 #'   kurtosis and regular kurtosis.
-#' - `range`: A vector of the minimum and maximum value of a distribution's
-#'   support.
+#'
+#' `range` and `vtype` are properties too, and [eval_property()] reads them
+#' like any other, but they cannot be given here: the support determines both,
+#' and a stated one could disagree with it. A name distionary does not know is
+#' simply kept, retrievable with [eval_property()] and otherwise unused.
 #' @examples
 #' linear <- distribution(
 #'   density = function(x) {
@@ -126,20 +142,15 @@ distribution <- function(
   }
   if (is.null(.support)) {
     stop(
-      "A distribution needs a support: the set on which it places ",
-      "probability. Specify `.support` with `continuous()`, `discrete()`, ",
-      "or `mixed()`.\n",
-      "Knowing the support is what lets distionary locate atoms exactly, ",
-      "report the true endpoints of a distribution, and integrate over the ",
-      "right region."
+      "A distribution needs a support.\n",
+      "Pass `.support` a `continuous()`, `discrete()`, or `mixed()` set."
     )
   }
   support <- as_support(.support)
   if (is_empty_support(support)) {
     stop(
-      "A distribution cannot have an empty support, because it has to ",
-      "place probability somewhere. The empty support exists so that ",
-      "operations on supports are closed; it is not itself a distribution."
+      "A distribution cannot have an empty support.\n",
+      "It has to place its probability somewhere; see `?empty_support`."
     )
   }
   .vtype <- vtype_of_support(support)
@@ -152,6 +163,18 @@ distribution <- function(
   checkmate::assert_list(.parameters, names = "named", null.ok = TRUE)
   dots <- rlang::enquos(...)
   checkmate::assert_list(dots, names = "named", null.ok = TRUE)
+  # `range` and `vtype` are properties of the distribution, but derived ones:
+  # the support determines both. A stated entry would be consulted ahead of
+  # the derived value and could disagree with it, so it is refused rather
+  # than kept and ignored.
+  derived <- intersect(c("range", "vtype"), names(dots))
+  if (length(derived) > 0) {
+    nm <- derived[[1L]]
+    stop(
+      "`", nm, "` is derived from the support, not stated.\n",
+      "Drop it; `.support` determines it, and `", nm, "()` reads it."
+    )
+  }
   representations <- lapply(dots, rlang::eval_tidy)
   # Representations declaring variants only learn what they are a
   # representation *of* here, from the argument they were assigned to,

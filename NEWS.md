@@ -1,171 +1,141 @@
 # distionary (development version)
 
-- Representations can now be evaluated in more than one *variant*: the
+This cycle adds support objects: a distribution now says where it places its
+probability, and the routines computing from it --- quantiles and moments ---
+use that to handle atoms exactly rather than approximately. It also lets a
+representation come in more than one *variant*, so that questions with more
+than one reasonable answer --- which inverse of the CDF a quantile is, whether
+a probability counts the point it is taken at --- can be asked either way.
+Code that uses the built-in `dst_*()` distributions is unaffected, and every
+variant defaults to the reading its function has always had. The breaking
+changes are in `distribution()`, so they reach only distributions built by
+hand, and in the two `prob_` functions.
+
+## Breaking changes
+
+- `distribution()` now requires a `.support`, saying where the distribution
+  places probability. See `?distribution`, and the "The Support of a
+  Distribution" vignette for why it is asked for.
+
+- `.vtype` is defunct, and errors with a message pointing at `.support`. The
+  variable type is derived from the support.
+
+- `range` and `vtype` are derived from the support rather than stated, and
+  `distribution()` refuses them as entries. Both remain properties, reachable
+  through `eval_property()` like any other.
+
+- `prob_left()` and `prob_right()` are deprecated in favour of
+  `eval_prob_left()` and `eval_prob_right()`, which join the rest of the
+  `eval_` family: they take `at` rather than `of`, they have `enframe_`
+  counterparts, and they say which inequality they mean in words rather than
+  as a logical `inclusive`. They are the CDF and the survival function under
+  names that say which way they point.
+
+## Supports
+
+- New support objects say where a distribution places probability, tracking
+  its atoms explicitly: `discrete()`, `continuous()`, and
+  `mixed(discrete =, continuous =)`. Retrieve one with `support()`, its two
+  parts with `atoms()` and `regions()`, and test one with `is_support()`.
+
+- `empty_support()`, with `is_empty_support()`. No distribution has an empty
+  support, but operations on supports need something to return.
+
+- Supports can now be manipulated, not only built: `support_union()`,
+  `support_restrict()` and `support_transform()`, with `support_shift()`,
+  `support_scale()` and `support_reciprocal()` for the common maps;
+  `support_add_atoms()` and `support_drop_atoms()`; and `support_contains()`
+  and `support_has_atom()`. There is deliberately no intersection.
+
+- All built-in `dst_*()` families carry a support, so their atoms are known
+  explicitly --- `dst_pois()` reports the atoms `0, 1, 2, ...`.
+
+- Re-exported the `discretes` constructors used to describe atomic supports,
+  so they work without attaching that package: `natural0()`, `natural1()`,
+  `integers()`, `arithmetic()` and `as_discretes()`.
+
+## Evaluation
+
+- Moments (`mean()`, `variance()`, `stdev()`, `skewness()`, `kurtosis()`) are
+  computed numerically for discrete and mixed distributions, not only
+  continuous ones: a sum over the atoms plus integration over the regions.
+  Infinite atomic supports are walked outward, and a moment that never settles
+  returns `NaN`.
+
+- Quantiles derived through the property network are considerably faster,
+  solving every requested probability in one vectorised bisection rather than
+  a separate search for each. A probability landing inside an atom's jump
+  returns that atom exactly, and the 0- and 1-quantiles come from the support,
+  so an unbounded distribution gives `-Inf` and `Inf`. Discrete and mixed
+  distributions raised an error on this path before.
+
+## Variants
+
+- A representation can now be evaluated in more than one *variant*: the
   `eval_` and `enframe_` functions take arguments for the versions of a
   representation that answer a different question about the same
-  distribution.
+  distribution. Each defaults to the reading it has always had.
 
-  - `eval_quantile()` takes `side`, choosing which inverse of the cdf to
+  - `eval_quantile()` takes `side`, choosing which inverse of the CDF to
     take. The left inverse, the usual quantile function, remains the default;
-    the right inverse is the other end of a stretch the cdf is flat over,
-    which is where the two differ.
-  - `eval_cdf()` and `eval_survival()` take `inequality`, choosing whether
-    the point itself is counted. The defaults are the conventional ones ---
-    the cdf weak, the survival function strict --- so that the two continue
-    to sum to 1. They differ only at an atom.
+    the right inverse is the far end of a stretch the CDF is flat over, which
+    is where the two differ.
+  - `eval_cdf()` and `eval_survival()` take `inequality`, choosing whether the
+    point itself is counted. The defaults are the conventional ones --- the
+    CDF weak, the survival function strict --- so the two continue to sum
+    to 1. They differ only at an atom.
   - `eval_return()` takes `event`, choosing whether the event of interest is
-    an exceedance of the return level (the default) or a shortfall below it,
-    and `obs_per_period`, for quoting return periods in something other than
+    an exceedance of the return level or a shortfall below it, and
+    `obs_per_period`, for quoting return periods in something other than
     observations of the variable: 365 to quote them in years for a variable
-    observed daily, and so on. The rescaling counts an event occurring
-    somewhere within a period, and assumes the observations are independent
-    of one another; it is not a conversion of the variable itself to a
-    coarser time scale.
+    observed daily. The rescaling counts an event occurring somewhere within a
+    period and assumes the observations are independent of one another; it is
+    not a conversion of the variable itself to a coarser time scale.
   - `eval_density()` and `eval_pmf()` take `definition`, choosing whether the
     representation must exist in the full sense (`"strict"`, which only a
     continuous or a discrete distribution respectively can satisfy) or may be
-    read off the cdf (`"extended"`, the default and the existing behaviour).
+    read off the CDF (`"extended"`, the default).
 
-- New `variants()` declares the variants a distribution can provide itself,
-  for use in `distribution()`:
+- New `variants()` declares the variants a distribution provides itself, for
+  use in `distribution()`:
 
   ``` r
   quantile = variants(function(p) qpois(p, 5), right = my_right_inverse)
   ```
 
-  A representation given to `distribution()` as a plain function provides the
-  canonical variant, and only that. Any other variant is derived from the
-  distribution's other representations --- so every variant is available on
-  every distribution, and declaring one says only that there is a better
-  route to it than the one distionary would find on its own.
+  A representation given as a plain function provides the canonical variant,
+  and only that. Any other variant is derived from the distribution's other
+  representations, so every variant is available on every distribution, and
+  declaring one says only that there is a better route to it than the one
+  distionary would find on its own. The levels are checked as the distribution
+  is built, against the `eval_` function's own signature, so a variant that
+  does not exist is an error rather than a function nothing ever calls.
 
 - `eval_property()` gains a `variant` argument, holding whatever departs from
   the canonical representation, such as `list(side = "right")`. Its `...` is
   unchanged, and still forwards to the representation as it always did.
 
-- **Breaking:** `prob_left()` and `prob_right()` are deprecated in favour of
-  `eval_prob_left()` and `eval_prob_right()`, which join the rest of the
-  `eval_` family: they take `at` rather than `of`, they have `enframe_`
-  counterparts, and they take the `inequality` argument described above
-  rather than a logical `inclusive`. They are the cdf and the survival
-  function under names that say which way they point.
-
-- `eval_density()` of a distribution with nothing but atoms now returns the
-  derivative of its cdf --- 0 between the atoms, `NaN` on them --- where it
+- `eval_density()` of a distribution with nothing but atoms returns the
+  derivative of its CDF --- 0 between the atoms, `NaN` on them --- where it
   previously refused for want of a density function. This is the extended
-  reading described above, and mirrors what `eval_pmf()` has always done for
-  a continuous distribution. A mixed distribution with no density supplied
-  still refuses, since the height it spreads probability at over its
-  continuous part is genuinely unknown.
+  reading described above, and mirrors what `eval_pmf()` has always done for a
+  continuous distribution. A mixed distribution with no density supplied still
+  refuses, since the height it spreads probability at over its regions is
+  genuinely unknown.
 
-- `dst_pearson3()` (and the underlying `ppearson3()`, `dpearson3()`,
-  `qpearson3()`, `rpearson3()`) now accept a negative `shape`, giving the
-  Pearson Type III distribution reflected about `location` --- the
-  negatively-skewed, upper-bounded form.
+## Distributions
 
-- **Breaking:** `range` is no longer one of the property names distionary
-  recognises. It is read from the support, as `vtype()` is --- both are derived
-  from where a distribution places probability, rather than being stated
-  alongside it.
+- `dst_pearson3()`, and the underlying `ppearson3()`, `dpearson3()`,
+  `qpearson3()` and `rpearson3()`, accept a negative `shape`: the Pearson
+  Type III reflected about `location`, giving the negatively-skewed,
+  upper-bounded form.
 
-  Previously a stated `range` won, a given property being consulted before a
-  derived one, so `range()` and `eval_quantile()` at 0 and 1 could report
-  different endpoints for the same distribution. Now `range()` reads the
-  support and nothing else.
+- `dst_lp3()` supports negative skew on the log scale. Zero skew is treated as
+  a log-normal distribution.
 
-  A `range` entry passed to `distribution()` is still kept, as any name
-  distionary does not recognise is kept, but nothing consults it.
+## Documentation
 
-- **Breaking:** `distribution()` now requires a `.support`. A distribution has
-  to say where it places probability, because that is the one thing distionary
-  cannot work out from the representations it is given: a CDF says how much
-  probability lies below a point, but not where the atoms are, nor where the
-  distribution ends. Without it, quantiles at probability 0 and 1 had to be
-  found by searching into the numerical tail --- returning a large finite
-  number where the answer was infinite --- atoms could not be located at all,
-  and moments could not be decomposed. It is the same bargain as declaring
-  atoms: a little more to say up front, in exchange for exact answers instead
-  of approximate ones.
-
-  The one distribution without a support is `dst_null()`, which has nothing to
-  place anywhere; `support()` returns `NULL` for it and nothing else.
-
-  As a consequence there is now a single quantile algorithm rather than two.
-  The separate routine for distributions lacking a support is gone, along with
-  its restriction to continuous distributions, and the inverter itself no
-  longer reaches into a distribution: it takes the function to invert and the
-  facts it needs about the answer's shape. The 0- and 1-quantiles are settled
-  by `eval_quantile()` from the support and never reach an algorithm at all.
-
-- New support objects describe where a distribution places probability,
-  tracking discrete atoms explicitly: `discrete()`, `continuous()` (a union of
-  intervals), and `mixed()`. Pass one to `distribution()` via the new
-  `.support` argument; the variable type (`vtype()`) and `range()` are derived
-  from it. Retrieve a distribution's support with `support()`, and its parts
-  with `atoms()` and `continuous_part()`. Test an object with `is_support()`,
-  and get a support's outermost points with `range()`. There is also an
-  `empty_support()`, tested by `is_empty_support()`: no distribution has one,
-  and `distribution()` rejects it, but it exists so that operations on supports
-  always have something to return. Its variable type is `"empty"`, which is a
-  different claim from `"unknown"` --- empty says there is nowhere to place
-  probability, unknown says nobody specified where. The `.vtype` argument is
-  defunct, and errors with a message pointing at `.support`. A variable type
-  cannot stand in for a support: `"discrete"` does not say *which* points carry
-  mass and `"continuous"` does not say over what region, so there is no way to
-  translate one into the other, and guessing would give quietly wrong answers
-  rather than an error. The argument is kept in the signature only so that old
-  code gets that message rather than `unused argument`. Its typo detection has
-  gone with it, there being nothing left to typo.
-
-- Supports can now be manipulated, not only built. `support_union()`,
-  `support_restrict()`, and `support_transform()` combine, cut down, and map a
-  support, with `support_shift()`, `support_scale()`, and
-  `support_reciprocal()` covering the common maps without having to supply an
-  inverse by hand. `support_add_atoms()` and `support_drop_atoms()` edit the
-  atomic part, and `support_contains()` and `support_has_atom()` test whether a
-  value belongs to a support at all or carries positive probability
-  specifically. Every operation returns a support, so they compose: one that
-  removes everything gives `empty_support()`. There is deliberately no
-  intersection, which has not been needed.
-
-- All built-in `dst_*()` families now carry a structured `.support` (replacing
-  their `range`/`.vtype` specification), so `support()` works on them and their
-  atoms are known explicitly (e.g. `dst_pois()` reports the atoms `0, 1, 2, ...`).
-
-- Moments (`mean()`, `variance()`, `stdev()`, `skewness()`, `kurtosis()`) are
-  now computed numerically for discrete and mixed distributions, not only
-  continuous ones, when not supplied analytically. The computation uses the
-  support: a sum over the atoms plus integration of the density over the
-  continuous part. Infinite atomic supports are walked in batches until the
-  tail is negligible, partitioning at any finite accumulation points so that
-  atoms on the far side of an accumulation point are still counted. A moment
-  that does not converge returns `NaN`.
-
-- Quantiles computed through the network --- that is, for a distribution with
-  no quantile function of its own --- are considerably faster, now solving
-  every requested probability in one vectorised bisection rather than running
-  a separate search for each. They also use the support: a probability landing
-  inside an atom's jump returns that atom *exactly*, and `p = 0` and `p = 1`
-  are read from the ends of the support, so an unbounded distribution gives
-  `-Inf` and `Inf` rather than a large finite number from the numerical tail.
-  Discrete and mixed distributions raised an error on this path before, since
-  their atoms could not be located; they are now exact. Distributions given a
-  `.vtype` string and no support keep the previous per-probability algorithm,
-  which remains restricted to continuous distributions and approximate at
-  `p = 0` and `p = 1`. Internally the algorithm can now take either inverse of
-  the CDF, the right as well as the left; `eval_quantile()` continues to give
-  the left inverse, and the choice is not yet exposed there.
-
-- Re-exported the `discretes` series constructors used to specify atomic
-  supports, so they are available without attaching the package: `natural0()`,
-  `natural1()`, `integers()`, `arithmetic()`, and `as_discretes()`.
-
-- `dst_lp3()` now supports negative skew on the log scale.
-  Zero skew is treated as a log-normal distribution.
-
-- New vignette, "The Support of a Distribution", covering what a support is,
-  how to build, inspect, and manipulate one, and what tracking atoms buys when
-  evaluating a distribution.
+- New vignette, "The Support of a Distribution".
 
 # distionary 0.1.1
 

@@ -32,7 +32,7 @@ a point of positive mass --- which is exactly the distinction between these
 two functions.
 }
 \examples{
-s <- mixed(atoms = 0, continuous = c(2, 5))
+s <- mixed(discrete = 0, continuous = c(2, 5))
 support_contains(s, at = c(0, 1, 3, 9))
 support_has_atom(s, at = c(0, 1, 3, 9))
 

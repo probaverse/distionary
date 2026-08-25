@@ -21,29 +21,12 @@ is.distribution(object)
 \arguments{
 \item{...}{Name-value pairs for defining the distribution.}
 
-\item{.support}{\strong{Required.} The support of the distribution, built with
-\code{\link[=discrete]{discrete()}}, \code{\link[=continuous]{continuous()}}, or \code{\link[=mixed]{mixed()}} (a bare \code{discretes} object is
-also accepted and treated as \code{discrete()}). The variable type (\code{\link[=vtype]{vtype()}})
-and the \code{\link[=range]{range()}} are derived from it.
-
-Every distribution has to declare where it places probability. It is the one
-thing distionary cannot work out from the representations: a CDF says how
-much probability lies below a point, but not where the atoms are, nor where
-the distribution ends. Without it, quantiles at probability 0 and 1 have to
-be found by searching into the numerical tail, atoms cannot be located at
-all, and moments cannot be decomposed. Declaring it is the same bargain as
-declaring atoms: a little more to say up front, in exchange for exact
-answers rather than approximate ones.}
+\item{.support}{\strong{Required.} Where the distribution places probability,
+built with \code{\link[=discrete]{discrete()}}, \code{\link[=continuous]{continuous()}} or \code{\link[=mixed]{mixed()}}. A bare \code{discretes}
+object is also accepted, and treated as \code{\link[=discrete]{discrete()}}. See Details.}
 
 \item{.vtype}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#defunct}{\figure{lifecycle-defunct.svg}{options: alt='[Defunct]'}}}{\strong{[Defunct]}} Removed in favour of
-\code{.support}, and now an error.
-
-A variable type cannot stand in for a support. \code{"discrete"} does not say
-\emph{which} points carry mass, and \code{"continuous"} does not say over what region
---- so there is no way to translate one into the other, and guessing would
-quietly give wrong answers rather than an error. The argument is kept only
-so that old code gets a message saying what to do instead of
-\verb{unused argument}.}
+\code{.support}, and now an error. See Details.}
 
 \item{.name}{A name to give to the distribution.
 Can be any character vector of length 1.}
@@ -69,6 +52,37 @@ variance from standard deviation).
 A list of these representations can be found in the details.
 }
 \details{
+\subsection{The support}{
+
+Every distribution has to say where it places probability, and \code{.support}
+is how. It is the one thing distionary asks for rather than working out: a
+CDF does hold the answer, its jumps being the atoms and its flattening out
+marking where the distribution ends, but recovering that numerically means
+hunting for discontinuities in a function that can only be sampled. The
+estimate would be worst for small atoms and long tails, which are the cases
+where it matters most.
+
+Declared instead, it is exact, and the difference shows: quantiles at
+probability 0 and 1 are read off rather than searched for in the numerical
+tail, atoms are located exactly, and moments can be decomposed. It is the
+same bargain as declaring atoms --- a little more to say up front, in
+exchange for exact answers rather than approximate ones. The
+"The Support of a Distribution" vignette covers what a support is and how
+to build one.
+
+The variable type (\code{\link[=vtype]{vtype()}}) and the \code{\link[=range]{range()}} follow from the support, so
+neither can be given here; see the property list below.
+
+\code{.vtype} used to take a string such as \code{"continuous"} and is now defunct. A
+variable type cannot stand in for a support: \code{"discrete"} does not say
+\emph{which} points carry mass, and \code{"continuous"} does not say over what
+region, so there is no translating one into the other, and a guess would be
+quietly wrong rather than an error. The argument is kept only so that old
+code gets a message saying what to do, rather than \verb{unused argument}.
+}
+
+\subsection{Properties}{
+
 Currently, the CDF (\code{cdf}) is required to be specified, along with the PMF
 (\code{pmf}) for discrete distributions and density (\code{density}) for continuous
 distributions. Otherwise, the full extent of distribution properties will
@@ -103,8 +117,12 @@ Other properties that are understood by \code{distionary} include:
 \item \code{mean}, \code{stdev}, \code{variance}, \code{skewness}, \code{median} are self-explanatory.
 \item \code{kurtosis_exc} and \code{kurtosis} are the distribution's excess
 kurtosis and regular kurtosis.
-\item \code{range}: A vector of the minimum and maximum value of a distribution's
-support.
+}
+
+\code{range} and \code{vtype} are properties too, and \code{\link[=eval_property]{eval_property()}} reads them
+like any other, but they cannot be given here: the support determines both,
+and a stated one could disagree with it. A name distionary does not know is
+simply kept, retrievable with \code{\link[=eval_property]{eval_property()}} and otherwise unused.
 }
 }
 \examples{

@@ -1,13 +1,18 @@
 # Support algebra -------------------------------------------------------------
 #
-# Operations on supports alone: supports in, supports out. No distribution is
-# involved, which is what separates these from the support *inference* that
-# belongs with the verbs that manipulate distributions (whether the boundary of
-# `max(X, Y)` carries mass depends on the distributions, not just their
-# supports).
+# Operations that depend on nothing but the support. A distribution is accepted
+# wherever a support is, as a convenience: its support is taken and nothing
+# else about it is ever consulted. That is what separates these from support
+# *inference*, which belongs with the verbs that manipulate distributions --
+# whether the boundary of `max(X, Y)` carries mass depends on the
+# distributions themselves, not only on their supports.
 #
-# Every operation is closed: an operation that removes everything returns
-# `empty_support()` rather than a sentinel.
+# Given supports, every operation returns a support: one that removes
+# everything returns `empty_support()` rather than a sentinel. Removing
+# everything and having nothing to remove it from are different, though. The
+# Null distribution has no support, and `NULL` -- what `support()` gives for
+# it -- is carried through rather than refused, so an absence stays an absence
+# instead of becoming an error partway down a chain.
 
 #' Combine Supports
 #'
@@ -16,6 +21,10 @@
 #' @param ... Supports to combine, or a single list of them. Distributions are
 #' accepted in place of supports. With no arguments, the result is
 #' [empty_support()], which is the identity for this operation.
+#'
+#' If any of them has no support --- a `NULL`, or [dst_null()] --- the result
+#' is `NULL`. A union cannot be known when one of the things being combined
+#' is not.
 #' @details
 #' The atomic parts are unioned as series, and the continuous parts are pooled
 #' and merged back into canonical form, so touching or overlapping intervals
@@ -45,7 +54,10 @@ support_union <- function(...) {
   if (length(dots) == 0L) {
     return(empty_support())
   }
-  supports <- lapply(dots, as_support_arg)
+  supports <- lapply(dots, as_support_arg, absent = "null")
+  if (any(vapply(supports, is.null, logical(1L)))) {
+    return(NULL)
+  }
   a <- do.call(
     discretes::dsct_union,
     lapply(supports, function(s) s[["atoms"]])
@@ -55,9 +67,9 @@ support_union <- function(...) {
     lapply(supports, function(s) s[["continuous"]])
   )
   if (is.null(intervals)) {
-    intervals <- empty_intervals()
+    intervals <- empty_regions()
   }
-  new_support(atoms = a, continuous = normalize_intervals(intervals))
+  new_support(atoms = a, continuous = normalize_regions(intervals))
 }
 
 #' Restrict a Support to an Interval
@@ -98,7 +110,10 @@ support_restrict <- function(
   include_to = TRUE
 ) {
   rlang::check_dots_empty()
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   checkmate::assert_number(from)
   checkmate::assert_number(to)
   a <- s[["atoms"]]
@@ -118,7 +133,7 @@ support_restrict <- function(
     # A clipped interval `[a, a]` has measure zero, and an interval lying
     # entirely outside `[from, to]` gives `lo > hi`. Both are dropped.
     keep <- lo < hi
-    intervals <- normalize_intervals(
+    intervals <- normalize_regions(
       cbind(lower = unname(lo[keep]), upper = unname(hi[keep]))
     )
   }
@@ -140,7 +155,7 @@ support_restrict <- function(
 #' @param domain,range The domain and range of `fun`, needed to transform an
 #' atomic part that is described rather than enumerated.
 #' @param by For `support_shift()` and `support_scale()`, the amount to shift
-#' or scale by. Scaling by zero is not a monotonic map, and is an error.
+#' or scale by.
 #' @details
 #' `support_shift()`, `support_scale()`, and `support_reciprocal()` are the
 #' common cases, and avoid having to supply an inverse, a domain, and a range
@@ -148,15 +163,32 @@ support_restrict <- function(
 #'
 #' `support_reciprocal()` maps each side of zero separately, since `1 / x` is
 #' monotonic on each side but not across the two. A support with an atom at
-#' zero has no reciprocal, and is an error. Zero lying inside a continuous
-#' part is fine: a single point carries no probability there.
+#' zero has no reciprocal, and is an error. Zero lying inside a region is
+#' fine: a single point carries no probability there.
+#'
+#' Scaling by zero sends every value to 0. Density that was spread over a
+#' region is compressed onto that single point, and density compressed onto a
+#' point is mass. So whatever the support was, the result has a mass at 0 and
+#' density nowhere: `discrete(0)`. Only an empty support, having nothing to
+#' compress, stays empty.
+#'
+#' It only works in that direction. A mass sits on one point and lands on one
+#' point, so mass stays mass.
+#'
+#' A strictly monotonic map stretches and shifts regions but never squashes
+#' one down to a point, so density stays density and mass stays mass. That is
+#' why `support_transform()` asks for a monotonic map, and why scaling by zero
+#' --- which is not one --- is handled separately.
 #' @returns A support object.
 #' @examples
 #' support_shift(continuous(c(0, 1)), by = 5)
 #' support_scale(discrete(natural0()), by = 2)
 #'
-#' # A decreasing map reverses the interval.
+#' # A decreasing map reverses the region.
 #' support_scale(continuous(c(1, 2)), by = -1)
+#'
+#' # Scaling by zero collapses everything onto a single atom.
+#' support_scale(continuous(c(1, 2)), by = 0)
 #'
 #' # Reciprocal of a support spanning zero.
 #' support_reciprocal(continuous(c(-2, 4)))
@@ -179,7 +211,10 @@ support_transform <- function(
   range = c(-Inf, Inf)
 ) {
   rlang::check_dots_empty()
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   checkmate::assert_function(fun)
   checkmate::assert_function(inv)
   checkmate::assert_flag(increasing)
@@ -204,7 +239,7 @@ support_transform <- function(
       cbind(lower = unname(hi), upper = unname(lo))
     }
     # A decreasing map reverses the order of the intervals, so re-canonicalize.
-    intervals <- normalize_intervals(intervals)
+    intervals <- normalize_regions(intervals)
   }
   new_support(atoms = a, continuous = intervals)
 }
@@ -226,10 +261,16 @@ support_shift <- function(support, by) {
 support_scale <- function(support, by) {
   checkmate::assert_number(by, finite = TRUE)
   if (by == 0) {
-    stop(
-      "Can't scale a support by zero: the result is a single point, which ",
-      "is not a monotonic image of the original. Use `discrete(0)`."
-    )
+    # Not a monotonic map, so it cannot go through `support_transform()`:
+    # every point lands on zero. The probability spread over a region does
+    # not vanish when the region collapses --- it piles up at zero, which in
+    # a support is an atom. So any support with anything in it scales to the
+    # single atom at zero, and only an empty one stays empty.
+    s <- as_support_arg(support, absent = "null")
+    if (is.null(s) || is_empty_support(s)) {
+      return(s)
+    }
+    return(discrete(0))
   }
   support_transform(
     support,
@@ -242,11 +283,13 @@ support_scale <- function(support, by) {
 #' @rdname support_transform
 #' @export
 support_reciprocal <- function(support) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   if (isTRUE(support_has_atom(s, 0))) {
     stop(
-      "Can't take the reciprocal of a support with an atom at zero, ",
-      "because `1 / 0` is undefined."
+      "Can't take the reciprocal of a support with an atom at zero."
     )
   }
   halves <- list(
@@ -283,7 +326,7 @@ reciprocal_half <- function(support, negative) {
     # An endpoint at zero maps to the signed infinity of its own side.
     lo <- ifelse(intervals[, "upper"] == 0, -Inf, 1 / intervals[, "upper"])
     hi <- ifelse(intervals[, "lower"] == 0, Inf, 1 / intervals[, "lower"])
-    intervals <- normalize_intervals(
+    intervals <- normalize_regions(
       cbind(lower = unname(lo), upper = unname(hi))
     )
   }
@@ -309,11 +352,14 @@ reciprocal_half <- function(support, negative) {
 #' support_drop_atoms(discrete(c(1, 2, 3)), 2)
 #'
 #' # Removing an atom leaves the continuous part alone.
-#' support_drop_atoms(mixed(atoms = 0, continuous = c(0, 1)), 0)
+#' support_drop_atoms(mixed(discrete = 0, continuous = c(0, 1)), 0)
 #' @family Support algebra
 #' @export
 support_add_atoms <- function(support, atoms) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   a <- as_atoms(atoms)
   new_support(
     atoms = discretes::dsct_union(s[["atoms"]], a),
@@ -324,7 +370,10 @@ support_add_atoms <- function(support, atoms) {
 #' @rdname support_add_atoms
 #' @export
 support_drop_atoms <- function(support, atoms) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
   values <- atoms_to_drop(atoms)
   a <- s[["atoms"]]
   for (v in values) {
@@ -347,9 +396,8 @@ atoms_to_drop <- function(atoms) {
     n <- discretes::num_discretes(atoms)
     if (!is.finite(n)) {
       stop(
-        "Can't remove infinitely many atoms, because they have to be ",
-        "enumerated. Use `support_restrict()` to cut a support down by ",
-        "region instead."
+        "Can't remove infinitely many atoms: they have to be listed.\n",
+        "Use `support_restrict()` to cut a support down by region."
       )
     }
     if (n == 0) {
@@ -379,7 +427,7 @@ atoms_to_drop <- function(atoms) {
 #' two functions.
 #' @returns A logical vector the same length as `at`.
 #' @examples
-#' s <- mixed(atoms = 0, continuous = c(2, 5))
+#' s <- mixed(discrete = 0, continuous = c(2, 5))
 #' support_contains(s, at = c(0, 1, 3, 9))
 #' support_has_atom(s, at = c(0, 1, 3, 9))
 #'
@@ -387,8 +435,11 @@ atoms_to_drop <- function(atoms) {
 #' @family Support algebra
 #' @export
 support_contains <- function(support, at) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
   checkmate::assert_numeric(at)
+  if (is.null(s)) {
+    return(rep(NA, length(at)))
+  }
   res <- support_has_atom(s, at)
   intervals <- s[["continuous"]]
   for (i in seq_len(nrow(intervals))) {
@@ -401,8 +452,11 @@ support_contains <- function(support, at) {
 #' @rdname support_contains
 #' @export
 support_has_atom <- function(support, at) {
-  s <- as_support_arg(support)
+  s <- as_support_arg(support, absent = "null")
   checkmate::assert_numeric(at)
+  if (is.null(s)) {
+    return(rep(NA, length(at)))
+  }
   if (discretes::num_discretes(s[["atoms"]]) == 0) {
     return(rep(FALSE, length(at)))
   }

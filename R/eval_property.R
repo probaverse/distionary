@@ -61,8 +61,8 @@ eval_property <- function(distribution, entry, ..., variant = list()) {
   } else {
     if (length(variant) > 0) {
       stop(
-        "The '", entry, "' entry of this distribution is a value, not a ",
-        "function, so it has no variants."
+        "The '", entry, "' entry is a value, not a function.\n",
+        "A value has no variants; drop the `variant` argument."
       )
     }
     rlang::check_dots_empty()
@@ -73,9 +73,9 @@ eval_property <- function(distribution, entry, ..., variant = list()) {
   if (!available) {
     if (length(variant) > 0) {
       stop(
-        "Cannot evaluate the ", describe_variant(variant), " variant of '",
-        entry, "': this distribution does not provide it, and distionary ",
-        "does not know how to derive it."
+        "Cannot evaluate the ", describe_variant(variant), " variant\n",
+        "of '", entry, "': the distribution does not provide it, and\n",
+        "distionary cannot derive it."
       )
     }
     return(NULL)

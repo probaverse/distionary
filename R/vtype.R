@@ -18,3 +18,15 @@ vtype <- function(distribution) {
   checkmate::assert_class(distribution, "dst")
   attributes(distribution)[["vtype"]]
 }
+
+#' Variable type, for the property network.
+#'
+#' As with `eval_range_from_network()`: `vtype` is a derived property, so
+#' `eval_property()` reaches it by computing rather than by finding it stored.
+#'
+#' @param distribution Distribution object.
+#' @returns Single character.
+#' @noRd
+eval_vtype_from_network <- function(distribution) {
+  vtype(distribution)
+}

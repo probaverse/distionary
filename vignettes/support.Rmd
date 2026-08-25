@@ -22,14 +22,17 @@ This vignette explains what a distribution's _support_ is in `distionary`, how t
 
 ## What a Support Is
 
-A distribution's **support** is the set on which it places probability. Every distribution splits that set into two parts:
+A support says where a distribution's probability lives, and in what form.
 
-- an **atomic** part -- individual points, each carrying positive probability mass; and
-- a **continuous** part -- one or more intervals, over which probability is spread as a density.
+Probability comes in two forms. **Mass** sits on single points. **Density** is spread over regions. A support records both: the points carrying mass, called **atoms**, and the **regions** carrying density.
 
-This split is the Lebesgue decomposition, and it's the reason a distribution is called discrete (atoms only), continuous (intervals only), or mixed (both). In `distionary`, a support is an object holding these two parts, and the variable type is _derived_ from it rather than declared.
+That is two pieces of information, not one. Knowing which values are possible is not enough --- `[0, 1]` with a mass at 0 and `[0, 1]` without one cover the same values but are different supports, and the distributions over them differ.
 
-The reason to carry this structure around is practical: numeric routines need to know where the atoms are. A quantile function has to land exactly on an atom rather than near it, and a mean has to sum over atoms rather than integrate across them. Recording the support means these calculations can be done correctly without having to guess.
+The support says where the mass and density are. The distribution over it says how much.
+
+Which of the two a distribution has decides what it is called: discrete if only mass, continuous if only density, mixed if both. So the variable type is _derived_ from the support rather than declared alongside it.
+
+The reason to carry this around is practical. Numeric routines need to know where the atoms are: a quantile has to land exactly on an atom rather than near it, and a mean has to sum over atoms rather than integrate across them. Recording the support means these can be done correctly instead of guessed at.
 
 ## Building a Support
 
@@ -90,10 +93,18 @@ discrete(arithmetic(0, 0.5, n_left = 0, n_right = 4))
 `mixed()` takes both parts, named. Here is an atom at zero sitting at the edge of a continuous tail:
 
 ```{r}
-mixed(atoms = 0, continuous = c(0, Inf))
+mixed(discrete = 0, continuous = c(0, Inf))
 ```
 
-An atom is allowed to coincide with an interval endpoint, as it does here -- the atom is simply tracked separately, and its mass is not double-counted against the density. Because the variable type is derived from the parts, `mixed()` insists that _both_ of them be non-empty; use `discrete()` or `continuous()` for the pure cases.
+An atom is allowed to coincide with a region's endpoint, as it does here -- the atom is simply tracked separately, and its mass is not double-counted against the density.
+
+Because the variable type is derived from the parts, `mixed()` has nothing to insist on. Hand it one half and you get a support of that kind back, which makes it the one to reach for when the parts are worked out by code rather than typed, and either might come out empty.
+
+```{r}
+mixed(continuous = continuous(c(0, 1)))
+```
+
+`discrete()` and `continuous()` remain the direct way to say one on its own.
 
 ### The empty support
 
@@ -126,11 +137,11 @@ support(dst_pois(3))
 support(dst_gamma(shape = 2, rate = 1))
 ```
 
-The two parts can be pulled out individually. `atoms()` returns a `discretes` object, and `continuous_part()` returns a two-column matrix of intervals.
+The two parts can be pulled out individually. `atoms()` returns a `discretes` object, and `regions()` returns a two-column matrix of intervals.
 
 ```{r}
-atoms(mixed(atoms = 0, continuous = c(0, Inf)))
-continuous_part(continuous(c(0, 1), c(3, 4)))
+atoms(mixed(discrete = 0, continuous = c(0, Inf)))
+regions(continuous(c(0, 1), c(3, 4)))
 ```
 
 Both accept a distribution as well as a support, so there's no need to unwrap first.
@@ -199,11 +210,23 @@ support_shift(continuous(c(0, 1)), by = 5)
 support_scale(discrete(natural0()), by = 2)
 ```
 
-A decreasing map reverses each interval, which is taken care of for you.
+A decreasing map reverses each region, which is taken care of for you.
 
 ```{r}
 support_scale(continuous(c(1, 2)), by = -1)
 ```
+
+Scaling by zero is worth singling out, because it changes what kind of support you have.
+
+```{r}
+support_scale(continuous(c(1, 2)), by = 0)
+```
+
+Multiplying by zero sends every value to 0. Density that was spread over a region is compressed onto that single point, and density compressed onto a point is mass. So whatever the distribution was, the result has a mass at 0 and density nowhere: it is discrete.
+
+It only works in that direction. A mass sits on one point and lands on one point, so mass stays mass.
+
+A strictly monotonic map stretches and shifts regions but never squashes one down to a point, so density stays density and mass stays mass. That is why `support_transform()` asks for a monotonic map, and why scaling by zero --- which is not one --- is handled separately.
 
 Reciprocals are worth a closer look, because `1 / x` isn't monotonic across zero. Each side of zero is mapped separately and the two results unioned, which is why the support below comes back in two pieces.
 
@@ -230,14 +253,14 @@ support_add_atoms(continuous(c(0, Inf)), 0)
 Finally, two functions ask whether a value belongs to a support. `support_contains()` counts both parts, whereas `support_has_atom()` counts only the atoms --- making it the one to reach for when what matters is whether a point carries positive probability.
 
 ```{r}
-s <- mixed(atoms = 0, continuous = c(2, 5))
+s <- mixed(discrete = 0, continuous = c(2, 5))
 support_contains(s, at = c(0, 1, 3, 9))
 support_has_atom(s, at = c(0, 1, 3, 9))
 ```
 
 ## Giving a Distribution a Support
 
-Supports are attached to user-defined distributions through the `.support` argument of `distribution()`, described in the [Specifying Your Own Distribution](./specify-user-defined.html) vignette.
+Supports are attached to user-defined distributions through the `.support` argument of `distribution()`, described in the [Specifying Your Own Distribution](https://distionary.probaverse.com/articles/specify-user-defined.html) vignette.
 
 ```{r}
 my_normal <- distribution(
@@ -256,7 +279,7 @@ distribution(cdf = stats::pnorm, .support = c(0, Inf))
 
 Inside `discrete()` and `mixed()` the ambiguity is already resolved by the argument name, which is why a bare vector is fine there.
 
-A support is not optional. It is the one thing `distionary` cannot work out from the representations you give it: a CDF says how much probability lies below a point, but not where the atoms are, nor where the distribution ends.
+A support is not optional. It is the one thing `distionary` asks you to state rather than work out for you. In principle it could: a CDF holds the answer, since its jumps are the atoms and it stops moving where the distribution ends. But finding those numerically means hunting for discontinuities in a function that can only be sampled, and the answer would be an estimate --- least reliable, as it happens, for the small atoms and the long tails where being exact matters most. Rather than guess well most of the time, `distionary` asks.
 
 ```{r, error = TRUE}
 distribution(cdf = stats::pnorm, density = stats::dnorm)
@@ -281,7 +304,7 @@ rainfall <- distribution(
   pmf = function(x) {
     ifelse(x == 0, p0, 0)
   },
-  .support = mixed(atoms = 0, continuous = c(0, Inf)),
+  .support = mixed(discrete = 0, continuous = c(0, Inf)),
   .name = "Rainfall"
 )
 vtype(rainfall)
@@ -312,7 +335,9 @@ my_poisson <- distribution(
 eval_quantile(my_poisson, at = c(0.05, 0.3, 0.5, 0.9, 0.99))
 ```
 
-Note that the support here has infinitely many atoms, and the mean is still computed, by walking outward through the atoms until the remaining contributions are negligible.
+Note that the support here has infinitely many atoms, and the mean is still computed. The atoms are walked outward in batches, and the walk stops only when two things are true at once: the probability still ahead of it has been spent, and the atoms underfoot are adding next to nothing to the running total.
+
+The first of those is what makes it safe. How much probability lies beyond a point is exactly what the CDF says, so the walk never stops while there is mass waiting further out --- not even if it happens to be crossing a long stretch of atoms too small to notice.
 
 ```{r}
 mean(my_poisson)
@@ -325,3 +350,5 @@ Two things are worth knowing about where supports stand today.
 A support describes a distribution on the real line. Multivariate supports would be composed from univariate ones, and the object already reserves a place to record its dimension, but that composition isn't built yet.
 
 There is no intersection. It hasn't been needed --- `support_restrict()` already covers cutting a support down to an interval, which is the case that comes up in practice --- so it waits until something calls for it.
+
+And a note for anyone checking the theory. Strictly, a measure on the real line splits into three parts, not two: mass on points, density over regions, and a third kind with neither --- all of its probability on a set of zero total length, none of it sitting on any point. The Cantor distribution is the usual example. This is the Lebesgue decomposition, and the third part is called singular continuous. A support here has no way to describe one, so such distributions are out of reach.

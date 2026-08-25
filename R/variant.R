@@ -233,9 +233,9 @@ representation_function <- function(representation, variant) {
   bound <- attr(representation, "bound")
   if (is.null(bound)) {
     stop(
-      "This representation has not been bound to a name, so its variants ",
-      "cannot be matched. Build it inside `distribution()`, or name it with ",
-      "the `.name` argument of `variants()`."
+      "This representation has not been bound to a name, so its\n",
+      "variants cannot be matched. Build it inside `distribution()`,\n",
+      "or name it with the `.name` argument of `variants()`."
     )
   }
   for (entry in bound) {

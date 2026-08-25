@@ -28,7 +28,7 @@ the size of the cdf's jump there, which is an answer any distribution can
 give --- zero, for a point carrying no probability. Under \code{"strict"}, it
 is a mass function in the full sense --- masses that account for all of
 the distribution's probability --- which only a discrete distribution has,
-and asking a distribution with a continuous part for one is an error.
+and asking a distribution with regions for one is an error.
 
 This is a question about the distribution, not about which function to
 evaluate: where both definitions apply they give the same numbers, and

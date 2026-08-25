@@ -38,7 +38,7 @@ test_that("Variable type is derived from the support that was given", {
     expect_identical(
       vtype(distribution(
         cdf = f, density = f,
-        .support = mixed(atoms = 0, continuous = c(0, 1))
+        .support = mixed(discrete = 0, continuous = c(0, 1))
       )),
       "mixed"
     )

@@ -39,7 +39,7 @@ which reverses each interval's endpoints.}
 atomic part that is described rather than enumerated.}
 
 \item{by}{For \code{support_shift()} and \code{support_scale()}, the amount to shift
-or scale by. Scaling by zero is not a monotonic map, and is an error.}
+or scale by.}
 }
 \value{
 A support object.
@@ -55,15 +55,32 @@ by hand.
 
 \code{support_reciprocal()} maps each side of zero separately, since \code{1 / x} is
 monotonic on each side but not across the two. A support with an atom at
-zero has no reciprocal, and is an error. Zero lying inside a continuous
-part is fine: a single point carries no probability there.
+zero has no reciprocal, and is an error. Zero lying inside a region is
+fine: a single point carries no probability there.
+
+Scaling by zero sends every value to 0. Density that was spread over a
+region is compressed onto that single point, and density compressed onto a
+point is mass. So whatever the support was, the result has a mass at 0 and
+density nowhere: \code{discrete(0)}. Only an empty support, having nothing to
+compress, stays empty.
+
+It only works in that direction. A mass sits on one point and lands on one
+point, so mass stays mass.
+
+A strictly monotonic map stretches and shifts regions but never squashes
+one down to a point, so density stays density and mass stays mass. That is
+why \code{support_transform()} asks for a monotonic map, and why scaling by zero
+--- which is not one --- is handled separately.
 }
 \examples{
 support_shift(continuous(c(0, 1)), by = 5)
 support_scale(discrete(natural0()), by = 2)
 
-# A decreasing map reverses the interval.
+# A decreasing map reverses the region.
 support_scale(continuous(c(1, 2)), by = -1)
+
+# Scaling by zero collapses everything onto a single atom.
+support_scale(continuous(c(1, 2)), by = 0)
 
 # Reciprocal of a support spanning zero.
 support_reciprocal(continuous(c(-2, 4)))

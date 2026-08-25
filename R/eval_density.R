@@ -54,8 +54,8 @@ eval_density_from_network <- function(distribution, at) {
     # it spreads it at is a fact about the distribution that nothing else can
     # supply --- so a missing density there stays missing.
     stop(
-      "Cannot find density function. Density must be specified ",
-      "in the distribution."
+      "Cannot find a density function.\n",
+      "Specify `density` when building the distribution."
     )
   }
   # A distribution of nothing but atoms has no density, but its cdf still has
@@ -99,26 +99,11 @@ check_strict_definition <- function(distribution, entry) {
   } else {
     "probability mass function"
   }
-  reason <- if (entry == "density") {
-    paste(
-      "the probability it places on its atoms cannot be recovered by",
-      "integrating anything"
-    )
-  } else {
-    paste(
-      "the probability it spreads over its continuous part sits on no",
-      "point in particular"
-    )
-  }
   stop(
-    "A ", type, " distribution has no ", object, " in the strict sense: ",
-    reason, ".\n",
-    "Use `definition = \"extended\"` to evaluate it anyway, where it is ",
-    "read as the derivative of the cdf (for a density) or the size of the ",
-    "cdf's jump (for a mass function)."
+    "A ", type, " distribution has no ", object, ".\n",
+    "Use `definition = \"extended\"` to read it off the cdf instead."
   )
 }
-
 #' @rdname density
 #' @export
 enframe_density <- function(

@@ -1,34 +1,57 @@
 #' Specify the Support of a Distribution
 #'
-#' A distribution's *support* is the set on which it places probability.
-#' It decomposes (the Lebesgue decomposition) into an *atomic* part --- a set
-#' of points each carrying positive probability mass --- and a *continuous*
-#' part --- a region carrying a density. `discrete()`, `continuous()`, and
-#' `mixed()` construct a support from these pieces.
+#' A support says where a distribution's probability lives, and in what form.
+#' Probability comes in two forms: *mass*, which sits on single points, and
+#' *density*, which is spread over regions. A support records both --- the
+#' points carrying mass, its *atoms*, and the *regions* carrying density ---
+#' and `discrete()`, `continuous()` and `mixed()` build one from those pieces.
 #'
-#' @param atoms The atomic (discrete) part of the support: either a `discretes`
-#' object (see the \pkg{discretes} package, e.g. [discretes::natural0()]) or a
-#' numeric vector of finitely many atoms, which is coerced with
-#' [discretes::as_discretes()]. A numeric vector is unambiguous here because the
-#' argument names the intent (contrast with passing a bare vector to
-#' `.support`, which is rejected).
-#' @param continuous The continuous part of the support, as a union of closed
-#' intervals. Provide one interval as a length-2 numeric `c(lower, upper)`, a
-#' union as several such vectors, or a continuous support built by
-#' `continuous()`.
-#' @param ... For `continuous()`, one or more intervals, each a length-2 numeric
-#' `c(lower, upper)`. With no arguments, `continuous()` defaults to the whole
-#' real line, `c(-Inf, Inf)`. Overlapping or touching intervals are merged and
-#' sorted into a canonical form.
+#' @param atoms For `discrete()`, the points carrying mass: a `discretes`
+#' object (see the \pkg{discretes} package, e.g. [discretes::natural0()]), a
+#' numeric vector of finitely many atoms, or a purely discrete support. A bare
+#' numeric vector is unambiguous here because the argument names the intent
+#' (contrast with passing one to `.support`, which is rejected).
+#' @param discrete,continuous For `mixed()`, the two halves. Each takes the
+#' same things its own constructor takes, or a support already built by it:
+#' `discrete` as for `atoms` above, `continuous` as for `...` below.
+#' @param ... For `continuous()`, one or more regions, each given as a length-2
+#' numeric `c(lower, upper)`. With no arguments, `continuous()` defaults to the
+#' whole real line, `c(-Inf, Inf)`. Overlapping or touching regions are merged
+#' and sorted into a canonical form.
 #' @details
 #' The variable type ([vtype()]) is *derived* from the support: a support with
-#' only atoms is `"discrete"`, only a continuous part is `"continuous"`, and
-#' both is `"mixed"`. `mixed()` therefore requires *both* parts to be non-empty;
-#' use `discrete()` or `continuous()` for the pure cases.
+#' only atoms is `"discrete"`, only a continuous part is `"continuous"`, both
+#' is `"mixed"`, and neither is `"empty"`.
 #'
-#' Intervals are treated as closed. Endpoints of a continuous part are
-#' measure-zero, so open/closed makes no probabilistic difference there; an atom
-#' that happens to sit on an interval boundary is simply tracked as an atom.
+#' Because the type is derived, none of the three insists on being handed
+#' something non-empty. Each builds whatever the parts describe, and describing
+#' nothing gives [empty_support()]. So `mixed(continuous = continuous())` is
+#' the whole real line, `discrete(numeric(0))` is empty, and `mixed()` is empty
+#' too. This is what makes them usable when the parts are computed rather than
+#' typed and may come out empty; `mixed()` is then the general constructor,
+#' with `discrete()` and `continuous()` the direct way to say one kind on its
+#' own.
+#'
+#' A region is written as a closed interval, but its endpoints carry no
+#' probability either way, a single point having no width, so open against
+#' closed makes no difference there. An atom that happens to sit on a region's
+#' boundary is simply tracked as an atom.
+#'
+#' Recording where the mass is and where the density is are two pieces of
+#' information, not one. Knowing which values are possible is not enough:
+#' `continuous(c(0, 1))` and `mixed(discrete = 0, continuous = c(0, 1))` cover
+#' the same values, but they are different supports and the distributions over
+#' them differ: one has `P(X = 0) = 0`, the other does not. This is why an
+#' atom lying inside a region is kept rather than absorbed into it.
+#'
+#' ## The third kind
+#'
+#' Strictly, a measure on the real line splits into three parts, not two: mass
+#' on points, density over regions, and a third kind with neither --- all of
+#' its probability on a set of zero total length, none of it sitting on any
+#' point. The Cantor distribution is the usual example. This is the Lebesgue
+#' decomposition, and the third part is called singular continuous. A support
+#' here has no way to describe one, so such distributions are out of reach.
 #' @returns A support object (class `"support"`).
 #' @seealso [support()] to retrieve a distribution's support, [vtype()] for the
 #' derived variable type.
@@ -36,17 +59,13 @@
 #' discrete(discretes::natural0())   # e.g. the support of a Poisson
 #' discrete(c(3.5, 1.2, 6.7))        # finitely many atoms
 #' continuous(c(0, Inf))             # e.g. the support of a Gamma
-#' continuous(c(0, 1), c(3, 4))      # a union of intervals
-#' mixed(atoms = 0, continuous = c(0, Inf))  # an atom at 0 plus a tail
+#' continuous(c(0, 1), c(3, 4))      # a union of regions
+#' mixed(discrete = 0, continuous = c(0, Inf))  # an atom, plus a tail
 #' @family Support
 #' @name support-construction
 #' @export
-discrete <- function(atoms) {
-  a <- as_atoms(atoms)
-  if (discretes::num_discretes(a) == 0) {
-    stop("`discrete()` requires at least one atom.")
-  }
-  new_support(atoms = a)
+discrete <- function(atoms = numeric(0)) {
+  new_support(atoms = as_atoms(atoms))
 }
 
 #' @rdname support-construction
@@ -56,27 +75,13 @@ continuous <- function(...) {
   if (length(dots) == 0) {
     dots <- list(c(-Inf, Inf))
   }
-  new_support(continuous = normalize_intervals(collect_intervals(dots)))
+  new_support(continuous = normalize_regions(collect_regions(dots)))
 }
 
 #' @rdname support-construction
 #' @export
-mixed <- function(atoms, continuous) {
-  a <- as_atoms(atoms)
-  ci <- as_intervals(continuous)
-  if (discretes::num_discretes(a) == 0) {
-    stop(
-      "`mixed()` requires a non-empty atomic part. ",
-      "Use `continuous()` for a purely continuous support."
-    )
-  }
-  if (nrow(ci) == 0) {
-    stop(
-      "`mixed()` requires a non-empty continuous part. ",
-      "Use `discrete()` for a purely discrete support."
-    )
-  }
-  new_support(atoms = a, continuous = ci)
+mixed <- function(discrete = numeric(0), continuous = numeric(0)) {
+  new_support(atoms = as_atoms(discrete), continuous = as_regions(continuous))
 }
 
 #' The Empty Support
@@ -100,9 +105,10 @@ mixed <- function(atoms, continuous) {
 #' empty_support()
 #' is_empty_support(empty_support())
 #'
-#' # The empty support is what falls out of an impossible restriction, and it
-#' # is what `continuous()` returns when given no intervals at all.
+#' # It is also what any of the constructors gives when handed nothing.
 #' continuous(numeric(0))
+#' discrete(numeric(0))
+#' mixed()
 #' @family Support
 #' @export
 empty_support <- function() {
@@ -126,7 +132,7 @@ empty_support <- function() {
 #' @noRd
 new_support <- function(
   atoms = discretes::empty_series(),
-  continuous = empty_intervals(),
+  continuous = empty_regions(),
   ndim = 1L
 ) {
   structure(
@@ -156,9 +162,9 @@ as_support <- function(x) {
   }
   if (is.numeric(x)) {
     stop(
-      "Can't interpret a bare numeric vector as a support, because ",
-      "`c(0, Inf)` is ambiguous. Did you mean `discrete()` (atoms) or ",
-      "`continuous()` (a range / intervals)?"
+      "A bare numeric vector is ambiguous as a support: `c(0, Inf)`\n",
+      "could be two atoms, or one interval.\n",
+      "Use `discrete()` for atoms, or `continuous()` for intervals."
     )
   }
   stop("`.support` must be a support object or a `discretes` object.")
@@ -207,27 +213,56 @@ support <- function(distribution) {
   attributes(distribution)[["support"]]
 }
 
-#' Atomic and Continuous Parts of a Support
+#' What a Support Is Made Of
 #'
-#' Extract the atomic (discrete) part or the continuous part of a support. Each
-#' accepts either a support object or a distribution.
+#' Take a support apart: `atoms()` gives the points it places mass on, and
+#' `regions()` gives the intervals it spreads mass across. Each accepts a
+#' support object or a distribution.
 #'
 #' @param x A support object or a distribution.
-#' @returns For `atoms()`, a `discretes` object. For `continuous_part()`, a
-#' two-column numeric matrix of intervals (`lower`, `upper`).
+#' @returns For `atoms()`, a `discretes` object. For `regions()`, a two-column
+#' numeric matrix of intervals (`lower`, `upper`), one row each.
+#' @details
+#' These are the inverses of the constructors. `discrete()` builds a support
+#' out of atoms and `atoms()` gives them back; `continuous()` builds one out of
+#' regions and `regions()` gives those back. So the discrete part of a support
+#' is `discrete(atoms(x))`, and its continuous part is `continuous(regions(x))`.
+#'
+#' A support with no atoms gives an empty `discretes` object rather than
+#' nothing, and one with no regions gives a matrix of no rows, so neither has
+#' to be guarded against before being used. That is a definite answer: the
+#' support says there is no part of that kind.
+#'
+#' [dst_null()] is different. It has no support at all, so there is nothing to
+#' take apart and nothing is known --- both give `NULL`, as [support()] does
+#' for it, rather than claiming it has no atoms. This mirrors [range()], which
+#' answers `c(NA, NA)` for it instead of refusing.
 #' @examples
-#' atoms(mixed(atoms = 0, continuous = c(0, Inf)))
-#' continuous_part(continuous(c(0, 1), c(3, 4)))
+#' atoms(mixed(discrete = 0, continuous = c(0, Inf)))
+#' regions(continuous(c(0, 1), c(3, 4)))
+#'
+#' # Either part can be put back together into a support of its own.
+#' s <- mixed(discrete = c(0, 5), continuous = c(0, 10))
+#' discrete(atoms(s))
+#' continuous(regions(s))
 #' @family Support
 #' @export
 atoms <- function(x) {
-  as_support_arg(x)[["atoms"]]
+  s <- as_support_arg(x, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
+  s[["atoms"]]
 }
 
 #' @rdname atoms
 #' @export
-continuous_part <- function(x) {
-  as_support_arg(x)[["continuous"]]
+regions <- function(x) {
+  s <- as_support_arg(x, absent = "null")
+  if (is.null(s)) {
+    return(NULL)
+  }
+  s[["continuous"]]
 }
 
 #' @export
@@ -283,7 +318,12 @@ support_hull <- function(support) {
     his <- c(his, max(support[["continuous"]][, "upper"]))
   }
   if (length(los) == 0) {
-    return(c(NA_real_, NA_real_))
+    # An empty support reaches nothing, and R's answer for the range of
+    # nothing is `c(Inf, -Inf)`. Reversed on purpose: it is the identity for
+    # combining ranges, since `min(x, Inf)` and `max(x, -Inf)` are both `x`.
+    # Built directly rather than by taking `min()` of nothing, so it does not
+    # carry that call's warnings.
+    return(c(Inf, -Inf))
   }
   c(min(los), max(his))
 }
@@ -291,44 +331,76 @@ support_hull <- function(support) {
 #' Coerce atoms input (a discretes object or numeric) to a discretes object.
 #' @noRd
 as_atoms <- function(x) {
+  if (is_support(x)) {
+    if (nrow(x[["continuous"]]) > 0) {
+      stop(
+        "The `discrete` part must be a purely discrete support,\n",
+        "not a continuous or mixed one."
+      )
+    }
+    return(x[["atoms"]])
+  }
   if (inherits(x, "discretes")) {
     return(x)
   }
   if (is.numeric(x)) {
     return(discretes::as_discretes(x))
   }
-  stop("Atoms must be a `discretes` object or a numeric vector.")
+  stop(
+    "The discrete part must be a `discretes` object, a numeric\n",
+    "vector, or a purely discrete support."
+  )
 }
 
 #' Coerce a `continuous` argument (intervals or a continuous support) to a
 #' canonical interval matrix.
 #' @noRd
-as_intervals <- function(x) {
+as_regions <- function(x) {
   if (is_support(x)) {
     if (discretes::num_discretes(x[["atoms"]]) > 0) {
       stop(
-        "The `continuous` part must be a purely continuous support, ",
+        "The `continuous` part must be a purely continuous support,\n",
         "not a discrete or mixed one."
       )
     }
     return(x[["continuous"]])
   }
   dots <- if (is.list(x) && !is.matrix(x)) x else list(x)
-  normalize_intervals(collect_intervals(dots))
+  normalize_regions(collect_regions(dots))
 }
 
 #' Accept a support or a distribution, returning the support.
+#'
+#' The Null distribution has no support, so there is nothing to hand back for
+#' it. Which answer that deserves depends on the caller. Something asking a
+#' question about a support can answer that it does not know, the way
+#' [range()] gives `c(NA, NA)`; something that has to *return* a support has
+#' nothing to return and should say so.
+#'
+#' @param x A support object or a distribution.
+#' @param absent What to do when there is no support: `"error"`, or `"null"`
+#' to hand back `NULL` and let the caller decide.
+#' @returns A support object, or `NULL`.
 #' @noRd
-as_support_arg <- function(x) {
+as_support_arg <- function(x, absent = c("error", "null")) {
+  absent <- rlang::arg_match(absent)
   if (is_support(x)) {
     return(x)
   }
+  # A `NULL` is what "no support" already looks like, from `support()` or from
+  # an earlier step of a chain, so it is carried rather than rejected.
+  if (is.null(x)) {
+    if (absent == "error") {
+      stop("Expected a support object or a distribution, not `NULL`.")
+    }
+    return(NULL)
+  }
   if (inherits(x, "dst")) {
     s <- support(x)
-    if (is.null(s)) {
+    if (is.null(s) && absent == "error") {
       stop(
-        "This distribution has no structured support. Only the Null ",
-        "distribution has none; every other distribution declares one."
+        "The Null distribution has no support to take apart.\n",
+        "Every other distribution declares one."
       )
     }
     return(s)
@@ -338,7 +410,7 @@ as_support_arg <- function(x) {
 
 #' An empty continuous part: a 0-row interval matrix.
 #' @noRd
-empty_intervals <- function() {
+empty_regions <- function() {
   m <- matrix(numeric(0), ncol = 2L)
   colnames(m) <- c("lower", "upper")
   m
@@ -346,7 +418,7 @@ empty_intervals <- function() {
 
 #' Gather `...`-style interval inputs into a two-column matrix.
 #' @noRd
-collect_intervals <- function(dots) {
+collect_regions <- function(dots) {
   # A single list-of-intervals argument: unwrap it.
   if (length(dots) == 1L && is.list(dots[[1L]]) && !is.matrix(dots[[1L]])) {
     dots <- dots[[1L]]
@@ -363,7 +435,7 @@ collect_intervals <- function(dots) {
   # representable; callers decide whether that is allowed.
   dots <- Filter(function(v) !(is.numeric(v) && length(v) == 0L), dots)
   if (length(dots) == 0L) {
-    return(empty_intervals())
+    return(empty_regions())
   }
   rows <- lapply(dots, function(v) {
     if (!is.numeric(v) || length(v) != 2L) {
@@ -374,23 +446,61 @@ collect_intervals <- function(dots) {
   do.call(rbind, rows)
 }
 
+#' Explain why an interval is not one.
+#'
+#' Three different mistakes all fail `lower < upper`, and they want different
+#' things said about them. Naming the offending endpoints matters most when the
+#' interval was computed rather than typed --- a family working out its own
+#' support from its parameters, say --- because then the numbers are the only
+#' clue to what went wrong.
+#'
+#' @param lo,hi The offending endpoints.
+#' @returns A character string, to be passed to `stop()`.
+#' @noRd
+interval_complaint <- function(lo, hi) {
+  shown <- sprintf("[%g, %g]", lo, hi)
+  if (lo > hi) {
+    return(paste0(
+      "An interval must run from lower to upper, and ", shown,
+      " runs backwards."
+    ))
+  }
+  # Equal endpoints from here on.
+  if (is.infinite(lo)) {
+    return(paste0(
+      shown, " describes no values: both ends are the same infinity.\n",
+      "A computed endpoint lands here when it overflows: a number\n",
+      "too large for a double becomes `Inf`.\n",
+      "Check whether the parameters reach past double precision."
+    ))
+  }
+  paste0(
+    shown, " is a single point, so carries no probability.\n",
+    "Use `discrete(", format(lo), ")` for an atom there."
+  )
+}
+
 #' Validate, sort, and merge an interval matrix into a canonical disjoint form.
 #' @noRd
-normalize_intervals <- function(m) {
+normalize_regions <- function(m) {
   if (nrow(m) == 0) {
-    return(empty_intervals())
+    return(empty_regions())
   }
   if (anyNA(m)) {
     stop("Interval endpoints must not be `NA`.")
   }
-  if (any(m[, 1L] >= m[, 2L])) {
-    stop("Each interval must have `lower < upper`.")
+  bad <- which(m[, 1L] >= m[, 2L])
+  if (length(bad) > 0) {
+    i <- bad[[1L]]
+    lo <- m[i, 1L]
+    hi <- m[i, 2L]
+    stop(interval_complaint(lo, hi))
   }
   # Drop degenerate intervals `[a, a]`: a continuous part on a single point has
   # measure zero (no probability mass), so it is not part of the canonical form.
   m <- m[m[, 1L] < m[, 2L], , drop = FALSE]
   if (nrow(m) == 0) {
-    return(empty_intervals())
+    return(empty_regions())
   }
   ord <- order(m[, 1L], m[, 2L])
   m <- m[ord, , drop = FALSE]

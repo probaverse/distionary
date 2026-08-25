@@ -58,8 +58,8 @@ variants <- function(.f = NULL, ..., .name = NULL) {
   declared <- rlang::list2(...)
   if (!is.null(.f) && !is.function(.f)) {
     stop(
-      "`.f` must be the canonical variant of the representation, as a ",
-      "function, or `NULL` if the distribution cannot provide it."
+      "`.f` must be a function: the representation in its canonical\n",
+      "variant. Pass `NULL` if the distribution cannot provide it."
     )
   }
   checkmate::assert_character(.name, len = 1, null.ok = TRUE)
@@ -68,8 +68,8 @@ variants <- function(.f = NULL, ..., .name = NULL) {
   }
   if (is.null(.f) && length(declared) == 0) {
     stop(
-      "A representation needs at least one function: a canonical variant in ",
-      "`.f`, or a named variant in `...`."
+      "A representation needs at least one function.\n",
+      "Give `.f` the canonical variant, or name a variant in `...`."
     )
   }
   out <- new_representation(canonical = .f, declared = declared)
@@ -105,8 +105,8 @@ new_representation <- function(
   if (is.null(f)) {
     f <- function(...) {
       stop(
-        "This representation declares only variants, and was asked for the ",
-        "canonical one. Give `variants()` a function in `.f` to provide it."
+        "This representation provides no canonical variant.\n",
+        "Give `variants()` a function in `.f` to provide it."
       )
     }
   }
@@ -147,8 +147,8 @@ bind_representation <- function(x, name) {
   if (!is.null(existing)) {
     if (!identical(existing, name)) {
       stop(
-        "This representation was built for '", existing, "', but is being ",
-        "stored as '", name, "'."
+        "This representation was built for '", existing, "', but is\n",
+        "being stored as '", name, "'. Drop `.name`, or match it."
       )
     }
     return(x)
@@ -201,12 +201,13 @@ variant_argument <- function(level, allowed, name) {
   }
   if (length(allowed) == 0) {
     stop(
-      "'", name, "' has no variants to declare, so there is nothing for the ",
-      "'", level, "' function to provide."
+      "'", name, "' has no variants to declare.\n",
+      "Drop the '", level, "' function."
     )
   }
   stop(
-    "'", level, "' is not a variant of '", name, "'. Available: ",
+    "'", level, "' is not a variant of '", name, "'.\n",
+    "Available: ",
     paste0("'", unlist(allowed, use.names = FALSE), "'", collapse = ", "),
     "."
   )

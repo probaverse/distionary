@@ -28,7 +28,7 @@ test_that("The strict definition of a pmf needs a discrete variable", {
   )
   expect_error(
     eval_pmf(dst_norm(0, 1), at = -2:2, definition = "strict"),
-    "no probability mass function in the strict sense"
+    "has no probability mass function"
   )
 })
 

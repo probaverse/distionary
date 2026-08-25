@@ -61,8 +61,8 @@ eval_return <- function(
   checkmate::assert_number(obs_per_period, finite = TRUE)
   if (obs_per_period <= 0) {
     stop(
-      "`obs_per_period` is a count of observations, so it has to be ",
-      "positive. Received ", obs_per_period, "."
+      "`obs_per_period` counts observations, so it must be positive.\n",
+      "Received ", obs_per_period, "."
     )
   }
   # A return period is quoted in periods; the distribution knows only
