@@ -5,8 +5,8 @@ probability, and the routines computing from it --- quantiles and moments ---
 use that to handle atoms exactly rather than approximately. Code that uses the
 built-in `dst_*()` distributions is unaffected. Most of the breaking changes
 are in `distribution()`, so they reach only distributions built by hand; the
-exception is that `length()` and `is.na()` now answer about the distribution
-rather than about the list of properties it is built from.
+exception is `length()` and `is.na()`, which now answer about the distribution
+itself.
 
 ## Breaking changes
 
@@ -21,8 +21,10 @@ rather than about the list of properties it is built from.
   `distribution()` refuses them as entries. Both remain properties, reachable
   through `eval_property()` like any other.
 
-- `length()`, `is.na()` and `as.list()` now answer about the distribution
-  rather than about the list it is built from. See the section below.
+- `length()`, `is.na()` and `as.list()` answer about the distribution rather
+  than about the list of properties it is built from: `length()` gives 1, not
+  11, and `is.na()` gives a single logical, `TRUE` for the Null distribution.
+  The properties are unchanged; see `?length.dst`.
 
 ## Supports
 
@@ -46,25 +48,6 @@ rather than about the list of properties it is built from.
 - Re-exported the `discretes` constructors used to describe atomic supports,
   so they work without attaching that package: `natural0()`, `natural1()`,
   `integers()`, `arithmetic()` and `as_discretes()`.
-
-## A distribution has length 1
-
-- `length()` gives 1, and `is.na()` gives a single logical. Before, both
-  reported on the list of properties a distribution is built from, so
-  `length(dst_norm(0, 1))` was 11 and `is.na()` answered with eleven `FALSE`s.
-  Neither was a fact about the distribution.
-
-- `is.na()` is `TRUE` for the Null distribution (`dst_null()`) and `FALSE`
-  for every other, which makes it the way to test for one. `dst_null()`
-  carries a `null_dst` class so that a distribution the user happens to name
-  "Null" is not mistaken for the missing one.
-
-- `as.list()` gives a list holding the one distribution. The properties are
-  still reachable as before --- `x[["cdf"]]` and `names(x)` are unchanged,
-  and `eval_property()` remains the supported way to reach them.
-
-- To hold several distributions, put them in a list; in a data frame, that is
-  a list-column. A distribution does not have length beyond one.
 
 ## Evaluation
 
