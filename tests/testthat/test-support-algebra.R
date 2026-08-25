@@ -95,8 +95,30 @@ test_that("support_scale() reverses the interval for a negative factor.", {
   expect_false(support_has_atom(s, 3))
 })
 
-test_that("support_scale() by zero is an error.", {
-  expect_error(support_scale(continuous(c(0, 1)), by = 0), "zero")
+test_that("support_scale() by zero collapses everything onto one atom.", {
+  # Every point lands on zero. The probability spread over a region does not
+  # vanish when the region collapses to a point -- it piles up there, and a
+  # point carrying probability is an atom, not a region of no width.
+  expect_identical(support_scale(continuous(c(1, 2)), by = 0), discrete(0))
+  expect_identical(support_scale(discrete(c(3, 7)), by = 0), discrete(0))
+  expect_identical(
+    support_scale(mixed(discrete = 5, continuous = c(0, 1)), by = 0),
+    discrete(0)
+  )
+  # Infinitely many atoms collapse just the same.
+  expect_identical(support_scale(discrete(natural0()), by = 0), discrete(0))
+  # Only a support with nothing in it stays empty.
+  expect_identical(support_scale(empty_support(), by = 0), empty_support())
+  expect_null(support_scale(dst_null(), by = 0))
+})
+
+test_that("Scaling a support by zero matches scaling the distribution.", {
+  # `distplyr::multiply(d, 0)` is a degenerate distribution at zero, and its
+  # support has to be what the support operation gives.
+  expect_identical(
+    support_scale(continuous(c(1, 2)), by = 0),
+    support(dst_degenerate(0))
+  )
 })
 
 test_that("support_reciprocal() maps each side of zero separately.", {

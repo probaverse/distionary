@@ -154,7 +154,7 @@ support_restrict <- function(
 #' @param domain,range The domain and range of `fun`, needed to transform an
 #' atomic part that is described rather than enumerated.
 #' @param by For `support_shift()` and `support_scale()`, the amount to shift
-#' or scale by. Scaling by zero is not a monotonic map, and is an error.
+#' or scale by.
 #' @details
 #' `support_shift()`, `support_scale()`, and `support_reciprocal()` are the
 #' common cases, and avoid having to supply an inverse, a domain, and a range
@@ -162,15 +162,24 @@ support_restrict <- function(
 #'
 #' `support_reciprocal()` maps each side of zero separately, since `1 / x` is
 #' monotonic on each side but not across the two. A support with an atom at
-#' zero has no reciprocal, and is an error. Zero lying inside a continuous
-#' part is fine: a single point carries no probability there.
+#' zero has no reciprocal, and is an error. Zero lying inside a region is
+#' fine: a single point carries no probability there.
+#'
+#' Scaling by zero is not monotonic either --- every point lands on zero ---
+#' so it is handled on its own. The probability spread over a region does not
+#' vanish when the region collapses to a point; it piles up there, and in a
+#' support that is an atom. Any support with anything in it therefore scales
+#' to `discrete(0)`, and only an empty support stays empty.
 #' @returns A support object.
 #' @examples
 #' support_shift(continuous(c(0, 1)), by = 5)
 #' support_scale(discrete(natural0()), by = 2)
 #'
-#' # A decreasing map reverses the interval.
+#' # A decreasing map reverses the region.
 #' support_scale(continuous(c(1, 2)), by = -1)
+#'
+#' # Scaling by zero collapses everything onto a single atom.
+#' support_scale(continuous(c(1, 2)), by = 0)
 #'
 #' # Reciprocal of a support spanning zero.
 #' support_reciprocal(continuous(c(-2, 4)))
@@ -243,11 +252,16 @@ support_shift <- function(support, by) {
 support_scale <- function(support, by) {
   checkmate::assert_number(by, finite = TRUE)
   if (by == 0) {
-    stop(
-      "Can't scale a support by zero: the result is a single point,\n",
-      "not a monotonic image of the original.\n",
-      "Use `discrete(0)` if that is what you meant."
-    )
+    # Not a monotonic map, so it cannot go through `support_transform()`:
+    # every point lands on zero. The probability spread over a region does
+    # not vanish when the region collapses --- it piles up at zero, which in
+    # a support is an atom. So any support with anything in it scales to the
+    # single atom at zero, and only an empty one stays empty.
+    s <- as_support_arg(support, absent = "null")
+    if (is.null(s) || is_empty_support(s)) {
+      return(s)
+    }
+    return(discrete(0))
   }
   support_transform(
     support,
