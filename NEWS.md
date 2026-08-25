@@ -3,8 +3,10 @@
 This cycle adds support objects: a distribution now says where it places its
 probability, and the routines computing from it --- quantiles and moments ---
 use that to handle atoms exactly rather than approximately. Code that uses the
-built-in `dst_*()` distributions is unaffected. The breaking changes are all
-in `distribution()`, so they reach only distributions built by hand.
+built-in `dst_*()` distributions is unaffected. Most of the breaking changes
+are in `distribution()`, so they reach only distributions built by hand; the
+exception is `length()` and `is.na()`, which now answer about the distribution
+itself.
 
 ## Breaking changes
 
@@ -18,6 +20,11 @@ in `distribution()`, so they reach only distributions built by hand.
 - `range` and `vtype` are derived from the support rather than stated, and
   `distribution()` refuses them as entries. Both remain properties, reachable
   through `eval_property()` like any other.
+
+- `length()`, `is.na()` and `as.list()` answer about the distribution rather
+  than about the list of properties it is built from: `length()` gives 1, not
+  11, and `is.na()` gives a single logical, `TRUE` for the Null distribution.
+  The properties are unchanged; see `?length.dst`.
 
 ## Supports
 
