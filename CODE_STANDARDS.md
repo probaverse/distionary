@@ -92,3 +92,21 @@ by hand.
 - When `...` is present but not consumed, call `rlang::check_dots_empty()` so
   that misspelled or misplaced arguments error rather than being silently
   ignored. (Omit this only when `...` is genuinely used.)
+
+### On a hot path
+
+`rlang::arg_match()` and `rlang::check_dots_empty()` each cost tens of
+microseconds. That is nothing against the work most functions do, and a great
+deal against a function called in a loop: `eval_cdf()` is called once per
+bisection step of a quantile inversion, and the two checks together made it
+about three times slower.
+
+In a function on such a path, use the low-overhead forms instead:
+`rlang::arg_match0()`, which is given the allowed values rather than working
+them out, and `rlang::check_dots_empty0(...)`. They are the same checks.
+
+Prefer the plain forms everywhere else. `arg_match()` gives a better error
+message, and needs no second statement of the allowed values -- which is the
+cost of `arg_match0()`, and worth avoiding by reading them from somewhere
+that already knows them, as `match_variant()` does from the function's own
+formals.

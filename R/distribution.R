@@ -76,6 +76,12 @@
 #'
 #' All functions should be vectorized.
 #'
+#' A representation given as a plain function provides that representation in
+#' its canonical variant: `quantile` is the left inverse of the CDF, `return`
+#' gives the levels of exceedance events. To provide more than that --- the
+#' right inverse as well as the left, say --- wrap the functions with
+#' [variants()].
+#'
 #' Other properties that are understood by `distionary` include:
 #'
 #' - `mean`, `stdev`, `variance`, `skewness`, `median` are self-explanatory.
@@ -170,6 +176,10 @@ distribution <- function(
     )
   }
   representations <- lapply(dots, rlang::eval_tidy)
+  # Representations declaring variants only learn what they are a
+  # representation *of* here, from the argument they were assigned to,
+  # which is also when the levels they declare are checked.
+  representations <- bind_representations(representations)
   # Check for required properties.
   reps_missing <- is.null(representations$cdf) ||
     (is.null(representations$density) && is.null(representations$pmf))

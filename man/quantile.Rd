@@ -5,15 +5,35 @@
 \alias{enframe_quantile}
 \title{Distribution Quantiles}
 \usage{
-eval_quantile(distribution, at)
+eval_quantile(distribution, at, ..., side = c("left", "right"))
 
-enframe_quantile(..., at, arg_name = ".arg", fn_prefix = "quantile", sep = "_")
+enframe_quantile(
+  ...,
+  at,
+  side = "left",
+  arg_name = ".arg",
+  fn_prefix = "quantile",
+  sep = "_"
+)
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
 \item{at}{Vector of values to evaluate the representation at.}
+
+\item{side}{Which inverse of the cdf to take: \code{"left"}, the usual quantile
+function, is the smallest \code{x} with \code{cdf(x) >= at}; \code{"right"} is the
+smallest \code{x} with \code{cdf(x) > at}.
+
+The two differ only where the cdf is flat at level \code{at} over a stretch of
+positive length --- a gap between atoms, or a region the distribution
+places no probability in. The left inverse gives the start of that stretch,
+the right inverse its end. Where no such stretch exists, including inside
+an atom's jump, both give the same answer.
+
+\code{side} does not apply at \code{at = 0} and \code{at = 1}, which are the ends of the
+support either way; see the details.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments. Length 1 character vector.}
@@ -47,7 +67,11 @@ The 0- and 1-quantiles are the ends of the distribution's support: the
 0-quantile is its lower end and the 1-quantile its upper end. They are
 read from the support (see \code{\link[=support]{support()}}) rather than computed, so an
 unbounded distribution gives \code{-Inf} and \code{Inf} instead of a large finite
-number found by searching into the tail.
+number found by searching into the tail. \code{side} has no say there: each
+inverse is degenerate at one of the two ends --- the left inverse of 0 is
+\code{-Inf} for every distribution, the right inverse of 1 is \code{Inf} for every
+distribution --- so a convention overrides both to put the answers on the
+support.
 
 When a quantile function does not exist, the remaining probabilities are
 found by inverting the CDF by bisection: an interval known to contain the
@@ -59,11 +83,20 @@ support says where the atoms (discrete mass points) are, a probability
 landing inside an atom's jump in the CDF is returned as that atom exactly,
 rather than approximately. Tolerance is roughly 1e-9 in the quantile value,
 unless the maximum number of iterations (200) is reached.
+
+A distribution's own quantile function is taken to be the left inverse. A
+distribution that can provide the right inverse too can say so with
+\code{\link[=variants]{variants()}}; otherwise it is found by inverting the cdf, as above.
 }
 \examples{
 d <- dst_unif(0, 4)
 eval_quantile(d, at = 1:9 / 10)
 enframe_quantile(d, at = 1:9 / 10)
+
+# Between the atoms of a Poisson, the two inverses part company.
+p <- dst_pois(5)
+eval_quantile(p, at = eval_cdf(p, at = 3))
+eval_quantile(p, at = eval_cdf(p, at = 3), side = "right")
 }
 \seealso{
 Other distributional representations: 
@@ -73,6 +106,7 @@ Other distributional representations:
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
 \code{\link{eval_pmf}()},
+\code{\link{eval_prob_left}()},
 \code{\link{eval_return}()},
 \code{\link{eval_survival}()}
 }

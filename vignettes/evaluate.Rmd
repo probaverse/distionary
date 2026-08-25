@@ -28,17 +28,19 @@ The key innovation in `distionary` is that these representations are interconnec
 
 Here is a list of representations recognised by `distionary`, and the functions for accessing them. 
 
-| Representation                   | `distionary` Functions                  |
-|----------------------------------|-----------------------------------------|
-| Cumulative Distribution Function | `eval_cdf()`,      `enframe_cdf()`      |
-| Survival Function                | `eval_survival()`, `enframe_survival()` |
-| Quantile Function                | `eval_quantile()`, `enframe_quantile()` |
-| Hazard Function                  | `eval_hazard()`,   `enframe_hazard()`   |
-| Cumulative Hazard Function       | `eval_chf()`,      `enframe_chf()`      |
-| Probability density Function     | `eval_density()`,  `enframe_density()`  |
-| Probability mass Function (PMF)  | `eval_pmf()`,      `enframe_pmf()`      |
-| Odds Function                    | `eval_odds()`,     `enframe_odds()`     |
-| Return Level Function            | `eval_return()`,   `enframe_return()`   |
+| Representation                   | `distionary` Functions                       |
+|----------------------------------|----------------------------------------------|
+| Cumulative Distribution Function | `eval_cdf()`,        `enframe_cdf()`         |
+| Survival Function                | `eval_survival()`,   `enframe_survival()`    |
+| Quantile Function                | `eval_quantile()`,   `enframe_quantile()`    |
+| Hazard Function                  | `eval_hazard()`,     `enframe_hazard()`      |
+| Cumulative Hazard Function       | `eval_chf()`,        `enframe_chf()`         |
+| Probability density Function     | `eval_density()`,    `enframe_density()`     |
+| Probability mass Function (PMF)  | `eval_pmf()`,        `enframe_pmf()`         |
+| Odds Function                    | `eval_odds()`,       `enframe_odds()`        |
+| Return Level Function            | `eval_return()`,     `enframe_return()`      |
+| Probability to the Left          | `eval_prob_left()`,  `enframe_prob_left()`   |
+| Probability to the Right         | `eval_prob_right()`, `enframe_prob_right()`  |
 
 All representations can either be accessed by the `eval_*()` family of functions, providing a vector of the evaluated representation.
 
@@ -68,6 +70,30 @@ enframe_pmf(
   arg_name = "num_failures", fn_prefix = "probability"
 )
 ```
+
+### Variants of a representation
+
+Some questions have more than one answer, all of them about the same distribution. Asking for the quantile at a probability the CDF is flat over -- as it is between the atoms of a discrete distribution -- could reasonably give either end of that flat stretch. Asking for the probability below a value could reasonably count the value itself, or not.
+
+Where that happens, the `eval_*()` function takes an argument for it, called a _variant_. Its default is the conventional reading, so nothing changes unless you ask it to.
+
+```{r}
+d3 <- dst_pois(5)
+p <- eval_cdf(d3, at = 3)
+# Two inverses of the same CDF at the same probability.
+eval_quantile(d3, at = p)
+eval_quantile(d3, at = p, side = "right")
+```
+
+The Poisson places probability on the whole numbers and nothing in between, so `eval_cdf()` and `eval_survival()` have a choice to make at each of them: whether the point itself belongs to the probability being reported.
+
+```{r}
+# At or below 3, and strictly below 3.
+eval_cdf(d3, at = 3)
+eval_cdf(d3, at = 3, inequality = "strict")
+```
+
+The variants each representation has are documented with it. Every one of them is available on every distribution, whether or not the distribution was given a function for it: a variant nobody supplied is derived from the representations that were, in the same way a quantile function is derived from a CDF. See the [Specifying Your Own Distribution](https://distionary.probaverse.com/articles/specify-user-defined.html) vignette for how a distribution supplies its own.
 
 ## Drawing a random sample
 

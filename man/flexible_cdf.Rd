@@ -22,14 +22,16 @@ Logical.}
 A vector of probabilities.
 }
 \description{
-Probability to the left or right of a number, inclusive or not.
-\code{prob_left()} is a more general cdf defined using either \code{<} or \code{<=}, and
-\code{prob_right()} is a more general survival function defined using either
-\code{>} or \code{>=}.
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}} Renamed to \code{\link[=eval_prob_left]{eval_prob_left()}} and
+\code{\link[=eval_prob_right]{eval_prob_right()}}, which join the rest of the \code{eval_} family: they take
+\code{at} rather than \code{of}, they have \code{enframe_} counterparts, and they say
+which inequality they mean in words rather than as a logical.
 }
 \examples{
 d <- dst_pois(5)
-prob_left(d, of = 3, inclusive = TRUE)
-prob_left(d, of = 3, inclusive = FALSE)
-prob_right(d, of = 0:3, inclusive = TRUE)
+# Deprecated:
+# prob_left(d, of = 3, inclusive = TRUE)
+# Instead:
+eval_prob_left(d, at = 3, inequality = "weak")
 }
+\keyword{internal}

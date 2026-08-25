@@ -56,6 +56,7 @@ Other distributional representations:
 \code{\link{eval_density}()},
 \code{\link{eval_hazard}()},
 \code{\link{eval_pmf}()},
+\code{\link{eval_prob_left}()},
 \code{\link{eval_quantile}()},
 \code{\link{eval_return}()},
 \code{\link{eval_survival}()}

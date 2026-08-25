@@ -19,3 +19,33 @@ test_that("PMF calculated thru CDF matches known vals.", {
     }
   }
 })
+
+
+test_that("The strict definition of a pmf needs a discrete variable", {
+  expect_equal(
+    eval_pmf(dst_pois(5), at = 0:3, definition = "strict"),
+    dpois(0:3, 5)
+  )
+  expect_error(
+    eval_pmf(dst_norm(0, 1), at = -2:2, definition = "strict"),
+    "has no probability mass function"
+  )
+})
+
+test_that("The extended definition reads a mass off the cdf's jump", {
+  # A continuous distribution puts no mass on any point, and says so
+  # rather than refusing.
+  expect_equal(eval_pmf(dst_norm(0, 1), at = -2:2), rep(0, 5))
+  expect_equal(
+    eval_pmf(dst_pois(5), at = 0:3, definition = "extended"),
+    dpois(0:3, 5)
+  )
+})
+
+test_that("The definition carries through to `enframe_pmf()`", {
+  d <- dst_pois(5)
+  expect_equal(
+    enframe_pmf(d, at = 0:3, definition = "strict")[["pmf"]],
+    eval_pmf(d, at = 0:3)
+  )
+})

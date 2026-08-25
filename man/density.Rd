@@ -5,15 +5,34 @@
 \alias{enframe_density}
 \title{Probability Density Function}
 \usage{
-eval_density(distribution, at)
+eval_density(distribution, at, ..., definition = c("extended", "strict"))
 
-enframe_density(..., at, arg_name = ".arg", fn_prefix = "density", sep = "_")
+enframe_density(
+  ...,
+  at,
+  definition = "extended",
+  arg_name = ".arg",
+  fn_prefix = "density",
+  sep = "_"
+)
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
 \item{at}{Vector of values to evaluate the representation at.}
+
+\item{definition}{Which definition of a density to hold the distribution
+to. Under \code{"extended"}, the default, the density is the derivative of the
+cdf wherever that derivative exists, which is an answer any distribution
+can give. Under \code{"strict"}, it is a density in the full sense --- a
+function that integrates to the distribution's probability --- which only
+a continuous distribution has, and asking a distribution with atoms for
+one is an error.
+
+This is a question about the distribution, not about which function to
+evaluate: where both definitions apply they give the same numbers, and
+\code{"strict"} only refuses where a density does not exist.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments. Length 1 character vector.}
@@ -46,6 +65,12 @@ Access a distribution's probability density function (pdf).
 d <- dst_unif(0, 4)
 eval_density(d, at = 0:4)
 enframe_density(d, at = 0:4)
+
+# A discrete distribution places its probability on atoms, so it
+# has no density in the strict sense. Under the extended reading,
+# the cdf's derivative is 0 between the atoms and undefined on them.
+eval_density(dst_pois(5), at = c(0.5, 1, 1.5))
+try(eval_density(dst_pois(5), at = 0:4, definition = "strict"))
 }
 \seealso{
 Other distributional representations: 
@@ -54,6 +79,7 @@ Other distributional representations:
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
 \code{\link{eval_pmf}()},
+\code{\link{eval_prob_left}()},
 \code{\link{eval_quantile}()},
 \code{\link{eval_return}()},
 \code{\link{eval_survival}()}

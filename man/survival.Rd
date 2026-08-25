@@ -5,15 +5,31 @@
 \alias{enframe_survival}
 \title{Survival Function}
 \usage{
-eval_survival(distribution, at)
+eval_survival(distribution, at, ..., inequality = c("strict", "weak"))
 
-enframe_survival(..., at, arg_name = ".arg", fn_prefix = "survival", sep = "_")
+enframe_survival(
+  ...,
+  at,
+  inequality = "strict",
+  arg_name = ".arg",
+  fn_prefix = "survival",
+  sep = "_"
+)
 }
 \arguments{
 \item{distribution, ...}{A distribution, or possibly multiple
 distributions in the case of \code{...}.}
 
 \item{at}{Vector of values to evaluate the representation at.}
+
+\item{inequality}{Which inequality the probability is taken over:
+\code{"strict"}, the usual survival function, is the probability of \code{X > at};
+\code{"weak"} is the probability of \code{X >= at}.
+
+Note that the canonical survival function is the strict one, where the
+canonical cdf is the weak one: between them they carve the line in two, so
+\code{\link[=eval_cdf]{eval_cdf()}} and \code{eval_survival()} sum to 1 as they are ordinarily written.
+As with the cdf, the two differ only where \code{at} is an atom.}
 
 \item{arg_name}{For \code{enframe_}, name of the column containing
 the function arguments. Length 1 character vector.}
@@ -46,8 +62,14 @@ Access a distribution's survival function.
 d <- dst_unif(0, 4)
 eval_survival(d, at = 0:4)
 enframe_survival(d, at = 0:4)
+
+# The Poisson has atoms, so the two inequalities differ there.
+eval_survival(dst_pois(1.1), at = 0:4, inequality = "weak")
 }
 \seealso{
+\code{\link[=eval_prob_right]{eval_prob_right()}}, which is this function said the other way
+around, for when the direction matters more than the name.
+
 Other distributional representations: 
 \code{\link{eval_cdf}()},
 \code{\link{eval_chf}()},
@@ -55,6 +77,7 @@ Other distributional representations:
 \code{\link{eval_hazard}()},
 \code{\link{eval_odds}()},
 \code{\link{eval_pmf}()},
+\code{\link{eval_prob_left}()},
 \code{\link{eval_quantile}()},
 \code{\link{eval_return}()}
 }
