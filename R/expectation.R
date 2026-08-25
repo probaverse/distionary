@@ -1,7 +1,7 @@
 #' Expectation of a function over a distribution's support
 #'
-#' Computes `E[g(X)]` by splitting the distribution into its atomic and
-#' continuous parts (its Lebesgue decomposition, recorded in the support):
+#' Computes `E[g(X)]` by splitting the distribution into the mass on its atoms
+#' and the density over its regions, which is what the support records:
 #'
 #' \deqn{E[g(X)] = \sum_{x \in atoms} g(x) \, p(x)
 #'                 + \sum_{intervals} \int g(x) \, f(x) \, dx,}

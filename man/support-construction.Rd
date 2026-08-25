@@ -33,11 +33,11 @@ same things its own constructor takes, or a support already built by it:
 A support object (class \code{"support"}).
 }
 \description{
-A distribution's \emph{support} is the set on which it places probability.
-It decomposes (the Lebesgue decomposition) into an \emph{atomic} part --- a set
-of points each carrying positive probability mass --- and a \emph{continuous}
-part --- a region carrying a density. \code{discrete()}, \code{continuous()}, and
-\code{mixed()} construct a support from these pieces.
+A support says where a distribution's probability lives, and in what form.
+Probability comes in two forms: \emph{mass}, which sits on single points, and
+\emph{density}, which is spread over regions. A support records both --- the
+points carrying mass, its \emph{atoms}, and the \emph{regions} carrying density ---
+and \code{discrete()}, \code{continuous()} and \code{mixed()} build one from those pieces.
 }
 \details{
 The variable type (\code{\link[=vtype]{vtype()}}) is \emph{derived} from the support: a support with
@@ -54,9 +54,25 @@ with \code{discrete()} and \code{continuous()} the direct way to say one kind on
 own.
 
 A region is written as a closed interval, but its endpoints carry no
-probability either way, a single point having measure zero, so open against
+probability either way, a single point having no width, so open against
 closed makes no difference there. An atom that happens to sit on a region's
 boundary is simply tracked as an atom.
+
+Recording where the mass is and where the density is are two pieces of
+information, not one. Knowing which values are possible is not enough:
+\code{continuous(c(0, 1))} and \code{mixed(discrete = 0, continuous = c(0, 1))} cover
+the same values, but they are different supports and the distributions over
+them differ: one has \code{P(X = 0) = 0}, the other does not. This is why an
+atom lying inside a region is kept rather than absorbed into it.
+\subsection{The third kind}{
+
+Strictly, a measure on the real line splits into three parts, not two: mass
+on points, density over regions, and a third kind with neither --- all of
+its probability on a set of zero total length, none of it sitting on any
+point. The Cantor distribution is the usual example. This is the Lebesgue
+decomposition, and the third part is called singular continuous. A support
+here has no way to describe one, so such distributions are out of reach.
+}
 }
 \examples{
 discrete(discretes::natural0())   # e.g. the support of a Poisson

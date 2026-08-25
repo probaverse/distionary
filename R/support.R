@@ -1,10 +1,10 @@
 #' Specify the Support of a Distribution
 #'
-#' A distribution's *support* is the set on which it places probability.
-#' It decomposes (the Lebesgue decomposition) into an *atomic* part --- a set
-#' of points each carrying positive probability mass --- and a *continuous*
-#' part --- a region carrying a density. `discrete()`, `continuous()`, and
-#' `mixed()` construct a support from these pieces.
+#' A support says where a distribution's probability lives, and in what form.
+#' Probability comes in two forms: *mass*, which sits on single points, and
+#' *density*, which is spread over regions. A support records both --- the
+#' points carrying mass, its *atoms*, and the *regions* carrying density ---
+#' and `discrete()`, `continuous()` and `mixed()` build one from those pieces.
 #'
 #' @param atoms For `discrete()`, the points carrying mass: a `discretes`
 #' object (see the \pkg{discretes} package, e.g. [discretes::natural0()]), a
@@ -33,9 +33,25 @@
 #' own.
 #'
 #' A region is written as a closed interval, but its endpoints carry no
-#' probability either way, a single point having measure zero, so open against
+#' probability either way, a single point having no width, so open against
 #' closed makes no difference there. An atom that happens to sit on a region's
 #' boundary is simply tracked as an atom.
+#'
+#' Recording where the mass is and where the density is are two pieces of
+#' information, not one. Knowing which values are possible is not enough:
+#' `continuous(c(0, 1))` and `mixed(discrete = 0, continuous = c(0, 1))` cover
+#' the same values, but they are different supports and the distributions over
+#' them differ: one has `P(X = 0) = 0`, the other does not. This is why an
+#' atom lying inside a region is kept rather than absorbed into it.
+#'
+#' ## The third kind
+#'
+#' Strictly, a measure on the real line splits into three parts, not two: mass
+#' on points, density over regions, and a third kind with neither --- all of
+#' its probability on a set of zero total length, none of it sitting on any
+#' point. The Cantor distribution is the usual example. This is the Lebesgue
+#' decomposition, and the third part is called singular continuous. A support
+#' here has no way to describe one, so such distributions are out of reach.
 #' @returns A support object (class `"support"`).
 #' @seealso [support()] to retrieve a distribution's support, [vtype()] for the
 #' derived variable type.

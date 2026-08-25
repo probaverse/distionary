@@ -22,14 +22,17 @@ This vignette explains what a distribution's _support_ is in `distionary`, how t
 
 ## What a Support Is
 
-A distribution's **support** is the set on which it places probability. Every distribution splits that set into two parts:
+A support says where a distribution's probability lives, and in what form.
 
-- an **atomic** part -- individual points, each carrying positive probability mass; and
-- a **continuous** part -- one or more intervals, over which probability is spread as a density.
+Probability comes in two forms. **Mass** sits on single points. **Density** is spread over regions. A support records both: the points carrying mass, called **atoms**, and the **regions** carrying density.
 
-This split is the Lebesgue decomposition, and it's the reason a distribution is called discrete (atoms only), continuous (intervals only), or mixed (both). In `distionary`, a support is an object holding these two parts, and the variable type is _derived_ from it rather than declared.
+That is two pieces of information, not one. Knowing which values are possible is not enough --- `[0, 1]` with a mass at 0 and `[0, 1]` without one cover the same values but are different supports, and the distributions over them differ.
 
-The reason to carry this structure around is practical: numeric routines need to know where the atoms are. A quantile function has to land exactly on an atom rather than near it, and a mean has to sum over atoms rather than integrate across them. Recording the support means these calculations can be done correctly without having to guess.
+The support says where the mass and density are. The distribution over it says how much.
+
+Which of the two a distribution has decides what it is called: discrete if only mass, continuous if only density, mixed if both. So the variable type is _derived_ from the support rather than declared alongside it.
+
+The reason to carry this around is practical. Numeric routines need to know where the atoms are: a quantile has to land exactly on an atom rather than near it, and a mean has to sum over atoms rather than integrate across them. Recording the support means these can be done correctly instead of guessed at.
 
 ## Building a Support
 
@@ -207,11 +210,23 @@ support_shift(continuous(c(0, 1)), by = 5)
 support_scale(discrete(natural0()), by = 2)
 ```
 
-A decreasing map reverses each interval, which is taken care of for you.
+A decreasing map reverses each region, which is taken care of for you.
 
 ```{r}
 support_scale(continuous(c(1, 2)), by = -1)
 ```
+
+Scaling by zero is worth singling out, because it changes what kind of support you have.
+
+```{r}
+support_scale(continuous(c(1, 2)), by = 0)
+```
+
+Multiplying by zero sends every value to 0. Density that was spread over a region is compressed onto that single point, and density compressed onto a point is mass. So whatever the distribution was, the result has a mass at 0 and density nowhere: it is discrete.
+
+It only works in that direction. A mass sits on one point and lands on one point, so mass stays mass.
+
+A strictly monotonic map stretches and shifts regions but never squashes one down to a point, so density stays density and mass stays mass. That is why `support_transform()` asks for a monotonic map, and why scaling by zero --- which is not one --- is handled separately.
 
 Reciprocals are worth a closer look, because `1 / x` isn't monotonic across zero. Each side of zero is mapped separately and the two results unioned, which is why the support below comes back in two pieces.
 
@@ -335,3 +350,5 @@ Two things are worth knowing about where supports stand today.
 A support describes a distribution on the real line. Multivariate supports would be composed from univariate ones, and the object already reserves a place to record its dimension, but that composition isn't built yet.
 
 There is no intersection. It hasn't been needed --- `support_restrict()` already covers cutting a support down to an interval, which is the case that comes up in practice --- so it waits until something calls for it.
+
+And a note for anyone checking the theory. Strictly, a measure on the real line splits into three parts, not two: mass on points, density over regions, and a third kind with neither --- all of its probability on a set of zero total length, none of it sitting on any point. The Cantor distribution is the usual example. This is the Lebesgue decomposition, and the third part is called singular continuous. A support here has no way to describe one, so such distributions are out of reach.
