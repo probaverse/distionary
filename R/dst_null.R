@@ -11,7 +11,8 @@
 #' every query about it answers `NA` in whatever type that query returns:
 #' `NA_real_` from [mean()] and the `eval_*()` functions, `NA_character_` from
 #' [vtype()], `c(NA, NA)` from [range()], and no support at all --- [support()]
-#' returns `NULL`, R's absent-object value.
+#' returns `NULL`, R's absent-object value. It is also the one distribution
+#' that [is.na()] finds; see [length.dst()].
 #'
 #' Because of that it is assembled with the package's low-level constructor
 #' rather than through [distribution()]. A Null distribution cannot satisfy
@@ -23,6 +24,10 @@
 #' x <- dst_null()
 #' mean(x)
 #' eval_pmf(x, at = 1:10)
+#'
+#' # It is the distribution that `is.na()` finds.
+#' is.na(x)
+#' is.na(dst_norm(0, 1))
 #'
 #' # Everything about it is missing, including its support.
 #' vtype(x)
@@ -64,6 +69,7 @@ dst_null <- function() {
     vtype = NA_character_,
     name = "Null",
     parameters = NULL,
-    support = NULL
+    support = NULL,
+    class = "null_dst"
   )
 }

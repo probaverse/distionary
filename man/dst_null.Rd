@@ -21,7 +21,8 @@ The Null distribution is the missing value of the distribution world, and
 every query about it answers \code{NA} in whatever type that query returns:
 \code{NA_real_} from \code{\link[=mean]{mean()}} and the \verb{eval_*()} functions, \code{NA_character_} from
 \code{\link[=vtype]{vtype()}}, \code{c(NA, NA)} from \code{\link[=range]{range()}}, and no support at all --- \code{\link[=support]{support()}}
-returns \code{NULL}, R's absent-object value.
+returns \code{NULL}, R's absent-object value. It is also the one distribution
+that \code{\link[=is.na]{is.na()}} finds; see \code{\link[=length.dst]{length.dst()}}.
 
 Because of that it is assembled with the package's low-level constructor
 rather than through \code{\link[=distribution]{distribution()}}. A Null distribution cannot satisfy
@@ -33,6 +34,10 @@ support cannot be made through the front door.
 x <- dst_null()
 mean(x)
 eval_pmf(x, at = 1:10)
+
+# It is the distribution that `is.na()` finds.
+is.na(x)
+is.na(dst_norm(0, 1))
 
 # Everything about it is missing, including its support.
 vtype(x)
