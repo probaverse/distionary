@@ -46,6 +46,7 @@ reference:
   - parameters
   - plot.dst
   - pretty_name
+  - scalar
   - vtype
 - title: Evaluate
 - subtitle: Distributional Representations
