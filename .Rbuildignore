@@ -18,3 +18,4 @@
 ^\.claude$
 ^CODE_STANDARDS\.md$
 ^figure$
+^revdep$
