@@ -2,9 +2,8 @@ test_that("Network is invoked in priority: kurtosis_exc", {
   # First look for `kurtosis`, then invoke algorithm if not found.
   d <- suppressWarnings(distribution(
     density = stats::dnorm,
-    range = c(-Inf, Inf),
     kurtosis = 100, # deliberately incorrect
-    .vtype = "continuous"
+    .support = continuous(c(-Inf, Inf))
   ))
   expect_equal(kurtosis_exc(d), 100 - 3)
   expect_equal(eval_kurtosis_exc_from_network(d), 100 - 3)

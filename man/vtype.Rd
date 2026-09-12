@@ -19,5 +19,9 @@ Retrieve the variable type of a distribution, such as
 \examples{
 vtype(dst_beta(1, 2))
 vtype(dst_bern(0.4))
-vtype(distribution())
+vtype(distribution(
+  cdf = pnorm,
+  density = dnorm,
+  .support = continuous()
+))
 }

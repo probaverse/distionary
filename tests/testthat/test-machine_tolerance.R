@@ -3,7 +3,7 @@ test_that("Distributions are not sensitive to machine tolerance.", {
   for (item in test_distributions) {
     paramset_orig <- item$valid[[1]]
     eps <- .Machine$double.eps
-    paramset_eps <- lapply(paramset_orig, \(x) x - eps)
+    paramset_eps <- lapply(paramset_orig, function(x) x - eps)
     d_orig <- rlang::exec(item$distribution, !!!paramset_orig)
     d_eps <- rlang::exec(item$distribution, !!!paramset_eps)
     p <- 0.4

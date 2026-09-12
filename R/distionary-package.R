@@ -76,7 +76,7 @@
 #' my_dist <- distribution(
 #'   density = function(x) ifelse(x >= 0 & x <= 1, 2 * (1 - x), 0),
 #'   cdf = function(x) ifelse(x >= 0 & x <= 1, 1 - (1 - x)^2, 0),
-#'   .vtype = "continuous",
+#'   .support = continuous(c(0, 1)),
 #'   .name = "Linear"
 #' )
 #' plot(my_dist)

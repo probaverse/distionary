@@ -17,7 +17,7 @@ test_that("Skewness algorithm matches known vals", {
           c("Hypergeometric", "Bernoulli", "Binomial", "Finite")
         ) {
           # Finite support.
-          expect_error(eval_skewness_from_network(d))
+          expect_equal(suppressMessages(eval_skewness_from_network(d)), supposed_skew, tolerance = 1e-6)
           r <- range(d)
           x <- seq(r[1], r[2], by = 1L)
           if (pretty_name(d) == "Finite") {
@@ -34,7 +34,7 @@ test_that("Skewness algorithm matches known vals", {
           c("Negative Binomial", "Poisson", "Geometric")
         ) {
           # Infinite support.
-          expect_error(eval_skewness_from_network(d))
+          expect_equal(suppressMessages(eval_skewness_from_network(d)), supposed_skew, tolerance = 1e-6)
           mu <- mean(d)
           sigma <- stdev(d)
           to_add <- Inf

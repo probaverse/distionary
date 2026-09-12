@@ -23,7 +23,7 @@
 #' a <- dst_beta(1, 2)
 #' parameters(a)
 #'
-#' b <- distribution(mean = 5)
+#' b <- distribution(mean = 5, .support = continuous())
 #' parameters(b)
 #' parameters(b) <- list(t = 7)
 #' parameters(b)

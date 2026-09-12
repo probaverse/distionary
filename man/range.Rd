@@ -2,14 +2,19 @@
 % Please edit documentation in R/range.r
 \name{range.dst}
 \alias{range.dst}
+\alias{range.support}
 \title{Range of Distribution}
 \usage{
 \method{range}{dst}(distribution, ...)
+
+\method{range}{support}(support, ...)
 }
 \arguments{
 \item{distribution}{Distribution to compute range from.}
 
 \item{...}{Not used; vestige of the \code{base::range()} S3 generic.}
+
+\item{support}{A support object.}
 }
 \value{
 Vector of length two, containing the minimum and maximum
@@ -18,11 +23,30 @@ values of a distribution.
 \description{
 Range returns a vector of length two, with the minimum and maximum
 values of the (support of the) distribution.
+
+The \code{support} method gives the smallest and largest values the support
+reaches --- its two outermost points, taking the atoms and the continuous
+regions together. Gaps in between are not represented.
+
+An empty support reaches nothing, and its range is \code{c(Inf, -Inf)} --- what
+R gives for the range of nothing, and reversed on purpose, being the
+identity for combining ranges.
 }
 \details{
-If there are no methods for the distribution's class,
-the range is calculated
-using \code{eval_quantile()} at 0 and at 1.
+The range is read from the distribution's support (see \code{\link[=support]{support()}}), which
+is where a distribution says what values it reaches. In this it behaves like
+\code{\link[=vtype]{vtype()}}: derived, not declared.
+
+It is still a property, and \code{\link[=eval_property]{eval_property()}} reaches it like any other, so
+code walking a list of property names need not know which are stored and
+which are worked out. What it cannot be is \emph{stated}: \code{\link[=distribution]{distribution()}}
+refuses a \code{range} entry, since a stated one would be consulted ahead of the
+derived value and could disagree with it.
+
+The Null distribution is a different case: it has no support at all, so
+neither end is \emph{known}, and its range is \code{c(NA, NA)} --- still a vector of
+length two, rather than a single \code{NA}. An empty support says there is
+nothing to reach; the Null distribution says nothing at all.
 }
 \examples{
 a <- dst_gp(1, 0.5)
@@ -31,4 +55,7 @@ c <- dst_norm(3, 4)
 range(a)
 range(b)
 range(c)
+range(continuous(c(0, 1), c(3, 4)))
+range(mixed(discrete = -1, continuous = c(0, Inf)))
+range(empty_support())
 }

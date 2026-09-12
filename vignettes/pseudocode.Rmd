@@ -15,13 +15,13 @@ needed.
 ## Distribution Objects
 
 Distribution objects store user-defined properties and distribution
-metadata. The key metadata field is `vtype` (e.g., continuous,
-discrete, mixed). Properties and metadata are bundled in a
+metadata. The key metadata field is the `support`, which says where the
+distribution places probability. Properties and metadata are bundled in a
 dictionary-like structure (`{}`).
 
 ```
-distribution = function(properties, vtype = Null):
-  return {properties = properties, vtype = vtype}
+distribution = function(properties, support):
+  return {properties = properties, support = support}
 ```
 
 Currently, `distionary` supports only numeric, univariate 
@@ -40,13 +40,12 @@ dst_norm = function(mean, sd):
       density = function(x) dnorm(x, mean = mean, sd = sd),
       realise = function(n) rnorm(n, mean = mean, sd = sd),
       ...,
-      range = [-Inf, Inf],
       mean = mean,
       stdev = sd,
       skewness = 0,
       ...
     ],
-    vtype = "continuous"
+    support = continuous([-Inf, Inf])
   )
 ```
 
@@ -70,9 +69,23 @@ functions of the same name:
 ```
 mean = function(distribution):
   eval_property(distribution, name = "mean")
+```
+
+Two properties do not go through this machinery: the variable type and the
+range. They are properties like any other; what differs is where they come
+from. A distribution is not generally asked to supply anything in
+particular --- the network works out what it can from whatever it is given.
+The support is the exception, being the one thing every distribution has to
+declare. And once it has been declared, the variable type and the range are
+already contained in it, so stating either of them separately would be
+saying the same thing twice, and the second saying would go unused.
+
+```
+vtype = function(distribution):
+  vtype_of_support(support(distribution))
 
 range = function(distribution):
-  eval_property(distribution, name = "range")
+  support_hull(support(distribution))
 ```
 
 Properties that are functions are prefixed with `eval_` to indicate they

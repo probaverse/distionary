@@ -22,13 +22,7 @@ pretty_name <- function(distribution, param_digits = 0) {
   }
   low_name <- tolower(name)
   if (low_name == "frechet") {
-    name <- "Fr\xE9chet"
-    Encoding(name) <- "latin1"
-    name <- iconv(
-      name,
-      "latin1",
-      "UTF-8"
-    )
+    name <- "Fr\u00e9chet"
   }
   if (low_name == "gev") name <- "GEV"
   if (low_name == "gp") name <- "GP"

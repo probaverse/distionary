@@ -16,24 +16,15 @@ eval_kurtosis_from_network <- function(distribution, ...) {
 
 #' @noRd
 algorithm_kurtosis <- function(distribution, tol = 1e-7, ...) {
-  if (vtype(distribution) != "continuous") {
-    stop(
-      "Numerical computation for non-continuous distributions is ",
-      "not yet supported in this version of distionary."
-    )
-  }
   mu <- mean(distribution)
   if (is.nan(mu) || is.infinite(mu)) {
     return(NaN)
   }
   sigma <- stdev(distribution)
-  if (is.nan(sigma) || is.infinite(sigma)) {
+  if (is.nan(sigma) || is.infinite(sigma) || sigma == 0) {
     return(NaN)
   }
-  r <- range(distribution)
-  dens <- representation_as_function(distribution, representation = "density")
-  integrand <- function(x) {
-    ((x - mu) / sigma)^4 * dens(x)
-  }
-  distionary_integrate(integrand, lower = r[1], upper = r[2], tol = tol, ...)
+  expect_over_support(
+    distribution, function(x) ((x - mu) / sigma)^4, tol = tol, ...
+  )
 }

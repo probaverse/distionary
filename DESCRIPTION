@@ -1,6 +1,6 @@
 Package: distionary
 Title: Create and Evaluate Probability Distributions
-Version: 0.1.1.9000
+Version: 0.2.0
 Authors@R: c(
     person("Vincenzo", "Coia", , "vincenzo.coia@gmail.com", 
            role = c("aut", "cre", "cph")),
@@ -14,7 +14,7 @@ Description: Create and evaluate probability distribution objects from a
     This package supports statistical modeling and simulations, and forms
     the core of the probaverse suite of R packages.
 License: MIT + file LICENSE
-Suggests: 
+Suggests:
     covr,
     knitr,
     rmarkdown,
@@ -25,8 +25,10 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list (markdown = TRUE)
 RoxygenNote: 7.3.3
-Imports: 
+Imports:
     checkmate,
+    discretes (>= 0.1.1),
+    lifecycle,
     rlang,
     stats,
     vctrs

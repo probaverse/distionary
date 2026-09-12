@@ -28,6 +28,13 @@ dst_lp3 <- function(meanlog, sdlog, skew) {
     quantile = function(p) qlp3(p, meanlog, sdlog, skew),
     realise = function(n) rlp3(n, meanlog, sdlog, skew),
     .name = "Log Pearson Type III",
-    .vtype = "continuous"
+    # The ends of the support are the 0- and 1-quantiles, by definition, so
+    # `qlp3()` is asked for them rather than the algebra being restated here.
+    # This is exact, not approximate: at those two probabilities `qlp3()`
+    # bottoms out in `qgamma(0) == 0` and `qgamma(1) == Inf`, so nothing is
+    # searched for. Deriving it keeps the support from drifting away from the
+    # quantile function, and keeps the three regimes -- positive, negative and
+    # zero skew -- stated in one place instead of two.
+    .support = continuous(qlp3(c(0, 1), meanlog, sdlog, skew))
   )
 }

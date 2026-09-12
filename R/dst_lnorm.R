@@ -49,8 +49,7 @@ dst_lnorm <- function(meanlog, sdlog) {
       e2 <- exp(2 * sdlog^2)
       e4 + 2 * e3 + 3 * e2 - 6
     },
-    range = c(0, Inf),
     .name = "Log Normal",
-    .vtype = "continuous"
+    .support = continuous(c(0, Inf))
   )
 }

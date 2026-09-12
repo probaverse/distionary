@@ -1,10 +1,11 @@
-test_that("Pearson3 negative scale and shape not allowed.", {
+test_that("Pearson3 negative scale not allowed; negative shape is.", {
   expect_error(dpearson3(1:10, location = 0, scale = -4, shape = 1))
   expect_error(ppearson3(1:10, location = 0, scale = -4, shape = 1))
   expect_error(qpearson3(1:10 / 10, location = 0, scale = -4, shape = 1))
-  expect_error(dpearson3(1:10, location = 0, scale = 4, shape = -1))
-  expect_error(ppearson3(1:10, location = 0, scale = 4, shape = -1))
-  expect_error(qpearson3(1:10 / 10, location = 0, scale = 4, shape = -1))
+  # A negative shape is the distribution reflected about `location`.
+  expect_no_error(dpearson3(1:10, location = 0, scale = 4, shape = -1))
+  expect_no_error(ppearson3(1:10, location = 0, scale = 4, shape = -1))
+  expect_no_error(qpearson3(1:10 / 10, location = 0, scale = 4, shape = -1))
 })
 
 test_that("cdf and pdf align via numerical derivative.", {

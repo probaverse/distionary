@@ -2,9 +2,8 @@ test_that("Network is invoked in priority: kurtosis", {
   # First look for `kurtosis_exc`, then invoke algorithm if not found.
   d <- suppressWarnings(distribution(
     density = stats::dnorm,
-    range = c(-Inf, Inf),
     kurtosis_exc = 100 - 3, # deliberately incorrect
-    .vtype = "continuous"
+    .support = continuous(c(-Inf, Inf))
   ))
   expect_equal(kurtosis(d), 100)
   expect_equal(eval_kurtosis_from_network(d), 100)
@@ -37,7 +36,7 @@ test_that("Kurtosis algorithm matches known vals", {
           c("Hypergeometric", "Bernoulli", "Binomial", "Finite")
         ) {
           # Finite support.
-          expect_error(algorithm_kurtosis(d))
+          expect_equal(suppressMessages(algorithm_kurtosis(d)), supposed_kurt, tolerance = 1e-6)
           r <- range(d)
           x <- seq(r[1], r[2], by = 1L)
           if (pretty_name(d) == "Finite") {
@@ -54,7 +53,7 @@ test_that("Kurtosis algorithm matches known vals", {
           c("Negative Binomial", "Poisson", "Geometric")
         ) {
           # Infinite support.
-          expect_error(algorithm_kurtosis(d))
+          expect_equal(suppressMessages(algorithm_kurtosis(d)), supposed_kurt, tolerance = 1e-6)
           mu <- mean(d)
           sigma <- stdev(d)
           to_add <- Inf
