@@ -12,3 +12,5 @@ inst/doc
 .positai
 figure/
 Rplots.pdf
+.claude/settings.local.json
+.claude/worktrees/
