@@ -9,7 +9,13 @@ in the details.
 ## Usage
 
 ``` r
-distribution(..., .vtype = NULL, .name = NULL, .parameters = list())
+distribution(
+  ...,
+  .support = NULL,
+  .vtype = NULL,
+  .name = NULL,
+  .parameters = list()
+)
 
 is_distribution(object)
 
@@ -22,12 +28,21 @@ is.distribution(object)
 
   Name-value pairs for defining the distribution.
 
+- .support:
+
+  **Required.** Where the distribution places probability, built with
+  [`discrete()`](https://distionary.probaverse.com/reference/support-construction.md),
+  [`continuous()`](https://distionary.probaverse.com/reference/support-construction.md)
+  or
+  [`mixed()`](https://distionary.probaverse.com/reference/support-construction.md).
+  A bare `discretes` object is also accepted, and treated as
+  [`discrete()`](https://distionary.probaverse.com/reference/support-construction.md).
+  See Details.
+
 - .vtype:
 
-  The variable type, typically "discrete" or "continuous". Can be any
-  character vector of length 1, but is converted to lowercase with
-  [`tolower()`](https://rdrr.io/r/base/chartr.html) for compliance with
-  known types.
+  **\[defunct\]** Removed in favour of `.support`, and now an error. See
+  Details.
 
 - .name:
 
@@ -52,6 +67,39 @@ is.distribution(object)
 A distribution object.
 
 ## Details
+
+### The support
+
+Every distribution has to say where it places probability, and
+`.support` is how. It is the one thing distionary asks for rather than
+working out: a CDF does hold the answer, its jumps being the atoms and
+its flattening out marking where the distribution ends, but recovering
+that numerically means hunting for discontinuities in a function that
+can only be sampled. The estimate would be worst for small atoms and
+long tails, which are the cases where it matters most.
+
+Declared instead, it is exact, and the difference shows: quantiles at
+probability 0 and 1 are read off rather than searched for in the
+numerical tail, atoms are located exactly, and moments can be
+decomposed. It is the same bargain as declaring atoms — a little more to
+say up front, in exchange for exact answers rather than approximate
+ones. The "The Support of a Distribution" vignette covers what a support
+is and how to build one.
+
+The variable type
+([`vtype()`](https://distionary.probaverse.com/reference/vtype.md)) and
+the [`range()`](https://rdrr.io/r/base/range.html) follow from the
+support, so neither can be given here; see the property list below.
+
+`.vtype` used to take a string such as `"continuous"` and is now
+defunct. A variable type cannot stand in for a support: `"discrete"`
+does not say *which* points carry mass, and `"continuous"` does not say
+over what region, so there is no translating one into the other, and a
+guess would be quietly wrong rather than an error. The argument is kept
+only so that old code gets a message saying what to do, rather than
+`unused argument`.
+
+### Properties
 
 Currently, the CDF (`cdf`) is required to be specified, along with the
 PMF (`pmf`) for discrete distributions and density (`density`) for
@@ -89,8 +137,13 @@ Other properties that are understood by `distionary` include:
 - `kurtosis_exc` and `kurtosis` are the distribution's excess kurtosis
   and regular kurtosis.
 
-- `range`: A vector of the minimum and maximum value of a distribution's
-  support.
+`range` and `vtype` are properties too, and
+[`eval_property()`](https://distionary.probaverse.com/reference/eval_property.md)
+reads them like any other, but they cannot be given here: the support
+determines both, and a stated one could disagree with it. A name
+distionary does not know is simply kept, retrievable with
+[`eval_property()`](https://distionary.probaverse.com/reference/eval_property.md)
+and otherwise unused.
 
 ## Examples
 
@@ -107,7 +160,7 @@ linear <- distribution(
     p[x > 1] <- 1
     p
   },
-  .vtype = "continuous",
+  .support = continuous(c(0, 1)),
   .name = "My Linear",
   .parameters = list(could = "include", anything = data.frame(x = 1:10))
 )

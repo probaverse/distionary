@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">distionary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@
     <li><a class="dropdown-item" href="../articles/pseudocode.html">Pseudocode</a></li>
     <li><a class="dropdown-item" href="../articles/specify-built-in.html">Built-In Distributions</a></li>
     <li><a class="dropdown-item" href="../articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
+    <li><a class="dropdown-item" href="../articles/support.html">The Support of a Distribution</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -257,6 +258,94 @@
         <dd>Build a Distribution Object</dd>
       </dl></div><div class="section level2">
 
+      <h3 id="support">Support<a class="anchor" aria-label="anchor" href="#support"></a></h3>
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="support-construction.html">discrete()</a></code> <code><a href="support-construction.html">continuous()</a></code> <code><a href="support-construction.html">mixed()</a></code>
+
+        </dt>
+        <dd>Specify the Support of a Distribution</dd>
+
+        <dt>
+
+          <code><a href="empty_support.html">empty_support()</a></code>
+
+        </dt>
+        <dd>The Empty Support</dd>
+
+        <dt>
+
+          <code><a href="support.html">support()</a></code>
+
+        </dt>
+        <dd>Retrieve the Support of a Distribution</dd>
+
+        <dt>
+
+          <code><a href="atoms.html">atoms()</a></code> <code><a href="atoms.html">regions()</a></code>
+
+        </dt>
+        <dd>What a Support Is Made Of</dd>
+
+        <dt>
+
+          <code><a href="is_support.html">is_support()</a></code> <code><a href="is_support.html">is_empty_support()</a></code>
+
+        </dt>
+        <dd>Test for a Support Object</dd>
+      </dl></div><div class="section level2">
+
+      <h3 id="support-algebra">Support Algebra<a class="anchor" aria-label="anchor" href="#support-algebra"></a></h3>
+
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="support_union.html">support_union()</a></code>
+
+        </dt>
+        <dd>Combine Supports</dd>
+
+        <dt>
+
+          <code><a href="support_restrict.html">support_restrict()</a></code>
+
+        </dt>
+        <dd>Restrict a Support to an Interval</dd>
+
+        <dt>
+
+          <code><a href="support_transform.html">support_transform()</a></code> <code><a href="support_transform.html">support_shift()</a></code> <code><a href="support_transform.html">support_scale()</a></code> <code><a href="support_transform.html">support_reciprocal()</a></code>
+
+        </dt>
+        <dd>Transform a Support</dd>
+
+        <dt>
+
+          <code><a href="support_add_atoms.html">support_add_atoms()</a></code> <code><a href="support_add_atoms.html">support_drop_atoms()</a></code>
+
+        </dt>
+        <dd>Add or Remove Atoms</dd>
+
+        <dt>
+
+          <code><a href="support_contains.html">support_contains()</a></code> <code><a href="support_contains.html">support_has_atom()</a></code>
+
+        </dt>
+        <dd>Test Membership of a Support</dd>
+      </dl></div><div class="section level2">
+
       <h3 id="distribution-characteristics">Distribution Characteristics<a class="anchor" aria-label="anchor" href="#distribution-characteristics"></a></h3>
 
 
@@ -285,6 +374,13 @@
 
         </dt>
         <dd>Distribution name</dd>
+
+        <dt>
+
+          <code><a href="scalar.html">length(<i>&lt;dst&gt;</i>)</a></code> <code><a href="scalar.html">is.na(<i>&lt;dst&gt;</i>)</a></code> <code><a href="scalar.html">as.list(<i>&lt;dst&gt;</i>)</a></code>
+
+        </dt>
+        <dd>A Distribution has Length 1</dd>
 
         <dt>
 
@@ -409,7 +505,7 @@
 
         <dt>
 
-          <code><a href="range.html">range(<i>&lt;dst&gt;</i>)</a></code>
+          <code><a href="range.html">range(<i>&lt;dst&gt;</i>)</a></code> <code><a href="range.html">range(<i>&lt;support&gt;</i>)</a></code>
 
         </dt>
         <dd>Range of Distribution</dd>

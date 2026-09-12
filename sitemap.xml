@@ -1,6 +1,7 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://distionary.probaverse.com/404.html</loc></url>
 <url><loc>https://distionary.probaverse.com/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://distionary.probaverse.com/CODE_STANDARDS.html</loc></url>
 <url><loc>https://distionary.probaverse.com/CONTRIBUTING.html</loc></url>
 <url><loc>https://distionary.probaverse.com/LICENSE-text.html</loc></url>
 <url><loc>https://distionary.probaverse.com/LICENSE.html</loc></url>
@@ -10,10 +11,12 @@
 <url><loc>https://distionary.probaverse.com/articles/pseudocode.html</loc></url>
 <url><loc>https://distionary.probaverse.com/articles/specify-built-in.html</loc></url>
 <url><loc>https://distionary.probaverse.com/articles/specify-user-defined.html</loc></url>
+<url><loc>https://distionary.probaverse.com/articles/support.html</loc></url>
 <url><loc>https://distionary.probaverse.com/authors.html</loc></url>
 <url><loc>https://distionary.probaverse.com/index.html</loc></url>
 <url><loc>https://distionary.probaverse.com/news/index.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/aggregate_weights.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/atoms.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/cdf.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/chf.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/density.html</loc></url>
@@ -45,12 +48,14 @@
 <url><loc>https://distionary.probaverse.com/reference/dst_t.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/dst_unif.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/dst_weibull.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/empty_support.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/eval_property.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/flexible_cdf.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/gev_raw.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/gp_raw.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/hazard.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/index.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/is_support.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/lp3_raw.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/median.dst.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/moments.html</loc></url>
@@ -63,7 +68,16 @@
 <url><loc>https://distionary.probaverse.com/reference/quantile.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/range.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/realise.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/reexports.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/return.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/scalar.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/support-construction.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/support.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/support_add_atoms.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/support_contains.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/support_restrict.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/support_transform.html</loc></url>
+<url><loc>https://distionary.probaverse.com/reference/support_union.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/survival.html</loc></url>
 <url><loc>https://distionary.probaverse.com/reference/vtype.html</loc></url>
 </urlset>

@@ -32,7 +32,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">distionary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -49,6 +49,7 @@
     <li><a class="dropdown-item" href="../articles/pseudocode.html">Pseudocode</a></li>
     <li><a class="dropdown-item" href="../articles/specify-built-in.html">Built-In Distributions</a></li>
     <li><a class="dropdown-item" href="../articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
+    <li><a class="dropdown-item" href="../articles/support.html">The Support of a Distribution</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -86,11 +87,11 @@ add extra checks as needed.</p>
 <h2 id="distribution-objects">Distribution Objects<a class="anchor" aria-label="anchor" href="#distribution-objects"></a>
 </h2>
 <p>Distribution objects store user-defined properties and distribution
-metadata. The key metadata field is <code>vtype</code> (e.g.,
-continuous, discrete, mixed). Properties and metadata are bundled in a
-dictionary-like structure (<code><a href="https://rdrr.io/r/base/Paren.html" class="external-link">{}</a></code>).</p>
-<pre><code>distribution = function(properties, vtype = Null):
-  return {properties = properties, vtype = vtype}</code></pre>
+metadata. The key metadata field is the <code>support</code>, which says
+where the distribution places probability. Properties and metadata are
+bundled in a dictionary-like structure (<code><a href="https://rdrr.io/r/base/Paren.html" class="external-link">{}</a></code>).</p>
+<pre><code>distribution = function(properties, support):
+  return {properties = properties, support = support}</code></pre>
 <p>Currently, <code>distionary</code> supports only numeric, univariate
 distributions (i.e., single variable). Future versions will support
 multivariate distributions.</p>
@@ -106,13 +107,12 @@ Poisson, prefixed with <code>dst_</code>. For example:</p>
       density = function(x) dnorm(x, mean = mean, sd = sd),
       realise = function(n) rnorm(n, mean = mean, sd = sd),
       ...,
-      range = [-Inf, Inf],
       mean = mean,
       stdev = sd,
       skewness = 0,
       ...
     ],
-    vtype = "continuous"
+    support = continuous([-Inf, Inf])
   )</code></pre>
 <p>Here, <code>[]</code> is a list-like structure that can be used to
 pass arguments to the function. <code>dnorm</code> and
@@ -131,10 +131,21 @@ invoke the general function <code>eval_property</code>.</p>
 <p>Properties that are not functions can be accessed by functions of the
 same name:</p>
 <pre><code>mean = function(distribution):
-  eval_property(distribution, name = "mean")
+  eval_property(distribution, name = "mean")</code></pre>
+<p>Two properties do not go through this machinery: the variable type
+and the range. They are properties like any other; what differs is where
+they come from. A distribution is not generally asked to supply anything
+in particular — the network works out what it can from whatever it is
+given. The support is the exception, being the one thing every
+distribution has to declare. And once it has been declared, the variable
+type and the range are already contained in it, so stating either of
+them separately would be saying the same thing twice, and the second
+saying would go unused.</p>
+<pre><code>vtype = function(distribution):
+  vtype_of_support(support(distribution))
 
 range = function(distribution):
-  eval_property(distribution, name = "range")</code></pre>
+  support_hull(support(distribution))</code></pre>
 <p>Properties that are functions are prefixed with <code>eval_</code> to
 indicate they require an argument, passed with <code>at</code>. All such
 properties currently in distionary only have one argument, but in

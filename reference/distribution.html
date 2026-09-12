@@ -23,7 +23,7 @@ A list of these representations can be found in the details."><meta property="og
 
     <a class="navbar-brand me-2" href="../index.html">distionary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,6 +38,7 @@ A list of these representations can be found in the details."><meta property="og
     <li><a class="dropdown-item" href="../articles/pseudocode.html">Pseudocode</a></li>
     <li><a class="dropdown-item" href="../articles/specify-built-in.html">Built-In Distributions</a></li>
     <li><a class="dropdown-item" href="../articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
+    <li><a class="dropdown-item" href="../articles/support.html">The Support of a Distribution</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -66,7 +67,13 @@ A list of these representations can be found in the details.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">distribution</span><span class="op">(</span><span class="va">...</span>, .vtype <span class="op">=</span> <span class="cn">NULL</span>, .name <span class="op">=</span> <span class="cn">NULL</span>, .parameters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">distribution</span><span class="op">(</span></span>
+<span>  <span class="va">...</span>,</span>
+<span>  .support <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  .vtype <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  .name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  .parameters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">is_distribution</span><span class="op">(</span><span class="va">object</span><span class="op">)</span></span>
 <span></span>
@@ -81,10 +88,15 @@ A list of these representations can be found in the details.</p>
 <dd><p>Name-value pairs for defining the distribution.</p></dd>
 
 
+<dt id="arg--support">.support<a class="anchor" aria-label="anchor" href="#arg--support"></a></dt>
+<dd><p><strong>Required.</strong> Where the distribution places probability,
+built with <code><a href="support-construction.html">discrete()</a></code>, <code><a href="support-construction.html">continuous()</a></code> or <code><a href="support-construction.html">mixed()</a></code>. A bare <code>discretes</code>
+object is also accepted, and treated as <code><a href="support-construction.html">discrete()</a></code>. See Details.</p></dd>
+
+
 <dt id="arg--vtype">.vtype<a class="anchor" aria-label="anchor" href="#arg--vtype"></a></dt>
-<dd><p>The variable type, typically "discrete" or "continuous".
-Can be any character vector of length 1, but is converted to
-lowercase with <code><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower()</a></code> for compliance with known types.</p></dd>
+<dd><p><a href="https://lifecycle.r-lib.org/articles/stages.html#defunct" class="external-link"><img src="figures/lifecycle-defunct.svg" alt="[Defunct]"></a> Removed in favour of
+<code>.support</code>, and now an error. See Details.</p></dd>
 
 
 <dt id="arg--name">.name<a class="anchor" aria-label="anchor" href="#arg--name"></a></dt>
@@ -111,7 +123,40 @@ a future version of distionary.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Currently, the CDF (<code>cdf</code>) is required to be specified, along with the PMF
+
+<div class="section">
+<h3 id="the-support">The support<a class="anchor" aria-label="anchor" href="#the-support"></a></h3>
+
+
+<p>Every distribution has to say where it places probability, and <code>.support</code>
+is how. It is the one thing distionary asks for rather than working out: a
+CDF does hold the answer, its jumps being the atoms and its flattening out
+marking where the distribution ends, but recovering that numerically means
+hunting for discontinuities in a function that can only be sampled. The
+estimate would be worst for small atoms and long tails, which are the cases
+where it matters most.</p>
+<p>Declared instead, it is exact, and the difference shows: quantiles at
+probability 0 and 1 are read off rather than searched for in the numerical
+tail, atoms are located exactly, and moments can be decomposed. It is the
+same bargain as declaring atoms — a little more to say up front, in
+exchange for exact answers rather than approximate ones. The
+"The Support of a Distribution" vignette covers what a support is and how
+to build one.</p>
+<p>The variable type (<code><a href="vtype.html">vtype()</a></code>) and the <code><a href="https://rdrr.io/r/base/range.html" class="external-link">range()</a></code> follow from the support, so
+neither can be given here; see the property list below.</p>
+<p><code>.vtype</code> used to take a string such as <code>"continuous"</code> and is now defunct. A
+variable type cannot stand in for a support: <code>"discrete"</code> does not say
+<em>which</em> points carry mass, and <code>"continuous"</code> does not say over what
+region, so there is no translating one into the other, and a guess would be
+quietly wrong rather than an error. The argument is kept only so that old
+code gets a message saying what to do, rather than <code>unused argument</code>.</p>
+</div>
+
+<div class="section">
+<h3 id="properties">Properties<a class="anchor" aria-label="anchor" href="#properties"></a></h3>
+
+
+<p>Currently, the CDF (<code>cdf</code>) is required to be specified, along with the PMF
 (<code>pmf</code>) for discrete distributions and density (<code>density</code>) for continuous
 distributions. Otherwise, the full extent of distribution properties will
 not be accessible.</p>
@@ -131,9 +176,13 @@ where events are exceedances.</p></li>
 <p>Other properties that are understood by <code>distionary</code> include:</p><ul><li><p><code>mean</code>, <code>stdev</code>, <code>variance</code>, <code>skewness</code>, <code>median</code> are self-explanatory.</p></li>
 <li><p><code>kurtosis_exc</code> and <code>kurtosis</code> are the distribution's excess
 kurtosis and regular kurtosis.</p></li>
-<li><p><code>range</code>: A vector of the minimum and maximum value of a distribution's
-support.</p></li>
-</ul></div>
+</ul><p><code>range</code> and <code>vtype</code> are properties too, and <code><a href="eval_property.html">eval_property()</a></code> reads them
+like any other, but they cannot be given here: the support determines both,
+and a stated one could disagree with it. A name distionary does not know is
+simply kept, retrievable with <code><a href="eval_property.html">eval_property()</a></code> and otherwise unused.</p>
+</div>
+
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -149,7 +198,7 @@ support.</p></li>
 <span class="r-in"><span>    <span class="va">p</span><span class="op">[</span><span class="va">x</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span>    <span class="va">p</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span>,</span></span>
-<span class="r-in"><span>  .vtype <span class="op">=</span> <span class="st">"continuous"</span>,</span></span>
+<span class="r-in"><span>  .support <span class="op">=</span> <span class="fu"><a href="support-construction.html">continuous</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  .name <span class="op">=</span> <span class="st">"My Linear"</span>,</span></span>
 <span class="r-in"><span>  .parameters <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>could <span class="op">=</span> <span class="st">"include"</span>, anything <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>x <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>

@@ -51,7 +51,7 @@ parameters(a)
 #> [1] 2
 #> 
 
-b <- distribution(mean = 5)
+b <- distribution(mean = 5, .support = continuous())
 #> Warning: Full suite of distribution properties may not be accessible without specifying 'cdf', and either 'density' or 'pmf'.
 parameters(b)
 #> list()

@@ -21,7 +21,7 @@ distribution's definition, a numerical algorithm may be used."><meta property="o
 
     <a class="navbar-brand me-2" href="../index.html">distionary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,6 +36,7 @@ distribution's definition, a numerical algorithm may be used."><meta property="o
     <li><a class="dropdown-item" href="../articles/pseudocode.html">Pseudocode</a></li>
     <li><a class="dropdown-item" href="../articles/specify-built-in.html">Built-In Distributions</a></li>
     <li><a class="dropdown-item" href="../articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
+    <li><a class="dropdown-item" href="../articles/support.html">The Support of a Distribution</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -96,16 +97,17 @@ function, arguments passed to <code><a href="https://rdrr.io/r/stats/integrate.h
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>If there is no method associated with a subclass of
-<code>x</code>, then moments are calculated using
-<code><a href="https://rdrr.io/r/stats/integrate.html" class="external-link">stats::integrate()</a></code> from the density function.</p>
+    <p>If a moment is not supplied in the distribution's definition, it is
+computed numerically over the distribution's support: a sum over the atoms
+(the discrete part) plus integration of the density over the continuous part.
+An infinite atomic support (such as a Poisson's) is summed by walking outward
+through its atoms until the tail contribution is negligible.</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>Beware that if a quantity is being calculated numerically
-for a non-continuous (e.g., discrete) distribution, the calculation
-could be highly approximate. An upcoming version of distionary will
-resolve this issue.</p>
+    <p>When a moment is computed numerically and the underlying sum or
+integral does not converge — for example, a heavy-tailed distribution
+whose moment is not finite — the result is <code>NaN</code>.</p>
     </div>
 
     <div class="section level2">

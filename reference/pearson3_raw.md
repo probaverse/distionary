@@ -22,8 +22,10 @@ rpearson3(n, location, scale, shape)
 
 - location:
 
-  Parameter representing the left-endpoint of the distribution; numeric.
-  Vectors are allowed except for `rpearson3()`.
+  Parameter representing the boundary (endpoint) of the distribution;
+  numeric. This is the left endpoint when `shape` is positive and the
+  right endpoint when `shape` is negative. Vectors are allowed except
+  for `rpearson3()`.
 
 - scale:
 
@@ -32,8 +34,9 @@ rpearson3(n, location, scale, shape)
 
 - shape:
 
-  Shape parameter; positive numeric. Vectors are allowed except for
-  `rpearson3()`.
+  Shape parameter; numeric. A negative value gives the distribution
+  reflected about `location` (an upper-bounded, left-skewed
+  distribution). Vectors are allowed except for `rpearson3()`.
 
 - lower.tail:
 

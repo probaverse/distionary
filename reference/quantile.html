@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">distionary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@
     <li><a class="dropdown-item" href="../articles/pseudocode.html">Pseudocode</a></li>
     <li><a class="dropdown-item" href="../articles/specify-built-in.html">Built-In Distributions</a></li>
     <li><a class="dropdown-item" href="../articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
+    <li><a class="dropdown-item" href="../articles/support.html">The Support of a Distribution</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -102,19 +103,21 @@ distributions are auto-named, and columns are named
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>When a quantile function does not exist, an algorithm is
-deployed that calculates the left inverse of the CDF. This algorithm
-works by progressively cutting the specified range in half, moving
-into the left or right half depending on where the solution is.
-The algorithm is not currently fast and is subject to improvement,
-and is a simple idea that has been passed around on the internet
-here and there. Tolerance is less than 1e-9, unless the maximum
-number of iterations (200) is reached.</p>
-<p>The algorithm is not new, and is rather simple.
-The algorithm works by progressively
-cutting an initially wide range in half, moving into the left or right
-half depending on where the solution is. I found the idea on Stack
-Overflow somewhere, but unfortunately cannot find the location anymore.</p>
+    <p>The 0- and 1-quantiles are the ends of the distribution's support: the
+0-quantile is its lower end and the 1-quantile its upper end. They are
+read from the support (see <code><a href="support.html">support()</a></code>) rather than computed, so an
+unbounded distribution gives <code>-Inf</code> and <code>Inf</code> instead of a large finite
+number found by searching into the tail.</p>
+<p>When a quantile function does not exist, the remaining probabilities are
+found by inverting the CDF by bisection: an interval known to contain the
+solution is progressively cut in half, moving into whichever half still
+contains it. The whole vector is solved together — one vectorized CDF
+evaluation per step rather than one per probability — so evaluating many
+quantiles at once is considerably faster than one at a time. Because the
+support says where the atoms (discrete mass points) are, a probability
+landing inside an atom's jump in the CDF is returned as that atom exactly,
+rather than approximately. Tolerance is roughly 1e-9 in the quantile value,
+unless the maximum number of iterations (200) is reached.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

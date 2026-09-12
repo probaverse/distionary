@@ -9,3 +9,5 @@
   Distributions](https://distionary.probaverse.com/articles/specify-built-in.md):
 - [Specifying Your Own
   Distribution](https://distionary.probaverse.com/articles/specify-user-defined.md):
+- [The Support of a
+  Distribution](https://distionary.probaverse.com/articles/support.md):

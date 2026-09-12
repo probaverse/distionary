@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">distionary</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.2.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@
     <li><a class="dropdown-item" href="../articles/pseudocode.html">Pseudocode</a></li>
     <li><a class="dropdown-item" href="../articles/specify-built-in.html">Built-In Distributions</a></li>
     <li><a class="dropdown-item" href="../articles/specify-user-defined.html">Specifying Your Own Distribution</a></li>
+    <li><a class="dropdown-item" href="../articles/support.html">The Support of a Distribution</a></li>
   </ul></li>
 <li class="active nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -45,10 +46,38 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="development version" id="distionary-development-version">distionary (development version)<a class="anchor" aria-label="anchor" href="#distionary-development-version"></a></h2>
-<ul><li>
-<code><a href="../reference/dst_lp3.html">dst_lp3()</a></code> now supports negative skew on the log scale. Zero skew is treated as a log-normal distribution.</li>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="distionary-020">distionary 0.2.0<a class="anchor" aria-label="anchor" href="#distionary-020"></a></h2>
+<p>This cycle adds support objects: a distribution now says where it places its probability, and the routines computing from it — quantiles and moments — use that to handle atoms exactly rather than approximately. Code that uses the built-in <code>dst_*()</code> distributions is unaffected. Most of the breaking changes are in <code><a href="../reference/distribution.html">distribution()</a></code>, so they reach only distributions built by hand; the exception is <code><a href="https://rdrr.io/r/base/length.html" class="external-link">length()</a></code> and <code><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na()</a></code>, which now answer about the distribution itself.</p>
+<div class="section level3">
+<h3 id="breaking-changes-0-2-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0"></a></h3>
+<ul><li><p><code><a href="../reference/distribution.html">distribution()</a></code> now requires a <code>.support</code>, saying where the distribution places probability. See <code><a href="../reference/distribution.html">?distribution</a></code>, and the “The Support of a Distribution” vignette for why it is asked for.</p></li>
+<li><p><code>.vtype</code> is defunct, and errors with a message pointing at <code>.support</code>. The variable type is derived from the support.</p></li>
+<li><p><code>range</code> and <code>vtype</code> are derived from the support rather than stated, and <code><a href="../reference/distribution.html">distribution()</a></code> refuses them as entries. Both remain properties, reachable through <code><a href="../reference/eval_property.html">eval_property()</a></code> like any other.</p></li>
+<li><p><code><a href="https://rdrr.io/r/base/length.html" class="external-link">length()</a></code>, <code><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na()</a></code> and <code><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list()</a></code> answer about the distribution rather than about the list of properties it is built from: <code><a href="https://rdrr.io/r/base/length.html" class="external-link">length()</a></code> gives 1, not 11, and <code><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na()</a></code> gives a single logical, <code>TRUE</code> for the Null distribution. The properties are unchanged; see <code><a href="../reference/scalar.html">?length.dst</a></code>.</p></li>
 </ul></div>
+<div class="section level3">
+<h3 id="supports-0-2-0">Supports<a class="anchor" aria-label="anchor" href="#supports-0-2-0"></a></h3>
+<ul><li><p>New support objects say where a distribution places probability, tracking its atoms explicitly: <code><a href="../reference/support-construction.html">discrete()</a></code>, <code><a href="../reference/support-construction.html">continuous()</a></code>, and <code>mixed(discrete =, continuous =)</code>. Retrieve one with <code><a href="../reference/support.html">support()</a></code>, its two parts with <code><a href="../reference/atoms.html">atoms()</a></code> and <code><a href="../reference/atoms.html">regions()</a></code>, and test one with <code><a href="../reference/is_support.html">is_support()</a></code>.</p></li>
+<li><p><code><a href="../reference/empty_support.html">empty_support()</a></code>, with <code><a href="../reference/is_support.html">is_empty_support()</a></code>. No distribution has an empty support, but operations on supports need something to return.</p></li>
+<li><p>Supports can now be manipulated, not only built: <code><a href="../reference/support_union.html">support_union()</a></code>, <code><a href="../reference/support_restrict.html">support_restrict()</a></code> and <code><a href="../reference/support_transform.html">support_transform()</a></code>, with <code><a href="../reference/support_transform.html">support_shift()</a></code>, <code><a href="../reference/support_transform.html">support_scale()</a></code> and <code><a href="../reference/support_transform.html">support_reciprocal()</a></code> for the common maps; <code><a href="../reference/support_add_atoms.html">support_add_atoms()</a></code> and <code><a href="../reference/support_add_atoms.html">support_drop_atoms()</a></code>; and <code><a href="../reference/support_contains.html">support_contains()</a></code> and <code><a href="../reference/support_contains.html">support_has_atom()</a></code>. There is deliberately no intersection.</p></li>
+<li><p>All built-in <code>dst_*()</code> families carry a support, so their atoms are known explicitly — <code><a href="../reference/dst_pois.html">dst_pois()</a></code> reports the atoms <code>0, 1, 2, ...</code>.</p></li>
+<li><p>Re-exported the <code>discretes</code> constructors used to describe atomic supports, so they work without attaching that package: <code><a href="https://discretes.netlify.app/reference/integers.html" class="external-link">natural0()</a></code>, <code><a href="https://discretes.netlify.app/reference/integers.html" class="external-link">natural1()</a></code>, <code><a href="https://discretes.netlify.app/reference/integers.html" class="external-link">integers()</a></code>, <code><a href="https://discretes.netlify.app/reference/arithmetic.html" class="external-link">arithmetic()</a></code> and <code><a href="https://discretes.netlify.app/reference/as_discretes.html" class="external-link">as_discretes()</a></code>.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="evaluation-0-2-0">Evaluation<a class="anchor" aria-label="anchor" href="#evaluation-0-2-0"></a></h3>
+<ul><li><p>Moments (<code><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean()</a></code>, <code><a href="../reference/moments.html">variance()</a></code>, <code><a href="../reference/moments.html">stdev()</a></code>, <code><a href="../reference/moments.html">skewness()</a></code>, <code><a href="../reference/moments.html">kurtosis()</a></code>) are computed numerically for discrete and mixed distributions, not only continuous ones: a sum over the atoms plus integration over the regions. Infinite atomic supports are walked outward, and a moment that never settles returns <code>NaN</code>.</p></li>
+<li><p>Quantiles derived through the property network are considerably faster, solving every requested probability in one vectorised bisection rather than a separate search for each. A probability landing inside an atom’s jump returns that atom exactly, and the 0- and 1-quantiles come from the support, so an unbounded distribution gives <code>-Inf</code> and <code>Inf</code>. Discrete and mixed distributions raised an error on this path before.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="distributions-0-2-0">Distributions<a class="anchor" aria-label="anchor" href="#distributions-0-2-0"></a></h3>
+<ul><li><p><code><a href="../reference/dst_pearson3.html">dst_pearson3()</a></code>, and the underlying <code><a href="../reference/pearson3_raw.html">ppearson3()</a></code>, <code><a href="../reference/pearson3_raw.html">dpearson3()</a></code>, <code><a href="../reference/pearson3_raw.html">qpearson3()</a></code> and <code><a href="../reference/pearson3_raw.html">rpearson3()</a></code>, accept a negative <code>shape</code>: the Pearson Type III reflected about <code>location</code>, giving the negatively-skewed, upper-bounded form.</p></li>
+<li><p><code><a href="../reference/dst_lp3.html">dst_lp3()</a></code> supports negative skew on the log scale. Zero skew is treated as a log-normal distribution.</p></li>
+</ul></div>
+<div class="section level3">
+<h3 id="documentation-0-2-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-2-0"></a></h3>
+<ul><li>New vignette, “The Support of a Distribution”.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="distionary-011">distionary 0.1.1<a class="anchor" aria-label="anchor" href="#distionary-011"></a></h2><p class="text-muted">CRAN release: 2026-04-27</p>
 <ul><li><p>Replaced usage of the deprecated <code>ellipsis</code> package with <code>rlang</code> for checking expected use of ellipsis (thanks to <a href="https://github.com/olivroy" class="external-link">@olivroy</a>, PR <a href="https://github.com/probaverse/distionary/issues/44" class="external-link">#44</a>).</p></li>
