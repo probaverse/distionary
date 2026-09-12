@@ -97,6 +97,25 @@
 </div>
 </div>
 <div class="section level2">
+<h2 id="distributional-representations">Distributional representations<a class="anchor" aria-label="anchor" href="#distributional-representations"></a></h2>
+<p>When building a distribution, two rules settle which representations to state.</p>
+<div class="section level3">
+<h3 id="do-not-state-what-the-network-already-derives">Do not state what the network already derives<a class="anchor" aria-label="anchor" href="#do-not-state-what-the-network-already-derives"></a></h3>
+<p>distionary derives a representation it was not given: a missing survival from the CDF, a missing CDF from the survival, a missing PMF from the jumps. Stating one that is the network’s own arithmetic rearranged is the same formula written twice — two places to keep correct, and nothing gained by it.</p>
+</div>
+<div class="section level3">
+<h3 id="state-one-when-it-computes-something-different">State one when it computes something different<a class="anchor" aria-label="anchor" href="#state-one-when-it-computes-something-different"></a></h3>
+<p>The reason to state a second representation is that it reaches its answer by a different route. Take each one from the base representation that carries its precision: a survival from a survival, a CDF from a CDF.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Yes                               # No</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>survival <span class="ot">=</span> <span class="cf">function</span>(x) {           survival <span class="ot">=</span> <span class="cf">function</span>(x) {</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="fu">eval_survival</span>(d, <span class="at">at =</span> x) <span class="sc">/</span>         <span class="dv">1</span> <span class="sc">-</span> <span class="fu">eval_cdf</span>(d, <span class="at">at =</span> x) <span class="sc">/</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>    p_kept                             p_kept</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>}                                  }</span></code></pre></div>
+<p>Far out in the tail, <code><a href="reference/cdf.html">eval_cdf()</a></code> returns 1 to the last bit a double holds, so one minus it is exactly 0 while the probability out there is real and wanted. <code><a href="reference/survival.html">eval_survival()</a></code> still holds every digit of it. Trimming a standard normal at 0 gave a survival of 0 at <code>x = 10</code>, where the answer is 1.5e-23.</p>
+<p>The two rules meet in the same place: a stated representation has to earn its place by being a better computation, and if it cannot, the network should be left to derive it.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="function-arguments">Function arguments<a class="anchor" aria-label="anchor" href="#function-arguments"></a></h2>
 <ul><li>Match an argument against a set of allowed string values with <code><a href="https://rlang.r-lib.org/reference/arg_match.html" class="external-link">rlang::arg_match()</a></code>, not base R’s <code><a href="https://rdrr.io/r/base/match.arg.html" class="external-link">match.arg()</a></code>.</li>
 <li>In exported (public-facing) functions, lean towards placing <code>...</code> between the mandatory arguments and the optional ones (those with defaults), unless that is awkward. This forces optional arguments to be named, which keeps call sites readable and lets the argument list grow without breaking positional calls.</li>
