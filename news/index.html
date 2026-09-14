@@ -42,11 +42,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/probaverse/distionary/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/probaverse/distionary/blob/v0.2.0/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0" id="distionary-020">distionary 0.2.0<a class="anchor" aria-label="anchor" href="#distionary-020"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.2.0" id="distionary-020">distionary 0.2.0<a class="anchor" aria-label="anchor" href="#distionary-020"></a></h2><p class="text-muted">CRAN release: 2026-09-14</p>
 <p>This cycle adds support objects: a distribution now says where it places its probability, and the routines computing from it — quantiles and moments — use that to handle atoms exactly rather than approximately. Code that uses the built-in <code>dst_*()</code> distributions is unaffected. Most of the breaking changes are in <code><a href="../reference/distribution.html">distribution()</a></code>, so they reach only distributions built by hand; the exception is <code><a href="https://rdrr.io/r/base/length.html" class="external-link">length()</a></code> and <code><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na()</a></code>, which now answer about the distribution itself.</p>
 <div class="section level3">
 <h3 id="breaking-changes-0-2-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0"></a></h3>

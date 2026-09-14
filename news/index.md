@@ -2,6 +2,8 @@
 
 ## distionary 0.2.0
 
+CRAN release: 2026-09-14
+
 This cycle adds support objects: a distribution now says where it places
 its probability, and the routines computing from it — quantiles and
 moments — use that to handle atoms exactly rather than approximately.

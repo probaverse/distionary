@@ -16,7 +16,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/probaverse/distionary/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/probaverse/distionary/blob/v0.2.0/DESCRIPTION)
 
 Coia V (2026). *distionary: Create and Evaluate Probability
 Distributions*. R package version 0.2.0,
