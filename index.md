@@ -181,7 +181,7 @@ linear <- distribution(
     p[x > 1] <- 1
     p
   },
-  .support = continuous(c(0, 1)),
+  .vtype = "continuous",
   .name = "My Linear"
 )
 # Inspect

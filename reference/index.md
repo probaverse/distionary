@@ -32,8 +32,6 @@
   : Generalised Extreme Value Distribution
 - [`dst_gp()`](https://distionary.probaverse.com/reference/dst_gp.md) :
   Generalised Pareto Distribution
-- [`dst_gumbel()`](https://distionary.probaverse.com/reference/dst_gumbel.md)
-  : Gumbel Distribution
 - [`dst_hyper()`](https://distionary.probaverse.com/reference/dst_hyper.md)
   : Hypergeometric Distribution
 - [`dst_lnorm()`](https://distionary.probaverse.com/reference/dst_lnorm.md)
@@ -64,41 +62,6 @@
   [`is.distribution()`](https://distionary.probaverse.com/reference/distribution.md)
   : Build a Distribution Object
 
-### Support
-
-- [`discrete()`](https://distionary.probaverse.com/reference/support-construction.md)
-  [`continuous()`](https://distionary.probaverse.com/reference/support-construction.md)
-  [`mixed()`](https://distionary.probaverse.com/reference/support-construction.md)
-  : Specify the Support of a Distribution
-- [`empty_support()`](https://distionary.probaverse.com/reference/empty_support.md)
-  : The Empty Support
-- [`support()`](https://distionary.probaverse.com/reference/support.md)
-  : Retrieve the Support of a Distribution
-- [`atoms()`](https://distionary.probaverse.com/reference/atoms.md)
-  [`regions()`](https://distionary.probaverse.com/reference/atoms.md) :
-  What a Support Is Made Of
-- [`is_support()`](https://distionary.probaverse.com/reference/is_support.md)
-  [`is_empty_support()`](https://distionary.probaverse.com/reference/is_support.md)
-  : Test for a Support Object
-
-### Support Algebra
-
-- [`support_union()`](https://distionary.probaverse.com/reference/support_union.md)
-  : Combine Supports
-- [`support_restrict()`](https://distionary.probaverse.com/reference/support_restrict.md)
-  : Restrict a Support to an Interval
-- [`support_transform()`](https://distionary.probaverse.com/reference/support_transform.md)
-  [`support_shift()`](https://distionary.probaverse.com/reference/support_transform.md)
-  [`support_scale()`](https://distionary.probaverse.com/reference/support_transform.md)
-  [`support_reciprocal()`](https://distionary.probaverse.com/reference/support_transform.md)
-  : Transform a Support
-- [`support_add_atoms()`](https://distionary.probaverse.com/reference/support_add_atoms.md)
-  [`support_drop_atoms()`](https://distionary.probaverse.com/reference/support_add_atoms.md)
-  : Add or Remove Atoms
-- [`support_contains()`](https://distionary.probaverse.com/reference/support_contains.md)
-  [`support_has_atom()`](https://distionary.probaverse.com/reference/support_contains.md)
-  : Test Membership of a Support
-
 ### Distribution Characteristics
 
 - [`parameters()`](https://distionary.probaverse.com/reference/parameters.md)
@@ -108,10 +71,6 @@
   : Plot a Distribution
 - [`pretty_name()`](https://distionary.probaverse.com/reference/pretty_name.md)
   : Distribution name
-- [`length(`*`<dst>`*`)`](https://distionary.probaverse.com/reference/scalar.md)
-  [`is.na(`*`<dst>`*`)`](https://distionary.probaverse.com/reference/scalar.md)
-  [`as.list(`*`<dst>`*`)`](https://distionary.probaverse.com/reference/scalar.md)
-  : A Distribution has Length 1
 - [`vtype()`](https://distionary.probaverse.com/reference/vtype.md) :
   Variable Type of a Distribution
 
@@ -164,7 +123,6 @@
 - [`median(`*`<dst>`*`)`](https://distionary.probaverse.com/reference/median.dst.md)
   : Median of a Distribution
 - [`range(`*`<dst>`*`)`](https://distionary.probaverse.com/reference/range.md)
-  [`range(`*`<support>`*`)`](https://distionary.probaverse.com/reference/range.md)
   : Range of Distribution
 
 ### Random Sampling
@@ -195,17 +153,3 @@ Distributional representations not found in the `stats` package.
   [`qgp()`](https://distionary.probaverse.com/reference/gp_raw.md)
   [`dgp()`](https://distionary.probaverse.com/reference/gp_raw.md) :
   Representations of the Generalized Pareto Distribution
-- [`dst_lp3()`](https://distionary.probaverse.com/reference/dst_lp3.md)
-  : Log Pearson Type III distribution
-- [`plp3()`](https://distionary.probaverse.com/reference/lp3_raw.md)
-  [`dlp3()`](https://distionary.probaverse.com/reference/lp3_raw.md)
-  [`qlp3()`](https://distionary.probaverse.com/reference/lp3_raw.md)
-  [`rlp3()`](https://distionary.probaverse.com/reference/lp3_raw.md) :
-  Representations of the Log Pearson Type III Distribution
-- [`dst_pearson3()`](https://distionary.probaverse.com/reference/dst_pearson3.md)
-  : Pearson Type III distribution
-- [`ppearson3()`](https://distionary.probaverse.com/reference/pearson3_raw.md)
-  [`dpearson3()`](https://distionary.probaverse.com/reference/pearson3_raw.md)
-  [`qpearson3()`](https://distionary.probaverse.com/reference/pearson3_raw.md)
-  [`rpearson3()`](https://distionary.probaverse.com/reference/pearson3_raw.md)
-  : Representations of the Pearson Type III Distribution

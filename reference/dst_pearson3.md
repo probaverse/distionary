@@ -13,9 +13,8 @@ dst_pearson3(location, scale, shape)
 
 - location:
 
-  Location parameter, specifying the boundary of the distribution;
-  single numeric. It is the left endpoint when `shape` is positive and
-  the right endpoint when `shape` is negative.
+  Location parameter, specifying how to shift the Gamma distribution;
+  single numeric.
 
 - scale:
 
@@ -23,9 +22,7 @@ dst_pearson3(location, scale, shape)
 
 - shape:
 
-  Shape parameter of the Gamma distribution; single numeric. A negative
-  value gives the distribution reflected about `location`: the Pearson
-  Type III with negative skewness, upper-bounded at `location`.
+  Shape parameter of the Gamma distribution; single positive numeric.
 
 ## Value
 
@@ -39,10 +36,4 @@ dst_pearson3(1, 1, 1)
 #> --Parameters--
 #> location    scale    shape 
 #>        1        1        1 
-# A negative shape reflects the distribution about `location`:
-dst_pearson3(1, 1, -1)
-#> Pearson Type III distribution (continuous) 
-#> --Parameters--
-#> location    scale    shape 
-#>        1        1       -1 
 ```
