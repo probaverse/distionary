@@ -39,7 +39,7 @@ d <- distribution(
     (x > 0) * pmin(x^2, 1)
   },
   g = 9.81,
-  .vtype = "continuous"
+  .support = continuous(c(0, 1))
 )
 #> Warning: Full suite of distribution properties may not be accessible without specifying 'cdf', and either 'density' or 'pmf'.
 eval_property(d, "g")

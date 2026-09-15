@@ -53,19 +53,24 @@ are auto-named, and columns are named
 
 ## Details
 
-When a quantile function does not exist, an algorithm is deployed that
-calculates the left inverse of the CDF. This algorithm works by
-progressively cutting the specified range in half, moving into the left
-or right half depending on where the solution is. The algorithm is not
-currently fast and is subject to improvement, and is a simple idea that
-has been passed around on the internet here and there. Tolerance is less
-than 1e-9, unless the maximum number of iterations (200) is reached.
+The 0- and 1-quantiles are the ends of the distribution's support: the
+0-quantile is its lower end and the 1-quantile its upper end. They are
+read from the support (see
+[`support()`](https://distionary.probaverse.com/reference/support.md))
+rather than computed, so an unbounded distribution gives `-Inf` and
+`Inf` instead of a large finite number found by searching into the tail.
 
-The algorithm is not new, and is rather simple. The algorithm works by
-progressively cutting an initially wide range in half, moving into the
-left or right half depending on where the solution is. I found the idea
-on Stack Overflow somewhere, but unfortunately cannot find the location
-anymore.
+When a quantile function does not exist, the remaining probabilities are
+found by inverting the CDF by bisection: an interval known to contain
+the solution is progressively cut in half, moving into whichever half
+still contains it. The whole vector is solved together — one vectorized
+CDF evaluation per step rather than one per probability — so evaluating
+many quantiles at once is considerably faster than one at a time.
+Because the support says where the atoms (discrete mass points) are, a
+probability landing inside an atom's jump in the CDF is returned as that
+atom exactly, rather than approximately. Tolerance is roughly 1e-9 in
+the quantile value, unless the maximum number of iterations (200) is
+reached.
 
 ## See also
 

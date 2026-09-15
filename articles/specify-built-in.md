@@ -31,6 +31,7 @@ package.
 | Gamma | [`dst_gamma()`](https://distionary.probaverse.com/reference/dst_gamma.md) | Yes |
 | Geometric | [`dst_geom()`](https://distionary.probaverse.com/reference/dst_geom.md) | Yes |
 | Generalised Extreme Value (GEV) | [`dst_gev()`](https://distionary.probaverse.com/reference/dst_gev.md) | No |
+| Gumbel | [`dst_gumbel()`](https://distionary.probaverse.com/reference/dst_gumbel.md) | No |
 | Generalised Pareto (GP) | [`dst_gp()`](https://distionary.probaverse.com/reference/dst_gp.md) | No |
 | Hypergeometric | [`dst_hyper()`](https://distionary.probaverse.com/reference/dst_hyper.md) | Yes |
 | Log Normal | [`dst_lnorm()`](https://distionary.probaverse.com/reference/dst_lnorm.md) | Yes |
