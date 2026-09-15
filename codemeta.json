@@ -18,6 +18,7 @@
   "author": [
     {
       "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-2930-0723",
       "givenName": "Vincenzo",
       "familyName": "Coia",
       "email": "vincenzo.coia@gmail.com"
@@ -43,6 +44,7 @@
   "copyrightHolder": [
     {
       "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-2930-0723",
       "givenName": "Vincenzo",
       "familyName": "Coia",
       "email": "vincenzo.coia@gmail.com"
@@ -51,6 +53,7 @@
   "maintainer": [
     {
       "@type": "Person",
+      "@id": "https://orcid.org/0000-0002-2930-0723",
       "givenName": "Vincenzo",
       "familyName": "Coia",
       "email": "vincenzo.coia@gmail.com"

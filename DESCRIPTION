@@ -3,7 +3,8 @@ Title: Create and Evaluate Probability Distributions
 Version: 0.2.0
 Authors@R: c(
     person("Vincenzo", "Coia", , "vincenzo.coia@gmail.com", 
-           role = c("aut", "cre", "cph")),
+           role = c("aut", "cre", "cph"),
+           comment = c(ORCID = "0000-0002-2930-0723")),
     person("Amogh", "Joshi", role = "ctb"),
     person("Shuyi", "Tan", role = "ctb"),
     person("Zhipeng", "Zhu", role = "ctb"),
