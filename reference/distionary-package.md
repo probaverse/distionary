@@ -89,8 +89,8 @@ Useful links:
 
 ## Author
 
-**Maintainer**: Vincenzo Coia <vincenzo.coia@gmail.com> \[copyright
-holder\]
+**Maintainer**: Vincenzo Coia <vincenzo.coia@gmail.com>
+([ORCID](https://orcid.org/0000-0002-2930-0723)) \[copyright holder\]
 
 Other contributors:
 

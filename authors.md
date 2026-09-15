@@ -3,6 +3,7 @@
 ## Authors
 
 - **Vincenzo Coia**. Author, maintainer, copyright holder.
+  [](https://orcid.org/0000-0002-2930-0723)
 
 - **Amogh Joshi**. Contributor.
 
