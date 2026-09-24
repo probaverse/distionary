@@ -1,10 +1,8 @@
 # distionary (development version)
 
-- Multivariate distributions (experimental): `support_product()` and
-  `discrete()` on a data frame build their supports; `dst_mv_norm()` and
-  `dst_mv_empirical()` (with `dst_bi_*()` shortcuts) build them; and
-  `eval_mv_*()`, `eval_bi_*()`, `prob_mv_orthant()`, and `marginal()`
-  evaluate them. See `?eval_mv`.
+- Multivariate distributions (experimental), including slices such as
+  fixing the total of two variables. See
+  `vignette("multivariate", package = "distionary")`.
 
 # distionary 0.2.0
 

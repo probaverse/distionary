@@ -41,6 +41,13 @@ reference:
   - support_transform
   - support_add_atoms
   - support_contains
+- subtitle: Several Variables
+  contents:
+  - support_product
+  - support_map
+  - dimension
+  - marginal
+  - conditional
 - subtitle: Distribution Characteristics
   contents:
   - parameters
@@ -54,6 +61,7 @@ reference:
   - starts_with("enframe_")
   - starts_with("eval_")
   - starts_with("prob_")
+  - orthant
 - subtitle: Distribution Properties
   contents:
   - starts_with("kurtosis")

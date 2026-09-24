@@ -1,92 +1,86 @@
 # Multivariate distributions: working notes
 
 Branch `feature/multivariate`, started 2026-09-24 from `main`. It supersedes
-`add_multivariate`, which predates supports. Nothing is taken from that branch
-except the idea of `bi`/`mv` evaluators.
+`add_multivariate`, which predates supports.
 
 This file is where work pauses and resumes. Read it first when picking up.
 
 ## Status
 
-Built, tested (full suite green), and `R CMD check` clean:
+All distionary-level work agreed on 2026-09-24 is built. The full suite is
+green, `R CMD check` is clean (0/0/0), and `pkgdown::check_pkgdown()`
+passes.
 
 | Piece | Where |
 |---|---|
-| `support_product()`: expand-grid supports, variables named by argument | `R/support-multivariate.R` |
-| `discrete(<data frame>)`: finite point sets (needed by empirical) | same |
-| `dimension()`, `variables()` | same |
+| `support_product()`: expand-grid supports | `R/support-multivariate.R` |
+| `discrete(<data frame>)`: finite point sets | same |
+| `support_map()`, `support_affine()`: supports as images of maps | `R/support-map.R` |
+| `"singular"` variable type (spans fewer dimensions than variables) | same, and `vtype_of_support_mv()` |
+| `dimension()`, `variables()` | `R/support-multivariate.R` |
 | `eval_{bi,mv}_{cdf,survival,density,pmf}()`, with `given =` | `R/eval_mv.R` |
-| Property network for multivariate distributions (`eval_mv_*_from_network`) | `R/eval_mv_network.R` |
-| `marginal()` (stated, or worked out) | `R/marginal.R` |
+| Multivariate property network (`eval_mv_*_from_network`) | `R/eval_mv_network.R` |
+| `marginal()` | `R/marginal.R` |
+| `conditional()`: conditional distribution objects; slices | `R/conditional.R` |
 | `prob_{bi,mv}_orthant()` | `R/prob_orthant.R` |
-| `dst_mv_norm()`, `dst_bi_norm()` (mvtnorm in Suggests) | `R/dst_mv_norm.R` |
+| `dst_mv_norm()` (incl. singular cov), `dst_bi_norm()` | `R/dst_mv_norm.R` |
 | `dst_mv_empirical()`, `dst_bi_empirical()` | `R/dst_mv_empirical.R` |
-| Univariate-only functions refuse multivariate input, naming what to use | `assert_univariate()` in `R/utils.R` |
-| `realise()` returns a data frame (tibble if installed), usable as `l` | `R/realise.R` |
+| Vignette "Multivariate Distributions" (river-slice example) | `vignettes/multivariate.Rmd` |
 
-## Decisions taken (review these)
+## Decisions taken
 
-- **`dimension()`, not `dim()`.** `dim()` means array extents, and it has to
-  agree with `length()`, which is 1 (see scalar hygiene). `NROW()` would call a
-  bivariate distribution two rows. Dimension = number of variables, which is
-  the standard meaning for a p-dimensional random vector, degenerate or not.
-- **Representations take one argument per variable**: `cdf = function(x, y)`.
-  General-p families write `function(...)`. The evaluator calls them
-  like `pmap()` does. Arguments are matched by position, in `variables()` order.
-- **Variable names live on the support** (the coordinates are the support's
-  axes). Unnamed variables default to `x1, x2, ...` in every dimension,
-  including the `bi` constructors.
-- **Survival is P(all exceed)**, not 1 - CDF. That is the standard
-  "joint survival function"; the two coincide only in 1D.
-- **`given`** names the variables to the right of the bar, by name or
-  position. Argument order never changes. In `eval_bi_*()`, `"x"`/`"y"` also
-  work as argument aliases, but variable names win if they clash.
-- **Orthants** (`prob_*_orthant()`, with `ineq` mandatory, like `inclusive`
-  in `prob_left()`). "Orthant" is the technical name for these regions.
-- **Intrinsic `marginal` and `conditional` properties**: a distribution may
-  state `marginal = function(which)` and
-  `conditional = function(given, at)`. Each returns a distribution. MVN states
-  both. Otherwise the network works them out.
-- **`vtype()` of a multivariate distribution describes the joint**:
-  continuous / discrete / mixed ("neither").
-- **mvtnorm is in Suggests.** It is only needed for the MVN CDF/survival.
-  Deterministic algorithms are used (TVPACK for p <= 3, Miwa for p <= 20).
-- **Singular covariances are refused for now.** They are the natural home of
-  slices (see below).
+- **`dimension()`, not `dim()`.** `dim()` has to agree with `length()`,
+  which is 1. Dimension = number of variables, degenerate or not.
+- **Representations take one argument per variable** (`function(x, y)`, or
+  `function(...)`), called like `pmap()`, in `variables()` order.
+- **Variable names live on the support.** Unnamed variables are `x1, x2,
+  ...`, except in `dst_bi_*()`, which use `x, y` (Vincenzo, 2026-09-24).
+- **Survival is P(all exceed)**, not 1 - CDF.
+- **`given`** names the variables to the right of the bar. Argument order
+  never changes. `"x"`/`"y"` are argument aliases in `eval_bi_*()`, but
+  variable names win.
+- **Orthants**: `prob_*_orthant(d, ..., ineq)`, with `ineq` mandatory.
+- **Intrinsic `marginal = function(which)` and
+  `conditional = function(given, at)`**, each returning a distribution.
+  Otherwise the network works them out: finite by enumeration; continuous
+  by densities, integrating when one variable is left.
+- **Non-product supports are images of maps** (agreed). `support_affine()`
+  derives margins exactly (a Minkowski sum of the scaled regions) and uses
+  the matrix rank as the spanned dimension. `support_map()` needs
+  `margins` stated, and assumes spanned dim = min(in, out).
+- **Slices are conditionals on a derived variable.** Slicing (X, Y) at
+  X + Y = s means conditioning (X, Y, S) on S. For Normals this is exact
+  via singular covariance. The result stays bivariate (singular);
+  `marginal()` reduces it.
+- **Singular MVN**: rank from eigenvalues (tol: scale * p * sqrt(eps)).
+  Rank 0 gives a point mass. The CDF uses mvtnorm GenzBretz under
+  `with_fixed_seed()`, which restores the caller's RNG. Conditioning uses a
+  pseudo-inverse; values off the support give `dst_null()`.
+- **mvtnorm is in Suggests** (only the MVN CDF/survival needs it).
+- `eval_property()` now calls network functions through a local name, so
+  errors no longer print the whole distribution as the call.
 
-## Deviation from the brief
+## Open questions
 
-The brief was to build only expand-grid supports. The empirical distribution
-cannot live on one: n points in p dimensions would become a grid of n^p.
-So `discrete()` also accepts a data frame of points. That is the minimum;
-nothing else non-product is built.
+1. **Independence binding** belongs in `couple` (agreed); distionary
+   supplies `support_product()`.
+2. **The slice verb in distplyr.** Given a linear map `A`, distplyr could
+   offer a verb that appends derived variables (MVN: `A mu`, `A S A'`) and
+   then conditions. For non-Normal joints, the slice density is
+   `f(x, s - x) / f_S(s)`. That needs a general linear-transform verb.
+3. **Mixed products** (count x amount): the support exists, but there is
+   no joint density/PMF representation. Possibly a flavours question.
+4. **`vtype` of affine images with a constant coordinate** (e.g. a segment
+   with z fixed) reports `"singular"`. That is correct (no joint density),
+   though one could argue for `"mixed"`.
+5. **Conditional support from the network** is the product of the
+   remaining margins, which may be larger than needed. It is documented.
+6. **Not built**: moments beyond mean/covariance, `enframe_bi_*()`,
+   plotting, event-conditioning (use ratios of orthants), membership
+   tests for map supports.
 
-## Open questions, for discussion
+## Next steps
 
-1. **Non-product supports (triangles, slices).** See the chat reply of
-   2026-09-24. In short: constraints on a product (`y <= x`) are easy to state
-   but opaque (membership only: no marginals, no integration). A
-   parametrisation / pushforward (the support of `(X, X*Z)` is the image of
-   a product under a map) covers both the triangle and the slice. It also
-   says what dimension the support has. That is the recommendation.
-2. **Slicing `x + y = s`.** Recommend: the result stays bivariate
-   (`dimension()` 2); internally a 1D distribution plus an affine map.
-   Reducing it is just `marginal()`. For Gaussians, this is a singular MVN.
-3. **Independence binding.** Recommend `couple` (independence copula as an
-   explicit choice), not distionary. distionary supplies `support_product()`.
-4. **Default variable names.** `x1, x2` everywhere, or `x, y` for bivariate?
-5. **Mixed products** (discrete x continuous): the support exists, but there
-   is no "density" for the joint yet. It is a density w.r.t. counting x
-   Lebesgue. This is where flavours might come in.
-6. **Moments beyond mean and covariance** for multivariate: not built.
-   Neither are `enframe_bi_*()`, plotting, or event-conditioning (`X > x`;
-   use ratios of orthants).
-
-## Next steps (in order)
-
-1. Vincenzo reviews names and the decisions above.
-2. A vignette: "Multivariate distributions".
-3. Slices of an MVN via singular covariance (closed form, and the river
-   use case).
-4. The pushforward support representation, if item 1 of the open questions
-   lands that way.
+- Vincenzo's review.
+- distplyr: the slice/linear-transform verb; mv-aware verbs.
+- couple: binding with copulas (independence included).

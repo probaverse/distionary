@@ -1,0 +1,267 @@
+---
+title: "Multivariate Distributions"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Multivariate Distributions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+has_mvtnorm <- requireNamespace("mvtnorm", quietly = TRUE)
+```
+
+```{r setup}
+library(distionary)
+```
+
+A distribution can describe several variables at once: the flows of two rivers on the same day, say, or a storm's duration together with its depth. This vignette shows how to build such distributions, how to evaluate them, and how to condition them --- including slicing one along a line, such as fixing the total of two flows.
+
+Multivariate distributions are new in `distionary`, and still experimental. The names and behaviour described here may change.
+
+## Building one
+
+The multivariate Normal comes in two forms: `dst_mv_norm()` for any number of variables, specified by a mean vector and covariance matrix, and `dst_bi_norm()`, a shortcut for two, specified by standard deviations and a correlation.
+
+```{r}
+d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
+d
+```
+
+Its variables have names, and `dimension()` counts them.
+
+```{r}
+variables(d)
+dimension(d)
+```
+
+Name them yourself through the names of the mean:
+
+```{r}
+flows <- dst_mv_norm(
+  mean = c(r1 = 50, r2 = 80),
+  cov = matrix(c(100, 60, 60, 225), 2)
+)
+variables(flows)
+```
+
+The other built-in family is the empirical distribution, which places probability on each observed point --- each row of a data set, taken as a whole.
+
+```{r}
+obs <- data.frame(
+  flow = c(10, 12, 15, 11, 12),
+  depth = c(1.0, 1.5, 2.0, 1.1, 1.5)
+)
+e <- dst_bi_empirical(flow, depth, data = obs)
+e
+```
+
+`dst_mv_empirical()` does the same for any number of variables, taking a list of vectors --- a data frame being one.
+
+## Evaluating one
+
+A univariate distribution is evaluated at a vector of values. A multivariate one needs a value for each variable, so there are two families of evaluators, much as `purrr` has `map2()` and `pmap()`:
+
+- `eval_bi_*(d, x, y)` for two variables, one vector each;
+- `eval_mv_*(d, l)` for any number, a list of vectors.
+
+```{r, eval = has_mvtnorm}
+eval_bi_cdf(d, x = 0, y = 1)
+eval_mv_cdf(d, list(0, 1))
+eval_bi_density(d, x = 0:2, y = 1)
+```
+
+The vectors are recycled to a common length, and element `i` of the result is the representation at the `i`th point. A named list is matched to the variables by name, so its order does not matter; a data frame works just as well. That includes the draws from `realise()`, which come back as a data frame:
+
+```{r}
+set.seed(1)
+draws <- realise(flows, n = 3)
+draws
+eval_mv_density(flows, draws)
+```
+
+The functions for one variable refuse a multivariate distribution, and say what to use instead:
+
+```{r, error = TRUE}
+eval_cdf(d, 0)
+```
+
+### Survival, and other corners
+
+The survival function is the probability that *every* variable exceeds its value, \(P(X > x, Y > y)\). That is not one minus the CDF, which is the probability that *at least one* does; the two agree only for a single variable.
+
+```{r, eval = has_mvtnorm}
+eval_bi_survival(d, x = 0, y = 1)
+1 - eval_bi_cdf(d, x = 0, y = 1)
+```
+
+For any other combination of inequalities --- one variable below its value and the other above, say --- use `prob_bi_orthant()` or `prob_mv_orthant()`:
+
+```{r, eval = has_mvtnorm}
+prob_bi_orthant(d, x = 0, y = 1, ineq = c("<=", ">"))
+```
+
+Strict and non-strict inequalities differ only where a variable has atoms:
+
+```{r}
+prob_bi_orthant(e, x = 12, y = 1.5, ineq = c("<", "<="))
+prob_bi_orthant(e, x = 12, y = 1.5, ineq = c("<=", "<="))
+```
+
+## Marginals and conditionals
+
+`marginal()` gives the distribution of some of the variables, ignoring the rest. With one variable, it is an ordinary univariate distribution, to be evaluated with the usual functions.
+
+```{r}
+r2 <- marginal(flows, "r2")
+r2
+eval_quantile(r2, at = 0.99)
+```
+
+To evaluate a representation *conditional* on some of the variables, say which ones are known with `given`. The arguments stay in the same order either way: every variable still gets a value, and `given` says which of those values are known rather than evaluated at. The variables in `given` are the ones on the right of the bar.
+
+```{r, eval = has_mvtnorm}
+# P(Y <= y | X = 2), for y = 0, 1, 2
+eval_bi_cdf(d, x = 2, y = 0:2, given = "x")
+```
+
+`conditional()` gives the conditional distribution as a distribution in its own right:
+
+```{r}
+conditional(d, given = c(x = 2))
+```
+
+## Supports of several variables
+
+Every distribution says where it places its probability, through its support (see `vignette("support")`). The simplest multivariate support is a *product*: every value of one variable paired with every value of each of the others, as `expand.grid()` pairs them.
+
+```{r}
+support_product(
+  storms = discrete(natural0()),
+  depth = continuous(c(0, Inf))
+)
+```
+
+An empirical distribution's support is not a product, though: it is the set of points observed, not every pairing of an observed flow with an observed depth. `discrete()` takes such a set as a data frame.
+
+```{r}
+support(e)
+```
+
+For anything else, describe the support as the image of a simpler one under a map. The triangle \(0 < y < x\) is where \((x, z) \mapsto (x, xz)\) sends the strip \(x > 0\), \(0 < z < 1\):
+
+```{r}
+strip <- support_product(
+  x = continuous(c(0, Inf)),
+  z = continuous(c(0, 1))
+)
+support_map(
+  strip,
+  fun = function(x, z) list(x, x * z),
+  margins = list(
+    x = continuous(c(0, Inf)),
+    y = continuous(c(0, Inf))
+  )
+)
+```
+
+A general map has to be told what values each variable reaches. A linear one does not, and `support_affine()` works them out. Here is the line \(x + y = 100\), as the image of the real line under \(t \mapsto (50 + t, 50 - t)\):
+
+```{r}
+line <- support_affine(
+  continuous(),
+  shift = c(x = 50, y = 50),
+  matrix = rbind(1, -1)
+)
+line
+```
+
+A line has two variables but spans only one dimension. A distribution on it puts no probability on any single point, but has no density over the plane either. Its variable type is `"singular"`.
+
+## Slicing: fixing the total of two flows
+
+Suppose two rivers feed a lake, and the question is how the inflow splits between them *given* that their total is extreme --- say, its 200-year value. That is the joint distribution of the two flows, sliced along the line where they add up to that value.
+
+Slicing is conditioning, on a variable that is a function of the others. So add the total as a third variable, and condition on it. For Normal flows this is exact, because a linear combination of Normal variables is again Normal: if the flows have mean \(\mu\) and covariance \(\Sigma\), then \(A\) times them has mean \(A\mu\) and covariance \(A \Sigma A^\top\).
+
+```{r}
+mu <- c(r1 = 50, r2 = 80)
+sigma <- matrix(c(100, 60, 60, 225), 2)
+a <- rbind(r1 = c(1, 0), r2 = c(0, 1), s = c(1, 1))
+trio <- dst_mv_norm(
+  mean = setNames(as.numeric(a %*% mu), rownames(a)),
+  cov = a %*% sigma %*% t(a)
+)
+trio
+```
+
+The covariance of the three is singular --- the total is determined by the flows --- so the three live on a plane, and their variable type is `"singular"`.
+
+The 200-year total is a return level of the total's marginal distribution:
+
+```{r}
+s200 <- eval_return(marginal(trio, "s"), at = 200)
+s200
+```
+
+Conditioning on it gives the slice: still a distribution of the two flows, but now on the line \(r_1 + r_2 = s_{200}\).
+
+```{r}
+slice <- conditional(trio, given = c(s = s200))
+slice
+set.seed(1)
+realise(slice, n = 3)
+```
+
+The slice has two variables but no density over the plane. Reduce it to one flow with `marginal()` --- the other is then determined --- to get a distribution with a density:
+
+```{r}
+r1_given_total <- marginal(slice, "r1")
+r1_given_total
+eval_quantile(r1_given_total, at = c(0.05, 0.5, 0.95))
+```
+
+The same probabilities are available without building the slice, by evaluating the three-variable distribution with `given`:
+
+```{r, eval = has_mvtnorm}
+eval_mv_cdf(trio, list(r1 = 90, r2 = Inf, s = s200), given = "s")
+eval_cdf(r1_given_total, 90)
+```
+
+## Your own multivariate distribution
+
+`distribution()` builds a multivariate distribution just as it builds a univariate one. Give `.support` a multivariate support, and write the representations as functions of one argument per variable, in order.
+
+```{r}
+storm <- distribution(
+  density = function(x, y) dnorm(x) * dexp(y),
+  cdf = function(x, y) pnorm(x) * pexp(y),
+  .support = support_product(
+    x = continuous(),
+    y = continuous(c(0, Inf))
+  )
+)
+```
+
+Whatever is not stated is worked out where it can be: the survival function from the CDF, marginals by setting the other variables to infinity or integrating them out, and conditionals by dividing densities.
+
+```{r}
+eval_bi_survival(storm, x = 0, y = 1)
+eval_bi_cdf(storm, x = 0.3, y = 1, given = "x")
+mean(marginal(storm, "y"))
+```
+
+A distribution can also state its own marginals and conditionals, as the multivariate Normal does, when it has closed forms for them: see the "Several variables" section of `?distribution`.
+
+## Not yet
+
+A few things are not supported yet:
+
+- Supports with a mix of kinds within one joint, such as a count paired with an amount, can be described, but such a distribution has no joint density or PMF to evaluate.
+- Moments beyond the mean and covariance matrix.
+- Plotting, and `enframe_*()` functions, for several variables.
+- Conditioning on an event such as \(X > x\), rather than on a value. Divide two orthant probabilities instead: \(P(Y > y \mid X > x) = P(X > x, Y > y) / P(X > x)\).

@@ -327,7 +327,13 @@ format_univariate_support <- function(s) {
       shown <- format(discretes::get_discretes_in(s[["atoms"]]))
       parts <- c(parts, paste0("{", paste(shown, collapse = ", "), "}"))
     } else {
-      parts <- c(parts, paste(n_atoms, "atoms"))
+      r <- range(s[["atoms"]])
+      parts <- c(parts, sprintf(
+        "%s atoms in [%g, %g]",
+        if (is.finite(n_atoms)) n_atoms else "infinitely many",
+        r[[1L]],
+        r[[2L]]
+      ))
     }
   }
   if (nrow(s[["continuous"]]) > 0) {
