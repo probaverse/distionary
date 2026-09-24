@@ -127,10 +127,10 @@ eval_bi_survival(d, x = 1, y = 1)
 
 # The same, with a list of vectors.
 eval_mv_cdf(d, list(0, 0))
-eval_mv_cdf(d, list(x2 = 0:1, x1 = 0))
+eval_mv_cdf(d, list(y = 0:1, x = 0))
 
 # The distribution of the second variable, when the first is known.
-eval_bi_cdf(d, x = 2, y = 0:2, given = "x1")
+eval_bi_cdf(d, x = 2, y = 0:2, given = "x")
 eval_bi_cdf(d, x = 2, y = 0:2, given = 1)
 }
 \seealso{

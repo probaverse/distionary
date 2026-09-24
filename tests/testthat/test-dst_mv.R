@@ -17,9 +17,9 @@ test_that("the bivariate Normal matches known values", {
     eval_bi_density(d, x, y),
     exp(-q / 2) / (2 * pi * 2 * sqrt(1 - 0.36))
   )
-  expect_equal(mean(d), c(x1 = 0, x2 = 1))
+  expect_equal(mean(d), c(x = 0, y = 1))
   expect_equal(unname(variance(d)), matrix(c(1, 1.2, 1.2, 4), 2))
-  expect_equal(stdev(d), c(x1 = 1, x2 = 2))
+  expect_equal(stdev(d), c(x = 1, y = 2))
   expect_equal(eval_bi_cdf(d, Inf, 1), 0.5)
   expect_equal(eval_bi_cdf(d, -Inf, 1), 0)
 })
@@ -50,7 +50,11 @@ test_that("the multivariate Normal checks its parameters", {
   expect_error(dst_mv_norm(c(0, 0), diag(3)), "one row and one column")
   lopsided <- matrix(c(1, 0.5, 0.2, 1), 2)
   expect_error(dst_mv_norm(c(0, 0), lopsided), "symmetric")
-  expect_error(dst_mv_norm(c(0, 0), matrix(1, 2, 2)), "positive definite")
+  expect_error(
+    dst_mv_norm(c(0, 0), matrix(c(1, 2, 2, 1), 2)),
+    "positive semi-definite"
+  )
+  expect_identical(vtype(dst_mv_norm(c(0, 0), matrix(1, 2, 2))), "singular")
   named <- diag(2)
   dimnames(named) <- list(c("a", "c"), c("a", "c"))
   expect_error(dst_mv_norm(c(a = 0, b = 0), named), "disagree")
@@ -101,7 +105,9 @@ test_that("dst_bi_empirical() names variables after bare columns", {
   w <- dst_bi_empirical(flow, depth, weights = w, data = df)
   expect_equal(eval_bi_pmf(w, 15, 2), 0.5)
   unnamed <- dst_bi_empirical(df$flow, df$depth)
-  expect_identical(variables(unnamed), c("x1", "x2"))
+  expect_identical(variables(unnamed), c("x", "y"))
+  half <- dst_bi_empirical(flow, df$depth, data = df)
+  expect_identical(variables(half), c("flow", "y"))
 })
 
 test_that("conditioning an empirical distribution uses its points", {
@@ -115,9 +121,9 @@ test_that("conditioning an empirical distribution uses its points", {
 
 test_that("printing names the variables", {
   d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
-  expect_output(print(d), "continuous; x1, x2")
+  expect_output(print(d), "continuous; x, y")
   e <- dst_mv_empirical(list(a = 1:2, b = 3:4))
   expect_output(print(e), "prob")
   expect_output(print(support(e)), "2 points")
-  expect_output(print(support(d)), "x2: \\[-Inf, Inf\\]")
+  expect_output(print(support(d)), "y: \\[-Inf, Inf\\]")
 })

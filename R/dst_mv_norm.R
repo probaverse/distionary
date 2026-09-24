@@ -6,13 +6,16 @@
 #'
 #' @param mean Vector of means, one per variable. Its names, if any, name the
 #' variables.
-#' @param cov Covariance matrix: symmetric and positive definite, with one
-#' row and column per variable. Its dimnames, if any, name the variables.
+#' @param cov Covariance matrix: symmetric and positive semi-definite, with
+#' one row and column per variable. Its dimnames, if any, name the
+#' variables.
 #' @param sd For `dst_bi_norm()`, the two standard deviations; positive.
 #' @param cor For `dst_bi_norm()`, the correlation, strictly between -1 and
 #' 1.
 #' @details
-#' Variables that are not named get the names `x1`, `x2`, and so on.
+#' Variables that are not named get the names `x1`, `x2`, and so on, except
+#' in `dst_bi_norm()`, where they are `x` and `y` to match the arguments of
+#' [eval_bi_cdf()] and the like.
 #'
 #' A single variable gives a univariate Normal distribution ([dst_norm()]).
 #'
@@ -26,10 +29,23 @@
 #' with Miwa's algorithm, which is accurate but slows as the number of
 #' variables grows.
 #'
-#' A covariance matrix that is not positive definite describes a
-#' distribution on a lower-dimensional subspace (such as perfect
-#' correlation, which places all probability on a line). These are not
-#' supported yet.
+#' ## Singular covariance
+#'
+#' A covariance matrix that is not positive definite (but is positive
+#' semi-definite) describes a distribution on a lower-dimensional flat: a
+#' line, a plane, and so on. Perfect correlation is one example; another
+#' is a set of variables together with their sum, which is how a slice
+#' such as \eqn{X + Y = s} is made (see [conditional()] and the
+#' "Multivariate Distributions" vignette). Such a distribution has
+#' [vtype()] `"singular"`, a support built by [support_affine()], and no
+#' density; its marginals and conditionals are again Normal. With no
+#' variation at all, all probability sits at the mean.
+#'
+#' The CDF and survival function of a singular Normal are computed with
+#' \pkg{mvtnorm}'s randomised algorithm, run with a fixed seed so that the
+#' answer is always the same (your own random number stream is left as it
+#' was). It is exact when the flat is a line, and accurate to about
+#' \eqn{10^{-6}} otherwise.
 #' @returns A distribution with one variable per entry of `mean`.
 #' @examples
 #' dst_mv_norm(mean = c(a = 0, b = 1, c = 2), cov = diag(3))
@@ -60,18 +76,24 @@ dst_mv_norm <- function(mean, cov) {
   if (!isSymmetric(unname(cov))) {
     stop("`cov` must be symmetric.")
   }
-  chol_cov <- tryCatch(chol(cov), error = function(e) NULL)
-  if (is.null(chol_cov)) {
-    stop(
-      "`cov` must be positive definite.\n",
-      "A singular covariance places the distribution on a lower-\n",
-      "dimensional subspace, which is not supported yet."
-    )
+  root <- cov_root(cov)
+  if (root$rank == 0L) {
+    # No variation at all: every variable sits at its mean.
+    if (p == 1L) {
+      return(dst_degenerate(unname(mean)))
+    }
+    return(mv_finite(as.data.frame(as.list(mean)), 1, name = "Degenerate"))
   }
   if (p == 1L) {
     return(dst_norm(mean = unname(mean), sd = sqrt(cov[[1L]])))
   }
-  new_mv_norm(mean, cov, chol_cov)
+  if (root$rank == p) {
+    chol_cov <- tryCatch(chol(cov), error = function(e) NULL)
+    if (!is.null(chol_cov)) {
+      return(new_mv_norm(mean, cov, chol_cov))
+    }
+  }
+  new_mv_norm_singular(mean, cov, root$factor)
 }
 
 #' @rdname dst_mv_norm
@@ -94,6 +116,9 @@ dst_bi_norm <- function(mean, sd, cor) {
     )
   }
   cov <- diag(sd) %*% matrix(c(1, cor, cor, 1), 2L) %*% diag(sd)
+  # The bivariate shortcuts name their variables after the arguments of
+  # `eval_bi_*()`, unless told otherwise.
+  names(mean) <- bi_variable_names(names(mean))
   d <- dst_mv_norm(mean = mean, cov = cov)
   parameters(d) <- list(mean = parameters(d)$mean, sd = unname(sd), cor = cor)
   d
@@ -139,22 +164,133 @@ new_mv_norm <- function(mean, cov, chol_cov) {
     mean = mean,
     variance = cov,
     stdev = sqrt(diag(cov)),
-    marginal = function(which) {
-      dst_mv_norm(mean = mean[which], cov = cov[which, which, drop = FALSE])
-    },
-    conditional = function(given, at) {
-      rest <- setdiff(seq_len(p), given)
-      s_rg <- cov[rest, given, drop = FALSE]
-      s_gg <- cov[given, given, drop = FALSE]
-      weights <- s_rg %*% solve(s_gg)
-      mu <- mean[rest] + as.numeric(weights %*% (at - mean[given]))
-      names(mu) <- vars[rest]
-      s <- cov[rest, rest, drop = FALSE] - weights %*% t(s_rg)
-      dst_mv_norm(mean = mu, cov = (s + t(s)) / 2)
-    },
+    marginal = mv_norm_marginal(mean, cov),
+    conditional = mv_norm_conditional(mean, cov),
     .support = support,
     .name = if (p == 2L) "Bivariate Normal" else "Multivariate Normal"
   )
+}
+
+#' Build a singular multivariate Normal: `mean + factor %*% z`, for `z`
+#' standard Normal of dimension `ncol(factor)`.
+#' @noRd
+new_mv_norm_singular <- function(mean, cov, factor) {
+  p <- length(mean)
+  r <- ncol(factor)
+  vars <- names(mean)
+  as_matrix <- function(...) {
+    do.call(cbind, vctrs::vec_recycle_common(...))
+  }
+  base <- if (r == 1L) {
+    continuous()
+  } else {
+    do.call(support_product, rep(list(continuous()), r))
+  }
+  distribution(
+    .parameters = list(mean = mean, cov = cov),
+    cdf = function(...) {
+      x <- as_matrix(...)
+      mvnorm_prob(lower = -Inf, upper = x, mean = mean, cov = cov)
+    },
+    survival = function(...) {
+      x <- as_matrix(...)
+      mvnorm_prob(lower = x, upper = Inf, mean = mean, cov = cov)
+    },
+    realise = function(n) {
+      z <- matrix(stats::rnorm(n * r), nrow = n)
+      x <- z %*% t(factor) + rep(mean, each = n)
+      colnames(x) <- vars
+      as.data.frame(x)
+    },
+    mean = mean,
+    variance = cov,
+    stdev = sqrt(diag(cov)),
+    marginal = mv_norm_marginal(mean, cov),
+    conditional = mv_norm_conditional(mean, cov),
+    .support = support_affine(base, shift = mean, matrix = factor),
+    .name = if (p == 2L) "Bivariate Normal" else "Multivariate Normal"
+  )
+}
+
+#' The `marginal` property of a multivariate Normal.
+#' @noRd
+mv_norm_marginal <- function(mean, cov) {
+  function(which) {
+    dst_mv_norm(mean = mean[which], cov = cov[which, which, drop = FALSE])
+  }
+}
+
+#' The `conditional` property of a multivariate Normal.
+#'
+#' The usual formulas, with a pseudo-inverse in place of the inverse so that
+#' the given variables may themselves have a singular covariance (as when
+#' one of them is the sum of others). Conditioning on values the given
+#' variables cannot take gives the Null distribution.
+#' @noRd
+mv_norm_conditional <- function(mean, cov) {
+  p <- length(mean)
+  vars <- names(mean)
+  scale <- max(abs(diag(cov)))
+  function(given, at) {
+    rest <- setdiff(seq_len(p), given)
+    s_rg <- cov[rest, given, drop = FALSE]
+    s_gg <- cov[given, given, drop = FALSE]
+    inv <- pinv_sym(s_gg, scale = scale)
+    dev <- at - mean[given]
+    # A value off the flat that the given variables live on has no chance
+    # of being seen, and there is nothing to condition on.
+    off <- dev - as.numeric(s_gg %*% inv %*% dev)
+    if (any(abs(off) > 1e-8 * max(1, sqrt(scale), abs(dev)))) {
+      return(dst_null())
+    }
+    weights <- s_rg %*% inv
+    mu <- mean[rest] + as.numeric(weights %*% dev)
+    names(mu) <- vars[rest]
+    s <- cov[rest, rest, drop = FALSE] - weights %*% t(s_rg)
+    s <- clean_cov((s + t(s)) / 2, scale = scale)
+    dimnames(s) <- list(vars[rest], vars[rest])
+    dst_mv_norm(mean = mu, cov = s)
+  }
+}
+
+#' A square root of a covariance matrix, of the least rank.
+#'
+#' @param cov Symmetric matrix.
+#' @param scale Size against which small eigenvalues count as zero;
+#' defaults to the largest eigenvalue.
+#' @returns A list with `rank` and `factor`, a `p` by `rank` matrix whose
+#' product with its transpose is `cov`.
+#' @noRd
+cov_root <- function(cov, scale = NULL) {
+  e <- eigen(cov, symmetric = TRUE)
+  if (is.null(scale)) {
+    scale <- max(abs(e$values), 0)
+  }
+  tol <- scale * nrow(cov) * sqrt(.Machine$double.eps)
+  if (any(e$values < -tol)) {
+    stop("`cov` must be positive semi-definite.")
+  }
+  keep <- e$values > tol
+  factor <- e$vectors[, keep, drop = FALSE] %*%
+    diag(sqrt(e$values[keep]), sum(keep))
+  list(rank = sum(keep), factor = factor)
+}
+
+#' Rebuild a covariance matrix with its negligible eigenvalues set to zero.
+#' @noRd
+clean_cov <- function(cov, scale) {
+  f <- cov_root(cov, scale = scale)$factor
+  f %*% t(f)
+}
+
+#' Pseudo-inverse of a symmetric positive semi-definite matrix.
+#' @noRd
+pinv_sym <- function(m, scale) {
+  e <- eigen(m, symmetric = TRUE)
+  tol <- scale * nrow(m) * sqrt(.Machine$double.eps)
+  keep <- e$values > tol
+  v <- e$vectors[, keep, drop = FALSE]
+  v %*% diag(1 / e$values[keep], sum(keep)) %*% t(v)
 }
 
 #' Variable names for a multivariate Normal, from `mean` or `cov`.
@@ -189,14 +325,19 @@ mvnorm_prob <- function(lower, upper, mean, cov) {
   )
   p <- length(mean)
   x <- if (is.matrix(lower)) lower else upper
-  algorithm <- if (p <= 3L) {
+  singular <- cov_root(cov)$rank < p
+  # The randomised algorithm is the only one that takes a singular
+  # covariance, and is needed beyond 20 variables. It is run with a fixed
+  # seed, so the same inputs always give the same answer.
+  randomised <- singular || p > 20L
+  algorithm <- if (randomised) {
+    mvtnorm::GenzBretz(maxpts = 1e5, abseps = 1e-6, releps = 0)
+  } else if (p <= 3L) {
     mvtnorm::TVPACK()
-  } else if (p <= 20L) {
-    mvtnorm::Miwa()
   } else {
-    mvtnorm::GenzBretz()
+    mvtnorm::Miwa()
   }
-  vapply(seq_len(nrow(x)), function(i) {
+  one <- function(i) {
     row <- x[i, ]
     if (anyNA(row)) {
       return(NA_real_)
@@ -215,5 +356,29 @@ mvnorm_prob <- function(lower, upper, mean, cov) {
       sigma = unname(cov),
       algorithm = algorithm
     ))
-  }, numeric(1))
+  }
+  if (randomised) {
+    return(with_fixed_seed(vapply(seq_len(nrow(x)), one, numeric(1))))
+  }
+  vapply(seq_len(nrow(x)), one, numeric(1))
+}
+
+#' Evaluate code with a fixed random seed, leaving the caller's random
+#' number stream as it was.
+#' @noRd
+with_fixed_seed <- function(code, seed = 1L) {
+  env <- globalenv()
+  had_seed <- exists(".Random.seed", envir = env, inherits = FALSE)
+  if (had_seed) {
+    old <- get(".Random.seed", envir = env, inherits = FALSE)
+  }
+  on.exit({
+    if (had_seed) {
+      assign(".Random.seed", old, envir = env)
+    } else if (exists(".Random.seed", envir = env, inherits = FALSE)) {
+      rm(".Random.seed", envir = env)
+    }
+  })
+  set.seed(seed)
+  code
 }

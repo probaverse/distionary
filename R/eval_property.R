@@ -44,7 +44,10 @@ eval_property <- function(distribution, entry, ...) {
     if (!available) {
       return(NULL)
     } else {
-      return(rlang::exec(eval_from_network, distribution, ...))
+      # Called through a local name, so that an error shows a short call
+      # rather than the whole distribution spelled out.
+      from_network <- get(eval_from_network, mode = "function")
+      return(from_network(distribution, ...))
     }
   } else {
     if (is.function(repres)) {

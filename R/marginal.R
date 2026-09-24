@@ -20,7 +20,7 @@
 #' @returns A distribution: univariate if `which` selects one variable.
 #' @examples
 #' d <- dst_bi_norm(mean = c(0, 10), sd = c(1, 2), cor = 0.5)
-#' marginal(d, "x2")
+#' marginal(d, "y")
 #' marginal(d, 1)
 #'
 #' e <- dst_mv_empirical(list(a = c(1, 1, 2), b = c(3, 4, 4)))

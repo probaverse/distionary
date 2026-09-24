@@ -42,7 +42,8 @@ precedence over \code{"null"}, which takes precedence over \code{"drop"}.}
 \item{x, y}{For \code{dst_bi_empirical()}, the observations of the two
 variables (<\code{\link[rlang:args_data_masking]{data-masking}}>). Each variable
 is named after its expression when that is a bare column name or
-variable, as in \code{dst_bi_empirical(flow, depth, data = df)}.}
+variable, as in \code{dst_bi_empirical(flow, depth, data = df)}, and is
+otherwise named \code{x} or \code{y}, after its argument.}
 
 \item{data}{For \code{dst_bi_empirical()}, optionally a data frame in which to
 find \code{x}, \code{y}, and \code{weights}.}

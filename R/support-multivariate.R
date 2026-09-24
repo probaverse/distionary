@@ -67,16 +67,16 @@ support_product <- function(...) {
       }
       factors <- c(factors, s[["factors"]])
       vars <- c(vars, s[["variables"]])
-    } else if (inherits(s, "support_points")) {
+    } else if (inherits(s, "support_mv")) {
       if (arg_names[[i]] != "") {
         stop(
           "A multivariate support brings its own variable names,\n",
           "so argument `", arg_names[[i]], "` cannot rename it.\n",
-          "Name the columns of the points instead."
+          "Name the variables where that support is built."
         )
       }
       factors <- c(factors, list(s))
-      vars <- c(vars, names(s[["points"]]))
+      vars <- c(vars, support_variables(s))
     } else {
       factors <- c(factors, list(s))
       vars <- c(vars, arg_names[[i]])
@@ -155,6 +155,12 @@ print.support_product <- function(x, ...) {
       cat(
         "-- (", paste(names(f[["points"]]), collapse = ", "), "): ",
         nrow(f[["points"]]), " points --\n",
+        sep = ""
+      )
+    } else if (inherits(f, "support_map")) {
+      cat(
+        "-- (", paste(f[["variables"]], collapse = ", "), "): ",
+        vtype_of_support(f), ", spanning ", f[["rank"]], " --\n",
         sep = ""
       )
     } else {
@@ -258,10 +264,32 @@ fill_variable_names <- function(vars) {
   vars
 }
 
+#' Names for the two variables of a `bi` constructor.
+#'
+#' The bivariate shortcuts fill unnamed variables with `x` and `y`, the names
+#' of the `eval_bi_*()` arguments, rather than `x1` and `x2`.
+#' @param nms Character vector of length 2 (or `NULL`), `""` for unnamed.
+#' @noRd
+bi_variable_names <- function(nms) {
+  if (is.null(nms)) {
+    nms <- c("", "")
+  }
+  nms[is.na(nms)] <- ""
+  blank <- nms == ""
+  nms[blank] <- c("x", "y")[blank]
+  if (nms[[1L]] == nms[[2L]]) {
+    stop(
+      "Each variable needs its own name, but `", nms[[1L]],
+      "` is used twice."
+    )
+  }
+  nms
+}
+
 #' Number of variables in a support.
 #' @noRd
 support_dimension <- function(s) {
-  if (inherits(s, "support_product")) {
+  if (inherits(s, "support_product") || inherits(s, "support_map")) {
     return(length(s[["variables"]]))
   }
   if (inherits(s, "support_points")) {
@@ -273,7 +301,7 @@ support_dimension <- function(s) {
 #' Variable names of a support; NULL for a univariate one.
 #' @noRd
 support_variables <- function(s) {
-  if (inherits(s, "support_product")) {
+  if (inherits(s, "support_product") || inherits(s, "support_map")) {
     return(s[["variables"]])
   }
   if (inherits(s, "support_points")) {
@@ -318,6 +346,9 @@ format_univariate_support <- function(s) {
 #' The variable type of a multivariate support.
 #' @noRd
 vtype_of_support_mv <- function(s) {
+  if (inherits(s, "support_map")) {
+    return(vtype_of_support_map(s))
+  }
   if (inherits(s, "support_points")) {
     if (nrow(s[["points"]]) == 0) {
       return("empty")
@@ -330,6 +361,10 @@ vtype_of_support_mv <- function(s) {
   }
   if (all(types == "continuous")) {
     return("continuous")
+  }
+  # A lower-dimensional piece makes the whole product lower-dimensional.
+  if (all(types %in% c("continuous", "singular"))) {
+    return("singular")
   }
   if (all(types == "discrete")) {
     return("discrete")
@@ -356,6 +391,9 @@ support_marginal <- function(s, idx) {
   if (inherits(s, "support_points")) {
     return(points_support(s[["points"]][idx]))
   }
+  if (inherits(s, "support_map")) {
+    return(support_marginal_map(s, idx))
+  }
   factors <- s[["factors"]]
   dims <- vapply(factors, support_dimension, integer(1))
   owner <- rep(seq_along(factors), dims)
@@ -363,8 +401,8 @@ support_marginal <- function(s, idx) {
   pieces <- list()
   piece_names <- character(0)
   # Walk the requested variables in order, grouping consecutive variables
-  # that come from the same point-set factor so that their joint pairing is
-  # kept rather than crossed.
+  # that come from the same multivariate factor, so that how they are
+  # paired within it is kept rather than crossed.
   k <- 1L
   while (k <= length(idx)) {
     f <- owner[[idx[[k]]]]
@@ -372,13 +410,12 @@ support_marginal <- function(s, idx) {
     while (run < length(idx) && owner[[idx[[run + 1L]]]] == f) {
       run <- run + 1L
     }
-    cols <- within[idx[k:run]]
     fac <- factors[[f]]
-    if (inherits(fac, "support_points")) {
-      piece <- points_support(fac[["points"]][cols])
+    if (inherits(fac, "support_mv")) {
+      piece <- support_marginal(fac, within[idx[k:run]])
       pieces <- c(pieces, list(piece))
-      piece_names <- c(piece_names, if (length(cols) == 1L) {
-        names(fac[["points"]])[cols]
+      piece_names <- c(piece_names, if (run == k) {
+        s[["variables"]][[idx[[k]]]]
       } else {
         ""
       })
@@ -414,6 +451,9 @@ enumerate_points <- function(s, max_points = 1e6) {
     if (inherits(f, "support_points")) {
       frames <- c(frames, list(f[["points"]]))
       next
+    }
+    if (inherits(f, "support_map")) {
+      return(NULL)
     }
     if (nrow(f[["continuous"]]) > 0) {
       return(NULL)

@@ -42,7 +42,9 @@ eval_mv_survival_from_network <- function(distribution, ...) {
 #' @noRd
 eval_mv_pmf_from_network <- function(distribution, ...) {
   l <- vctrs::vec_recycle_common(...)
-  if (vtype(distribution) == "continuous") {
+  # Neither kind has atoms: a singular distribution spreads its probability
+  # over a lower-dimensional set, but still puts none on any single point.
+  if (vtype(distribution) %in% c("continuous", "singular")) {
     out <- rep(0, length(l[[1L]]))
     out[is.na(Reduce(`+`, l))] <- NA_real_
     return(out)
@@ -52,6 +54,13 @@ eval_mv_pmf_from_network <- function(distribution, ...) {
 
 #' @noRd
 eval_mv_density_from_network <- function(distribution, ...) {
+  if (vtype(distribution) == "singular") {
+    stop(
+      "This distribution has no density: its probability lies on a\n",
+      "set spanning fewer dimensions than it has variables.\n",
+      "Take a `marginal()` of fewer variables for one with a density."
+    )
+  }
   stop("Cannot find the density, which must be stated in the distribution.")
 }
 

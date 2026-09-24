@@ -12,7 +12,8 @@
 #' @param x,y For `dst_bi_empirical()`, the observations of the two
 #' variables (<[`data-masking`][rlang::args_data_masking]>). Each variable
 #' is named after its expression when that is a bare column name or
-#' variable, as in `dst_bi_empirical(flow, depth, data = df)`.
+#' variable, as in `dst_bi_empirical(flow, depth, data = df)`, and is
+#' otherwise named `x` or `y`, after its argument.
 #' @param ... Not used; forces the optional arguments to be named.
 #' @param weights Weights for the observations, scaled to add up to 1.
 #' For `dst_bi_empirical()`, data-masked like `x` and `y`.
@@ -137,10 +138,11 @@ dst_bi_empirical <- function(
     rlang::eval_tidy(quo_x, data = data),
     rlang::eval_tidy(quo_y, data = data)
   )
-  names(l) <- c(symbol_name(quo_x), symbol_name(quo_y))
-  if (anyDuplicated(names(l)[names(l) != ""])) {
-    names(l) <- c("", "")
+  nms <- c(symbol_name(quo_x), symbol_name(quo_y))
+  if (nms[[1L]] != "" && identical(nms[[1L]], nms[[2L]])) {
+    nms <- c("", "")
   }
+  names(l) <- bi_variable_names(nms)
   w <- rlang::eval_tidy(rlang::enquo(weights), data = data)
   dst_mv_empirical(
     l,

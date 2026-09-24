@@ -105,6 +105,21 @@ where events are exceedances.
 }
 
 All functions should be vectorized.
+}
+
+\subsection{Several variables}{
+
+A distribution of several variables is made by giving \code{.support} a
+multivariate support, such as one from \code{\link[=support_product]{support_product()}}. Its
+representations then take one argument per variable, in the order of
+\code{\link[=variables]{variables()}}: \verb{cdf = function(x, y)} for two, or \verb{function(...)} for
+any number. The CDF, survival function, density and PMF mean what they
+do in \code{\link[=eval_mv_cdf]{eval_mv_cdf()}} and friends. Two more properties are understood:
+\code{marginal}, a function of the positions of some variables returning
+their distribution (see \code{\link[=marginal]{marginal()}}); and \code{conditional}, a function of
+the positions of the known variables and their values, returning the
+distribution of the rest (see \code{\link[=conditional]{conditional()}}). Either is worked out
+when it can be, if not given.
 
 Other properties that are understood by \code{distionary} include:
 \itemize{

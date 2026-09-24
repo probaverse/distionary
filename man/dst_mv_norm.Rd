@@ -13,8 +13,9 @@ dst_bi_norm(mean, sd, cor)
 \item{mean}{Vector of means, one per variable. Its names, if any, name the
 variables.}
 
-\item{cov}{Covariance matrix: symmetric and positive definite, with one
-row and column per variable. Its dimnames, if any, name the variables.}
+\item{cov}{Covariance matrix: symmetric and positive semi-definite, with
+one row and column per variable. Its dimnames, if any, name the
+variables.}
 
 \item{sd}{For \code{dst_bi_norm()}, the two standard deviations; positive.}
 
@@ -30,7 +31,9 @@ any number of variables; \code{dst_bi_norm()} is a shortcut for two, specified
 by standard deviations and a correlation.
 }
 \details{
-Variables that are not named get the names \code{x1}, \code{x2}, and so on.
+Variables that are not named get the names \code{x1}, \code{x2}, and so on, except
+in \code{dst_bi_norm()}, where they are \code{x} and \code{y} to match the arguments of
+\code{\link[=eval_bi_cdf]{eval_bi_cdf()}} and the like.
 
 A single variable gives a univariate Normal distribution (\code{\link[=dst_norm]{dst_norm()}}).
 
@@ -43,11 +46,24 @@ The CDF and survival function need the \pkg{mvtnorm} package. For up to
 three variables they are computed to high accuracy; for more (up to 20),
 with Miwa's algorithm, which is accurate but slows as the number of
 variables grows.
+\subsection{Singular covariance}{
 
-A covariance matrix that is not positive definite describes a
-distribution on a lower-dimensional subspace (such as perfect
-correlation, which places all probability on a line). These are not
-supported yet.
+A covariance matrix that is not positive definite (but is positive
+semi-definite) describes a distribution on a lower-dimensional flat: a
+line, a plane, and so on. Perfect correlation is one example; another
+is a set of variables together with their sum, which is how a slice
+such as \eqn{X + Y = s} is made (see \code{\link[=conditional]{conditional()}} and the
+"Multivariate Distributions" vignette). Such a distribution has
+\code{\link[=vtype]{vtype()}} \code{"singular"}, a support built by \code{\link[=support_affine]{support_affine()}}, and no
+density; its marginals and conditionals are again Normal. With no
+variation at all, all probability sits at the mean.
+
+The CDF and survival function of a singular Normal are computed with
+\pkg{mvtnorm}'s randomised algorithm, run with a fixed seed so that the
+answer is always the same (your own random number stream is left as it
+was). It is exact when the flat is a line, and accurate to about
+\eqn{10^{-6}} otherwise.
+}
 }
 \examples{
 dst_mv_norm(mean = c(a = 0, b = 1, c = 2), cov = diag(3))

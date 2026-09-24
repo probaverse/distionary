@@ -88,9 +88,12 @@ test_that("`given` conditions on variables by name, position, or argument", {
   d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
   # Y | X = x is Normal with mean 1 + 0.6 * 2 * x, sd 2 * sqrt(1 - 0.36).
   truth <- stats::pnorm(0:2, mean = 1 + 1.2, sd = 1.6)
-  expect_equal(eval_bi_cdf(d, x = 1, y = 0:2, given = "x1"), truth)
-  expect_equal(eval_bi_cdf(d, x = 1, y = 0:2, given = 1), truth)
   expect_equal(eval_bi_cdf(d, x = 1, y = 0:2, given = "x"), truth)
+  expect_equal(eval_bi_cdf(d, x = 1, y = 0:2, given = 1), truth)
+  named <- dst_bi_norm(mean = c(u = 0, v = 1), sd = c(1, 2), cor = 0.6)
+  expect_equal(eval_bi_cdf(named, x = 1, y = 0:2, given = "u"), truth)
+  # "x" is also the argument, when no variable is called that.
+  expect_equal(eval_bi_cdf(named, x = 1, y = 0:2, given = "x"), truth)
   expect_equal(
     eval_bi_survival(d, x = 1, y = 0:2, given = "x"),
     1 - truth
