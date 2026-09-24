@@ -17,6 +17,7 @@
 #' @export
 eval_return <- function(distribution, at) {
   checkmate::assert_class(distribution, "dst")
+  assert_univariate(distribution, "eval_return")
   checkmate::assert_numeric(at)
   eval_property(distribution, "return", at)
 }

@@ -18,7 +18,9 @@ mixed(discrete = numeric(0), continuous = numeric(0))
 object (see the \pkg{discretes} package, e.g. \code{\link[discretes:integers]{discretes::natural0()}}), a
 numeric vector of finitely many atoms, or a purely discrete support. A bare
 numeric vector is unambiguous here because the argument names the intent
-(contrast with passing one to \code{.support}, which is rejected).}
+(contrast with passing one to \code{.support}, which is rejected). A data frame
+or matrix with one column per variable gives the finitely many points of a
+multivariate support; see \code{\link[=support_product]{support_product()}}.}
 
 \item{...}{For \code{continuous()}, one or more regions, each given as a length-2
 numeric \code{c(lower, upper)}. With no arguments, \code{continuous()} defaults to the
@@ -89,6 +91,7 @@ Other Support:
 \code{\link{atoms}()},
 \code{\link{empty_support}()},
 \code{\link{is_support}()},
-\code{\link{support}()}
+\code{\link{support}()},
+\code{\link{support_product}()}
 }
 \concept{Support}

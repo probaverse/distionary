@@ -30,6 +30,7 @@ Other Support:
 \code{\link{atoms}()},
 \code{\link{empty_support}()},
 \code{\link{is_support}()},
-\code{\link{support-construction}}
+\code{\link{support-construction}},
+\code{\link{support_product}()}
 }
 \concept{Support}

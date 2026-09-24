@@ -1,3 +1,11 @@
+# distionary (development version)
+
+- Multivariate distributions (experimental): `support_product()` and
+  `discrete()` on a data frame build their supports; `dst_mv_norm()` and
+  `dst_mv_empirical()` (with `dst_bi_*()` shortcuts) build them; and
+  `eval_mv_*()`, `eval_bi_*()`, `prob_mv_orthant()`, and `marginal()`
+  evaluate them. See `?eval_mv`.
+
 # distionary 0.2.0
 
 This cycle adds support objects: a distribution now says where it places its

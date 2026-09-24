@@ -30,6 +30,7 @@
 #' @export
 eval_quantile <- function(distribution, at) {
   checkmate::assert_class(distribution, "dst")
+  assert_univariate(distribution, "eval_quantile")
   checkmate::assert_numeric(at)
   s <- support(distribution)
   if (is.null(s)) {

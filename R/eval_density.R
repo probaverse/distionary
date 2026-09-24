@@ -13,6 +13,7 @@
 #' @export
 eval_density <- function(distribution, at) {
   checkmate::assert_class(distribution, "dst")
+  assert_univariate(distribution, "eval_density", "density")
   checkmate::assert_numeric(at)
   eval_property(distribution, "density", at)
 }

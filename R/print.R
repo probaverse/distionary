@@ -9,9 +9,14 @@ print.dst <- function(x, ...) {
   } else {
     cat(nm, "distribution")
   }
-  # Variable type
+  # Variable type, and the variables if there are several
   if (!is.null(vtype)) {
-    cat(paste0(" (", vtype, ")", collapse = ""), "\n")
+    vars <- variables(x)
+    if (is.null(vars)) {
+      cat(paste0(" (", vtype, ")", collapse = ""), "\n")
+    } else {
+      cat(" (", vtype, "; ", paste(vars, collapse = ", "), ")\n", sep = "")
+    }
   }
   # Parameters
   if (!is.null(param) && all(!is.na(param))) {
@@ -23,7 +28,10 @@ print.dst <- function(x, ...) {
     if (all_numeric) {
       param <- unlist(param)
     }
-    if (pretty_name(x) == "Finite") {
+    if (is.list(param) && is.data.frame(param[["outcomes"]])) {
+      param <- cbind(param[["outcomes"]], .prob = param[["probs"]])
+      param <- convert_dataframe_to_tibble(param)
+    } else if (pretty_name(x) == "Finite") {
       param <- as.data.frame(param)
       param <- convert_dataframe_to_tibble(param)
     }

@@ -33,6 +33,7 @@
 #' @export
 range.dst <- function(distribution, ...) {
   checkmate::assert_class(distribution, "dst")
+  assert_univariate(distribution, "range")
   dots <- rlang::enexprs(...)
   dots[["na.rm"]] <- NULL
   if (length(dots) > 0) {

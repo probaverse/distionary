@@ -10,7 +10,9 @@
 #' object (see the \pkg{discretes} package, e.g. [discretes::natural0()]), a
 #' numeric vector of finitely many atoms, or a purely discrete support. A bare
 #' numeric vector is unambiguous here because the argument names the intent
-#' (contrast with passing one to `.support`, which is rejected).
+#' (contrast with passing one to `.support`, which is rejected). A data frame
+#' or matrix with one column per variable gives the finitely many points of a
+#' multivariate support; see [support_product()].
 #' @param discrete,continuous For `mixed()`, the two halves. Each takes the
 #' same things its own constructor takes, or a support already built by it:
 #' `discrete` as for `atoms` above, `continuous` as for `...` below.
@@ -65,6 +67,9 @@
 #' @name support-construction
 #' @export
 discrete <- function(atoms = numeric(0)) {
+  if (is.data.frame(atoms) || is.matrix(atoms)) {
+    return(points_support(atoms))
+  }
   new_support(atoms = as_atoms(atoms))
 }
 
@@ -125,19 +130,14 @@ empty_support <- function() {
 #' @param atoms A `discretes` object.
 #' @param continuous A two-column numeric matrix of intervals (`lower`,
 #' `upper`), assumed already normalized.
-#' @param ndim Number of dimensions. Always `1L` for now; reserved so that
-#' multivariate supports (built by composing univariate ones) have somewhere to
-#' record their dimension.
 #' @returns A support object (class `"support"`).
 #' @noRd
 new_support <- function(
   atoms = discretes::empty_series(),
-  continuous = empty_regions(),
-  ndim = 1L
+  continuous = empty_regions()
 ) {
   structure(
     list(atoms = atoms, continuous = continuous),
-    ndim = ndim,
     class = "support"
   )
 }
@@ -188,6 +188,9 @@ is_support <- function(x) {
 is_empty_support <- function(x) {
   if (!is_support(x)) {
     return(FALSE)
+  }
+  if (inherits(x, "support_mv")) {
+    return(is_empty_support_mv(x))
   }
   discretes::num_discretes(x[["atoms"]]) == 0 && nrow(x[["continuous"]]) == 0
 }
@@ -252,6 +255,7 @@ atoms <- function(x) {
   if (is.null(s)) {
     return(NULL)
   }
+  assert_univariate_support(s, "atoms")
   s[["atoms"]]
 }
 
@@ -262,6 +266,7 @@ regions <- function(x) {
   if (is.null(s)) {
     return(NULL)
   }
+  assert_univariate_support(s, "regions")
   s[["continuous"]]
 }
 
@@ -287,6 +292,9 @@ print.support <- function(x, ...) {
 #' The variable type implied by a support.
 #' @noRd
 vtype_of_support <- function(support) {
+  if (inherits(support, "support_mv")) {
+    return(vtype_of_support_mv(support))
+  }
   has_atoms <- discretes::num_discretes(support[["atoms"]]) > 0
   has_cont <- nrow(support[["continuous"]]) > 0
   if (has_atoms && has_cont) {
@@ -306,6 +314,7 @@ vtype_of_support <- function(support) {
 #' The hull (min, max) of a support, used to derive a distribution's range.
 #' @noRd
 support_hull <- function(support) {
+  assert_univariate_support(support, "range")
   los <- numeric(0)
   his <- numeric(0)
   if (discretes::num_discretes(support[["atoms"]]) > 0) {
@@ -524,4 +533,20 @@ normalize_regions <- function(m) {
   res[res == 0] <- 0
   colnames(res) <- c("lower", "upper")
   res
+}
+
+#' Refuse a multivariate support where only a univariate one makes sense.
+#'
+#' @param s A support.
+#' @param fn Name of the function asking, for the message.
+#' @noRd
+assert_univariate_support <- function(s, fn) {
+  if (inherits(s, "support_mv")) {
+    stop(
+      "`", fn, "()` describes one variable, and this support has ",
+      support_dimension(s), ".\n",
+      "Take one variable's support first, e.g. with `marginal()`."
+    )
+  }
+  invisible(s)
 }

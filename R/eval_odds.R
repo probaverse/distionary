@@ -15,6 +15,7 @@
 #' @export
 eval_odds <- function(distribution, at) {
   checkmate::assert_class(distribution, "dst")
+  assert_univariate(distribution, "eval_odds")
   checkmate::assert_numeric(at)
   eval_property(distribution, "odds", at)
 }
