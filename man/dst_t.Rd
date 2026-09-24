@@ -4,17 +4,36 @@
 \alias{dst_t}
 \title{Student t Distribution}
 \usage{
-dst_t(df)
+dst_t(df, ..., location = 0, scale = 1)
 }
 \arguments{
 \item{df}{Degrees of freedom; single positive numeric.}
+
+\item{...}{Not used; forces \code{location} and \code{scale} to be named.}
+
+\item{location, scale}{The distribution is that of \code{location + scale * T},
+where \code{T} has the standard t distribution with \code{df} degrees of freedom.
+\code{scale} is positive. They default to the standard t.}
 }
 \value{
 A Student t distribution.
 }
 \description{
-Makes a Student t distribution.
+Makes a Student t distribution, optionally shifted and scaled.
+}
+\details{
+The \code{location} is the mean when \code{df > 1}, and the \code{scale} is not the
+standard deviation: the variance is \code{scale^2 * df / (df - 2)}, for
+\code{df > 2}.
+
+The standard t's parameters are its degrees of freedom alone, so
+\code{\link[=parameters]{parameters()}} lists \code{location} and \code{scale} only when they are not 0 and
+1.
 }
 \examples{
 dst_t(3)
+dst_t(3, location = 10, scale = 2)
+}
+\seealso{
+\code{\link[=dst_mv_t]{dst_mv_t()}} for several variables.
 }

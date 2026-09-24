@@ -25,6 +25,9 @@ passes.
 | `prob_{bi,mv}_orthant()` | `R/prob_orthant.R` |
 | `dst_mv_norm()` (incl. singular cov), `dst_bi_norm()` | `R/dst_mv_norm.R` |
 | `dst_mv_empirical()`, `dst_bi_empirical()` | `R/dst_mv_empirical.R` |
+| `dst_mv_t()`, `dst_bi_t()` (any df, singular scale OK) | `R/dst_mv_t.R` |
+| `dst_t()` gains `location`, `scale` (for the t's marginals) | `R/dst_t.R` |
+| Vectorised bivariate Normal CDF `pbinorm()` (Sheppard-Drezner + GL) | `R/dst_mv_norm.R` |
 | Vignette "Multivariate Distributions" (river-slice example) | `vignettes/multivariate.Rmd` |
 
 ## Decisions taken
@@ -60,7 +63,22 @@ passes.
 - `eval_property()` now calls network functions through a local name, so
   errors no longer print the whole distribution as the call.
 
+- **Multivariate t CDF** is a 1D integral over the chi-square mixing
+  variable of Normal CDFs, because `mvtnorm::pmvt()` needs integer df. It
+  agrees with high-precision `pmvt()` to ~1e-10. Bivariate is fast thanks to
+  `pbinorm()`, which is exact to 2e-16 for |rho| < 0.925; beyond that, and
+  for p >= 3, it goes through `pmvnorm()`, which is slower (~0.1 s/point).
+- **`dst_t()` parameters** list `location`/`scale` only when not 0/1, so
+  the standard t is unchanged.
+
 ## Open questions
+
+0. **Move `conditional()` to distplyr?** Vincenzo asked (2026-09-24). My
+   recommendation: yes for the exported verb, since it parallels `trim_*()`.
+   Keep the `conditional` property plus its network in distionary (the
+   `given` evaluation needs it). distplyr calls
+   `eval_property(d, "conditional", idx, at)`. `marginal()` stays because
+   distionary uses it internally. Awaiting his answer.
 
 1. **Independence binding** belongs in `couple` (agreed); distionary
    supplies `support_product()`.

@@ -326,6 +326,18 @@ mvnorm_prob <- function(lower, upper, mean, cov) {
   p <- length(mean)
   x <- if (is.matrix(lower)) lower else upper
   singular <- cov_root(cov)$rank < p
+  if (p == 2L && !singular) {
+    sds <- sqrt(diag(cov))
+    rho <- cov[1L, 2L] / prod(sds)
+    if (abs(rho) < 0.925) {
+      h <- (x[, 1L] - mean[[1L]]) / sds[[1L]]
+      k <- (x[, 2L] - mean[[2L]]) / sds[[2L]]
+      if (is.matrix(lower)) {
+        return(pbinorm(-h, -k, rho))
+      }
+      return(pbinorm(h, k, rho))
+    }
+  }
   # The randomised algorithm is the only one that takes a singular
   # covariance, and is needed beyond 20 variables. It is run with a fixed
   # seed, so the same inputs always give the same answer.
@@ -381,4 +393,56 @@ with_fixed_seed <- function(code, seed = 1L) {
   })
   set.seed(seed)
   code
+}
+
+#' Standard bivariate Normal CDF, vectorised.
+#'
+#' \eqn{P(X \le h, Y \le k)} for standard Normal \eqn{X, Y} with
+#' correlation `rho`, by the Sheppard--Drezner formula
+#' \deqn{\Phi(h)\Phi(k) + \frac{1}{2\pi} \int_0^{\arcsin \rho}
+#'   \exp\left(-\frac{h^2 + k^2 - 2hk\sin\theta}{2\cos^2\theta}
+#'   \right) d\theta,}
+#' with the integral done by 20-point Gauss--Legendre quadrature. This is
+#' accurate to double precision for `abs(rho) < 0.925` (Genz, 2004), where
+#' the integrand is smooth; the caller uses \pkg{mvtnorm} beyond that.
+#' @param h,k Vectors of the same length.
+#' @param rho Single correlation.
+#' @noRd
+pbinorm <- function(h, k, rho) {
+  base <- stats::pnorm(h) * stats::pnorm(k)
+  out <- base
+  ok <- is.finite(h) & is.finite(k)
+  if (rho != 0 && any(ok)) {
+    gl <- gauss_legendre(20L)
+    half <- asin(rho) / 2
+    theta <- half * (gl$nodes + 1)
+    sn <- sin(theta)
+    hh <- h[ok]
+    kk <- k[ok]
+    expo <- outer(hh^2 + kk^2, rep(1, length(sn))) -
+      2 * outer(hh * kk, sn)
+    expo <- -expo / rep(2 * (1 - sn^2), each = length(hh))
+    integral <- as.numeric(exp(expo) %*% gl$weights) * half
+    out[ok] <- base[ok] + integral / (2 * pi)
+  }
+  # With an infinite limit, the probability is a univariate one (or 0).
+  out[which(h == -Inf | k == -Inf)] <- 0
+  only_k <- which(h == Inf & k > -Inf)
+  out[only_k] <- stats::pnorm(k[only_k])
+  only_h <- which(k == Inf & h > -Inf)
+  out[only_h] <- stats::pnorm(h[only_h])
+  out[is.na(h) | is.na(k)] <- NA_real_
+  pmin(pmax(out, 0), 1)
+}
+
+#' Gauss-Legendre nodes and weights, from -1 to 1, by Golub-Welsch.
+#' @noRd
+gauss_legendre <- function(n) {
+  i <- seq_len(n - 1L)
+  off <- i / sqrt(4 * i^2 - 1)
+  jacobi <- matrix(0, n, n)
+  jacobi[cbind(i, i + 1L)] <- off
+  jacobi[cbind(i + 1L, i)] <- off
+  e <- eigen(jacobi, symmetric = TRUE)
+  list(nodes = e$values, weights = 2 * e$vectors[1L, ]^2)
 }

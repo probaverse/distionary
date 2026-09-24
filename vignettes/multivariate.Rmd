@@ -62,6 +62,8 @@ e
 
 `dst_mv_empirical()` does the same for any number of variables, taking a list of vectors --- a data frame being one.
 
+There is also the multivariate Student t, `dst_mv_t()` (and `dst_bi_t()`), whose heavier tails make its variables extreme together more often than the Normal's. Everything below that works for the Normal --- including slicing --- works for it too.
+
 ## Evaluating one
 
 A univariate distribution is evaluated at a vector of values. A multivariate one needs a value for each variable, so there are two families of evaluators, much as `purrr` has `map2()` and `pmap()`:
