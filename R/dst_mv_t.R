@@ -30,9 +30,9 @@
 #'
 #' The marginal distribution of any of the variables (see [marginal()]) is
 #' again t with the same degrees of freedom; one variable gives [dst_t()].
-#' Given some of the variables (see [conditional()]), the rest are t with
-#' more degrees of freedom: `df` plus the number of variables given. Both
-#' are exact.
+#' Given some of the variables (see the `given` argument of
+#' [eval_mv_cdf()]), the rest are t with more degrees of freedom: `df` plus
+#' the number of variables given. Both are exact.
 #'
 #' ## Singular scale
 #'

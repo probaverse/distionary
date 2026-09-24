@@ -52,7 +52,7 @@ A covariance matrix that is not positive definite (but is positive
 semi-definite) describes a distribution on a lower-dimensional flat: a
 line, a plane, and so on. Perfect correlation is one example; another
 is a set of variables together with their sum, which is how a slice
-such as \eqn{X + Y = s} is made (see \code{\link[=conditional]{conditional()}} and the
+such as \eqn{X + Y = s} is made (see the
 "Multivariate Distributions" vignette). Such a distribution has
 \code{\link[=vtype]{vtype()}} \code{"singular"}, a support built by \code{\link[=support_affine]{support_affine()}}, and no
 density; its marginals and conditionals are again Normal. With no

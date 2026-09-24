@@ -131,11 +131,7 @@ To evaluate a representation *conditional* on some of the variables, say which o
 eval_bi_cdf(d, x = 2, y = 0:2, given = "x")
 ```
 
-`conditional()` gives the conditional distribution as a distribution in its own right:
-
-```{r}
-conditional(d, given = c(x = 2))
-```
+To have the conditional distribution itself, as a distribution to evaluate, draw from or condition further, use `conditional()` from the [distplyr](https://distplyr.probaverse.com) package, which makes new distributions out of existing ones.
 
 ## Supports of several variables
 
@@ -210,29 +206,27 @@ s200 <- eval_return(marginal(trio, "s"), at = 200)
 s200
 ```
 
-Conditioning on it gives the slice: still a distribution of the two flows, but now on the line \(r_1 + r_2 = s_{200}\).
-
-```{r}
-slice <- conditional(trio, given = c(s = s200))
-slice
-set.seed(1)
-realise(slice, n = 3)
-```
-
-The slice has two variables but no density over the plane. Reduce it to one flow with `marginal()` --- the other is then determined --- to get a distribution with a density:
-
-```{r}
-r1_given_total <- marginal(slice, "r1")
-r1_given_total
-eval_quantile(r1_given_total, at = c(0.05, 0.5, 0.95))
-```
-
-The same probabilities are available without building the slice, by evaluating the three-variable distribution with `given`:
+Conditioning on it slices the distribution: the two flows now live on the line \(r_1 + r_2 = s_{200}\), so fixing one fixes the other. Evaluate the three-variable distribution with `given = "s"`, leaving the other flow unrestricted (at `Inf` for a CDF, `-Inf` for a survival function). Here is the chance that the first river carries at most 60, 70 or 80 of the total:
 
 ```{r, eval = has_mvtnorm}
-eval_mv_cdf(trio, list(r1 = 90, r2 = Inf, s = s200), given = "s")
-eval_cdf(r1_given_total, 90)
+eval_mv_cdf(
+  trio,
+  list(r1 = c(60, 70, 80), r2 = Inf, s = s200),
+  given = "s"
+)
 ```
+
+And the chance that it carries more than half:
+
+```{r, eval = has_mvtnorm}
+eval_mv_survival(
+  trio,
+  list(r1 = s200 / 2, r2 = -Inf, s = s200),
+  given = "s"
+)
+```
+
+distplyr's `conditional()` gives the slice as a distribution of its own. It still has two variables, but its variable type is `"singular"`: it has no density over the plane. Reduce it to one flow with `marginal()` to get one with a density, as in `marginal(conditional(trio, given = c(s = s200)), "r1")`.
 
 ## Your own multivariate distribution
 

@@ -21,7 +21,7 @@ passes.
 | `eval_{bi,mv}_{cdf,survival,density,pmf}()`, with `given =` | `R/eval_mv.R` |
 | Multivariate property network (`eval_mv_*_from_network`) | `R/eval_mv_network.R` |
 | `marginal()` | `R/marginal.R` |
-| `conditional()`: conditional distribution objects; slices | `R/conditional.R` |
+| `conditional` property network (the verb is distplyr's `conditional()`) | `R/conditional.R` |
 | `prob_{bi,mv}_orthant()` | `R/prob_orthant.R` |
 | `dst_mv_norm()` (incl. singular cov), `dst_bi_norm()` | `R/dst_mv_norm.R` |
 | `dst_mv_empirical()`, `dst_bi_empirical()` | `R/dst_mv_empirical.R` |
@@ -73,12 +73,11 @@ passes.
 
 ## Open questions
 
-0. **Move `conditional()` to distplyr?** Vincenzo asked (2026-09-24). My
-   recommendation: yes for the exported verb, since it parallels `trim_*()`.
-   Keep the `conditional` property plus its network in distionary (the
-   `given` evaluation needs it). distplyr calls
-   `eval_property(d, "conditional", idx, at)`. `marginal()` stays because
-   distionary uses it internally. Awaiting his answer.
+0. ~~Move `conditional()` to distplyr?~~ **Done 2026-09-25.** The verb
+   now lives in distplyr (branch `feature/multivariate`) and calls
+   `eval_property(d, "conditional", idx, at)`. distionary keeps the
+   property and its network, which `given` evaluation needs. distionary
+   tests reach it through `helper-conditional.R`.
 
 1. **Independence binding** belongs in `couple` (agreed); distionary
    supplies `support_product()`.

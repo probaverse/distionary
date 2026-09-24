@@ -48,9 +48,9 @@ in \code{dst_bi_t()}, where they are \code{x} and \code{y}.
 
 The marginal distribution of any of the variables (see \code{\link[=marginal]{marginal()}}) is
 again t with the same degrees of freedom; one variable gives \code{\link[=dst_t]{dst_t()}}.
-Given some of the variables (see \code{\link[=conditional]{conditional()}}), the rest are t with
-more degrees of freedom: \code{df} plus the number of variables given. Both
-are exact.
+Given some of the variables (see the \code{given} argument of
+\code{\link[=eval_mv_cdf]{eval_mv_cdf()}}), the rest are t with more degrees of freedom: \code{df} plus
+the number of variables given. Both are exact.
 \subsection{Singular scale}{
 
 As with \code{\link[=dst_mv_norm]{dst_mv_norm()}}, a scale matrix that is only positive

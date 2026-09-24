@@ -1,90 +1,18 @@
-#' Conditional Distribution
-#'
-#' The distribution of some of a multivariate distribution's variables,
-#' when the others are known.
-#'
-#' @param distribution A distribution of several variables.
-#' @param given The known values, named after their variables: a named
-#' numeric vector, such as `c(x = 3)`, or a named list.
-#' @details
-#' The result is a distribution of the variables not in `given`, in their
-#' original order. It is what the `given` argument of [eval_mv_cdf()] and
-#' the like evaluates, but as a distribution in its own right, to be
-#' evaluated, drawn from, or conditioned further.
-#'
-#' ## Slices
-#'
-#' Conditioning on a variable that is a function of others slices the
-#' distribution. To slice a distribution of \eqn{(X, Y)} along the line
-#' \eqn{X + Y = s}, include \eqn{S = X + Y} as a third variable and
-#' condition on it: the result is still a distribution of \eqn{X} and
-#' \eqn{Y}, but it lives on a line, so its variable type is `"singular"`.
-#' Take a [marginal()] of one of them for a distribution with a density.
-#' For the multivariate Normal this is exact, since the three variables are
-#' again Normal (with a singular covariance); see the "Multivariate
-#' Distributions" vignette.
-#'
-#' ## How it is found
-#'
-#' A distribution can state its own conditionals (the multivariate Normal
-#' does). Otherwise, for a distribution on finitely many points, the result
-#' keeps the points that match `given`, with their probabilities rescaled.
-#' For a continuous distribution, its density is the joint density divided
-#' by the density of the `given` variables, and, when one variable is left,
-#' its CDF comes from integrating that density. Its support is then taken
-#' to be the support of the remaining variables in the joint distribution,
-#' which may be larger than the conditional distribution needs.
-#'
-#' Conditioning on values that cannot occur --- a point not in a finite
-#' distribution's support, or where the `given` variables have zero
-#' density --- gives the Null distribution ([dst_null()]).
-#' @returns A distribution: univariate if one variable is left over.
-#' @seealso [marginal()]; the `given` argument of [eval_mv_cdf()].
-#' @examples
-#' d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
-#' conditional(d, given = c(x = 1))
-#'
-#' e <- dst_mv_empirical(list(a = c(1, 2, 2, 3), b = c(1, 1, 2, 2)))
-#' conditional(e, given = list(a = 2))
-#' @export
-conditional <- function(distribution, given) {
-  checkmate::assert_class(distribution, "dst")
-  if (!is_multivariate(distribution)) {
-    stop("A distribution of one variable has nothing to condition on.")
-  }
-  known <- is.numeric(given) || is.list(given) ||
-    (is.logical(given) && all(is.na(given)))
-  if (!known || length(given) == 0) {
-    stop(
-      "`given` must be a named vector of known values,\n",
-      "as in `c(x = 3)`."
-    )
-  }
-  nms <- rlang::names2(given)
-  if (any(nms == "")) {
-    stop(
-      "Name each value in `given` after its variable,\n",
-      "as in `c(x = 3)`."
-    )
-  }
-  if (is.list(given) && any(lengths(given) != 1L)) {
-    stop("Each value in `given` must be a single number.")
-  }
-  at <- as.numeric(unlist(given, use.names = FALSE))
-  idx <- resolve_variables(distribution, nms, "given")
-  if (length(idx) == dimension(distribution)) {
-    stop(
-      "Every variable is `given`, which leaves nothing to describe.\n",
-      "Leave at least one variable out of `given`."
-    )
-  }
-  if (anyNA(at)) {
-    return(dst_null())
-  }
-  eval_property(distribution, "conditional", idx, at)
-}
-
 #' Conditional distribution, for the property network.
+#'
+#' A multivariate distribution may state a `conditional` property: a function
+#' of the positions of the known variables and their values, returning the
+#' distribution of the rest. When it does not, this works one out. It is what
+#' the `given` argument of `eval_mv_cdf()` and friends relies on, and what
+#' distplyr's `conditional()` verb calls, through
+#' `eval_property(d, "conditional", given, at)`.
+#'
+#' For a distribution on finitely many points, the result keeps the points
+#' matching `at`, rescaled. For a continuous one, its density is the joint
+#' density over that of the known variables, and with one variable left its
+#' CDF comes from integrating that; its support is the remaining variables'
+#' support in the joint distribution, which may be larger than needed. Values
+#' that cannot occur give the Null distribution.
 #' @param given Integer positions of the known variables.
 #' @param at Their values, in the same order.
 #' @noRd

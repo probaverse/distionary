@@ -30,7 +30,7 @@ test_that("a linear combination makes a singular Normal", {
 
 test_that("conditioning on the total slices the distribution", {
   skip_if_not_installed("mvtnorm")
-  sl <- conditional(rivers(), given = c(s = 200))
+  sl <- condition(rivers(), given = c(s = 200))
   expect_identical(variables(sl), c("r1", "r2"))
   expect_identical(vtype(sl), "singular")
   expect_equal(unname(rowSums(realise(sl, 4))), rep(200, 4))
@@ -54,7 +54,7 @@ test_that("conditioning on the total slices the distribution", {
 
 test_that("the slice does not disturb the random number stream", {
   skip_if_not_installed("mvtnorm")
-  sl <- conditional(rivers(), given = c(s = 200))
+  sl <- condition(rivers(), given = c(s = 200))
   set.seed(5)
   a <- stats::runif(1)
   eval_bi_cdf(sl, 60, 150)
@@ -63,23 +63,19 @@ test_that("the slice does not disturb the random number stream", {
   expect_identical(c(a, b), stats::runif(2))
 })
 
-test_that("impossible or complete conditioning is handled", {
+test_that("impossible conditioning gives the Null distribution", {
   trio <- rivers()
-  expect_error(conditional(trio, c(r1 = 1, r2 = 1, s = 2)), "nothing to")
   # x and y are always equal, so x = 1 and y = 2 cannot happen together.
   tied <- dst_mv_norm(
     c(x = 0, y = 0, z = 0),
     matrix(c(1, 1, 0, 1, 1, 0, 0, 0, 1), 3)
   )
-  expect_true(is.na(conditional(tied, c(x = 1, y = 2))))
-  expect_equal(mean(conditional(tied, c(x = 1, y = 1))), 0)
+  expect_true(is.na(condition(tied, c(x = 1, y = 2))))
+  expect_equal(mean(condition(tied, c(x = 1, y = 1))), 0)
   expect_identical(
-    eval_quantile(conditional(trio, c(r1 = 40, r2 = 10)), 0.5),
+    eval_quantile(condition(trio, c(r1 = 40, r2 = 10)), 0.5),
     50
   )
-  expect_error(conditional(trio, c(40, 10)), "Name each value")
-  expect_error(conditional(dst_norm(0, 1), c(x = 1)), "one variable")
-  expect_true(is.na(conditional(trio, c(s = NA))))
 })
 
 test_that("conditionals are worked out when not stated", {
@@ -88,12 +84,12 @@ test_that("conditionals are worked out when not stated", {
     cdf = function(x, y) stats::pnorm(x) * stats::pexp(y),
     .support = support_product(x = continuous(), y = continuous(c(0, Inf)))
   )
-  y <- conditional(g, c(x = 0.3))
+  y <- condition(g, c(x = 0.3))
   expect_equal(eval_density(y, 1:2), stats::dexp(1:2))
   expect_equal(eval_cdf(y, 1:2), stats::pexp(1:2))
   expect_equal(mean(y), 1, tolerance = 1e-6)
   e <- dst_mv_empirical(list(a = c(1, 2, 2, 3), b = c(1, 1, 2, 2)))
-  b <- conditional(e, list(a = 2))
+  b <- condition(e, list(a = 2))
   expect_equal(eval_pmf(b, 1:2), c(0.5, 0.5))
-  expect_true(is.na(conditional(e, c(a = 9))))
+  expect_true(is.na(condition(e, c(a = 9))))
 })

@@ -47,7 +47,7 @@ test_that("marginals and conditionals of the t are t", {
   expect_identical(pretty_name(b), "Student t")
   expect_equal(eval_cdf(b, 2), stats::pt((2 - 1) / sqrt(2), 3))
   # b | a = 1 is t with df 4, location 1.5, scale^2 (3 + 1) / 4 * 1.75.
-  cb <- conditional(d, c(a = 1))
+  cb <- condition(d, c(a = 1))
   expect_equal(parameters(cb)$df, 4)
   expect_equal(parameters(cb)$location, 1.5)
   expect_equal(parameters(cb)$scale, sqrt(1.75))
@@ -80,7 +80,7 @@ test_that("slices of the t are exact", {
     df = 4
   )
   expect_identical(vtype(trio), "singular")
-  sl <- conditional(trio, c(s = 200))
+  sl <- condition(trio, c(s = 200))
   expect_identical(parameters(sl)$df, 5)
   set.seed(2)
   expect_equal(unname(rowSums(realise(sl, 3))), rep(200, 3))

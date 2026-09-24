@@ -35,7 +35,7 @@
 #' semi-definite) describes a distribution on a lower-dimensional flat: a
 #' line, a plane, and so on. Perfect correlation is one example; another
 #' is a set of variables together with their sum, which is how a slice
-#' such as \eqn{X + Y = s} is made (see [conditional()] and the
+#' such as \eqn{X + Y = s} is made (see the
 #' "Multivariate Distributions" vignette). Such a distribution has
 #' [vtype()] `"singular"`, a support built by [support_affine()], and no
 #' density; its marginals and conditionals are again Normal. With no

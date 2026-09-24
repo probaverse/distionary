@@ -87,8 +87,9 @@
 #' `marginal`, a function of the positions of some variables returning
 #' their distribution (see [marginal()]); and `conditional`, a function of
 #' the positions of the known variables and their values, returning the
-#' distribution of the rest (see [conditional()]). Either is worked out
-#' when it can be, if not given.
+#' distribution of the rest (used by the `given` argument of
+#' [eval_mv_cdf()], and by `conditional()` in \pkg{distplyr}). Either is
+#' worked out when it can be, if not given.
 #'
 #' Other properties that are understood by `distionary` include:
 #'

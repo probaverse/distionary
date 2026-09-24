@@ -47,7 +47,6 @@ reference:
   - support_map
   - dimension
   - marginal
-  - conditional
 - subtitle: Distribution Characteristics
   contents:
   - parameters
