@@ -184,3 +184,14 @@ test_that("conditions prob() cannot follow are refused, not misread", {
   expect_equal(prob(d, x - x < 1), 1)
   expect_equal(prob(d, (x - x) * y < 1), 1)
 })
+
+test_that("== and != on quantities without atoms do not multiply the work", {
+  m <- dst_mv_norm(c(a = 0, b = 0, c = 0, e = 0), diag(4))
+  expect_equal(prob(m, a != 1, b != 1, c != 1, e != 1), 1)
+  expect_equal(prob(m, a > 0, b != 1, c != 2, e != 3), 0.5)
+  expect_equal(prob(m, a == 1 | b > 0), 0.5)
+  # x - y has an atom at 0 when x and y are always equal.
+  tied <- dst_mv_norm(c(x = 0, y = 0), matrix(1, 2, 2))
+  expect_equal(prob(tied, x == y), 1)
+  expect_equal(prob(tied, x != y), 0)
+})

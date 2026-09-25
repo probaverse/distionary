@@ -122,6 +122,11 @@ event_holds <- function(ev, i) {
 #' @noRd
 prob_event_boxes <- function(distribution, ev) {
   n <- length(event_values(ev)[[1L]])
+  coords <- event_coordinates(list(list(atoms = event_atoms(ev))))
+  if (length(coords) > 0L) {
+    dist_y <- coordinate_distribution(distribution, coords)
+    ev <- drop_null_comparisons(ev, dist_y, coords)
+  }
   clauses <- event_dnf(ev, n)
   if (length(clauses) == 0L) {
     return(rep(0, n))
@@ -133,13 +138,11 @@ prob_event_boxes <- function(distribution, ev) {
       call. = FALSE
     )
   }
-  coords <- event_coordinates(clauses)
-  if (length(coords) == 0L) {
-    # No variables in it at all: the event holds or it does not.
+  if (length(event_coordinates(clauses)) == 0L) {
+    # No variables left in it: the event holds or it does not.
     held <- Reduce(`|`, lapply(clauses, `[[`, "mask"))
     return(as.numeric(held))
   }
-  dist_y <- coordinate_distribution(distribution, coords)
   total <- rep(0, n)
   m <- length(clauses)
   # Inclusion-exclusion over the pieces: each intersection of boxes is a
@@ -152,6 +155,53 @@ prob_event_boxes <- function(distribution, ev) {
     total <- total + (-1)^(length(pick) + 1L) * p
   }
   pmin(pmax(total, 0), 1)
+}
+
+#' The comparisons in an event.
+#' @noRd
+event_atoms <- function(ev) {
+  if (ev$type == "atom") {
+    return(list(ev))
+  }
+  if (ev$type == "const") {
+    return(list())
+  }
+  unlist(lapply(ev$children, event_atoms), recursive = FALSE)
+}
+
+#' Replace `==` and `!=` on quantities without atoms by what they almost
+#' surely are.
+#'
+#' A quantity with no atoms equals any given value with probability zero,
+#' so `==` is false and `!=` true, as far as probability goes. Settling them
+#' before expanding the event keeps each `!=` from doubling the number of
+#' pieces to add up. Whether a quantity has atoms is read from its own
+#' distribution: `x - y` can have one even when `x` and `y` do not.
+#' @noRd
+drop_null_comparisons <- function(ev, dist_y, coords) {
+  keys <- vapply(coords, `[[`, "", "key")
+  s <- support(dist_y)
+  atomless <- vapply(seq_along(coords), function(j) {
+    sj <- if (length(coords) == 1L) s else support_marginal(s, j)
+    vtype_of_support(sj) == "continuous"
+  }, logical(1))
+  settle <- function(e) {
+    if (e$type == "atom") {
+      if (e$op %in% c("==", "!=") && term_linear(e$term)) {
+        j <- match(coord_key(e$term$coef), keys)
+        if (atomless[[j]]) {
+          return(event_const(rep(e$op == "!=", length(e$value)), e$ids))
+        }
+      }
+      return(e)
+    }
+    if (e$type == "const") {
+      return(e)
+    }
+    e$children <- lapply(e$children, settle)
+    e
+  }
+  settle(ev)
 }
 
 #' Push negations to the comparisons, and expand into an "or" of "and"s.
