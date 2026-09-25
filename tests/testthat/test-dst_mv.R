@@ -87,9 +87,9 @@ test_that("the empirical distribution keeps the observed points", {
 test_that("empirical weights and NAs are handled", {
   l <- list(a = c(1, 2, NA), b = c(1, 2, 3))
   expect_true(is.na(dst_mv_empirical(l)))
-  d <- dst_mv_empirical(l, na_action = "drop")
+  d <- dst_mv_empirical(l, na_action_y = "drop")
   expect_equal(eval_mv_pmf(d, list(1:2, 1:2)), c(0.5, 0.5))
-  expect_error(dst_mv_empirical(l, na_action = "fail"), "NA")
+  expect_error(dst_mv_empirical(l, na_action_y = "fail"), "NA")
   w <- dst_mv_empirical(list(1:2, 3:4), weights = c(3, 1))
   expect_equal(eval_mv_pmf(w, list(1:2, 3:4)), c(0.75, 0.25))
   zero <- dst_mv_empirical(list(1:2, 3:4), weights = c(1, 0))
@@ -140,4 +140,30 @@ test_that("drawing nothing gives an empty data frame with the variables", {
     expect_identical(nrow(r), 0L)
     expect_named(r, variables(d))
   }
+})
+
+test_that("dst_mv_empirical() takes variables, lists, and a data mask", {
+  df <- data.frame(
+    site = c("a", "a", "b"),
+    flow = c(10, 12, 15),
+    depth = c(1, 1.5, 2),
+    w = 1:3
+  )
+  masked <- dst_mv_empirical(flow, depth, data = df)
+  expect_identical(variables(masked), c("flow", "depth"))
+  spliced <- dst_mv_empirical(df[c("flow", "depth")])
+  expect_equal(eval_mv_pmf(spliced, list(12, 1.5)), 1 / 3)
+  expect_identical(variables(spliced), c("flow", "depth"))
+  renamed <- dst_mv_empirical(q = flow, h = depth, data = df)
+  expect_identical(variables(renamed), c("q", "h"))
+  mixed <- dst_mv_empirical(df["flow"], d2 = depth * 2, data = df)
+  expect_identical(variables(mixed), c("flow", "d2"))
+  unnamed <- dst_mv_empirical(df$flow, df$depth)
+  expect_identical(variables(unnamed), c("x1", "x2"))
+  weighted <- dst_mv_empirical(flow, depth, weights = w, data = df)
+  expect_equal(eval_mv_pmf(weighted, list(15, 2)), 0.5)
+  one <- dst_mv_empirical(flow, data = df)
+  expect_identical(variables(one), "flow")
+  expect_error(dst_mv_empirical(obs = df[2:3]), "cannot take one name")
+  expect_error(dst_mv_empirical(), "at least one")
 })

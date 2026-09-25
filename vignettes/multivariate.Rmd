@@ -60,7 +60,7 @@ e <- dst_bi_empirical(flow, depth, data = obs)
 e
 ```
 
-`dst_mv_empirical()` does the same for any number of variables, taking a list of vectors --- a data frame being one.
+`dst_mv_empirical()` does the same for any number of variables: `dst_mv_empirical(flow, depth, data = obs)`, or, to take many columns at once, `dst_mv_empirical(obs[cols])`.
 
 There is also the multivariate Student t, `dst_mv_t()` (and `dst_bi_t()`), whose heavier tails make its variables extreme together more often than the Normal's. Everything below that works for the Normal --- including slicing --- works for it too.
 

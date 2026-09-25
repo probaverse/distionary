@@ -6,10 +6,10 @@
 \title{Multivariate Empirical Distribution}
 \usage{
 dst_mv_empirical(
-  l,
   ...,
   weights = 1,
-  na_action = c("null", "drop", "fail"),
+  data = NULL,
+  na_action_y = c("null", "drop", "fail"),
   na_action_w = c("null", "drop", "fail")
 )
 
@@ -19,37 +19,36 @@ dst_bi_empirical(
   ...,
   weights = 1,
   data = NULL,
-  na_action = c("null", "drop", "fail"),
+  na_action_y = c("null", "drop", "fail"),
   na_action_w = c("null", "drop", "fail")
 )
 }
 \arguments{
-\item{l}{For \code{dst_mv_empirical()}, a list of numeric vectors, one per
-variable, all the same length (or length 1). A data frame is such a list.
-Names, if any, name the variables.}
+\item{...}{For \code{dst_mv_empirical()},
+<\code{\link[rlang:args_data_masking]{data-masking}}> the observations of each
+variable: numeric vectors of the same length (or length 1), or columns of
+\code{data}. A list or data frame of such vectors can also go here, and
+stands for its vectors, so \code{dst_mv_empirical(df)} takes every column of
+\code{df}, and \code{dst_mv_empirical(df[cols])} some of them. Not used in
+\code{dst_bi_empirical()}, where it forces the other arguments to be named.}
 
-\item{...}{Not used; forces the optional arguments to be named.}
+\item{weights}{<\code{\link[rlang:args_data_masking]{data-masking}}> Weights for
+the observations, scaled to add up to 1.}
 
-\item{weights}{Weights for the observations, scaled to add up to 1.
-For \code{dst_bi_empirical()}, data-masked like \code{x} and \code{y}.}
+\item{data}{Optionally, a data frame in which to find the variables and
+\code{weights}.}
 
-\item{na_action, na_action_w}{What to do with \code{NA}s in the observations
+\item{na_action_y, na_action_w}{What to do with \code{NA}s in the observations
 (an \code{NA} in any variable counts against the whole observation) or in the
 weights: one of \code{"null"} (the default: return a Null distribution),
 \code{"drop"}, or \code{"fail"}. As in \code{\link[=dst_empirical]{dst_empirical()}}, \code{"fail"} takes
 precedence over \code{"null"}, which takes precedence over \code{"drop"}.}
 
 \item{x, y}{For \code{dst_bi_empirical()}, the observations of the two
-variables (<\code{\link[rlang:args_data_masking]{data-masking}}>). Each variable
-is named after its expression when that is a bare column name or
-variable, as in \code{dst_bi_empirical(flow, depth, data = df)}, and is
-otherwise named \code{x} or \code{y}, after its argument.}
-
-\item{data}{For \code{dst_bi_empirical()}, optionally a data frame in which to
-find \code{x}, \code{y}, and \code{weights}.}
+variables (<\code{\link[rlang:args_data_masking]{data-masking}}>).}
 }
 \value{
-A distribution with one variable per vector in \code{l} (or two, for
+A distribution with one variable per vector given (or two, for
 \code{dst_bi_empirical()}), or a Null distribution.
 }
 \description{
@@ -60,6 +59,11 @@ every observation gets equal probability; \code{weights} overrides that.
 is a shortcut for two.
 }
 \details{
+A variable is named by its argument name (\code{flow = x1}); failing that,
+after its expression when that is a bare name (\code{flow}); failing that,
+\code{x1}, \code{x2}, and so on, by position (\code{x} and \code{y} in \code{dst_bi_empirical()}).
+A list's vectors are named by their names in the list.
+
 Observations that repeat are combined into one point, with their weights
 added. Its support is the set of distinct observed points (see
 \code{\link[=discrete]{discrete()}}), and not every pairing of an observed value of one variable
@@ -69,14 +73,19 @@ A single variable gives a univariate empirical distribution
 (\code{\link[=dst_empirical]{dst_empirical()}}).
 }
 \examples{
-d <- dst_mv_empirical(list(a = c(1, 2, 2, 3), b = c(5, 4, 4, 6)))
+d <- dst_mv_empirical(a = c(1, 2, 2, 3), b = c(5, 4, 4, 6))
 d
 eval_mv_pmf(d, list(a = 2, b = 4))
 mean(d)
 variance(d)
 
-df <- data.frame(flow = c(10, 12, 15, 11), depth = c(1, 1.5, 2, 1.1))
+df <- data.frame(
+  site = c("a", "a", "b", "b"),
+  flow = c(10, 12, 15, 11),
+  depth = c(1, 1.5, 2, 1.1)
+)
+dst_mv_empirical(flow, depth, data = df)
+dst_mv_empirical(df[c("flow", "depth")])
 e <- dst_bi_empirical(flow, depth, data = df)
-variables(e)
 eval_bi_cdf(e, x = 12, y = 1.5)
 }
