@@ -24,6 +24,8 @@ passes.
 | `conditional` property network (the verb is distplyr's `conditional()`) | `R/conditional.R` |
 | `prob(d, event, given = )`: one way in for probabilities | `R/prob.R` |
 | `variables<-`; univariate distributions named (`x` by default) | `R/support-multivariate.R` |
+| Reordering: `marginal()` with every variable, exact via `permute_distribution()` | `R/marginal.R` |
+| tidyselect selections (Suggests) in `marginal(which)` and `given` | `R/select.R` (own commit c57e458) |
 | `dst_mv_norm()` (incl. singular cov), `dst_bi_norm()` | `R/dst_mv_norm.R` |
 | `dst_mv_empirical()`, `dst_bi_empirical()` | `R/dst_mv_empirical.R` |
 | `dst_mv_t()`, `dst_bi_t()` (any df, singular scale OK) | `R/dst_mv_t.R` |
@@ -100,7 +102,21 @@ passes.
 - **`dst_t()` parameters** list `location`/`scale` only when not 0/1, so
   the standard t is unchanged.
 
+- **`prob()` takes conditions in `...`**, joined by `&` as in `filter()`
+  (2026-09-25). A named argument is refused with a `==` hint.
+
 ## Open questions
+
+- **EARMARKED (Vincenzo, 2026-09-25): `parameters()` vs variable names.**
+  `variables<-` renames variables but leaves `parameters()` as built (e.g.
+  `dst_bi_norm()`'s `mean` stays named `x`, `y`). This matters once
+  parameters form a data mask (families Phase 2). Options: variable names
+  and parameter names are separate namespaces (the likely answer, since
+  parameters describe the family, not the variables); or name-bearing
+  parameters get renamed too, which can't be done generally.
+- **The distionary/distplyr split** (Vincenzo raised it 2026-09-25). My
+  recommendation was to fold distplyr's verbs into distionary as part of
+  the families refactor, with distplyr as a re-export shim. Undecided.
 
 0. ~~Move `conditional()` to distplyr?~~ **Done 2026-09-25.** The verb
    now lives in distplyr (branch `feature/multivariate`) and calls
