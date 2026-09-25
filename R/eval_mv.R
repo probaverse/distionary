@@ -8,10 +8,12 @@
 #' @param distribution A distribution.
 #' @param x,y For `eval_bi_*()`, vectors of values of the first and second
 #' variables, in the order given by [variables()].
-#' @param l For `eval_mv_*()`, a list of vectors, one for each variable. A data
-#' frame is such a list, so the output of [realise()] can be passed straight
-#' in. If the list is named, its names are matched to the distribution's
-#' [variables()]; if not, the vectors are taken in order.
+#' @param l For `eval_mv_*()`, a list of vectors, one for each variable. If
+#' the list is named, each variable's vector is found by its name (see
+#' [variables()]) and anything else in the list is ignored, so a data frame
+#' with other columns, or the output of [realise()], can be passed as it
+#' is. If the list is not named, it must have one vector per variable, in
+#' order.
 #' @param ... Not used; forces `given` to be named.
 #' @param given Variables whose values are known, making the evaluation
 #' conditional on them. Name them, as in [variables()], or give their
@@ -210,29 +212,33 @@ as_eval_list <- function(distribution, l, arg = "l") {
       "A data frame works too."
     )
   }
-  if (length(l) != p) {
-    stop(
-      "`", arg, "` has ", length(l), " vectors, but the distribution has ",
-      format_dimension(p), ".\n",
-      "Give one vector per variable."
-    )
-  }
   vars <- variables(distribution)
+  if (is.null(vars)) {
+    vars <- "x"
+  }
   nms <- rlang::names2(l)
-  if (!is.null(vars) && all(nms != "")) {
-    unknown <- setdiff(nms, vars)
-    if (length(unknown) > 0) {
+  if (length(l) > 0L && all(nms != "")) {
+    # Named: take the variables by name, so that a data frame with other
+    # columns can be passed as it is. A misspelled name leaves its variable
+    # missing, which is an error, so nothing is silently skipped.
+    missing <- setdiff(vars, nms)
+    if (length(missing) > 0L) {
       stop(
-        "`", arg, "` names a variable `", unknown[[1L]],
-        "` that the distribution does not have.\n",
-        "Its variables are ", format_names(vars), "."
+        "`", arg, "` has no vector named `", missing[[1L]], "`.\n",
+        "Name one vector after each variable: ", format_names(vars), "."
       )
     }
     l <- l[vars]
-  } else if (any(nms != "") && any(nms == "")) {
+  } else if (any(nms != "")) {
     stop(
       "`", arg, "` has names on some vectors but not others.\n",
       "Name all of them, or none (to take them in order)."
+    )
+  } else if (length(l) != p) {
+    stop(
+      "`", arg, "` has ", length(l), " vectors, but the distribution has ",
+      format_dimension(p), ".\n",
+      "Give one vector per variable, or name them."
     )
   }
   l <- as.list(l)
@@ -242,8 +248,20 @@ as_eval_list <- function(distribution, l, arg = "l") {
     }
     l[[i]] <- as.numeric(l[[i]])
   }
-  l <- vctrs::vec_recycle_common(!!!unname(l))
-  names(l) <- vars
+  sizes <- lengths(l)
+  size <- max(c(0L, sizes))
+  if (any(sizes == 0L)) {
+    size <- 0L
+  }
+  if (any(sizes != 1L & sizes != size)) {
+    stop(
+      "The vectors in `", arg, "` have lengths ",
+      paste(unique(sizes), collapse = " and "), ".\n",
+      "They must have the same length, or length 1."
+    )
+  }
+  l <- lapply(l, function(v) if (length(v) == 1L) rep(v, size) else v)
+  names(l) <- if (p == 1L) NULL else vars
   l
 }
 

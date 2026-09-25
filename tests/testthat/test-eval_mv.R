@@ -35,11 +35,14 @@ test_that("`l` is matched by name, recycled, and may be a data frame", {
     eval_mv_density(d, df),
     eval_mv_density(d, list(c(0, 0.5), 1:2))
   )
-  expect_error(eval_mv_cdf(d, list(a = 0, z = 1)), "does not have")
+  expect_error(eval_mv_cdf(d, list(a = 0, z = 1)), "no vector named `b`")
+  # Other named vectors are ignored, so a data frame can carry extra columns.
+  extra <- data.frame(id = c("p", "q"), b = 1:2, a = c(0, 0.5))
+  expect_equal(eval_mv_density(d, extra), eval_mv_density(d, df))
   expect_error(eval_mv_cdf(d, list(a = 0, 1)), "some vectors")
   expect_error(eval_mv_cdf(d, list(0)), "one vector per variable")
   expect_error(eval_mv_cdf(d, c(0, 1)), "list of vectors")
-  expect_error(eval_mv_cdf(d, list(1:2, 1:3)))
+  expect_error(eval_mv_cdf(d, list(1:2, 1:3)), "lengths 2 and 3")
 })
 
 test_that("the multivariate evaluators accept a univariate distribution", {
