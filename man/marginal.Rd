@@ -27,7 +27,9 @@ Like \code{dplyr::select()}, \code{marginal()} both picks variables and orders
 them, so selecting all of them in a new order reorders the
 distribution: \code{marginal(d, c("runoff", "rainfall"))}. Nothing is lost in
 a reordering; every property the distribution states is kept, with its
-arguments rearranged.
+arguments rearranged. A property distionary does not know (one you
+added yourself) is kept exactly as it was, since there is no telling
+whether it depends on the order of the variables.
 
 A distribution can state its own marginals (the multivariate Normal
 does, as Normal distributions). Otherwise they are worked out: the CDF

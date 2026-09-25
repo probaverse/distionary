@@ -64,6 +64,14 @@ test_that("selecting every variable in a new order reorders exactly", {
   expect_equal(prob(u, q > 5, given = p == 1), 0.5)
   e <- dst_mv_empirical(list(a = c(1, 2, 2), b = c(3, 4, 4)))
   expect_equal(eval_mv_pmf(marginal(e, c("b", "a")), list(4, 2)), 2 / 3)
+  # Properties it does not know are kept as they are.
+  own <- distribution(
+    cdf = function(x, y) stats::pnorm(x) * stats::pnorm(y),
+    density = function(x, y) stats::dnorm(x) * stats::dnorm(y),
+    g = 9.81,
+    .support = support_product(x = continuous(), y = continuous())
+  )
+  expect_identical(eval_property(marginal(own, c("y", "x")), "g"), 9.81)
 })
 
 test_that("any reordering works, even between paired variables", {
