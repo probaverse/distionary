@@ -18,7 +18,9 @@
 #' An infinite atomic support (such as a Poisson's) is summed by walking outward
 #' through its atoms until the tail contribution is negligible.
 #'
-#' @returns A single numeric.
+#' @returns A single numeric. For a distribution of several variables,
+#' `mean()` and `stdev()` give one number per variable, and `variance()`
+#' gives the covariance matrix.
 #' @examples
 #' a <- dst_gp(1, 0.5)
 #' b <- dst_unif(0, 1)
@@ -31,5 +33,5 @@
 #' @export
 mean.dst <- function(x, ...) {
   rlang::check_dots_empty()
-  eval_property(x, "mean")
+  name_by_variables(eval_property(x, "mean"), x)
 }

@@ -95,11 +95,35 @@ test_that("enumerate_points() lists finite supports and only those", {
 
 test_that("dimension() and variables() of distributions", {
   expect_identical(dimension(dst_norm(0, 1)), 1L)
-  expect_null(variables(dst_norm(0, 1)))
+  expect_identical(variables(dst_norm(0, 1)), "x")
+  expect_null(variables(continuous()))
+  expect_null(variables(dst_null()))
   expect_identical(dimension(dst_null()), NA_integer_)
   d <- dst_bi_norm(c(a = 0, b = 0), sd = c(1, 1), cor = 0)
   expect_identical(dimension(d), 2L)
   expect_identical(variables(d), c("a", "b"))
   # A distribution has length 1 whatever its dimension.
   expect_identical(length(d), 1L)
+})
+
+test_that("variables can be renamed, and the names carry through", {
+  d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
+  variables(d) <- c("flow", "depth")
+  expect_identical(variables(d), c("flow", "depth"))
+  expect_named(mean(d), c("flow", "depth"))
+  expect_identical(dimnames(variance(d)), list(
+    c("flow", "depth"),
+    c("flow", "depth")
+  ))
+  expect_named(realise(d, 2), c("flow", "depth"))
+  expect_identical(variables(marginal(d, "depth")), "depth")
+  expect_equal(eval_mv_cdf(d, list(depth = 1, flow = 0)), eval_bi_cdf(d, 0, 1))
+  n <- dst_norm(0, 1)
+  variables(n) <- "z"
+  expect_identical(variables(n), "z")
+  expect_error(variables(d) <- "a", "one name per variable")
+  expect_error(variables(d) <- c("a", "a"), "twice")
+  e <- dst_mv_empirical(list(a = 1:3, b = 4:6))
+  variables(e) <- c("u", "v")
+  expect_identical(names(support(e)[["points"]]), c("u", "v"))
 })

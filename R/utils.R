@@ -39,3 +39,22 @@ assert_univariate <- function(distribution, fn, alt = NULL) {
     call. = FALSE
   )
 }
+
+#' Name a multivariate moment after the distribution's variables.
+#'
+#' A family's moments carry the names it was built with; the distribution's
+#' current names are the ones to show, in case it has been renamed since.
+#' @param value A vector (one entry per variable) or a square matrix.
+#' @noRd
+name_by_variables <- function(value, distribution) {
+  if (!is_multivariate(distribution) || is.null(value)) {
+    return(value)
+  }
+  vars <- variables(distribution)
+  if (is.matrix(value)) {
+    dimnames(value) <- list(vars, vars)
+  } else {
+    names(value) <- vars
+  }
+  value
+}

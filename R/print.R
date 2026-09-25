@@ -12,7 +12,7 @@ print.dst <- function(x, ...) {
   # Variable type, and the variables if there are several
   if (!is.null(vtype)) {
     vars <- variables(x)
-    if (is.null(vars)) {
+    if (length(vars) <= 1L) {
       cat(paste0(" (", vtype, ")", collapse = ""), "\n")
     } else {
       cat(" (", vtype, "; ", paste(vars, collapse = ", "), ")\n", sep = "")

@@ -27,8 +27,8 @@
 #' - The survival function is \eqn{P(X_1 > x_1, \ldots, X_p > x_p)}: every
 #'   variable exceeding its value. This is not one minus the CDF, which is
 #'   the probability that *at least one* exceeds its value. The two agree
-#'   only for a single variable. For any other combination of
-#'   inequalities, see [prob_mv()].
+#'   only for a single variable. For the probability of any other event,
+#'   such as `x <= 1 & y > 3`, see [prob()].
 #' - The density is the joint density, for a continuous distribution.
 #' - The PMF is \eqn{P(X_1 = x_1, \ldots, X_p = x_p)}, for a discrete one.
 #'
@@ -56,9 +56,8 @@
 #' that is how the bar is read aloud.
 #'
 #' Conditioning is on the variables *equalling* their values. To condition on
-#' an event such as \eqn{X > x}, divide two probabilities from
-#' [prob_mv()]:
-#' \eqn{P(Y > y \mid X > x) = P(X > x, Y > y) / P(X > x)}.
+#' an event such as \eqn{X > x}, use [prob()]:
+#' `prob(d, y > 3, given = x > 1)`.
 #'
 #' ## Which ones are available
 #'
@@ -75,8 +74,8 @@
 #' distribution with a single variable left over, by integrating the
 #' density.
 #' @returns A numeric vector, with the common length of the inputs.
-#' @seealso [prob_mv()] for probabilities with any combination of
-#' inequalities; [marginal()] for a distribution of some of the variables.
+#' @seealso [prob()] for the probability of any event; [marginal()] for a
+#' distribution of some of the variables.
 #' @examples
 #' d <- dst_bi_norm(mean = c(0, 0), sd = c(1, 1), cor = 0.6)
 #' variables(d)

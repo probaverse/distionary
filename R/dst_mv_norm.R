@@ -80,12 +80,16 @@ dst_mv_norm <- function(mean, cov) {
   if (root$rank == 0L) {
     # No variation at all: every variable sits at its mean.
     if (p == 1L) {
-      return(dst_degenerate(unname(mean)))
+      out <- dst_degenerate(unname(mean))
+      variables(out) <- vars
+      return(out)
     }
     return(mv_finite(as.data.frame(as.list(mean)), 1, name = "Degenerate"))
   }
   if (p == 1L) {
-    return(dst_norm(mean = unname(mean), sd = sqrt(cov[[1L]])))
+    out <- dst_norm(mean = unname(mean), sd = sqrt(cov[[1L]]))
+    variables(out) <- vars
+    return(out)
   }
   if (root$rank == p) {
     chol_cov <- tryCatch(chol(cov), error = function(e) NULL)
@@ -166,6 +170,12 @@ new_mv_norm <- function(mean, cov, chol_cov) {
     stdev = sqrt(diag(cov)),
     marginal = mv_norm_marginal(mean, cov),
     conditional = mv_norm_conditional(mean, cov),
+    linear = function(matrix) {
+      dst_mv_norm(
+        mean = stats::setNames(as.numeric(matrix %*% mean), rownames(matrix)),
+        cov = matrix %*% cov %*% t(matrix)
+      )
+    },
     .support = support,
     .name = if (p == 2L) "Bivariate Normal" else "Multivariate Normal"
   )
@@ -207,6 +217,12 @@ new_mv_norm_singular <- function(mean, cov, factor) {
     stdev = sqrt(diag(cov)),
     marginal = mv_norm_marginal(mean, cov),
     conditional = mv_norm_conditional(mean, cov),
+    linear = function(matrix) {
+      dst_mv_norm(
+        mean = stats::setNames(as.numeric(matrix %*% mean), rownames(matrix)),
+        cov = matrix %*% cov %*% t(matrix)
+      )
+    },
     .support = support_affine(base, shift = mean, matrix = factor),
     .name = if (p == 2L) "Bivariate Normal" else "Multivariate Normal"
   )

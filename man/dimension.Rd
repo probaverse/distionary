@@ -3,23 +3,29 @@
 \name{dimension}
 \alias{dimension}
 \alias{variables}
+\alias{variables<-}
 \title{Number of Variables}
 \usage{
 dimension(x)
 
 variables(x)
+
+variables(x) <- value
 }
 \arguments{
-\item{x}{A distribution or a support.}
+\item{x}{A distribution or a support. For \verb{variables<-}, a distribution.}
+
+\item{value}{New variable names: one per variable, all different.}
 }
 \value{
 For \code{dimension()}, a single integer. For \code{variables()}, a
-character vector with one name per variable, or \code{NULL} for a univariate
-distribution.
+character vector with one name per variable. \verb{variables<-} returns the
+renamed distribution.
 }
 \description{
 \code{dimension()} gives how many variables a distribution (or a support)
-describes, and \code{variables()} gives their names.
+describes, and \code{variables()} gives their names. \verb{variables<-} renames
+them.
 }
 \details{
 The dimension is the number of variables, which is the number of
@@ -35,15 +41,28 @@ extents of an array, whose product is the length of the object. A
 distribution has length 1 (see \code{\link[=length.dst]{length.dst()}}), so a \code{dim()} of 2 would
 contradict it, and functions such as \code{\link[=NROW]{NROW()}} would take a bivariate
 distribution to be two rows of something.
+\subsection{Names}{
 
-A univariate distribution has dimension 1 and no variable names, so
-\code{variables()} gives \code{NULL} for it. The Null distribution (\code{\link[=dst_null]{dst_null()}})
-has no support, so its dimension is not known: \code{NA}.
+Every distribution names its variables, as a data frame names its
+columns, and a name is given when none is: \code{x} for a univariate
+distribution, \code{x} and \code{y} from the \verb{dst_bi_*()} constructors, and \code{x1},
+\code{x2}, and so on otherwise. The names are how \code{\link[=prob]{prob()}} refers to the
+variables, and they carry through \code{\link[=marginal]{marginal()}} and conditioning.
+
+A univariate \emph{support} has no name, since a support describes values, not
+a variable; \code{variables()} gives \code{NULL} for it. The Null distribution
+(\code{\link[=dst_null]{dst_null()}}) has no support, so its dimension is not known (\code{NA}), and
+nor are its names (\code{NULL}).
+}
 }
 \examples{
 dimension(dst_norm(0, 1))
 d <- dst_bi_norm(mean = c(0, 0), sd = c(1, 1), cor = 0.5)
 dimension(d)
 variables(d)
+variables(dst_norm(0, 1))
 dimension(support_product(a = continuous(), b = discrete(0:3)))
+
+variables(d) <- c("flow", "depth")
+d
 }

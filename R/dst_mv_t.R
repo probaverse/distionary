@@ -91,7 +91,9 @@ dst_mv_t <- function(location, scale, df) {
   root <- cov_root(scale)
   if (root$rank == 0L) {
     if (p == 1L) {
-      return(dst_degenerate(unname(location)))
+      out <- dst_degenerate(unname(location))
+      variables(out) <- vars
+      return(out)
     }
     return(mv_finite(
       as.data.frame(as.list(location)),
@@ -100,7 +102,9 @@ dst_mv_t <- function(location, scale, df) {
     ))
   }
   if (p == 1L) {
-    return(dst_t(df, location = unname(location), scale = sqrt(scale[[1L]])))
+    out <- dst_t(df, location = unname(location), scale = sqrt(scale[[1L]]))
+    variables(out) <- vars
+    return(out)
   }
   new_mv_t(location, scale, df, root)
 }
@@ -176,7 +180,17 @@ new_mv_t <- function(location, scale, df, root) {
         df = df
       )
     },
-    conditional = mv_t_conditional(location, scale, df)
+    conditional = mv_t_conditional(location, scale, df),
+    linear = function(matrix) {
+      dst_mv_t(
+        location = stats::setNames(
+          as.numeric(matrix %*% location),
+          rownames(matrix)
+        ),
+        scale = matrix %*% scale %*% t(matrix),
+        df = df
+      )
+    }
   )
   if (r == p) {
     chol_scale <- chol(scale)

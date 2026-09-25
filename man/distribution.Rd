@@ -119,8 +119,12 @@ do in \code{\link[=eval_mv_cdf]{eval_mv_cdf()}} and friends. Two more properties
 their distribution (see \code{\link[=marginal]{marginal()}}); and \code{conditional}, a function of
 the positions of the known variables and their values, returning the
 distribution of the rest (used by the \code{given} argument of
-\code{\link[=eval_mv_cdf]{eval_mv_cdf()}}, and by \code{conditional()} in \pkg{distplyr}). Either is
-worked out when it can be, if not given.
+\code{\link[=eval_mv_cdf]{eval_mv_cdf()}} and \code{\link[=prob]{prob()}}, and by \code{conditional()} in \pkg{distplyr}).
+Either is worked out when it can be, if not given. A third, \code{linear},
+is a function of a matrix \code{A} (one row per new variable, named, and one
+column per variable) returning the distribution of \code{A} times the
+variables; \code{\link[=prob]{prob()}} uses it for events such as \code{x - y > 0}, and nothing
+works it out when it is not given.
 
 Other properties that are understood by \code{distionary} include:
 \itemize{

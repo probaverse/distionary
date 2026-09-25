@@ -65,8 +65,8 @@ With variables \eqn{X_1, \ldots, X_p}, evaluated at
 \item The survival function is \eqn{P(X_1 > x_1, \ldots, X_p > x_p)}: every
 variable exceeding its value. This is not one minus the CDF, which is
 the probability that \emph{at least one} exceeds its value. The two agree
-only for a single variable. For any other combination of
-inequalities, see \code{\link[=prob_mv]{prob_mv()}}.
+only for a single variable. For the probability of any other event,
+such as \code{x <= 1 & y > 3}, see \code{\link[=prob]{prob()}}.
 \item The density is the joint density, for a continuous distribution.
 \item The PMF is \eqn{P(X_1 = x_1, \ldots, X_p = x_p)}, for a discrete one.
 }
@@ -97,9 +97,8 @@ right of the bar in \eqn{P(\cdot \mid \cdot)}. The word was chosen because
 that is how the bar is read aloud.
 
 Conditioning is on the variables \emph{equalling} their values. To condition on
-an event such as \eqn{X > x}, divide two probabilities from
-\code{\link[=prob_mv]{prob_mv()}}:
-\eqn{P(Y > y \mid X > x) = P(X > x, Y > y) / P(X > x)}.
+an event such as \eqn{X > x}, use \code{\link[=prob]{prob()}}:
+\code{prob(d, y > 3, given = x > 1)}.
 }
 
 \subsection{Which ones are available}{
@@ -134,6 +133,6 @@ eval_bi_cdf(d, x = 2, y = 0:2, given = "x")
 eval_bi_cdf(d, x = 2, y = 0:2, given = 1)
 }
 \seealso{
-\code{\link[=prob_mv]{prob_mv()}} for probabilities with any combination of
-inequalities; \code{\link[=marginal]{marginal()}} for a distribution of some of the variables.
+\code{\link[=prob]{prob()}} for the probability of any event; \code{\link[=marginal]{marginal()}} for a
+distribution of some of the variables.
 }

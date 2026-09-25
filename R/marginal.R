@@ -39,7 +39,10 @@ marginal <- function(distribution, which) {
   if (identical(idx, seq_len(p))) {
     return(distribution)
   }
-  eval_property(distribution, "marginal", idx)
+  out <- eval_property(distribution, "marginal", idx)
+  # The variables keep their names, whatever built the result.
+  variables(out) <- variables(distribution)[idx]
+  out
 }
 
 #' Marginal distribution, for the property network.

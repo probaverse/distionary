@@ -59,6 +59,7 @@ reference:
   contents:
   - starts_with("enframe_")
   - starts_with("eval_")
+  - prob
   - starts_with("prob_")
 - subtitle: Distribution Properties
   contents:

@@ -22,7 +22,8 @@ passes.
 | Multivariate property network (`eval_mv_*_from_network`) | `R/eval_mv_network.R` |
 | `marginal()` | `R/marginal.R` |
 | `conditional` property network (the verb is distplyr's `conditional()`) | `R/conditional.R` |
-| `prob_bi()`, `prob_mv()` | `R/prob_mv.R` |
+| `prob(d, event, given = )`: one way in for probabilities | `R/prob.R` |
+| `variables<-`; univariate distributions named (`x` by default) | `R/support-multivariate.R` |
 | `dst_mv_norm()` (incl. singular cov), `dst_bi_norm()` | `R/dst_mv_norm.R` |
 | `dst_mv_empirical()`, `dst_bi_empirical()` | `R/dst_mv_empirical.R` |
 | `dst_mv_t()`, `dst_bi_t()` (any df, singular scale OK) | `R/dst_mv_t.R` |
@@ -42,9 +43,35 @@ passes.
 - **`given`** names the variables to the right of the bar. Argument order
   never changes. `"x"`/`"y"` are argument aliases in `eval_bi_*()`, but
   variable names win.
-- **`prob_bi()` / `prob_mv()`** (`ineq` mandatory). Named after
-  `prob_left()`/`prob_right()`, not "orthant": Vincenzo, 2026-09-25, said
-  nobody knows that word.
+- **`prob(d, event, given = )`** replaced `prob_bi()`/`prob_mv()`
+  (2026-09-25). Events are `filter()`-style expressions: `&`, `|`, `!`, and
+  unmentioned variables are free. The design is to evaluate the
+  expression symbolically. Each variable is bound to a term (a linear form,
+  or a non-linear function). A comparison becomes a condition on one
+  quantity (`lhs - rhs`, put in canonical form), and an event becomes a
+  union of boxes in those quantities (DNF, then inclusion-exclusion). What
+  can be evaluated is exactly what joint distributions of the quantities
+  can be found:
+  - finite supports: anything, evaluated on the points (literally filter);
+  - univariate discrete with infinitely many atoms: anything, by walking
+    the atoms (`expect_over_support()` of the indicator);
+  - a stated `linear` property (MVN, t): sums of multiples of variables;
+  - otherwise, the variables themselves (marginals and the CDF).
+  Anything else is refused with the quantity named. That answers
+  Vincenzo's "false promise" worry: the rule is stated, and exactness is
+  never traded away silently.
+  `given`: `var == v` conditions on a value; `combo == v` (e.g.
+  `r1 + r2 == s`) slices, via `linear` plus `conditional`; anything else
+  is an event, divided out. The event may not mention a variable fixed
+  by `given`.
+- **Every distribution names its variables**, like a data frame's columns.
+  A univariate one defaults to `x` (stored in attr `variable`, not on the
+  support, since a univariate support describes values). `marginal()`,
+  `prob()`'s conditionals and distplyr's `conditional()` keep names.
+  `mean()`/`variance()`/`stdev()` take names from the distribution, so a
+  renaming is not undone by a family's closures. `parameters()` are left
+  as built. There are no purrr-style positional pronouns (`.x`, `..1`):
+  names always exist, as in `filter()`.
 - **Intrinsic `marginal = function(which)` and
   `conditional = function(given, at)`**, each returning a distribution.
   Otherwise the network works them out: finite by enumeration; continuous
@@ -95,7 +122,7 @@ passes.
 5. **Conditional support from the network** is the product of the
    remaining margins, which may be larger than needed. It is documented.
 6. **Not built**: moments beyond mean/covariance, `enframe_bi_*()`,
-   plotting, event-conditioning (use ratios of `prob_mv()`), membership
+   plotting, non-linear events on continuous distributions, membership
    tests for map supports.
 
 ## Next steps

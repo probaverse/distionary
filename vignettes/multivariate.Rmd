@@ -101,18 +101,57 @@ eval_bi_survival(d, x = 0, y = 1)
 1 - eval_bi_cdf(d, x = 0, y = 1)
 ```
 
-For any other combination of inequalities --- one variable below its value and the other above, say --- use `prob_bi()` or `prob_mv()`:
+For the probability of any other event --- one variable below its value and the other above, say --- use `prob()`, described next.
+
+## Probabilities of events
+
+`prob()` finds the probability of an event, written as you would write it for `dplyr::filter()`: compare variables by name, and combine the comparisons with `&` (and), `|` (or), and `!` (not).
 
 ```{r, eval = has_mvtnorm}
-prob_bi(d, x = 0, y = 1, ineq = c("<=", ">"))
+prob(d, x <= 0 & y > 1)
+prob(d, x > 2 | y > 5)
 ```
 
-Strict and non-strict inequalities differ only where a variable has atoms:
+A variable left out of the event is free, so there is no need to take a marginal first:
 
 ```{r}
-prob_bi(e, x = 12, y = 1.5, ineq = c("<", "<="))
-prob_bi(e, x = 12, y = 1.5, ineq = c("<=", "<="))
+prob(d, x < 2)
 ```
+
+Values can be vectors, giving one probability for each:
+
+```{r}
+prob(d, y > c(1, 3, 5))
+```
+
+A comparison can involve several variables, as long as the distribution can say how their combination is distributed. The multivariate Normal and t can, for any sum of multiples of the variables:
+
+```{r}
+prob(d, x + y > 3)
+prob(d, x < y)
+```
+
+For a distribution on finitely many points, anything goes: the event is checked at each point, much as `filter()` checks each row, and the probabilities of the points passing it are added up.
+
+```{r}
+prob(e, flow * depth > 15)
+```
+
+Strict and non-strict inequalities differ only where there are atoms, and are handled exactly:
+
+```{r}
+prob(e, flow < 12)
+prob(e, flow <= 12)
+```
+
+`given` makes the probability conditional. Comparing a variable with `==` conditions on its value, which works even for a continuous variable, where that value has probability zero; any other condition is divided out as an event:
+
+```{r}
+prob(d, y > 3, given = x == 1)
+prob(d, y > 3, given = x > 1)
+```
+
+A univariate distribution's variable is called `x`, so `prob()` works there too: `prob(dst_norm(0, 1), x > 2)`.
 
 ## Marginals and conditionals
 
@@ -184,49 +223,42 @@ A line has two variables but spans only one dimension. A distribution on it puts
 
 Suppose two rivers feed a lake, and the question is how the inflow splits between them *given* that their total is extreme --- say, its 200-year value. That is the joint distribution of the two flows, sliced along the line where they add up to that value.
 
-Slicing is conditioning, on a variable that is a function of the others. So add the total as a third variable, and condition on it. For Normal flows this is exact, because a linear combination of Normal variables is again Normal: if the flows have mean \(\mu\) and covariance \(\Sigma\), then \(A\) times them has mean \(A\mu\) and covariance \(A \Sigma A^\top\).
+With `prob()`, that is a condition in `given`: the total taking a value.
 
 ```{r}
-mu <- c(r1 = 50, r2 = 80)
-sigma <- matrix(c(100, 60, 60, 225), 2)
-a <- rbind(r1 = c(1, 0), r2 = c(0, 1), s = c(1, 1))
-trio <- dst_mv_norm(
-  mean = setNames(as.numeric(a %*% mu), rownames(a)),
-  cov = a %*% sigma %*% t(a)
-)
-trio
+flows
 ```
 
-The covariance of the three is singular --- the total is determined by the flows --- so the three live on a plane, and their variable type is `"singular"`.
-
-The 200-year total is a return level of the total's marginal distribution:
+The 200-year total is a return level of the total's distribution. For Normal flows the total is Normal too, with mean and variance from those of the flows:
 
 ```{r}
-s200 <- eval_return(marginal(trio, "s"), at = 200)
+total <- dst_norm(
+  mean = sum(mean(flows)),
+  sd = sqrt(sum(variance(flows)))
+)
+s200 <- eval_return(total, at = 200)
 s200
 ```
 
-Conditioning on it slices the distribution: the two flows now live on the line \(r_1 + r_2 = s_{200}\), so fixing one fixes the other. Evaluate the three-variable distribution with `given = "s"`, leaving the other flow unrestricted (at `Inf` for a CDF, `-Inf` for a survival function). Here is the chance that the first river carries at most 60, 70 or 80 of the total:
+Now the chance that the first river carries more than half of that total, and the chance that it carries at most 60, 70 or 80 of it:
 
-```{r, eval = has_mvtnorm}
-eval_mv_cdf(
-  trio,
-  list(r1 = c(60, 70, 80), r2 = Inf, s = s200),
-  given = "s"
-)
+```{r}
+prob(flows, r1 > r2, given = r1 + r2 == s200)
+prob(flows, r1 <= c(60, 70, 80), given = r1 + r2 == s200)
 ```
 
-And the chance that it carries more than half:
+This is exact for the multivariate Normal and t, whose sums of multiples of variables are again Normal or t. Behind the scenes, the total is added as a third variable and conditioned on. The three variables have a singular covariance --- the total is determined by the flows --- and live on a plane, so their variable type is `"singular"`:
 
-```{r, eval = has_mvtnorm}
-eval_mv_survival(
-  trio,
-  list(r1 = s200 / 2, r2 = -Inf, s = s200),
-  given = "s"
+```{r}
+a <- rbind(r1 = c(1, 0), r2 = c(0, 1), s = c(1, 1))
+trio <- dst_mv_norm(
+  mean = setNames(as.numeric(a %*% mean(flows)), rownames(a)),
+  cov = a %*% variance(flows) %*% t(a)
 )
+vtype(trio)
 ```
 
-distplyr's `conditional()` gives the slice as a distribution of its own. It still has two variables, but its variable type is `"singular"`: it has no density over the plane. Reduce it to one flow with `marginal()` to get one with a density, as in `marginal(conditional(trio, given = c(s = s200)), "r1")`.
+To keep the slice itself as a distribution, rather than asking it for probabilities, condition `trio` on `s` with `conditional()` from distplyr. The result still has two variables, `r1` and `r2`, but lives on a line, with no density over the plane; `marginal()` reduces it to one flow, which has one.
 
 ## Your own multivariate distribution
 
@@ -260,4 +292,4 @@ A few things are not supported yet:
 - Supports with a mix of kinds within one joint, such as a count paired with an amount, can be described, but such a distribution has no joint density or PMF to evaluate.
 - Moments beyond the mean and covariance matrix.
 - Plotting, and `enframe_*()` functions, for several variables.
-- Conditioning on an event such as \(X > x\), rather than on a value. Divide two probabilities from `prob_mv()` instead: \(P(Y > y \mid X > x) = P(X > x, Y > y) / P(X > x)\).
+- Events on combinations of variables other than sums of multiples of them (such as `x * y > 1`), except for distributions on finitely many points.

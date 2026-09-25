@@ -93,9 +93,11 @@ support_product <- function(...) {
 #' Number of Variables
 #'
 #' `dimension()` gives how many variables a distribution (or a support)
-#' describes, and `variables()` gives their names.
+#' describes, and `variables()` gives their names. `variables<-` renames
+#' them.
 #'
-#' @param x A distribution or a support.
+#' @param x A distribution or a support. For `variables<-`, a distribution.
+#' @param value New variable names: one per variable, all different.
 #' @details
 #' The dimension is the number of variables, which is the number of
 #' coordinates a point in the support has. It is not the dimension of the
@@ -111,18 +113,31 @@ support_product <- function(...) {
 #' contradict it, and functions such as [NROW()] would take a bivariate
 #' distribution to be two rows of something.
 #'
-#' A univariate distribution has dimension 1 and no variable names, so
-#' `variables()` gives `NULL` for it. The Null distribution ([dst_null()])
-#' has no support, so its dimension is not known: `NA`.
+#' ## Names
+#'
+#' Every distribution names its variables, as a data frame names its
+#' columns, and a name is given when none is: `x` for a univariate
+#' distribution, `x` and `y` from the `dst_bi_*()` constructors, and `x1`,
+#' `x2`, and so on otherwise. The names are how [prob()] refers to the
+#' variables, and they carry through [marginal()] and conditioning.
+#'
+#' A univariate *support* has no name, since a support describes values, not
+#' a variable; `variables()` gives `NULL` for it. The Null distribution
+#' ([dst_null()]) has no support, so its dimension is not known (`NA`), and
+#' nor are its names (`NULL`).
 #' @returns For `dimension()`, a single integer. For `variables()`, a
-#' character vector with one name per variable, or `NULL` for a univariate
-#' distribution.
+#' character vector with one name per variable. `variables<-` returns the
+#' renamed distribution.
 #' @examples
 #' dimension(dst_norm(0, 1))
 #' d <- dst_bi_norm(mean = c(0, 0), sd = c(1, 1), cor = 0.5)
 #' dimension(d)
 #' variables(d)
+#' variables(dst_norm(0, 1))
 #' dimension(support_product(a = continuous(), b = discrete(0:3)))
+#'
+#' variables(d) <- c("flow", "depth")
+#' d
 #' @export
 dimension <- function(x) {
   s <- as_support_arg(x, absent = "null")
@@ -139,7 +154,42 @@ variables <- function(x) {
   if (is.null(s)) {
     return(NULL)
   }
+  if (inherits(x, "dst") && !inherits(s, "support_mv")) {
+    # A univariate distribution keeps its name beside the support, which
+    # describes values rather than a variable.
+    name <- attr(x, "variable")
+    return(if (is.null(name)) "x" else name)
+  }
   support_variables(s)
+}
+
+#' @rdname dimension
+#' @export
+`variables<-` <- function(x, value) {
+  checkmate::assert_class(x, "dst")
+  s <- support(x)
+  if (is.null(s)) {
+    stop("The Null distribution has no variables to name.")
+  }
+  p <- support_dimension(s)
+  if (!is.character(value) || length(value) != p || anyNA(value) ||
+    any(value == "")) {
+    stop(
+      "Give one name per variable (", p, "), none of them empty."
+    )
+  }
+  if (anyDuplicated(value)) {
+    stop(
+      "Each variable needs its own name, but `",
+      value[duplicated(value)][[1L]], "` is used twice."
+    )
+  }
+  if (p == 1L) {
+    attr(x, "variable") <- value
+    return(x)
+  }
+  attr(x, "support") <- rename_support(s, value)
+  x
 }
 
 #' @export
@@ -262,6 +312,35 @@ fill_variable_names <- function(vars) {
     )
   }
   vars
+}
+
+#' Rename the variables of a multivariate support, including the names held
+#' by its pieces.
+#' @noRd
+rename_support <- function(s, value) {
+  if (inherits(s, "support_points")) {
+    names(s[["points"]]) <- value
+    return(s)
+  }
+  if (inherits(s, "support_map")) {
+    s[["variables"]] <- value
+    names(s[["margins"]]) <- value
+    if (!is.null(s[["shift"]])) {
+      names(s[["shift"]]) <- value
+    }
+    return(s)
+  }
+  pos <- 1L
+  for (k in seq_along(s[["factors"]])) {
+    f <- s[["factors"]][[k]]
+    d <- support_dimension(f)
+    if (inherits(f, "support_mv")) {
+      s[["factors"]][[k]] <- rename_support(f, value[pos:(pos + d - 1L)])
+    }
+    pos <- pos + d
+  }
+  s[["variables"]] <- value
+  s
 }
 
 #' Names for the two variables of a `bi` constructor.
