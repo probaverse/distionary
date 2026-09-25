@@ -66,12 +66,29 @@ test_that("selecting every variable in a new order reorders exactly", {
   expect_equal(eval_mv_pmf(marginal(e, c("b", "a")), list(4, 2)), 2 / 3)
 })
 
-test_that("a reordering cannot separate paired variables", {
+test_that("any reordering works, even between paired variables", {
   sp <- support_product(
     discrete(data.frame(a = 1:2, b = 3:4)),
-    z = continuous()
+    z = discrete(c(10, 20))
   )
-  h <- suppressWarnings(distribution(cdf = function(a, b, z) 0, .support = sp))
-  expect_error(marginal(h, c("a", "z", "b")), "paired")
-  expect_identical(variables(marginal(h, c("z", "a", "b"))), c("z", "a", "b"))
+  s <- support_marginal(sp, c(1L, 3L, 2L))
+  expect_identical(variables(s), c("a", "z", "b"))
+  pts <- enumerate_points(s)
+  expect_named(pts, c("a", "z", "b"))
+  # a and b stay paired: (1, 3) and (2, 4), crossed with z.
+  expect_setequal(paste(pts$a, pts$b), c("1 3", "2 4"))
+  expect_identical(nrow(pts), 4L)
+  expect_identical(support_marginal(s, c(3L, 1L)), discrete(
+    data.frame(b = 3:4, a = 1:2)
+  ))
+  expect_identical(variables(support_marginal(s, c(2L, 3L))), c("z", "b"))
+  h <- distribution(
+    pmf = function(a, b, z) ifelse(b == a + 2, 0.25, 0),
+    .support = sp
+  )
+  r <- marginal(h, c("a", "z", "b"))
+  expect_equal(eval_mv_pmf(r, list(a = 1, z = 10, b = 3)), 0.25)
+  expect_equal(eval_mv_pmf(r, list(a = 1, z = 10, b = 4)), 0)
+  expect_equal(prob(r, a + b > 5), 0.5)
+  expect_output(print(s), "in the order: a, z, b")
 })

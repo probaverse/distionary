@@ -14,9 +14,7 @@
 #' them, so selecting all of them in a new order reorders the
 #' distribution: `marginal(d, c("runoff", "rainfall"))`. Nothing is lost in
 #' a reordering; every property the distribution states is kept, with its
-#' arguments rearranged. The one thing a reordering cannot do is separate
-#' variables whose support pairs them (such as the columns of a set of
-#' points) with another variable in between.
+#' arguments rearranged.
 #'
 #' A distribution can state its own marginals (the multivariate Normal
 #' does, as Normal distributions). Otherwise they are worked out: the CDF

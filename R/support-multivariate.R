@@ -55,39 +55,38 @@ support_product <- function(...) {
   arg_names <- rlang::names2(dots)
   factors <- list()
   vars <- character(0)
+  # Where each variable sits among the pieces laid end to end.
+  order <- integer(0)
   for (i in seq_along(dots)) {
     s <- as_support(dots[[i]])
+    offset <- sum(vapply(factors, support_dimension, integer(1)))
+    if (inherits(s, "support_mv") && arg_names[[i]] != "") {
+      stop(
+        "A multivariate support brings its own variable names,\n",
+        "so argument `", arg_names[[i]], "` cannot rename it.\n",
+        "Name the variables where that support is built."
+      )
+    }
     if (inherits(s, "support_product")) {
-      if (arg_names[[i]] != "") {
-        stop(
-          "A multivariate support brings its own variable names,\n",
-          "so argument `", arg_names[[i]], "` cannot rename it.\n",
-          "Name the variables where that support is built."
-        )
-      }
       factors <- c(factors, s[["factors"]])
       vars <- c(vars, s[["variables"]])
+      order <- c(order, offset + product_order(s))
     } else if (inherits(s, "support_mv")) {
-      if (arg_names[[i]] != "") {
-        stop(
-          "A multivariate support brings its own variable names,\n",
-          "so argument `", arg_names[[i]], "` cannot rename it.\n",
-          "Name the variables where that support is built."
-        )
-      }
       factors <- c(factors, list(s))
       vars <- c(vars, support_variables(s))
+      order <- c(order, offset + seq_len(support_dimension(s)))
     } else {
       factors <- c(factors, list(s))
       vars <- c(vars, arg_names[[i]])
+      order <- c(order, offset + 1L)
     }
   }
   vars <- fill_variable_names(vars)
   # A product of one support is that support, not a wrapper around it.
-  if (length(factors) == 1L) {
+  if (length(factors) == 1L && identical(order, seq_along(order))) {
     return(factors[[1L]])
   }
-  new_support_product(factors, vars)
+  new_support_product(factors, vars, order)
 }
 
 #' Number of Variables
@@ -199,6 +198,7 @@ print.support_product <- function(x, ...) {
     vtype_of_support(x),
     support_dimension(x)
   ))
+  layout <- product_layout_names(x)
   pos <- 1L
   for (f in x[["factors"]]) {
     if (inherits(f, "support_points")) {
@@ -214,10 +214,13 @@ print.support_product <- function(x, ...) {
         sep = ""
       )
     } else {
-      cat("-- ", x[["variables"]][[pos]], ": ", sep = "")
+      cat("-- ", layout[[pos]], ": ", sep = "")
       cat(format_univariate_support(f), "\n", sep = "")
     }
     pos <- pos + support_dimension(f)
+  }
+  if (!identical(product_order(x), seq_along(layout))) {
+    cat("-- in the order:", paste(x[["variables"]], collapse = ", "), "\n")
   }
   invisible(x)
 }
@@ -243,11 +246,34 @@ print.support_points <- function(x, ...) {
 #' @param factors List of supports: univariate ones and point sets.
 #' @param variables Character vector, one name per variable.
 #' @noRd
-new_support_product <- function(factors, variables) {
+new_support_product <- function(factors, variables, order = NULL) {
+  if (is.null(order)) {
+    order <- seq_along(variables)
+  }
   structure(
-    list(factors = factors, variables = variables),
+    list(factors = factors, variables = variables, order = as.integer(order)),
     class = c("support_product", "support_mv", "support")
   )
+}
+
+#' Where each of a product's variables sits among its pieces laid end to
+#' end (the layout). Variable `j` is layout position `order[j]`.
+#'
+#' A product's pieces keep their own variables together, but the product's
+#' variables can come in any order: `(a, z, b)` for a set of `(a, b)`
+#' points times `z` is the layout `(a, b, z)` in the order `c(1, 3, 2)`.
+#' @noRd
+product_order <- function(s) {
+  order <- s[["order"]]
+  if (is.null(order)) seq_along(s[["variables"]]) else order
+}
+
+#' The product's variable names, in layout order.
+#' @noRd
+product_layout_names <- function(s) {
+  out <- character(length(s[["variables"]]))
+  out[product_order(s)] <- s[["variables"]]
+  out
 }
 
 #' Low-level constructor for a finite point set.
@@ -330,12 +356,14 @@ rename_support <- function(s, value) {
     }
     return(s)
   }
+  layout <- character(length(value))
+  layout[product_order(s)] <- value
   pos <- 1L
   for (k in seq_along(s[["factors"]])) {
     f <- s[["factors"]][[k]]
     d <- support_dimension(f)
     if (inherits(f, "support_mv")) {
-      s[["factors"]][[k]] <- rename_support(f, value[pos:(pos + d - 1L)])
+      s[["factors"]][[k]] <- rename_support(f, layout[pos:(pos + d - 1L)])
     }
     pos <- pos + d
   }
@@ -485,53 +513,33 @@ support_marginal <- function(s, idx) {
   dims <- vapply(factors, support_dimension, integer(1))
   owner <- rep(seq_along(factors), dims)
   within <- sequence(dims)
-  # A multivariate piece pairs its variables; putting another variable
-  # between two of them would need a product with interleaved pieces,
-  # which a product cannot describe.
-  runs <- owner[idx][c(TRUE, diff(owner[idx]) != 0)]
-  split <- runs[duplicated(runs)]
-  split <- split[vapply(factors[split], inherits, logical(1), "support_mv")]
-  if (length(split) > 0L) {
-    paired <- s[["variables"]][owner == split[[1L]]]
-    stop(
-      "The variables ", format_names(paired), " are paired in the\n",
-      "support, and cannot be separated by another variable.\n",
-      "Keep them next to each other.",
-      call. = FALSE
-    )
-  }
+  wanted <- product_order(s)[idx]
+  # Keep each piece that holds a wanted variable, projected onto those
+  # variables (in the piece's own order), then say in what order the
+  # variables were asked for.
   pieces <- list()
-  piece_names <- character(0)
-  # Walk the requested variables in order, grouping consecutive variables
-  # that come from the same multivariate factor, so that how they are
-  # paired within it is kept rather than crossed.
-  k <- 1L
-  while (k <= length(idx)) {
-    f <- owner[[idx[[k]]]]
-    run <- k
-    while (run < length(idx) && owner[[idx[[run + 1L]]]] == f) {
-      run <- run + 1L
-    }
+  new_layout <- integer(0)
+  for (f in unique(owner[sort(wanted)])) {
+    here <- sort(wanted[owner[wanted] == f])
     fac <- factors[[f]]
-    if (inherits(fac, "support_mv")) {
-      piece <- support_marginal(fac, within[idx[k:run]])
-      pieces <- c(pieces, list(piece))
-      piece_names <- c(piece_names, if (run == k) {
-        s[["variables"]][[idx[[k]]]]
-      } else {
-        ""
-      })
+    piece <- if (inherits(fac, "support_mv")) {
+      support_marginal(fac, within[here])
     } else {
-      pieces <- c(pieces, list(fac))
-      piece_names <- c(piece_names, s[["variables"]][[idx[[k]]]])
+      fac
     }
-    k <- run + 1L
+    pieces <- c(pieces, list(piece))
+    new_layout <- c(new_layout, here)
   }
-  if (length(pieces) == 1L && length(idx) == 1L) {
-    return(pieces[[1L]])
+  order <- match(wanted, new_layout)
+  if (length(pieces) == 1L) {
+    # One piece holds them all, and can put them in any order itself.
+    piece <- pieces[[1L]]
+    if (identical(order, seq_along(order))) {
+      return(piece)
+    }
+    return(support_marginal(piece, order))
   }
-  names(pieces) <- piece_names
-  do.call(support_product, pieces)
+  new_support_product(pieces, s[["variables"]][idx], order)
 }
 
 #' List every point of a finite support, or NULL if it is not finite.
@@ -576,7 +584,7 @@ enumerate_points <- function(s, max_points = 1e6) {
   out <- do.call(cbind, lapply(seq_along(frames), function(j) {
     frames[[j]][grid[[j]], , drop = FALSE]
   }))
-  out <- as.data.frame(out)
+  out <- as.data.frame(out)[product_order(s)]
   names(out) <- s[["variables"]]
   rownames(out) <- NULL
   out

@@ -31,10 +31,12 @@ eval_bi_pmf(distribution, x, y, ..., given = NULL)
 \arguments{
 \item{distribution}{A distribution.}
 
-\item{l}{For \verb{eval_mv_*()}, a list of vectors, one for each variable. A data
-frame is such a list, so the output of \code{\link[=realise]{realise()}} can be passed straight
-in. If the list is named, its names are matched to the distribution's
-\code{\link[=variables]{variables()}}; if not, the vectors are taken in order.}
+\item{l}{For \verb{eval_mv_*()}, a list of vectors, one for each variable. If
+the list is named, each variable's vector is found by its name (see
+\code{\link[=variables]{variables()}}) and anything else in the list is ignored, so a data frame
+with other columns, or the output of \code{\link[=realise]{realise()}}, can be passed as it
+is. If the list is not named, it must have one vector per variable, in
+order.}
 
 \item{...}{Not used; forces \code{given} to be named.}
 

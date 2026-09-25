@@ -214,7 +214,8 @@ affine_base_types <- function(base) {
 #' @noRd
 base_margins <- function(base) {
   if (inherits(base, "support_product")) {
-    return(base[["factors"]])
+    # A continuous base has one variable per piece.
+    return(base[["factors"]][product_order(base)])
   }
   list(base)
 }
