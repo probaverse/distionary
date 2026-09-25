@@ -40,8 +40,7 @@ in. If the list is named, its names are matched to the distribution's
 
 \item{given}{Variables whose values are known, making the evaluation
 conditional on them. Name them, as in \code{\link[=variables]{variables()}}, or give their
-positions; with \pkg{tidyselect} installed, any tidyselect selection
-works too. In \verb{eval_bi_*()}, \code{x} and \code{y} also refer to the arguments of
+positions. In \verb{eval_bi_*()}, \code{"x"} and \code{"y"} also refer to the arguments of
 those names, unless they are the names of variables. See Details.}
 
 \item{x, y}{For \verb{eval_bi_*()}, vectors of values of the first and second

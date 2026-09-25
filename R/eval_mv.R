@@ -15,8 +15,7 @@
 #' @param ... Not used; forces `given` to be named.
 #' @param given Variables whose values are known, making the evaluation
 #' conditional on them. Name them, as in [variables()], or give their
-#' positions; with \pkg{tidyselect} installed, any tidyselect selection
-#' works too. In `eval_bi_*()`, `x` and `y` also refer to the arguments of
+#' positions. In `eval_bi_*()`, `"x"` and `"y"` also refer to the arguments of
 #' those names, unless they are the names of variables. See Details.
 #' @details
 #' ## The representations
@@ -98,60 +97,56 @@ NULL
 #' @export
 eval_mv_cdf <- function(distribution, l, ..., given = NULL) {
   rlang::check_dots_empty()
-  g <- select_variables(distribution, rlang::enquo(given), "given")
-  eval_mv_representation(distribution, "cdf", l, g)
+  eval_mv_representation(distribution, "cdf", l, given)
 }
 
 #' @rdname eval_mv
 #' @export
 eval_mv_survival <- function(distribution, l, ..., given = NULL) {
   rlang::check_dots_empty()
-  g <- select_variables(distribution, rlang::enquo(given), "given")
-  eval_mv_representation(distribution, "survival", l, g)
+  eval_mv_representation(distribution, "survival", l, given)
 }
 
 #' @rdname eval_mv
 #' @export
 eval_mv_density <- function(distribution, l, ..., given = NULL) {
   rlang::check_dots_empty()
-  g <- select_variables(distribution, rlang::enquo(given), "given")
-  eval_mv_representation(distribution, "density", l, g)
+  eval_mv_representation(distribution, "density", l, given)
 }
 
 #' @rdname eval_mv
 #' @export
 eval_mv_pmf <- function(distribution, l, ..., given = NULL) {
   rlang::check_dots_empty()
-  g <- select_variables(distribution, rlang::enquo(given), "given")
-  eval_mv_representation(distribution, "pmf", l, g)
+  eval_mv_representation(distribution, "pmf", l, given)
 }
 
 #' @rdname eval_mv
 #' @export
 eval_bi_cdf <- function(distribution, x, y, ..., given = NULL) {
   rlang::check_dots_empty()
-  eval_bi_representation(distribution, "cdf", x, y, rlang::enquo(given))
+  eval_bi_representation(distribution, "cdf", x, y, given)
 }
 
 #' @rdname eval_mv
 #' @export
 eval_bi_survival <- function(distribution, x, y, ..., given = NULL) {
   rlang::check_dots_empty()
-  eval_bi_representation(distribution, "survival", x, y, rlang::enquo(given))
+  eval_bi_representation(distribution, "survival", x, y, given)
 }
 
 #' @rdname eval_mv
 #' @export
 eval_bi_density <- function(distribution, x, y, ..., given = NULL) {
   rlang::check_dots_empty()
-  eval_bi_representation(distribution, "density", x, y, rlang::enquo(given))
+  eval_bi_representation(distribution, "density", x, y, given)
 }
 
 #' @rdname eval_mv
 #' @export
 eval_bi_pmf <- function(distribution, x, y, ..., given = NULL) {
   rlang::check_dots_empty()
-  eval_bi_representation(distribution, "pmf", x, y, rlang::enquo(given))
+  eval_bi_representation(distribution, "pmf", x, y, given)
 }
 
 # ---- internal ---------------------------------------------------------------
@@ -169,7 +164,7 @@ eval_bi_representation <- function(distribution, entry, x, y, given) {
       "Use `eval_mv_", entry, "()` for any number of variables."
     )
   }
-  g <- select_variables(distribution, given, "given", aliases = c("x", "y"))
+  g <- resolve_variables(distribution, given, "given", aliases = c("x", "y"))
   eval_mv_representation(distribution, entry, list(x, y), g)
 }
 
@@ -322,7 +317,7 @@ eval_conditional <- function(distribution, entry, l, g) {
   }
   if (entry %in% c("density", "pmf")) {
     joint <- eval_joint(distribution, entry, l)
-    margin <- eval_joint(marginal_at(distribution, g), entry, l[g])
+    margin <- eval_joint(marginal(distribution, g), entry, l[g])
     return(joint / margin)
   }
   upper <- entry == "survival"

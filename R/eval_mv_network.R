@@ -95,7 +95,7 @@ eval_mv_mean_from_network <- function(distribution) {
   vars <- variables(distribution)
   out <- vapply(
     seq_along(vars),
-    function(i) mean(marginal_at(distribution, i)),
+    function(i) mean(marginal(distribution, i)),
     numeric(1)
   )
   names(out) <- vars
@@ -125,7 +125,7 @@ eval_mv_stdev_from_network <- function(distribution) {
   vars <- variables(distribution)
   out <- vapply(
     seq_along(vars),
-    function(i) stdev(marginal_at(distribution, i)),
+    function(i) stdev(marginal(distribution, i)),
     numeric(1)
   )
   names(out) <- vars

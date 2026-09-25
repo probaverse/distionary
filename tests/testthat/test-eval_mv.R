@@ -108,11 +108,8 @@ test_that("`given` conditions on variables by name, position, or argument", {
     stats::pnorm(0.5, mean = 0.6, sd = 0.8)
   )
   expect_error(eval_bi_cdf(d, 0, 0, given = c("x", "y")), "nothing to")
-  expect_error(
-    eval_bi_cdf(d, 0, 0, given = "z"),
-    "does not have|doesn't exist"
-  )
-  expect_error(eval_bi_cdf(d, 0, 0, given = 3), "position|doesn't exist")
+  expect_error(eval_bi_cdf(d, 0, 0, given = "z"), "does not have")
+  expect_error(eval_bi_cdf(d, 0, 0, given = 3), "position")
 })
 
 test_that("variable names take precedence over the argument names", {
