@@ -47,7 +47,7 @@ test_that("conditioning on the total slices the distribution", {
     tolerance = 1e-6
   )
   expect_equal(
-    eval_mv_cdf(rivers(), list(60, 150, 200), given = "s"),
+    eval_mv_cdf(rivers(), list(60, 150, 200), known = "s"),
     eval_bi_cdf(sl, 60, 150)
   )
 })

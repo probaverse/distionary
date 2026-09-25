@@ -112,11 +112,11 @@ test_that("dst_bi_empirical() names variables after bare columns", {
 
 test_that("conditioning an empirical distribution uses its points", {
   d <- dst_mv_empirical(list(a = c(1, 2, 2, 3), b = c(1, 1, 2, 2)))
-  expect_equal(eval_mv_cdf(d, list(2, 1:2), given = "a"), c(0.5, 1))
-  expect_equal(eval_mv_pmf(d, list(2, 1), given = "a"), 0.5)
-  expect_equal(eval_mv_survival(d, list(0, 1), given = "b"), 1)
+  expect_equal(eval_mv_cdf(d, list(2, 1:2), known = "a"), c(0.5, 1))
+  expect_equal(eval_mv_pmf(d, list(2, 1), known = "a"), 0.5)
+  expect_equal(eval_mv_survival(d, list(0, 1), known = "b"), 1)
   # Nothing observed at a = 5.
-  expect_true(is.nan(eval_mv_cdf(d, list(5, 1), given = "a")))
+  expect_true(is.nan(eval_mv_cdf(d, list(5, 1), known = "a")))
 })
 
 test_that("printing names the variables", {

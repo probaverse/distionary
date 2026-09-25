@@ -87,7 +87,7 @@
 #' `marginal`, a function of the positions of some variables returning
 #' their distribution (see [marginal()]); and `conditional`, a function of
 #' the positions of the known variables and their values, returning the
-#' distribution of the rest (used by the `given` argument of
+#' distribution of the rest (used by the `known` argument of
 #' [eval_mv_cdf()] and [prob()], and by `conditional()` in \pkg{distplyr}).
 #' Either is worked out when it can be, if not given. A third, `linear`,
 #' is a function of a matrix `A` (one row per new variable, named, and one

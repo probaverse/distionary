@@ -86,53 +86,53 @@ test_that("the CDF is worked out from a stated survival function", {
   )
 })
 
-test_that("`given` conditions on variables by name, position, or argument", {
+test_that("`known` conditions on variables by name, position, or argument", {
   skip_if_not_installed("mvtnorm")
   d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
   # Y | X = x is Normal with mean 1 + 0.6 * 2 * x, sd 2 * sqrt(1 - 0.36).
   truth <- stats::pnorm(0:2, mean = 1 + 1.2, sd = 1.6)
-  expect_equal(eval_bi_cdf(d, x = 1, y = 0:2, given = "x"), truth)
-  expect_equal(eval_bi_cdf(d, x = 1, y = 0:2, given = 1), truth)
+  expect_equal(eval_bi_cdf(d, x = 1, y = 0:2, known = "x"), truth)
+  expect_equal(eval_bi_cdf(d, x = 1, y = 0:2, known = 1), truth)
   named <- dst_bi_norm(mean = c(u = 0, v = 1), sd = c(1, 2), cor = 0.6)
-  expect_equal(eval_bi_cdf(named, x = 1, y = 0:2, given = "u"), truth)
+  expect_equal(eval_bi_cdf(named, x = 1, y = 0:2, known = "u"), truth)
   # "x" is also the argument, when no variable is called that.
-  expect_equal(eval_bi_cdf(named, x = 1, y = 0:2, given = "x"), truth)
+  expect_equal(eval_bi_cdf(named, x = 1, y = 0:2, known = "x"), truth)
   expect_equal(
-    eval_bi_survival(d, x = 1, y = 0:2, given = "x"),
+    eval_bi_survival(d, x = 1, y = 0:2, known = "x"),
     1 - truth
   )
   expect_equal(
-    eval_bi_density(d, x = 1, y = 0:2, given = "x"),
+    eval_bi_density(d, x = 1, y = 0:2, known = "x"),
     stats::dnorm(0:2, mean = 2.2, sd = 1.6)
   )
   # X | Y = y is Normal with mean 0.6 / 2 * (y - 1), sd sqrt(1 - 0.36).
   expect_equal(
-    eval_bi_cdf(d, x = 0.5, y = 3, given = "y"),
+    eval_bi_cdf(d, x = 0.5, y = 3, known = "y"),
     stats::pnorm(0.5, mean = 0.6, sd = 0.8)
   )
-  expect_error(eval_bi_cdf(d, 0, 0, given = c("x", "y")), "nothing to")
-  expect_error(eval_bi_cdf(d, 0, 0, given = "z"), "does not have")
-  expect_error(eval_bi_cdf(d, 0, 0, given = 3), "position")
+  expect_error(eval_bi_cdf(d, 0, 0, known = c("x", "y")), "nothing to")
+  expect_error(eval_bi_cdf(d, 0, 0, known = "z"), "does not have")
+  expect_error(eval_bi_cdf(d, 0, 0, known = 3), "position")
 })
 
 test_that("variable names take precedence over the argument names", {
   skip_if_not_installed("mvtnorm")
   d <- dst_bi_norm(mean = c(y = 0, x = 10), sd = c(1, 1), cor = 0.5)
-  # `given = "x"` is the variable named x: the second one.
+  # `known = "x"` is the variable named x: the second one.
   expect_equal(
-    eval_bi_cdf(d, x = 0, y = 10, given = "x"),
-    eval_bi_cdf(d, x = 0, y = 10, given = 2)
+    eval_bi_cdf(d, x = 0, y = 10, known = "x"),
+    eval_bi_cdf(d, x = 0, y = 10, known = 2)
   )
 })
 
 test_that("conditionals are worked out by integration when not stated", {
   d <- indep()
-  expect_equal(eval_bi_cdf(d, 0.3, 1:2, given = "x"), stats::pexp(1:2))
+  expect_equal(eval_bi_cdf(d, 0.3, 1:2, known = "x"), stats::pexp(1:2))
   expect_equal(
-    eval_bi_survival(d, 0.3, 1, given = "y"),
+    eval_bi_survival(d, 0.3, 1, known = "y"),
     stats::pnorm(0.3, lower.tail = FALSE)
   )
-  expect_equal(eval_bi_density(d, 0.3, 1, given = "x"), stats::dexp(1))
+  expect_equal(eval_bi_density(d, 0.3, 1, known = "x"), stats::dexp(1))
 })
 
 test_that("NA propagates", {
@@ -141,7 +141,7 @@ test_that("NA propagates", {
   expect_identical(is.na(eval_bi_cdf(d, c(0, NA), 1)), c(FALSE, TRUE))
   expect_identical(is.na(eval_bi_density(d, 0, c(NA, 1))), c(TRUE, FALSE))
   expect_identical(
-    is.na(eval_bi_cdf(d, c(NA, 0), 1, given = "x")),
+    is.na(eval_bi_cdf(d, c(NA, 0), 1, known = "x")),
     c(TRUE, FALSE)
   )
 })

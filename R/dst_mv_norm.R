@@ -22,7 +22,7 @@
 #'
 #' The marginal distribution of any of the variables (see [marginal()]) is
 #' again Normal, as is their distribution conditional on the rest (see the
-#' `given` argument of [eval_mv_cdf()]); both are stated exactly rather than
+#' `known` argument of [eval_mv_cdf()]); both are stated exactly rather than
 #' worked out.
 #'
 #' The CDF and survival function need the \pkg{mvtnorm} package. For up to

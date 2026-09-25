@@ -52,11 +52,11 @@ test_that("marginals and conditionals of the t are t", {
   expect_equal(parameters(cb)$location, 1.5)
   expect_equal(parameters(cb)$scale, sqrt(1.75))
   expect_equal(
-    eval_mv_cdf(d, list(1, 2), given = "a"),
+    eval_mv_cdf(d, list(1, 2), known = "a"),
     stats::pt((2 - 1.5) / sqrt(1.75), 4)
   )
   expect_equal(
-    eval_mv_density(d, list(1, 2), given = "a"),
+    eval_mv_density(d, list(1, 2), known = "a"),
     stats::dt((2 - 1.5) / sqrt(1.75), 4) / sqrt(1.75)
   )
 })

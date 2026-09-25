@@ -40,7 +40,7 @@ A single variable gives a univariate Normal distribution (\code{\link[=dst_norm]
 
 The marginal distribution of any of the variables (see \code{\link[=marginal]{marginal()}}) is
 again Normal, as is their distribution conditional on the rest (see the
-\code{given} argument of \code{\link[=eval_mv_cdf]{eval_mv_cdf()}}); both are stated exactly rather than
+\code{known} argument of \code{\link[=eval_mv_cdf]{eval_mv_cdf()}}); both are stated exactly rather than
 worked out.
 
 The CDF and survival function need the \pkg{mvtnorm} package. For up to

@@ -163,11 +163,11 @@ r2
 eval_quantile(r2, at = 0.99)
 ```
 
-To evaluate a representation *conditional* on some of the variables, say which ones are known with `given`. The arguments stay in the same order either way: every variable still gets a value, and `given` says which of those values are known rather than evaluated at. The variables in `given` are the ones on the right of the bar.
+To evaluate a representation *conditional* on some of the variables, say which ones are known with `known`. The arguments stay in the same order either way: every variable still gets a value, and `known` says which of those values are known rather than evaluated at. The variables in `known` are the ones on the right of the bar.
 
 ```{r, eval = has_mvtnorm}
 # P(Y <= y | X = 2), for y = 0, 1, 2
-eval_bi_cdf(d, x = 2, y = 0:2, given = "x")
+eval_bi_cdf(d, x = 2, y = 0:2, known = "x")
 ```
 
 To have the conditional distribution itself, as a distribution to evaluate, draw from or condition further, use `conditional()` from the [distplyr](https://distplyr.probaverse.com) package, which makes new distributions out of existing ones.
@@ -279,7 +279,7 @@ Whatever is not stated is worked out where it can be: the survival function from
 
 ```{r}
 eval_bi_survival(storm, x = 0, y = 1)
-eval_bi_cdf(storm, x = 0.3, y = 1, given = "x")
+eval_bi_cdf(storm, x = 0.3, y = 1, known = "x")
 mean(marginal(storm, "y"))
 ```
 

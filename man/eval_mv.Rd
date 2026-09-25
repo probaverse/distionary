@@ -12,21 +12,21 @@
 \alias{eval_bi_pmf}
 \title{Evaluate a Multivariate Distribution}
 \usage{
-eval_mv_cdf(distribution, l, ..., given = NULL)
+eval_mv_cdf(distribution, l, ..., known = NULL)
 
-eval_mv_survival(distribution, l, ..., given = NULL)
+eval_mv_survival(distribution, l, ..., known = NULL)
 
-eval_mv_density(distribution, l, ..., given = NULL)
+eval_mv_density(distribution, l, ..., known = NULL)
 
-eval_mv_pmf(distribution, l, ..., given = NULL)
+eval_mv_pmf(distribution, l, ..., known = NULL)
 
-eval_bi_cdf(distribution, x, y, ..., given = NULL)
+eval_bi_cdf(distribution, x, y, ..., known = NULL)
 
-eval_bi_survival(distribution, x, y, ..., given = NULL)
+eval_bi_survival(distribution, x, y, ..., known = NULL)
 
-eval_bi_density(distribution, x, y, ..., given = NULL)
+eval_bi_density(distribution, x, y, ..., known = NULL)
 
-eval_bi_pmf(distribution, x, y, ..., given = NULL)
+eval_bi_pmf(distribution, x, y, ..., known = NULL)
 }
 \arguments{
 \item{distribution}{A distribution.}
@@ -38,9 +38,9 @@ with other columns, or the output of \code{\link[=realise]{realise()}}, can be p
 is. If the list is not named, it must have one vector per variable, in
 order.}
 
-\item{...}{Not used; forces \code{given} to be named.}
+\item{...}{Not used; forces \code{known} to be named.}
 
-\item{given}{Variables whose values are known, making the evaluation
+\item{known}{Variables whose values are known, making the evaluation
 conditional on them. Name them, as in \code{\link[=variables]{variables()}}, or give their
 positions. In \verb{eval_bi_*()}, \code{"x"} and \code{"y"} also refer to the arguments of
 those names, unless they are the names of variables. See Details.}
@@ -79,22 +79,22 @@ The vectors are recycled to a common length (in the manner of
 \code{i}th element of each vector.
 }
 
-\subsection{Conditioning with \code{given}}{
+\subsection{Conditioning with \code{known}}{
 
-\code{given} names the variables whose values are known, and the
+\code{known} names the variables whose values are known, and the
 representation is then about the rest of them. Arguments stay in the same
-order either way: you still pass a value for every variable, and \code{given}
+order either way: you still pass a value for every variable, and \code{known}
 says which of those values are known rather than evaluated at. For a
 bivariate distribution of \code{x} and \code{y}:
 \itemize{
-\item \code{eval_bi_density(d, x, y, given = "x")} is the density of \code{y} at \code{y},
+\item \code{eval_bi_density(d, x, y, known = "x")} is the density of \code{y} at \code{y},
 given that the first variable equals \code{x}.
-\item \code{eval_bi_cdf(d, x, y, given = "x")} is \eqn{P(Y \le y \mid X = x)}.
-\item \code{eval_bi_survival(d, x, y, given = "y")} is
+\item \code{eval_bi_cdf(d, x, y, known = "x")} is \eqn{P(Y \le y \mid X = x)}.
+\item \code{eval_bi_survival(d, x, y, known = "y")} is
 \eqn{P(X > x \mid Y = y)}.
 }
 
-The variables in \code{given} are the ones held at their values, sitting on the
+The variables in \code{known} are the ones held at their values, sitting on the
 right of the bar in \eqn{P(\cdot \mid \cdot)}. The word was chosen because
 that is how the bar is read aloud.
 
@@ -111,7 +111,7 @@ of a continuous distribution is zero. A distribution on finitely many
 points is worked out by listing the points.
 
 A conditional density or PMF is the joint one divided by that of the
-\code{given} variables, which comes from \code{\link[=marginal]{marginal()}}. A conditional CDF or
+\code{known} variables, which comes from \code{\link[=marginal]{marginal()}}. A conditional CDF or
 survival function comes from the distribution's own \code{conditional}
 property, if it states one (the multivariate Normal does); otherwise from
 listing the points of a finite distribution; otherwise, for a continuous
@@ -131,8 +131,8 @@ eval_mv_cdf(d, list(0, 0))
 eval_mv_cdf(d, list(y = 0:1, x = 0))
 
 # The distribution of the second variable, when the first is known.
-eval_bi_cdf(d, x = 2, y = 0:2, given = "x")
-eval_bi_cdf(d, x = 2, y = 0:2, given = 1)
+eval_bi_cdf(d, x = 2, y = 0:2, known = "x")
+eval_bi_cdf(d, x = 2, y = 0:2, known = 1)
 }
 \seealso{
 \code{\link[=prob]{prob()}} for the probability of any event; \code{\link[=marginal]{marginal()}} for a

@@ -33,7 +33,7 @@
 #' again t with the same degrees of freedom. One variable gives a t shifted
 #' by its location and stretched by its scale ("Location-Scale Student t"),
 #' or [dst_t()] itself when those are 0 and 1.
-#' Given some of the variables (see the `given` argument of
+#' Given some of the variables (see the `known` argument of
 #' [eval_mv_cdf()]), the rest are t with more degrees of freedom: `df` plus
 #' the number of variables given. Both are exact.
 #'

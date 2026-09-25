@@ -118,7 +118,7 @@ do in \code{\link[=eval_mv_cdf]{eval_mv_cdf()}} and friends. Two more properties
 \code{marginal}, a function of the positions of some variables returning
 their distribution (see \code{\link[=marginal]{marginal()}}); and \code{conditional}, a function of
 the positions of the known variables and their values, returning the
-distribution of the rest (used by the \code{given} argument of
+distribution of the rest (used by the \code{known} argument of
 \code{\link[=eval_mv_cdf]{eval_mv_cdf()}} and \code{\link[=prob]{prob()}}, and by \code{conditional()} in \pkg{distplyr}).
 Either is worked out when it can be, if not given. A third, \code{linear},
 is a function of a matrix \code{A} (one row per new variable, named, and one

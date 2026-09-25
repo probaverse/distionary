@@ -14,8 +14,8 @@
 #' with other columns, or the output of [realise()], can be passed as it
 #' is. If the list is not named, it must have one vector per variable, in
 #' order.
-#' @param ... Not used; forces `given` to be named.
-#' @param given Variables whose values are known, making the evaluation
+#' @param ... Not used; forces `known` to be named.
+#' @param known Variables whose values are known, making the evaluation
 #' conditional on them. Name them, as in [variables()], or give their
 #' positions. In `eval_bi_*()`, `"x"` and `"y"` also refer to the arguments of
 #' those names, unless they are the names of variables. See Details.
@@ -39,21 +39,21 @@
 #' `i` evaluates the representation at the point whose coordinates are the
 #' `i`th element of each vector.
 #'
-#' ## Conditioning with `given`
+#' ## Conditioning with `known`
 #'
-#' `given` names the variables whose values are known, and the
+#' `known` names the variables whose values are known, and the
 #' representation is then about the rest of them. Arguments stay in the same
-#' order either way: you still pass a value for every variable, and `given`
+#' order either way: you still pass a value for every variable, and `known`
 #' says which of those values are known rather than evaluated at. For a
 #' bivariate distribution of `x` and `y`:
 #'
-#' - `eval_bi_density(d, x, y, given = "x")` is the density of `y` at `y`,
+#' - `eval_bi_density(d, x, y, known = "x")` is the density of `y` at `y`,
 #'   given that the first variable equals `x`.
-#' - `eval_bi_cdf(d, x, y, given = "x")` is \eqn{P(Y \le y \mid X = x)}.
-#' - `eval_bi_survival(d, x, y, given = "y")` is
+#' - `eval_bi_cdf(d, x, y, known = "x")` is \eqn{P(Y \le y \mid X = x)}.
+#' - `eval_bi_survival(d, x, y, known = "y")` is
 #'   \eqn{P(X > x \mid Y = y)}.
 #'
-#' The variables in `given` are the ones held at their values, sitting on the
+#' The variables in `known` are the ones held at their values, sitting on the
 #' right of the bar in \eqn{P(\cdot \mid \cdot)}. The word was chosen because
 #' that is how the bar is read aloud.
 #'
@@ -69,7 +69,7 @@
 #' points is worked out by listing the points.
 #'
 #' A conditional density or PMF is the joint one divided by that of the
-#' `given` variables, which comes from [marginal()]. A conditional CDF or
+#' `known` variables, which comes from [marginal()]. A conditional CDF or
 #' survival function comes from the distribution's own `conditional`
 #' property, if it states one (the multivariate Normal does); otherwise from
 #' listing the points of a finite distribution; otherwise, for a continuous
@@ -90,72 +90,72 @@
 #' eval_mv_cdf(d, list(y = 0:1, x = 0))
 #'
 #' # The distribution of the second variable, when the first is known.
-#' eval_bi_cdf(d, x = 2, y = 0:2, given = "x")
-#' eval_bi_cdf(d, x = 2, y = 0:2, given = 1)
+#' eval_bi_cdf(d, x = 2, y = 0:2, known = "x")
+#' eval_bi_cdf(d, x = 2, y = 0:2, known = 1)
 #' @name eval_mv
 NULL
 
 #' @rdname eval_mv
 #' @export
-eval_mv_cdf <- function(distribution, l, ..., given = NULL) {
+eval_mv_cdf <- function(distribution, l, ..., known = NULL) {
   rlang::check_dots_empty()
-  eval_mv_representation(distribution, "cdf", l, given)
+  eval_mv_representation(distribution, "cdf", l, known)
 }
 
 #' @rdname eval_mv
 #' @export
-eval_mv_survival <- function(distribution, l, ..., given = NULL) {
+eval_mv_survival <- function(distribution, l, ..., known = NULL) {
   rlang::check_dots_empty()
-  eval_mv_representation(distribution, "survival", l, given)
+  eval_mv_representation(distribution, "survival", l, known)
 }
 
 #' @rdname eval_mv
 #' @export
-eval_mv_density <- function(distribution, l, ..., given = NULL) {
+eval_mv_density <- function(distribution, l, ..., known = NULL) {
   rlang::check_dots_empty()
-  eval_mv_representation(distribution, "density", l, given)
+  eval_mv_representation(distribution, "density", l, known)
 }
 
 #' @rdname eval_mv
 #' @export
-eval_mv_pmf <- function(distribution, l, ..., given = NULL) {
+eval_mv_pmf <- function(distribution, l, ..., known = NULL) {
   rlang::check_dots_empty()
-  eval_mv_representation(distribution, "pmf", l, given)
+  eval_mv_representation(distribution, "pmf", l, known)
 }
 
 #' @rdname eval_mv
 #' @export
-eval_bi_cdf <- function(distribution, x, y, ..., given = NULL) {
+eval_bi_cdf <- function(distribution, x, y, ..., known = NULL) {
   rlang::check_dots_empty()
-  eval_bi_representation(distribution, "cdf", x, y, given)
+  eval_bi_representation(distribution, "cdf", x, y, known)
 }
 
 #' @rdname eval_mv
 #' @export
-eval_bi_survival <- function(distribution, x, y, ..., given = NULL) {
+eval_bi_survival <- function(distribution, x, y, ..., known = NULL) {
   rlang::check_dots_empty()
-  eval_bi_representation(distribution, "survival", x, y, given)
+  eval_bi_representation(distribution, "survival", x, y, known)
 }
 
 #' @rdname eval_mv
 #' @export
-eval_bi_density <- function(distribution, x, y, ..., given = NULL) {
+eval_bi_density <- function(distribution, x, y, ..., known = NULL) {
   rlang::check_dots_empty()
-  eval_bi_representation(distribution, "density", x, y, given)
+  eval_bi_representation(distribution, "density", x, y, known)
 }
 
 #' @rdname eval_mv
 #' @export
-eval_bi_pmf <- function(distribution, x, y, ..., given = NULL) {
+eval_bi_pmf <- function(distribution, x, y, ..., known = NULL) {
   rlang::check_dots_empty()
-  eval_bi_representation(distribution, "pmf", x, y, given)
+  eval_bi_representation(distribution, "pmf", x, y, known)
 }
 
 # ---- internal ---------------------------------------------------------------
 
 #' The bivariate evaluators: check there are two variables, then hand off.
 #' @noRd
-eval_bi_representation <- function(distribution, entry, x, y, given) {
+eval_bi_representation <- function(distribution, entry, x, y, known) {
   checkmate::assert_class(distribution, "dst")
   p <- dimension(distribution)
   if (!identical(p, 2L)) {
@@ -166,17 +166,17 @@ eval_bi_representation <- function(distribution, entry, x, y, given) {
       "Use `eval_mv_", entry, "()` for any number of variables."
     )
   }
-  g <- resolve_variables(distribution, given, "given", aliases = c("x", "y"))
+  g <- resolve_variables(distribution, known, "known", aliases = c("x", "y"))
   eval_mv_representation(distribution, entry, list(x, y), g)
 }
 
 #' Evaluate a representation at the points given by a list of vectors,
 #' possibly conditional on some of the variables.
 #' @noRd
-eval_mv_representation <- function(distribution, entry, l, given) {
+eval_mv_representation <- function(distribution, entry, l, known) {
   checkmate::assert_class(distribution, "dst")
   l <- as_eval_list(distribution, l)
-  g <- resolve_variables(distribution, given, "given")
+  g <- resolve_variables(distribution, known, "known")
   if (length(g) == 0) {
     return(eval_joint(distribution, entry, l))
   }
@@ -329,8 +329,8 @@ eval_conditional <- function(distribution, entry, l, g) {
   r <- setdiff(seq_len(p), g)
   if (length(r) == 0) {
     stop(
-      "Every variable is `given`, which leaves nothing to evaluate.\n",
-      "Leave at least one variable out of `given`."
+      "Every variable is `known`, which leaves nothing to evaluate.\n",
+      "Leave at least one variable out of `known`."
     )
   }
   if (entry %in% c("density", "pmf")) {
