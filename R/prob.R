@@ -819,7 +819,7 @@ coordinate_distribution <- function(distribution, coords) {
   }, logical(1))
   if (all(unit)) {
     idx <- match(vapply(coords, function(cd) names(cd$coef), ""), vars)
-    return(marginal(distribution, idx))
+    return(marginal_at(distribution, idx))
   }
   a <- matrix(0, nrow = length(coords), ncol = length(vars))
   colnames(a) <- vars

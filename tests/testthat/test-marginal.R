@@ -9,8 +9,6 @@ test_that("marginal() selects variables by name or position", {
   expect_identical(variables(b), "b")
   expect_equal(mean(b), 1)
   expect_equal(variance(b), 2)
-  # A position among names is read as a name.
-  expect_error(marginal(d, c("c", 1)), "does not have")
   ca <- marginal(d, c("c", "a"))
   expect_identical(variables(ca), c("c", "a"))
   expect_equal(unname(variance(ca)), matrix(c(3, 0.3, 0.3, 1), 2))

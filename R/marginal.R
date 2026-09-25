@@ -4,8 +4,10 @@
 #' ignoring the rest.
 #'
 #' @param distribution A distribution.
-#' @param which The variables to keep: names, as in [variables()], or
-#' positions. The result has them in this order.
+#' @param which The variables to keep, in the order wanted: names, as in
+#' [variables()], or positions. With \pkg{tidyselect} installed, any
+#' tidyselect selection works too, such as bare names or
+#' `c(runoff, everything())`.
 #' @details
 #' Selecting a single variable gives a univariate distribution, which can be
 #' evaluated with [eval_cdf()], [eval_quantile()], and the rest.
@@ -39,7 +41,13 @@
 #' @export
 marginal <- function(distribution, which) {
   checkmate::assert_class(distribution, "dst")
-  idx <- resolve_variables(distribution, which, "which")
+  idx <- select_variables(distribution, rlang::enquo(which), "which")
+  marginal_at(distribution, idx)
+}
+
+#' `marginal()`, for positions already worked out.
+#' @noRd
+marginal_at <- function(distribution, idx) {
   if (length(idx) == 0) {
     stop("`which` must select at least one variable.")
   }
@@ -177,7 +185,7 @@ permute_distribution <- function(distribution, idx) {
         return(out)
       }
       variables(out) <- setdiff(old_vars, old_vars[idx[given]])
-      marginal(out, rest)
+      marginal_at(out, match(rest, variables(out)))
     }
   }
   linear_old <- distribution[["linear"]]

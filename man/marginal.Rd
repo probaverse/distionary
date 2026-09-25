@@ -9,8 +9,10 @@ marginal(distribution, which)
 \arguments{
 \item{distribution}{A distribution.}
 
-\item{which}{The variables to keep: names, as in \code{\link[=variables]{variables()}}, or
-positions. The result has them in this order.}
+\item{which}{The variables to keep, in the order wanted: names, as in
+\code{\link[=variables]{variables()}}, or positions. With \pkg{tidyselect} installed, any
+tidyselect selection works too, such as bare names or
+\code{c(runoff, everything())}.}
 }
 \value{
 A distribution: univariate if \code{which} selects one variable.

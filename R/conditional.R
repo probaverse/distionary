@@ -47,7 +47,7 @@ eval_mv_conditional_from_network <- function(distribution, given, at) {
     )
   }
   margin <- eval_joint(
-    marginal(distribution, given),
+    marginal_at(distribution, given),
     "density",
     as.list(at)
   )
