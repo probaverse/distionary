@@ -159,3 +159,28 @@ test_that("commas join conditions, as in filter()", {
   expect_equal(prob(d), 1)
   expect_error(prob(d, x = 2), "Did you mean `x == ...`")
 })
+
+test_that("%in% compares with a set of values", {
+  p <- dst_pois(3)
+  expect_equal(prob(p, x %in% c(1, 2)), sum(stats::dpois(1:2, 3)))
+  expect_equal(prob(p, x %in% c(1, 1, 2)), sum(stats::dpois(1:2, 3)))
+  expect_equal(prob(p, x %in% numeric(0)), 0)
+  expect_equal(prob(d, x %in% c(0, 1)), 0)
+})
+
+test_that("conditions prob() cannot follow are refused, not misread", {
+  expect_error(prob(d, is.na(x)), "`is.na\\(\\)`")
+  expect_error(prob(d, x > 0 & is.na(y)), "`is.na\\(\\)`")
+  expect_error(prob(d, x > 0 && y > 0), "rather than `&&`")
+  expect_error(prob(d, ifelse(x > 0, TRUE, FALSE)), "`ifelse\\(\\)`")
+  expect_error(prob(d, pmax(x, y) > 2), "`pmax\\(\\)`")
+  expect_error(prob(d, y > 3, given = is.na(x)), "`is.na\\(\\)`")
+  hide <- function(v) is.na(v)
+  expect_error(prob(d, hide(x)), "cannot evaluate")
+  # A helper built from arithmetic is followed.
+  double <- function(v) 2 * v
+  expect_equal(prob(d, double(x) > 0), 0.5)
+  # Cancelling a variable out still counts as using it.
+  expect_equal(prob(d, x - x < 1), 1)
+  expect_equal(prob(d, (x - x) * y < 1), 1)
+})

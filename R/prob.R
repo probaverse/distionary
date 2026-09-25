@@ -24,6 +24,21 @@
 #' `prob()` is called, as in dplyr; where a value has the same name as a
 #' variable, write `.env$name` for the value.
 #'
+#' A condition looks like R code, but it is not run on data the way a
+#' `filter()` condition is: `prob()` works out what region it describes.
+#' So only these can be used on the variables:
+#'
+#' - arithmetic: `+`, `-`, `*`, `/`, `^`, `%%`, `%/%`;
+#' - comparisons: `<`, `<=`, `>`, `>=`, `==`, `!=`, and `%in%`;
+#' - maths functions, such as `exp()`, `log()`, `abs()`, and `sqrt()`;
+#' - logic: `&`, `|`, `!`, and `xor()`;
+#' - functions of your own built only from these.
+#'
+#' Anything else applied to a variable, such as `is.na()`, `ifelse()`,
+#' `pmax()`, or `&&`, is refused with an error naming it, rather than being
+#' allowed to give a wrong answer. Values (not variables) can be computed
+#' any way at all.
+#'
 #' Values may be vectors, and the result then has one probability per
 #' element, recycled as in [vctrs::vec_recycle_common()]:
 #' `prob(d, x < c(1, 2, 3))` gives three probabilities.
@@ -66,8 +81,10 @@
 #' - Otherwise, the variables themselves.
 #'
 #' An event needing something else is refused, naming the quantity that
-#' could not be found, rather than approximated. All answers are exact, to
-#' within the accuracy of the distribution's CDF.
+#' could not be found, rather than approximated. Answers are never
+#' simulated: they come from the distribution's CDF (and the like), from
+#' sums over its atoms, or from numerical integration, and are as accurate
+#' as those.
 #'
 #' Strict and non-strict inequalities differ only where there are atoms,
 #' and are handled exactly for a single quantity, and for several whose
@@ -104,7 +121,9 @@ prob <- function(distribution, ..., given = NULL) {
   if (is.null(vars)) {
     vars <- "x"
   }
-  mask <- event_mask(vars)
+  log <- new.env(parent = emptyenv())
+  log$read <- integer(0)
+  mask <- event_mask(vars, log)
   conditions <- rlang::enquos(...)
   named <- rlang::names2(conditions) != ""
   if (any(named)) {
@@ -115,9 +134,7 @@ prob <- function(distribution, ..., given = NULL) {
       call. = FALSE
     )
   }
-  events <- lapply(conditions, function(q) {
-    as_event(rlang::eval_tidy(q, data = mask), "event")
-  })
+  events <- lapply(conditions, eval_condition, mask = mask, log = log)
   # Several conditions must all hold, as in `filter()`.
   ev <- if (length(events) == 0L) {
     event_const(TRUE)
@@ -126,8 +143,12 @@ prob <- function(distribution, ..., given = NULL) {
   } else {
     event_node("and", events)
   }
-  gv <- rlang::eval_tidy(rlang::enquo(given), data = mask)
-  gv <- if (is.null(gv)) NULL else as_event(gv, "given")
+  given <- rlang::enquo(given)
+  gv <- if (rlang::quo_is_null(given)) {
+    NULL
+  } else {
+    eval_condition(given, mask, log, arg = "given")
+  }
   n <- event_length(list(ev, gv))
   if (is.na(distribution)) {
     return(rep(NA_real_, n))
@@ -254,4 +275,91 @@ flatten_and <- function(ev) {
     return(unlist(lapply(ev$children, flatten_and), recursive = FALSE))
   }
   list(ev)
+}
+
+#' Evaluate one condition, refusing anything `prob()` cannot follow.
+#'
+#' A variable read by the expression but missing from the result was
+#' swallowed by something other than arithmetic, comparisons, maths
+#' functions, `%in%`, and `&`, `|`, `!` (such as `is.na(x)`, which returns
+#' plain logicals). Evaluating such an expression would give a wrong answer
+#' without complaint, so it is refused.
+#' @noRd
+eval_condition <- function(quo, mask, log, arg = "event") {
+  log$read <- integer(0)
+  result <- tryCatch(
+    rlang::eval_tidy(quo, data = mask),
+    error = function(e) {
+      odd <- unfollowable_calls(rlang::quo_get_expr(quo))
+      if (length(odd) == 0L) {
+        stop(e)
+      }
+      refuse_condition(quo, odd, conditionMessage(e))
+    }
+  )
+  read <- log$read
+  kept <- if (inherits(result, "dst_expr")) result$ids else integer(0)
+  if (length(setdiff(read, kept)) > 0L) {
+    refuse_condition(quo, unfollowable_calls(rlang::quo_get_expr(quo)))
+  }
+  as_event(result, arg)
+}
+
+#' Stop, explaining which parts of a condition `prob()` cannot follow.
+#' @noRd
+refuse_condition <- function(quo, odd, reason = NULL) {
+  shown <- rlang::expr_deparse(rlang::quo_get_expr(quo), width = 60L)
+  which <- if (length(odd) > 0L) {
+    shown_odd <- ifelse(make.names(odd) == odd, paste0(odd, "()"), odd)
+    paste0(
+      "It uses ", paste0("`", shown_odd, "`", collapse = ", "),
+      " on a variable, which it cannot follow."
+    )
+  } else {
+    "It passes a variable through a function it cannot follow."
+  }
+  hint <- if (any(odd %in% c("&&", "||"))) {
+    "Use `&` rather than `&&`, and `|` rather than `||`.\n"
+  } else {
+    ""
+  }
+  stop(
+    "`prob()` cannot evaluate `", paste(shown, collapse = " "), "`.\n",
+    which, "\n", hint,
+    "Conditions can use arithmetic, comparisons, `%in%`, maths\n",
+    "functions such as `exp()`, and `&`, `|`, `!`; see `?prob`.",
+    if (!is.null(reason)) paste0("\n(It failed with: ", reason, ")"),
+    call. = FALSE
+  )
+}
+
+#' Functions called on something mentioning a variable, other than the ones
+#' `prob()` understands.
+#' @noRd
+unfollowable_calls <- function(expr) {
+  understood <- c(
+    "+", "-", "*", "/", "^", "%%", "%/%",
+    "==", "!=", "<", "<=", ">", ">=", "&", "|", "!", "(", "%in%", "xor",
+    "abs", "sign", "sqrt", "floor", "ceiling", "trunc", "round", "signif",
+    "exp", "log", "expm1", "log1p", "log2", "log10",
+    "cos", "sin", "tan", "cospi", "sinpi", "tanpi",
+    "acos", "asin", "atan", "cosh", "sinh", "tanh",
+    "acosh", "asinh", "atanh", "lgamma", "gamma", "digamma", "trigamma"
+  )
+  found <- character(0)
+  walk <- function(e) {
+    if (!is.call(e)) {
+      return(invisible())
+    }
+    fn <- e[[1L]]
+    name <- if (is.symbol(fn)) as.character(fn) else ""
+    if (!name %in% understood && name != "" && !identical(name, "$")) {
+      found <<- c(found, name)
+    }
+    for (arg in as.list(e)[-1L]) {
+      walk(arg)
+    }
+  }
+  walk(expr)
+  unique(setdiff(found, c("c", ".env", ".data")))
 }

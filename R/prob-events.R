@@ -8,10 +8,57 @@
 
 # ---- terms: what a variable, or arithmetic on variables, evaluates to -----
 
-#' Bind each variable name to a term, for evaluating an event.
+#' A data mask binding each variable name to a term, for evaluating an
+#' event.
+#'
+#' Each variable is an active binding: every time the expression reads it,
+#' it gets a term with a fresh identity, and the identity is logged in
+#' `log$read`. A term carries the identities it was built from, so once the
+#' expression is evaluated, any identity read but missing from the result
+#' was swallowed by something `prob()` cannot follow (such as `is.na()`),
+#' and the answer would be wrong. See `check_event_reads()`.
+#'
+#' The mask also binds `%in%`, so that a variable can be compared with a
+#' set of values.
+#' @param log An environment holding `read`, an integer vector.
 #' @noRd
-event_mask <- function(vars) {
-  stats::setNames(lapply(vars, variable_term), vars)
+event_mask <- function(vars, log) {
+  bottom <- new.env(parent = emptyenv())
+  for (v in vars) {
+    local({
+      name <- v
+      makeActiveBinding(name, function() {
+        id <- length(log$read) + 1L
+        log$read <- c(log$read, id)
+        variable_term(name, id)
+      }, bottom)
+    })
+  }
+  assign("%in%", term_in, envir = bottom)
+  rlang::new_data_mask(bottom)
+}
+
+#' `%in%`, for a variable: equal to one of the values.
+#' @noRd
+term_in <- function(x, table) {
+  if (inherits(table, "dst_expr")) {
+    stop(
+      "`%in%` needs a set of values on its right, not a variable.",
+      call. = FALSE
+    )
+  }
+  if (!inherits(x, "dst_term")) {
+    return(base::`%in%`(x, table))
+  }
+  table <- unique(table)
+  if (length(table) == 0L) {
+    return(event_const(FALSE, ids = x$ids))
+  }
+  alts <- lapply(table, function(v) term_compare("==", x, as_term(v), "%in%"))
+  if (length(alts) == 1L) {
+    return(alts[[1L]])
+  }
+  event_node("or", alts)
 }
 
 #' A term: a quantity computed from the variables.
@@ -22,20 +69,21 @@ event_mask <- function(vars) {
 #' other than `const` on a named list of variable values, and `const` may
 #' be a vector (one value per probability asked for).
 #' @noRd
-new_term <- function(coef, const, fun, label) {
+new_term <- function(coef, const, fun, label, ids = integer(0)) {
   structure(
-    list(coef = coef, const = const, fun = fun, label = label),
+    list(coef = coef, const = const, fun = fun, label = label, ids = ids),
     class = c("dst_term", "dst_expr")
   )
 }
 
 #' @noRd
-variable_term <- function(name) {
+variable_term <- function(name, id = integer(0)) {
   new_term(
     coef = stats::setNames(1, name),
     const = 0,
     fun = function(env) env[[name]],
-    label = name
+    label = name,
+    ids = id
   )
 }
 
@@ -84,6 +132,7 @@ format_value <- function(x) {
 #' Sum of two terms.
 #' @noRd
 term_add <- function(t1, t2, label) {
+  ids <- union(t1$ids, t2$ids)
   const <- t1$const + t2$const
   f1 <- t1$fun
   f2 <- t2$fun
@@ -94,9 +143,9 @@ term_add <- function(t1, t2, label) {
     coef[names(t1$coef)] <- coef[names(t1$coef)] + t1$coef
     coef[names(t2$coef)] <- coef[names(t2$coef)] + t2$coef
     coef <- coef[coef != 0]
-    return(new_term(coef, const, fun, label))
+    return(new_term(coef, const, fun, label, ids))
   }
-  new_term(NULL, const, fun, label)
+  new_term(NULL, const, fun, label, ids)
 }
 
 #' A term times a single number.
@@ -107,7 +156,7 @@ term_scale <- function(t, k, label) {
   if (!is.null(coef)) {
     coef <- coef[coef != 0]
   }
-  new_term(coef, t$const * k, function(env) f(env) * k, label)
+  new_term(coef, t$const * k, function(env) f(env) * k, label, t$ids)
 }
 
 #' A term built by a function of the variables that is not linear.
@@ -131,12 +180,22 @@ term_nonlinear <- function(op, terms, label, args = list()) {
     vals <- lapply(terms, term_value, env = env)
     do.call(op, c(vals, args))
   }
-  new_term(NULL, 0, fun, label)
+  ids <- unique(unlist(lapply(terms, `[[`, "ids")))
+  new_term(NULL, 0, fun, label, as.integer(ids))
 }
 
 #' Arithmetic on terms.
 #' @noRd
 term_arith <- function(op, t1, t2, label) {
+  out <- term_arith_parts(op, t1, t2, label)
+  # A side that has cancelled to a constant, such as `x - x`, still read
+  # its variables.
+  out$ids <- as.integer(union(union(t1$ids, t2$ids), out$ids))
+  out
+}
+
+#' @noRd
+term_arith_parts <- function(op, t1, t2, label) {
   v1 <- has_variables(t1)
   v2 <- has_variables(t2)
   if (!v1 && !v2) {
@@ -184,17 +243,24 @@ new_event <- function(node) {
 
 #' @noRd
 event_atom <- function(term, op, value) {
-  new_event(list(type = "atom", term = term, op = op, value = value))
+  new_event(list(
+    type = "atom",
+    term = term,
+    op = op,
+    value = value,
+    ids = term$ids
+  ))
 }
 
 #' @noRd
-event_const <- function(value) {
-  new_event(list(type = "const", value = as.logical(value)))
+event_const <- function(value, ids = integer(0)) {
+  new_event(list(type = "const", value = as.logical(value), ids = ids))
 }
 
 #' @noRd
 event_node <- function(type, children) {
-  new_event(list(type = type, children = children))
+  ids <- unique(unlist(lapply(children, `[[`, "ids")))
+  new_event(list(type = type, children = children, ids = as.integer(ids)))
 }
 
 #' A comparison of two terms, as a condition on their difference.
@@ -208,7 +274,7 @@ event_node <- function(type, children) {
 term_compare <- function(op, t1, t2, label) {
   d <- term_arith("-", t1, t2, label)
   if (!has_variables(d)) {
-    return(event_const(get(op)(d$const, 0)))
+    return(event_const(get(op)(d$const, 0), ids = d$ids))
   }
   value <- -d$const
   if (term_linear(d)) {
@@ -220,7 +286,13 @@ term_compare <- function(op, t1, t2, label) {
       op <- flip_op(op)
     }
     f <- d$fun
-    d <- new_term(coef, 0, function(env) f(env) / lead, linear_label(coef))
+    d <- new_term(
+      coef,
+      0,
+      function(env) f(env) / lead,
+      linear_label(coef),
+      d$ids
+    )
   } else {
     d$const <- 0
     d$label <- label

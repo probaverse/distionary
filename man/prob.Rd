@@ -39,6 +39,22 @@ called \code{x} unless it has been named otherwise. Values come from where
 \code{prob()} is called, as in dplyr; where a value has the same name as a
 variable, write \code{.env$name} for the value.
 
+A condition looks like R code, but it is not run on data the way a
+\code{filter()} condition is: \code{prob()} works out what region it describes.
+So only these can be used on the variables:
+\itemize{
+\item arithmetic: \code{+}, \code{-}, \code{*}, \code{/}, \code{^}, \code{\%\%}, \code{\%/\%};
+\item comparisons: \code{<}, \code{<=}, \code{>}, \code{>=}, \code{==}, \code{!=}, and \code{\%in\%};
+\item maths functions, such as \code{exp()}, \code{log()}, \code{abs()}, and \code{sqrt()};
+\item logic: \code{&}, \code{|}, \code{!}, and \code{xor()};
+\item functions of your own built only from these.
+}
+
+Anything else applied to a variable, such as \code{is.na()}, \code{ifelse()},
+\code{pmax()}, or \code{&&}, is refused with an error naming it, rather than being
+allowed to give a wrong answer. Values (not variables) can be computed
+any way at all.
+
 Values may be vectors, and the result then has one probability per
 element, recycled as in \code{\link[vctrs:vec_recycle]{vctrs::vec_recycle_common()}}:
 \code{prob(d, x < c(1, 2, 3))} gives three probabilities.
@@ -84,8 +100,10 @@ Normal and t do, any sum of multiples of the variables, such as
 }
 
 An event needing something else is refused, naming the quantity that
-could not be found, rather than approximated. All answers are exact, to
-within the accuracy of the distribution's CDF.
+could not be found, rather than approximated. Answers are never
+simulated: they come from the distribution's CDF (and the like), from
+sums over its atoms, or from numerical integration, and are as accurate
+as those.
 
 Strict and non-strict inequalities differ only where there are atoms,
 and are handled exactly for a single quantity, and for several whose
