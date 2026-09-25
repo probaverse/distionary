@@ -1,4 +1,4 @@
-#' Probability of an Orthant
+#' Probability Using Inequalities
 #'
 #' The probability that each variable falls on a chosen side of its value:
 #' for example \eqn{P(X \le x, Y > y)}. These are the multivariate
@@ -10,53 +10,53 @@
 #' variable; otherwise give one per variable, named to match
 #' [variables()] or in order.
 #' @details
-#' An orthant is a region bounded on one side in each coordinate: the
-#' multivariate version of a half-line. With every inequality `"<="`, its
-#' probability is the CDF; with every one `">"`, the survival function.
+#' With every inequality `"<="`, this is the CDF; with every one `">"`, the
+#' survival function. Mixing them covers the rest, such as the probability
+#' that one flow is high while another is low.
 #'
 #' Strict and non-strict inequalities differ only where a variable has
 #' atoms, and are treated alike for a variable that is continuous.
 #'
 #' The probability is worked out from the CDF (or the survival function) by
 #' inclusion-exclusion, and for a distribution on finitely many points, by
-#' adding up the points in the orthant.
+#' adding up the points that satisfy every inequality.
 #' @returns A numeric vector, with the common length of the inputs.
 #' @seealso [eval_mv_cdf()], [eval_mv_survival()].
 #' @examples
 #' d <- dst_bi_norm(mean = c(0, 0), sd = c(1, 1), cor = 0.6)
 #' # Both exceeding 1.
-#' prob_bi_orthant(d, x = 1, y = 1, ineq = ">")
+#' prob_bi(d, x = 1, y = 1, ineq = ">")
 #' # The first at most 0, the second exceeding 0.
-#' prob_bi_orthant(d, x = 0, y = 0, ineq = c("<=", ">"))
+#' prob_bi(d, x = 0, y = 0, ineq = c("<=", ">"))
 #'
 #' e <- dst_mv_empirical(list(a = c(1, 2, 2, 3), b = c(1, 1, 2, 2)))
-#' prob_mv_orthant(e, list(a = 2, b = 1), ineq = c(a = "<", b = "<="))
-#' prob_mv_orthant(e, list(a = 2, b = 1), ineq = c(a = "<=", b = "<="))
-#' @name orthant
+#' prob_mv(e, list(a = 2, b = 1), ineq = c(a = "<", b = "<="))
+#' prob_mv(e, list(a = 2, b = 1), ineq = c(a = "<=", b = "<="))
+#' @name prob_mv
 NULL
 
-#' @rdname orthant
+#' @rdname prob_mv
 #' @export
-prob_mv_orthant <- function(distribution, l, ineq) {
+prob_mv <- function(distribution, l, ineq) {
   checkmate::assert_class(distribution, "dst")
   l <- as_eval_list(distribution, l)
   ineq <- as_ineq(distribution, ineq)
-  orthant(distribution, l, ineq)
+  prob_mv_checked(distribution, l, ineq)
 }
 
-#' @rdname orthant
+#' @rdname prob_mv
 #' @export
-prob_bi_orthant <- function(distribution, x, y, ineq) {
+prob_bi <- function(distribution, x, y, ineq) {
   checkmate::assert_class(distribution, "dst")
   p <- dimension(distribution)
   if (!identical(p, 2L)) {
     stop(
-      "`prob_bi_orthant()` is for distributions of two variables,\n",
+      "`prob_bi()` is for distributions of two variables,\n",
       "and this one has ", format_dimension(p), ".\n",
-      "Use `prob_mv_orthant()` for any number of variables."
+      "Use `prob_mv()` for any number of variables."
     )
   }
-  prob_mv_orthant(distribution, list(x, y), ineq = unname(ineq))
+  prob_mv(distribution, list(x, y), ineq = unname(ineq))
 }
 
 # ---- internal ---------------------------------------------------------------
@@ -92,9 +92,9 @@ as_ineq <- function(distribution, ineq) {
   unname(ineq)
 }
 
-#' The orthant probability, for checked inputs.
+#' The probability, for checked inputs.
 #' @noRd
-orthant <- function(distribution, l, ineq) {
+prob_mv_checked <- function(distribution, l, ineq) {
   if (!is_multivariate(distribution)) {
     upper <- ineq %in% c(">", ">=")
     inclusive <- ineq %in% c("<=", ">=")
@@ -106,7 +106,7 @@ orthant <- function(distribution, l, ineq) {
   s <- support(distribution)
   pts <- enumerate_points(s)
   if (!is.null(pts) && has_stated(distribution, "pmf")) {
-    return(orthant_by_points(distribution, pts, l, upper, strict))
+    return(prob_by_points(distribution, pts, l, upper, strict))
   }
   # A strict inequality differs from its non-strict one only by the atoms at
   # the value. Step to the atom below instead: `X < x` is `X <= x-`, and
@@ -118,9 +118,9 @@ orthant <- function(distribution, l, ineq) {
     return(eval_joint(distribution, "survival", l))
   }
   if (!any(upper) || !has_stated(distribution, "survival")) {
-    return(orthant_from_cdf(distribution, l, upper))
+    return(prob_from_cdf(distribution, l, upper))
   }
-  orthant_from_survival(distribution, l, upper)
+  prob_from_survival(distribution, l, upper)
 }
 
 #' For each value, the point just below it in a univariate support.

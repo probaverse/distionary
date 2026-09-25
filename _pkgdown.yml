@@ -60,7 +60,6 @@ reference:
   - starts_with("enframe_")
   - starts_with("eval_")
   - starts_with("prob_")
-  - orthant
 - subtitle: Distribution Properties
   contents:
   - starts_with("kurtosis")

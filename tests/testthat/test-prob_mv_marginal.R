@@ -1,17 +1,17 @@
-test_that("orthant probabilities match their inclusion-exclusion", {
+test_that("mixed inequalities match their inclusion-exclusion", {
   skip_if_not_installed("mvtnorm")
   d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
   cdf <- eval_bi_cdf(d, 0, 1)
-  expect_equal(prob_bi_orthant(d, 0, 1, "<="), cdf)
-  expect_equal(prob_bi_orthant(d, 0, 1, c("<=", ">")), 0.5 - cdf)
-  expect_equal(prob_bi_orthant(d, 0, 1, c(">", "<=")), 0.5 - cdf)
-  expect_equal(prob_bi_orthant(d, 0, 1, ">"), eval_bi_survival(d, 0, 1))
+  expect_equal(prob_bi(d, 0, 1, "<="), cdf)
+  expect_equal(prob_bi(d, 0, 1, c("<=", ">")), 0.5 - cdf)
+  expect_equal(prob_bi(d, 0, 1, c(">", "<=")), 0.5 - cdf)
+  expect_equal(prob_bi(d, 0, 1, ">"), eval_bi_survival(d, 0, 1))
   # Strictness makes no difference to a continuous variable.
-  expect_equal(prob_bi_orthant(d, 0, 1, c("<", ">=")), 0.5 - cdf)
-  total <- prob_bi_orthant(d, 0, 1, c("<=", "<=")) +
-    prob_bi_orthant(d, 0, 1, c("<=", ">")) +
-    prob_bi_orthant(d, 0, 1, c(">", "<=")) +
-    prob_bi_orthant(d, 0, 1, c(">", ">"))
+  expect_equal(prob_bi(d, 0, 1, c("<", ">=")), 0.5 - cdf)
+  total <- prob_bi(d, 0, 1, c("<=", "<=")) +
+    prob_bi(d, 0, 1, c("<=", ">")) +
+    prob_bi(d, 0, 1, c(">", "<=")) +
+    prob_bi(d, 0, 1, c(">", ">"))
   expect_equal(total, 1)
 })
 
@@ -22,37 +22,37 @@ test_that("strict inequalities step past atoms", {
     .support = support_product(n = discrete(natural0()), k = discrete(0:3))
   )
   expect_equal(
-    prob_bi_orthant(h, 2, 1, c("<", ">=")),
+    prob_bi(h, 2, 1, c("<", ">=")),
     stats::ppois(1, 2) * stats::pbinom(0, 3, 0.5, lower.tail = FALSE)
   )
   expect_equal(
-    prob_bi_orthant(h, 2, 1, c("<=", ">")),
+    prob_bi(h, 2, 1, c("<=", ">")),
     stats::ppois(2, 2) * stats::pbinom(1, 3, 0.5, lower.tail = FALSE)
   )
   # Below every atom.
-  expect_equal(prob_bi_orthant(h, 0, 1, c("<", "<=")), 0)
+  expect_equal(prob_bi(h, 0, 1, c("<", "<=")), 0)
 })
 
 test_that("`ineq` is checked and matched by name", {
   e <- dst_mv_empirical(list(a = c(1, 2, 2, 3), b = c(1, 1, 2, 2)))
   expect_equal(
-    prob_mv_orthant(e, list(a = 2, b = 1), ineq = c(b = "<=", a = "<")),
+    prob_mv(e, list(a = 2, b = 1), ineq = c(b = "<=", a = "<")),
     0.25
   )
-  expect_equal(prob_mv_orthant(e, list(2, 1), ineq = c("<=", "<=")), 0.5)
-  expect_equal(prob_mv_orthant(e, list(2, 1), ineq = c(">=", ">")), 0.5)
-  expect_error(prob_mv_orthant(e, list(2, 1), ineq = "=<"), "one of")
-  expect_error(prob_mv_orthant(e, list(2, 1), ineq = rep("<", 3)), "one per")
+  expect_equal(prob_mv(e, list(2, 1), ineq = c("<=", "<=")), 0.5)
+  expect_equal(prob_mv(e, list(2, 1), ineq = c(">=", ">")), 0.5)
+  expect_error(prob_mv(e, list(2, 1), ineq = "=<"), "one of")
+  expect_error(prob_mv(e, list(2, 1), ineq = rep("<", 3)), "one per")
 })
 
-test_that("a univariate orthant is prob_left() or prob_right()", {
+test_that("with one variable, prob_mv() is prob_left() or prob_right()", {
   d <- dst_pois(3)
   expect_equal(
-    prob_mv_orthant(d, list(2), "<"),
+    prob_mv(d, list(2), "<"),
     prob_left(d, 2, inclusive = FALSE)
   )
   expect_equal(
-    prob_mv_orthant(d, list(2), ">="),
+    prob_mv(d, list(2), ">="),
     prob_right(d, 2, inclusive = TRUE)
   )
 })

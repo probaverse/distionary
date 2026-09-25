@@ -4,7 +4,7 @@ test_that("the bivariate Normal matches known values", {
   expect_identical(pretty_name(d), "Bivariate Normal")
   expect_identical(vtype(d), "continuous")
   expect_identical(parameters(d)$cor, 0.6)
-  # Orthant probability of a standard bivariate Normal at its mean.
+  # Both below their means: a known closed form.
   expect_equal(eval_bi_cdf(d, 0, 1), 0.25 + asin(0.6) / (2 * pi))
   expect_equal(eval_bi_survival(d, 0, 1), 0.25 + asin(0.6) / (2 * pi))
   # Density against the closed form.
@@ -28,7 +28,7 @@ test_that("the multivariate Normal's CDF matches a known value", {
   skip_if_not_installed("mvtnorm")
   rho <- 0.3 / 1.3
   d <- dst_mv_norm(c(a = 0, b = 0, c = 0), diag(3) + 0.3)
-  # Equicorrelated trivariate orthant probability.
+  # All three below their means, with equal correlations.
   expect_equal(
     eval_mv_cdf(d, list(0, 0, 0)),
     1 / 8 + 3 / (4 * pi) * asin(rho),

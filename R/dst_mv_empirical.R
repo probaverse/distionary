@@ -168,7 +168,7 @@ mv_finite <- function(pts, probs, name = NULL) {
   as_matrix <- function(...) {
     do.call(cbind, vctrs::vec_recycle_common(...))
   }
-  orthant_sum <- function(q, upper) {
+  prob_sum <- function(q, upper) {
     vapply(seq_len(nrow(q)), function(i) {
       if (anyNA(q[i, ])) {
         return(NA_real_)
@@ -190,8 +190,8 @@ mv_finite <- function(pts, probs, name = NULL) {
       out[!stats::complete.cases(q)] <- NA_real_
       out
     },
-    cdf = function(...) orthant_sum(as_matrix(...), upper = FALSE),
-    survival = function(...) orthant_sum(as_matrix(...), upper = TRUE),
+    cdf = function(...) prob_sum(as_matrix(...), upper = FALSE),
+    survival = function(...) prob_sum(as_matrix(...), upper = TRUE),
     realise = function(n) {
       rows <- sample.int(nrow(pts), size = n, replace = TRUE, prob = probs)
       out <- pts[rows, , drop = FALSE]

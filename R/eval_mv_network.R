@@ -12,7 +12,7 @@ eval_mv_cdf_from_network <- function(distribution, ...) {
   l <- vctrs::vec_recycle_common(...)
   pts <- enumerate_points(support(distribution))
   if (!is.null(pts) && has_stated(distribution, "pmf")) {
-    return(orthant_by_points(distribution, pts, l, rep(FALSE, length(l))))
+    return(prob_by_points(distribution, pts, l, rep(FALSE, length(l))))
   }
   if (has_stated(distribution, "survival")) {
     return(cdf_from_survival(distribution, l))
@@ -28,10 +28,10 @@ eval_mv_survival_from_network <- function(distribution, ...) {
   l <- vctrs::vec_recycle_common(...)
   pts <- enumerate_points(support(distribution))
   if (!is.null(pts) && has_stated(distribution, "pmf")) {
-    return(orthant_by_points(distribution, pts, l, rep(TRUE, length(l))))
+    return(prob_by_points(distribution, pts, l, rep(TRUE, length(l))))
   }
   if (has_stated(distribution, "cdf")) {
-    return(orthant_from_cdf(distribution, l, rep(TRUE, length(l))))
+    return(prob_from_cdf(distribution, l, rep(TRUE, length(l))))
   }
   stop(
     "Cannot find the survival function. State a `cdf` or `survival`,\n",
@@ -148,16 +148,16 @@ weighted_cov <- function(x, probs) {
   crossprod(centred * sqrt(probs))
 }
 
-#' Probability of an orthant, by inclusion-exclusion on the CDF.
+#' Probability from inequalities, by inclusion-exclusion on the CDF.
 #'
-#' The orthant is where each variable is at most its value (`upper` FALSE) or
+#' The event is that each variable is at most its value (`upper` FALSE) or
 #' exceeds it (`upper` TRUE). Expanding each "exceeds" as one minus "at most"
 #' gives a signed sum of CDFs, with the variables not kept at their value
 #' set to `Inf`.
 #' @param l List of recycled vectors, one per variable.
 #' @param upper Logical, one per variable.
 #' @noRd
-orthant_from_cdf <- function(distribution, l, upper) {
+prob_from_cdf <- function(distribution, l, upper) {
   n <- length(l[[1L]])
   up <- which(upper)
   total <- rep(0, n)
@@ -170,12 +170,13 @@ orthant_from_cdf <- function(distribution, l, upper) {
   total
 }
 
-#' Probability of an orthant, by inclusion-exclusion on the survival function.
+#' Probability from inequalities, by inclusion-exclusion on the survival
+#' function.
 #'
-#' The mirror image of `orthant_from_cdf()`: each "at most" is one minus
+#' The mirror image of `prob_from_cdf()`: each "at most" is one minus
 #' "exceeds", and variables not kept at their value are set to `-Inf`.
 #' @noRd
-orthant_from_survival <- function(distribution, l, upper) {
+prob_from_survival <- function(distribution, l, upper) {
   n <- length(l[[1L]])
   down <- which(!upper)
   total <- rep(0, n)
@@ -192,15 +193,16 @@ orthant_from_survival <- function(distribution, l, upper) {
 #' The CDF, from the survival function.
 #' @noRd
 cdf_from_survival <- function(distribution, l) {
-  orthant_from_survival(distribution, l, rep(FALSE, length(l)))
+  prob_from_survival(distribution, l, rep(FALSE, length(l)))
 }
 
-#' Probability of an orthant of a finite distribution, by listing its points.
+#' Probability from inequalities for a finite distribution, by listing its
+#' points.
 #' @param upper Logical, one per variable: `>` if `TRUE`, `<=` if `FALSE`.
 #' @param strict Logical, one per variable: whether to use `<` instead of
 #' `<=`, or `>=` instead of `>`.
 #' @noRd
-orthant_by_points <- function(
+prob_by_points <- function(
   distribution,
   pts,
   l,

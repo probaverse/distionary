@@ -101,17 +101,17 @@ eval_bi_survival(d, x = 0, y = 1)
 1 - eval_bi_cdf(d, x = 0, y = 1)
 ```
 
-For any other combination of inequalities --- one variable below its value and the other above, say --- use `prob_bi_orthant()` or `prob_mv_orthant()`:
+For any other combination of inequalities --- one variable below its value and the other above, say --- use `prob_bi()` or `prob_mv()`:
 
 ```{r, eval = has_mvtnorm}
-prob_bi_orthant(d, x = 0, y = 1, ineq = c("<=", ">"))
+prob_bi(d, x = 0, y = 1, ineq = c("<=", ">"))
 ```
 
 Strict and non-strict inequalities differ only where a variable has atoms:
 
 ```{r}
-prob_bi_orthant(e, x = 12, y = 1.5, ineq = c("<", "<="))
-prob_bi_orthant(e, x = 12, y = 1.5, ineq = c("<=", "<="))
+prob_bi(e, x = 12, y = 1.5, ineq = c("<", "<="))
+prob_bi(e, x = 12, y = 1.5, ineq = c("<=", "<="))
 ```
 
 ## Marginals and conditionals
@@ -260,4 +260,4 @@ A few things are not supported yet:
 - Supports with a mix of kinds within one joint, such as a count paired with an amount, can be described, but such a distribution has no joint density or PMF to evaluate.
 - Moments beyond the mean and covariance matrix.
 - Plotting, and `enframe_*()` functions, for several variables.
-- Conditioning on an event such as \(X > x\), rather than on a value. Divide two orthant probabilities instead: \(P(Y > y \mid X > x) = P(X > x, Y > y) / P(X > x)\).
+- Conditioning on an event such as \(X > x\), rather than on a value. Divide two probabilities from `prob_mv()` instead: \(P(Y > y \mid X > x) = P(X > x, Y > y) / P(X > x)\).
