@@ -21,10 +21,10 @@ convert_dataframe_to_tibble <- function(res) {
 #' `"cdf"` for `eval_bi_cdf()` and `eval_mv_cdf()`).
 #' @noRd
 assert_univariate <- function(distribution, fn, alt = NULL) {
-  p <- dimension(distribution)
-  if (is.na(p) || p == 1L) {
+  if (!is_multivariate(distribution)) {
     return(invisible(distribution))
   }
+  p <- dimension(distribution)
   instead <- if (is.null(alt)) {
     "Take one variable with `marginal()` first."
   } else {

@@ -392,8 +392,10 @@ support_variables <- function(s) {
 #' Is a support (or distribution) multivariate?
 #' @noRd
 is_multivariate <- function(x) {
-  d <- dimension(x)
-  !is.na(d) && d > 1L
+  # On every evaluation's path, so it reads the class directly rather than
+  # going through `dimension()`.
+  s <- if (inherits(x, "dst")) attr(x, "support", exact = TRUE) else x
+  inherits(s, "support_mv")
 }
 
 #' A one-line description of a univariate support, for printing a product.
