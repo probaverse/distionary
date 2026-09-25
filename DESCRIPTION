@@ -18,7 +18,7 @@ License: MIT + file LICENSE
 Suggests:
     covr,
     knitr,
-    mvtnorm,
+    mvtnorm (>= 1.2-0),
     rmarkdown,
     testthat (>= 3.0.0),
     tibble

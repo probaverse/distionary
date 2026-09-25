@@ -381,33 +381,13 @@ mvnorm_prob <- function(lower, upper, mean, cov) {
       upper = hi,
       mean = unname(mean),
       sigma = unname(cov),
-      algorithm = algorithm
+      algorithm = algorithm,
+      # Fixes the randomised algorithm's seed, so the same inputs always give
+      # the same answer; mvtnorm restores the caller's random numbers after.
+      seed = if (randomised) 1L else NULL
     ))
   }
-  if (randomised) {
-    return(with_fixed_seed(vapply(seq_len(nrow(x)), one, numeric(1))))
-  }
   vapply(seq_len(nrow(x)), one, numeric(1))
-}
-
-#' Evaluate code with a fixed random seed, leaving the caller's random
-#' number stream as it was.
-#' @noRd
-with_fixed_seed <- function(code, seed = 1L) {
-  env <- globalenv()
-  had_seed <- exists(".Random.seed", envir = env, inherits = FALSE)
-  if (had_seed) {
-    old <- get(".Random.seed", envir = env, inherits = FALSE)
-  }
-  on.exit({
-    if (had_seed) {
-      assign(".Random.seed", old, envir = env)
-    } else if (exists(".Random.seed", envir = env, inherits = FALSE)) {
-      rm(".Random.seed", envir = env)
-    }
-  })
-  set.seed(seed)
-  code
 }
 
 #' Standard bivariate Normal CDF, vectorised.

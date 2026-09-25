@@ -88,7 +88,7 @@ passes.
   `marginal()` reduces it.
 - **Singular MVN**: rank from eigenvalues (tol: scale * p * sqrt(eps)).
   Rank 0 gives a point mass. The CDF uses mvtnorm GenzBretz under
-  `with_fixed_seed()`, which restores the caller's RNG. Conditioning uses a
+  mvtnorm's `seed` argument (>= 1.2-0), which restores the caller's RNG itself. Conditioning uses a
   pseudo-inverse; values off the support give `dst_null()`.
 - **mvtnorm is in Suggests** (only the MVN CDF/survival needs it).
 - `eval_property()` now calls network functions through a local name, so
