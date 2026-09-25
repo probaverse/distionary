@@ -1,16 +1,17 @@
 #' Probability of an Event
 #'
-#' The probability that a distribution's variables satisfy a condition,
-#' written the way you would write it for `dplyr::filter()`: `x < 2`,
-#' `x <= 1 & y > 3`, `x > 100 | y > 100`. Optionally, conditional on
+#' The probability that a distribution's variables satisfy some conditions,
+#' written the way you would write them for `dplyr::filter()`: `x < 2`,
+#' `x <= 1, y > 3`, `x > 100 | y > 100`. Optionally, conditional on
 #' another.
 #'
 #' @param distribution A distribution.
-#' @param event <[`data-masking`][rlang::args_data_masking]> A condition on
+#' @param ... <[`data-masking`][rlang::args_data_masking]> Conditions on
 #' the distribution's variables, referred to by name (see [variables()]).
-#' Combine comparisons with `&`, `|`, and `!`. A variable left out of the
-#' event is unrestricted.
-#' @param ... Not used; forces `given` to be named.
+#' Several conditions must all hold, as in `filter()`: `x < 2, y > 3` is
+#' the same event as `x < 2 & y > 3`. Within a condition, combine
+#' comparisons with `&`, `|`, and `!`. A variable left out is
+#' unrestricted, and no conditions at all is the certain event.
 #' @param given <[`data-masking`][rlang::args_data_masking]> Optionally, a
 #' condition to be given (to hold). A variable compared with `==` is
 #' conditioned on taking that value; anything else is conditioned on as an
@@ -78,9 +79,9 @@
 #' @examples
 #' d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
 #' prob(d, x < 0)
-#' prob(d, x < 0 & y > 1)
+#' prob(d, x < 0, y > 1)
 #' prob(d, x > 2 | y > 5)
-#' prob(d, 0 < x & x <= 1)
+#' prob(d, 0 < x, x <= 1)
 #' prob(d, y > c(1, 3, 5))
 #'
 #' # Combinations of variables.
@@ -97,18 +98,34 @@
 #' # A univariate distribution's variable is `x`.
 #' prob(dst_pois(3), x >= 2 & x != 4)
 #' @export
-prob <- function(distribution, event, ..., given = NULL) {
-  rlang::check_dots_empty()
+prob <- function(distribution, ..., given = NULL) {
   checkmate::assert_class(distribution, "dst")
   vars <- variables(distribution)
   if (is.null(vars)) {
     vars <- "x"
   }
   mask <- event_mask(vars)
-  ev <- as_event(
-    rlang::eval_tidy(rlang::enquo(event), data = mask),
-    "event"
-  )
+  conditions <- rlang::enquos(...)
+  named <- rlang::names2(conditions) != ""
+  if (any(named)) {
+    nm <- rlang::names2(conditions)[named][[1L]]
+    stop(
+      "`prob()` takes conditions, but `", nm, " = ...` is an argument.\n",
+      "Did you mean `", nm, " == ...`?",
+      call. = FALSE
+    )
+  }
+  events <- lapply(conditions, function(q) {
+    as_event(rlang::eval_tidy(q, data = mask), "event")
+  })
+  # Several conditions must all hold, as in `filter()`.
+  ev <- if (length(events) == 0L) {
+    event_const(TRUE)
+  } else if (length(events) == 1L) {
+    events[[1L]]
+  } else {
+    event_node("and", events)
+  }
   gv <- rlang::eval_tidy(rlang::enquo(given), data = mask)
   gv <- if (is.null(gv)) NULL else as_event(gv, "given")
   n <- event_length(list(ev, gv))

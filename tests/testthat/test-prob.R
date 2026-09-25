@@ -148,3 +148,14 @@ test_that("giving a combination a value slices the distribution", {
   )
   expect_error(prob(g, x > 0, given = x + y == 1), "`linear` property")
 })
+
+test_that("commas join conditions, as in filter()", {
+  expect_equal(prob(d, x <= 0, y > 1), prob(d, x <= 0 & y > 1))
+  expect_equal(prob(d, 0 < x, x <= 1), prob(d, 0 < x & x <= 1))
+  expect_equal(
+    prob(d, x > 2 | y > 5, x < 3),
+    prob(d, (x > 2 | y > 5) & x < 3)
+  )
+  expect_equal(prob(d), 1)
+  expect_error(prob(d, x = 2), "Did you mean `x == ...`")
+})

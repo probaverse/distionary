@@ -4,17 +4,17 @@
 \alias{prob}
 \title{Probability of an Event}
 \usage{
-prob(distribution, event, ..., given = NULL)
+prob(distribution, ..., given = NULL)
 }
 \arguments{
 \item{distribution}{A distribution.}
 
-\item{event}{<\code{\link[rlang:args_data_masking]{data-masking}}> A condition on
+\item{...}{<\code{\link[rlang:args_data_masking]{data-masking}}> Conditions on
 the distribution's variables, referred to by name (see \code{\link[=variables]{variables()}}).
-Combine comparisons with \code{&}, \code{|}, and \code{!}. A variable left out of the
-event is unrestricted.}
-
-\item{...}{Not used; forces \code{given} to be named.}
+Several conditions must all hold, as in \code{filter()}: \verb{x < 2, y > 3} is
+the same event as \code{x < 2 & y > 3}. Within a condition, combine
+comparisons with \code{&}, \code{|}, and \code{!}. A variable left out is
+unrestricted, and no conditions at all is the certain event.}
 
 \item{given}{<\code{\link[rlang:args_data_masking]{data-masking}}> Optionally, a
 condition to be given (to hold). A variable compared with \code{==} is
@@ -26,9 +26,9 @@ A numeric vector of probabilities, with the common length of the
 values in \code{event} and \code{given}.
 }
 \description{
-The probability that a distribution's variables satisfy a condition,
-written the way you would write it for \code{dplyr::filter()}: \code{x < 2},
-\code{x <= 1 & y > 3}, \code{x > 100 | y > 100}. Optionally, conditional on
+The probability that a distribution's variables satisfy some conditions,
+written the way you would write them for \code{dplyr::filter()}: \code{x < 2},
+\verb{x <= 1, y > 3}, \code{x > 100 | y > 100}. Optionally, conditional on
 another.
 }
 \details{
@@ -95,9 +95,9 @@ supports are each continuous or discrete.
 \examples{
 d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
 prob(d, x < 0)
-prob(d, x < 0 & y > 1)
+prob(d, x < 0, y > 1)
 prob(d, x > 2 | y > 5)
-prob(d, 0 < x & x <= 1)
+prob(d, 0 < x, x <= 1)
 prob(d, y > c(1, 3, 5))
 
 # Combinations of variables.

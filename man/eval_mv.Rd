@@ -66,7 +66,7 @@ With variables \eqn{X_1, \ldots, X_p}, evaluated at
 variable exceeding its value. This is not one minus the CDF, which is
 the probability that \emph{at least one} exceeds its value. The two agree
 only for a single variable. For the probability of any other event,
-such as \code{x <= 1 & y > 3}, see \code{\link[=prob]{prob()}}.
+such as \verb{x <= 1, y > 3}, see \code{\link[=prob]{prob()}}.
 \item The density is the joint density, for a continuous distribution.
 \item The PMF is \eqn{P(X_1 = x_1, \ldots, X_p = x_p)}, for a discrete one.
 }

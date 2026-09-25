@@ -28,7 +28,7 @@
 #'   variable exceeding its value. This is not one minus the CDF, which is
 #'   the probability that *at least one* exceeds its value. The two agree
 #'   only for a single variable. For the probability of any other event,
-#'   such as `x <= 1 & y > 3`, see [prob()].
+#'   such as `x <= 1, y > 3`, see [prob()].
 #' - The density is the joint density, for a continuous distribution.
 #' - The PMF is \eqn{P(X_1 = x_1, \ldots, X_p = x_p)}, for a discrete one.
 #'
