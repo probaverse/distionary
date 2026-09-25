@@ -3,7 +3,7 @@ test_that("the bivariate Normal matches known values", {
   d <- dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6)
   expect_identical(pretty_name(d), "Bivariate Normal")
   expect_identical(vtype(d), "continuous")
-  expect_identical(parameters(d)$cor, 0.6)
+  expect_named(parameters(d), c("mean", "cov"))
   # Both below their means: a known closed form.
   expect_equal(eval_bi_cdf(d, 0, 1), 0.25 + asin(0.6) / (2 * pi))
   expect_equal(eval_bi_survival(d, 0, 1), 0.25 + asin(0.6) / (2 * pi))

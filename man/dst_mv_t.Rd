@@ -29,7 +29,8 @@ A distribution with one variable per entry of \code{location}.
 \description{
 Makes a multivariate Student t distribution. \code{dst_mv_t()} takes any
 number of variables; \code{dst_bi_t()} is a shortcut for two, specified by
-scales and a correlation.
+scales and a correlation. Either way, the result is the same kind of
+distribution, with parameters \code{location}, \code{scale} (a matrix), and \code{df}.
 }
 \details{
 The distribution is that of \eqn{\mu + Z / \sqrt{W / \nu}}, where
@@ -47,7 +48,9 @@ Variables that are not named get the names \code{x1}, \code{x2}, and so on, exce
 in \code{dst_bi_t()}, where they are \code{x} and \code{y}.
 
 The marginal distribution of any of the variables (see \code{\link[=marginal]{marginal()}}) is
-again t with the same degrees of freedom; one variable gives \code{\link[=dst_t]{dst_t()}}.
+again t with the same degrees of freedom. One variable gives a t shifted
+by its location and stretched by its scale ("Location-Scale Student t"),
+or \code{\link[=dst_t]{dst_t()}} itself when those are 0 and 1.
 Given some of the variables (see the \code{given} argument of
 \code{\link[=eval_mv_cdf]{eval_mv_cdf()}}), the rest are t with more degrees of freedom: \code{df} plus
 the number of variables given. Both are exact.

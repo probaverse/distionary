@@ -28,7 +28,8 @@ A distribution with one variable per entry of \code{mean}.
 \description{
 Makes a multivariate Normal (Gaussian) distribution. \code{dst_mv_norm()} takes
 any number of variables; \code{dst_bi_norm()} is a shortcut for two, specified
-by standard deviations and a correlation.
+by standard deviations and a correlation. Either way, the result is the
+same kind of distribution, with parameters \code{mean} and \code{cov}.
 }
 \details{
 Variables that are not named get the names \code{x1}, \code{x2}, and so on, except

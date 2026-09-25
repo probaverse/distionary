@@ -44,7 +44,7 @@ test_that("marginals and conditionals of the t are t", {
   s <- matrix(c(1, 0.5, 0.5, 2), 2)
   d <- dst_mv_t(c(a = 0, b = 1), s, df = 3)
   b <- marginal(d, "b")
-  expect_identical(pretty_name(b), "Student t")
+  expect_identical(pretty_name(b), "Location-Scale Student t")
   expect_equal(eval_cdf(b, 2), stats::pt((2 - 1) / sqrt(2), 3))
   # b | a = 1 is t with df 4, location 1.5, scale^2 (3 + 1) / 4 * 1.75.
   cb <- condition(d, c(a = 1))
@@ -99,23 +99,27 @@ test_that("the t checks its parameters, and reduces where it should", {
   expect_true(is.na(dst_mv_t(c(0, NA), s, 2)))
   expect_identical(pretty_name(dst_mv_t(c(0, 0), s, Inf)), "Bivariate Normal")
   one <- dst_mv_t(3, matrix(4), 2)
-  expect_identical(parameters(one), list(df = 2, location = 3, scale = 2))
+  expect_identical(parameters(one), list(location = 3, scale = 2, df = 2))
   d <- dst_bi_t(c(0, 0), c(1, 2), 0.5, 3)
   expect_identical(variables(d), c("x", "y"))
-  expect_identical(parameters(d)$cor, 0.5)
+  expect_named(parameters(d), c("location", "scale", "df"))
   expect_error(dst_bi_t(c(0, 0), c(1, 2), 1, 3), "strictly between")
 })
 
-test_that("dst_t() shifts and scales, and keeps the standard t as it was", {
-  expect_identical(parameters(dst_t(3)), list(df = 3))
-  d <- dst_t(3, location = 10, scale = 2)
+test_that("one variable of a t is a shifted, scaled t", {
+  d <- dst_mv_t(c(a = 10), matrix(4), df = 3)
+  expect_identical(pretty_name(d), "Location-Scale Student t")
+  expect_identical(parameters(d), list(location = 10, scale = 2, df = 3))
   expect_equal(eval_cdf(d, 12), stats::pt(1, 3))
   expect_equal(eval_density(d, 12), stats::dt(1, 3) / 2)
   expect_equal(eval_quantile(d, 0.9), 10 + 2 * stats::qt(0.9, 3))
   expect_equal(mean(d), 10)
   expect_equal(variance(d), 4 * 3)
-  expect_error(dst_t(3, location = 0, scale = 0), "positive")
-  expect_error(dst_t(3, 1))
+  expect_identical(variables(d), "a")
+  # The standard t is dst_t(), whose only parameter is df.
+  standard <- marginal(dst_mv_t(c(0, 0), diag(2), df = 3), 1)
+  expect_identical(pretty_name(standard), "Student t")
+  expect_identical(parameters(standard), list(df = 3))
 })
 
 test_that("the vectorised bivariate Normal CDF matches mvtnorm", {

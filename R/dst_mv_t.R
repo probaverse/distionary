@@ -2,7 +2,8 @@
 #'
 #' Makes a multivariate Student t distribution. `dst_mv_t()` takes any
 #' number of variables; `dst_bi_t()` is a shortcut for two, specified by
-#' scales and a correlation.
+#' scales and a correlation. Either way, the result is the same kind of
+#' distribution, with parameters `location`, `scale` (a matrix), and `df`.
 #'
 #' @param location Vector of locations, one per variable. Its names, if any,
 #' name the variables.
@@ -29,7 +30,9 @@
 #' in `dst_bi_t()`, where they are `x` and `y`.
 #'
 #' The marginal distribution of any of the variables (see [marginal()]) is
-#' again t with the same degrees of freedom; one variable gives [dst_t()].
+#' again t with the same degrees of freedom. One variable gives a t shifted
+#' by its location and stretched by its scale ("Location-Scale Student t"),
+#' or [dst_t()] itself when those are 0 and 1.
 #' Given some of the variables (see the `given` argument of
 #' [eval_mv_cdf()]), the rest are t with more degrees of freedom: `df` plus
 #' the number of variables given. Both are exact.
@@ -102,7 +105,7 @@ dst_mv_t <- function(location, scale, df) {
     ))
   }
   if (p == 1L) {
-    out <- dst_t(df, location = unname(location), scale = sqrt(scale[[1L]]))
+    out <- univariate_t(unname(location), sqrt(scale[[1L]]), df)
     variables(out) <- vars
     return(out)
   }
@@ -132,14 +135,7 @@ dst_bi_t <- function(location, scale, cor, df) {
   scale_matrix <- diag(scale) %*% matrix(c(1, cor, cor, 1), 2L) %*%
     diag(scale)
   names(location) <- bi_variable_names(names(location))
-  d <- dst_mv_t(location = location, scale = scale_matrix, df = df)
-  parameters(d) <- list(
-    location = parameters(d)$location,
-    scale = unname(scale),
-    cor = cor,
-    df = df
-  )
-  d
+  dst_mv_t(location = location, scale = scale_matrix, df = df)
 }
 
 #' Build a multivariate t from checked parameters.
@@ -312,4 +308,47 @@ mvt_prob <- function(x, upper, location, scale, df) {
       subdivisions = 1000L
     )$value
   }, numeric(1))
+}
+
+#' A univariate t, shifted and scaled: the distribution of one variable of a
+#' multivariate t.
+#'
+#' [dst_t()] is the standard t, with degrees of freedom as its only
+#' parameter, so it is returned whenever the location is 0 and the scale 1.
+#' Otherwise, this is `location + scale * T`, under its own name so that a
+#' "Student t" always has the same parameters.
+#' @noRd
+univariate_t <- function(location, scale, df) {
+  if (location == 0 && scale == 1) {
+    return(dst_t(df))
+  }
+  distribution(
+    .parameters = list(location = location, scale = scale, df = df),
+    density = function(x) stats::dt((x - location) / scale, df = df) / scale,
+    cdf = function(x) stats::pt((x - location) / scale, df = df),
+    quantile = function(p) location + scale * stats::qt(p, df = df),
+    realise = function(n) location + scale * stats::rt(n, df = df),
+    survival = function(x) {
+      stats::pt((x - location) / scale, df = df, lower.tail = FALSE)
+    },
+    mean = if (df > 1) location else NaN,
+    median = location,
+    variance = if (df > 2) {
+      scale^2 * df / (df - 2)
+    } else if (df > 1) {
+      Inf
+    } else {
+      NaN
+    },
+    skewness = if (df > 3) 0 else NaN,
+    kurtosis_exc = if (df > 4) {
+      6 / (df - 4)
+    } else if (df > 2) {
+      Inf
+    } else {
+      NaN
+    },
+    .support = continuous(),
+    .name = "Location-Scale Student t"
+  )
 }

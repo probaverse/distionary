@@ -2,7 +2,8 @@
 #'
 #' Makes a multivariate Normal (Gaussian) distribution. `dst_mv_norm()` takes
 #' any number of variables; `dst_bi_norm()` is a shortcut for two, specified
-#' by standard deviations and a correlation.
+#' by standard deviations and a correlation. Either way, the result is the
+#' same kind of distribution, with parameters `mean` and `cov`.
 #'
 #' @param mean Vector of means, one per variable. Its names, if any, name the
 #' variables.
@@ -123,9 +124,7 @@ dst_bi_norm <- function(mean, sd, cor) {
   # The bivariate shortcuts name their variables after the arguments of
   # `eval_bi_*()`, unless told otherwise.
   names(mean) <- bi_variable_names(names(mean))
-  d <- dst_mv_norm(mean = mean, cov = cov)
-  parameters(d) <- list(mean = parameters(d)$mean, sd = unname(sd), cor = cor)
-  d
+  dst_mv_norm(mean = mean, cov = cov)
 }
 
 #' Build a multivariate Normal from checked parameters.
