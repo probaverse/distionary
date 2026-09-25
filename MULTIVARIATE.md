@@ -22,14 +22,13 @@ passes.
 | Multivariate property network (`eval_mv_*_from_network`) | `R/eval_mv_network.R` |
 | `marginal()` | `R/marginal.R` |
 | `conditional` property network (the verb is distplyr's `conditional()`) | `R/conditional.R` |
-| `prob(d, event, given = )`: one way in for probabilities | `R/prob.R` |
+| `prob(d, ..., given = )`: one way in for probabilities | `R/prob.R`, `R/prob-events.R`, `R/prob-evaluate.R` |
 | `variables<-`; univariate distributions named (`x` by default) | `R/support-multivariate.R` |
 | Reordering: `marginal()` with every variable, exact via `permute_distribution()` | `R/marginal.R` |
-| tidyselect selections (Suggests) in `marginal(which)` and `given` | `R/select.R` (own commit c57e458) |
 | `dst_mv_norm()` (incl. singular cov), `dst_bi_norm()` | `R/dst_mv_norm.R` |
 | `dst_mv_empirical()`, `dst_bi_empirical()` | `R/dst_mv_empirical.R` |
 | `dst_mv_t()`, `dst_bi_t()` (any df, singular scale OK) | `R/dst_mv_t.R` |
-| `dst_t()` gains `location`, `scale` (for the t's marginals) | `R/dst_t.R` |
+| One variable of a t: internal `univariate_t()`, "Location-Scale Student t" (`dst_t()` unchanged) | `R/dst_mv_t.R` |
 | Vectorised bivariate Normal CDF `pbinorm()` (Sheppard-Drezner + GL) | `R/dst_mv_norm.R` |
 | Vignette "Multivariate Distributions" (river-slice example) | `vignettes/multivariate.Rmd` |
 
@@ -104,6 +103,27 @@ passes.
 
 - **`prob()` takes conditions in `...`**, joined by `&` as in `filter()`
   (2026-09-25). A named argument is refused with a `==` hint.
+
+- **Self-review fixes (2026-09-25)**, after Vincenzo asked for a review
+  as if by an outside reviewer:
+  - `prob()` tracks every read of a variable (active bindings in the data
+    mask). A variable that goes missing from the event means a function
+    swallowed it (`is.na()`, `%in%` before it was supported, ...), so the
+    condition is refused, naming the function. `%in%` is now supported.
+  - Univariate speed is back level with main: `is_multivariate()` reads
+    the support's class directly.
+  - `realise(d, 0)` works. Products carry an `order`, so any reordering
+    works (no more "paired variables" refusal). Reordering keeps unknown
+    properties.
+  - tidyselect was reverted (ed58e2f): standard evaluation only.
+  - The evaluators' `given` became `known`; `prob()` keeps `given`.
+  - `dst_t()` is back to df only. The bi families report mv parameters.
+    `dst_mv_empirical(..., weights, data, na_action_y, na_action_w)` takes
+    variables data-masked, and splices lists as `mix()` does. A named `l`
+    in `eval_mv_*()` is matched by name, ignoring extras.
+  - mvtnorm's own `seed` argument replaces `with_fixed_seed()`.
+  - `==`/`!=` on atomless quantities are settled before DNF expansion.
+  - distplyr: every verb and operator refuses multivariate input.
 
 ## Open questions
 
