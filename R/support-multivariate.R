@@ -483,6 +483,21 @@ support_marginal <- function(s, idx) {
   dims <- vapply(factors, support_dimension, integer(1))
   owner <- rep(seq_along(factors), dims)
   within <- sequence(dims)
+  # A multivariate piece pairs its variables; putting another variable
+  # between two of them would need a product with interleaved pieces,
+  # which a product cannot describe.
+  runs <- owner[idx][c(TRUE, diff(owner[idx]) != 0)]
+  split <- runs[duplicated(runs)]
+  split <- split[vapply(factors[split], inherits, logical(1), "support_mv")]
+  if (length(split) > 0L) {
+    paired <- s[["variables"]][owner == split[[1L]]]
+    stop(
+      "The variables ", format_names(paired), " are paired in the\n",
+      "support, and cannot be separated by another variable.\n",
+      "Keep them next to each other.",
+      call. = FALSE
+    )
+  }
   pieces <- list()
   piece_names <- character(0)
   # Walk the requested variables in order, grouping consecutive variables

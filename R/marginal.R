@@ -10,6 +10,14 @@
 #' Selecting a single variable gives a univariate distribution, which can be
 #' evaluated with [eval_cdf()], [eval_quantile()], and the rest.
 #'
+#' Like `dplyr::select()`, `marginal()` both picks variables and orders
+#' them, so selecting all of them in a new order reorders the
+#' distribution: `marginal(d, c("runoff", "rainfall"))`. Nothing is lost in
+#' a reordering; every property the distribution states is kept, with its
+#' arguments rearranged. The one thing a reordering cannot do is separate
+#' variables whose support pairs them (such as the columns of a set of
+#' points) with another variable in between.
+#'
 #' A distribution can state its own marginals (the multivariate Normal
 #' does, as Normal distributions). Otherwise they are worked out: the CDF
 #' is the joint CDF with the other variables at `Inf`; the survival
@@ -22,6 +30,9 @@
 #' d <- dst_bi_norm(mean = c(0, 10), sd = c(1, 2), cor = 0.5)
 #' marginal(d, "y")
 #' marginal(d, 1)
+#'
+#' # Reorder the variables.
+#' marginal(d, c("y", "x"))
 #'
 #' e <- dst_mv_empirical(list(a = c(1, 1, 2), b = c(3, 4, 4)))
 #' marginal(e, "b")
@@ -49,6 +60,9 @@ marginal <- function(distribution, which) {
 #' @param idx Integer positions of the variables to keep.
 #' @noRd
 eval_mv_marginal_from_network <- function(distribution, idx) {
+  if (length(idx) == dimension(distribution)) {
+    return(permute_distribution(distribution, idx))
+  }
   s <- support(distribution)
   s_marg <- support_marginal(s, idx)
   p <- dimension(distribution)
@@ -116,4 +130,79 @@ eval_mv_marginal_from_network <- function(distribution, idx) {
     .support = s_marg,
     .name = name
   ))
+}
+
+#' Reorder a distribution's variables, keeping every stated property.
+#'
+#' New variable `j` is old variable `idx[j]`. Representations are called
+#' with their arguments put back in the old order; moments are rearranged;
+#' and the `marginal`, `conditional`, and `linear` properties translate
+#' positions between the two orders. Properties that are not stated are
+#' left for the network to work out, as they would have been.
+#' @noRd
+permute_distribution <- function(distribution, idx) {
+  back <- order(idx)
+  old_vars <- variables(distribution)
+  new_vars <- old_vars[idx]
+  reps <- list()
+  for (entry in c("cdf", "survival", "density", "pmf")) {
+    f <- distribution[[entry]]
+    if (is.function(f)) {
+      reps[[entry]] <- permute_arguments(f, back)
+    }
+  }
+  realise_old <- distribution[["realise"]]
+  if (is.function(realise_old)) {
+    reps$realise <- function(n) as.data.frame(realise_old(n))[idx]
+  }
+  if (!is.null(distribution[["mean"]])) {
+    reps$mean <- distribution[["mean"]][idx]
+  }
+  if (!is.null(distribution[["stdev"]])) {
+    reps$stdev <- distribution[["stdev"]][idx]
+  }
+  if (!is.null(distribution[["variance"]])) {
+    reps$variance <- distribution[["variance"]][idx, idx, drop = FALSE]
+  }
+  marginal_old <- distribution[["marginal"]]
+  if (is.function(marginal_old)) {
+    reps$marginal <- function(which) marginal_old(idx[which])
+  }
+  conditional_old <- distribution[["conditional"]]
+  if (is.function(conditional_old)) {
+    reps$conditional <- function(given, at) {
+      out <- conditional_old(idx[given], at)
+      rest <- new_vars[-given]
+      if (is.na(out) || length(rest) == 1L) {
+        return(out)
+      }
+      variables(out) <- setdiff(old_vars, old_vars[idx[given]])
+      marginal(out, rest)
+    }
+  }
+  linear_old <- distribution[["linear"]]
+  if (is.function(linear_old)) {
+    reps$linear <- function(matrix) linear_old(matrix[, back, drop = FALSE])
+  }
+  build <- get("distribution", mode = "function")
+  out <- suppressWarnings(rlang::exec(
+    build,
+    !!!reps,
+    .support = support_marginal(support(distribution), idx),
+    .name = pretty_name(distribution),
+    .parameters = parameters(distribution)
+  ))
+  variables(out) <- new_vars
+  out
+}
+
+#' A function of variables in the old order, called in the new order.
+#' @noRd
+permute_arguments <- function(f, back) {
+  force(f)
+  force(back)
+  function(...) {
+    args <- list(...)
+    do.call(f, args[back])
+  }
 }

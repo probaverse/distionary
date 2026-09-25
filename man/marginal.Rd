@@ -23,6 +23,14 @@ ignoring the rest.
 Selecting a single variable gives a univariate distribution, which can be
 evaluated with \code{\link[=eval_cdf]{eval_cdf()}}, \code{\link[=eval_quantile]{eval_quantile()}}, and the rest.
 
+Like \code{dplyr::select()}, \code{marginal()} both picks variables and orders
+them, so selecting all of them in a new order reorders the
+distribution: \code{marginal(d, c("runoff", "rainfall"))}. Nothing is lost in
+a reordering; every property the distribution states is kept, with its
+arguments rearranged. The one thing a reordering cannot do is separate
+variables whose support pairs them (such as the columns of a set of
+points) with another variable in between.
+
 A distribution can state its own marginals (the multivariate Normal
 does, as Normal distributions). Otherwise they are worked out: the CDF
 is the joint CDF with the other variables at \code{Inf}; the survival
@@ -35,6 +43,9 @@ found by integrating it out.
 d <- dst_bi_norm(mean = c(0, 10), sd = c(1, 2), cor = 0.5)
 marginal(d, "y")
 marginal(d, 1)
+
+# Reorder the variables.
+marginal(d, c("y", "x"))
 
 e <- dst_mv_empirical(list(a = c(1, 1, 2), b = c(3, 4, 4)))
 marginal(e, "b")

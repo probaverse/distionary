@@ -41,3 +41,37 @@ test_that("finite marginals add up the points", {
   a <- marginal(e, 1)
   expect_equal(eval_pmf(a, 1:3), c(0.25, 0.5, 0.25))
 })
+
+test_that("selecting every variable in a new order reorders exactly", {
+  g <- distribution(
+    density = function(x, y) stats::dnorm(x) * stats::dexp(y),
+    cdf = function(x, y) stats::pnorm(x) * stats::pexp(y),
+    .support = support_product(
+      rainfall = continuous(),
+      runoff = continuous(c(0, Inf))
+    )
+  )
+  r <- marginal(g, c("runoff", "rainfall"))
+  expect_identical(variables(r), c("runoff", "rainfall"))
+  expect_equal(eval_bi_density(r, 1, 0.3), eval_bi_density(g, 0.3, 1))
+  expect_equal(eval_bi_cdf(r, 1, 0.3), eval_bi_cdf(g, 0.3, 1))
+  expect_identical(support_marginal(support(r), 1L), continuous(c(0, Inf)))
+  # Stated properties are kept, with positions translated.
+  u <- permute_distribution(dst_mv_norm(c(p = 0, q = 5), diag(2)), 2:1)
+  expect_identical(variables(u), c("q", "p"))
+  expect_equal(mean(u), c(q = 5, p = 0))
+  expect_equal(prob(u, q - p > 5), 0.5)
+  expect_equal(prob(u, q > 5, given = p == 1), 0.5)
+  e <- dst_mv_empirical(list(a = c(1, 2, 2), b = c(3, 4, 4)))
+  expect_equal(eval_mv_pmf(marginal(e, c("b", "a")), list(4, 2)), 2 / 3)
+})
+
+test_that("a reordering cannot separate paired variables", {
+  sp <- support_product(
+    discrete(data.frame(a = 1:2, b = 3:4)),
+    z = continuous()
+  )
+  h <- suppressWarnings(distribution(cdf = function(a, b, z) 0, .support = sp))
+  expect_error(marginal(h, c("a", "z", "b")), "paired")
+  expect_identical(variables(marginal(h, c("z", "a", "b"))), c("z", "a", "b"))
+})
