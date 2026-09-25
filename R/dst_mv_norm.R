@@ -160,7 +160,7 @@ new_mv_norm <- function(mean, cov, chol_cov) {
       mvnorm_prob(lower = x, upper = Inf, mean = mean, cov = cov)
     },
     realise = function(n) {
-      z <- matrix(stats::rnorm(n * p), nrow = n)
+      z <- matrix(stats::rnorm(n * p), nrow = n, ncol = p)
       x <- z %*% chol_cov + rep(mean, each = n)
       colnames(x) <- vars
       as.data.frame(x)
@@ -207,7 +207,7 @@ new_mv_norm_singular <- function(mean, cov, factor) {
       mvnorm_prob(lower = x, upper = Inf, mean = mean, cov = cov)
     },
     realise = function(n) {
-      z <- matrix(stats::rnorm(n * r), nrow = n)
+      z <- matrix(stats::rnorm(n * r), nrow = n, ncol = r)
       x <- z %*% t(factor) + rep(mean, each = n)
       colnames(x) <- vars
       as.data.frame(x)

@@ -127,3 +127,17 @@ test_that("printing names the variables", {
   expect_output(print(support(e)), "2 points")
   expect_output(print(support(d)), "y: \\[-Inf, Inf\\]")
 })
+
+test_that("drawing nothing gives an empty data frame with the variables", {
+  sing <- dst_mv_norm(c(a = 0, b = 0), matrix(1, 2, 2))
+  for (d in list(
+    dst_bi_norm(mean = c(0, 1), sd = c(1, 2), cor = 0.6),
+    sing,
+    dst_bi_t(c(0, 0), c(1, 1), 0.5, 4),
+    dst_mv_empirical(list(a = 1:3, b = 4:6))
+  )) {
+    r <- realise(d, 0)
+    expect_identical(nrow(r), 0L)
+    expect_named(r, variables(d))
+  }
+})

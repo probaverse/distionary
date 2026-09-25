@@ -161,7 +161,7 @@ new_mv_t <- function(location, scale, df, root) {
       mvt_prob(as_matrix(...), upper = FALSE, location, scale, df)
     },
     realise = function(n) {
-      z <- matrix(stats::rnorm(n * r), nrow = n) %*% t(factor)
+      z <- matrix(stats::rnorm(n * r), nrow = n, ncol = r) %*% t(factor)
       w <- stats::rchisq(n, df = df)
       x <- z / sqrt(w / df) + rep(location, each = n)
       colnames(x) <- vars
