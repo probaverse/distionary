@@ -16,6 +16,9 @@ realize(distribution, n = 1)
 }
 \value{
 Vector of independent values drawn from the inputted distribution.
+For a multivariate distribution, a data frame with one column per variable
+and one row per draw (a tibble, if \pkg{tibble} is installed). It can be
+passed as \code{l} to the \verb{eval_mv_*()} functions.
 }
 \description{
 Draw \code{n} independent observations from a distribution.

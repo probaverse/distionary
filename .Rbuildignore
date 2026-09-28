@@ -18,3 +18,5 @@
 ^\.claude$
 ^CODE_STANDARDS\.md$
 ^figure$
+^revdep$
+^MULTIVARIATE\.md$

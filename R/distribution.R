@@ -76,6 +76,25 @@
 #'
 #' All functions should be vectorized.
 #'
+#' ## Several variables
+#'
+#' A distribution of several variables is made by giving `.support` a
+#' multivariate support, such as one from [support_product()]. Its
+#' representations then take one argument per variable, in the order of
+#' [variables()]: `cdf = function(x, y)` for two, or `function(...)` for
+#' any number. The CDF, survival function, density and PMF mean what they
+#' do in [eval_mv_cdf()] and friends. Two more properties are understood:
+#' `marginal`, a function of the positions of some variables returning
+#' their distribution (see [marginal()]); and `conditional`, a function of
+#' the positions of the known variables and their values, returning the
+#' distribution of the rest (used by the `known` argument of
+#' [eval_mv_cdf()] and [prob()], and by `conditional()` in \pkg{distplyr}).
+#' Either is worked out when it can be, if not given. A third, `linear`,
+#' is a function of a matrix `A` (one row per new variable, named, and one
+#' column per variable) returning the distribution of `A` times the
+#' variables; [prob()] uses it for events such as `x - y > 0`, and nothing
+#' works it out when it is not given.
+#'
 #' Other properties that are understood by `distionary` include:
 #'
 #' - `mean`, `stdev`, `variance`, `skewness`, `median` are self-explanatory.
@@ -171,8 +190,10 @@ distribution <- function(
   }
   representations <- lapply(dots, rlang::eval_tidy)
   # Check for required properties.
+  # A singular distribution has neither a density nor a PMF to give.
   reps_missing <- is.null(representations$cdf) ||
-    (is.null(representations$density) && is.null(representations$pmf))
+    (is.null(representations$density) && is.null(representations$pmf) &&
+      .vtype != "singular")
   if (reps_missing) {
     warning(
       "Full suite of distribution properties may not be accessible ",

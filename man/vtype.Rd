@@ -16,6 +16,14 @@ Single character with the variable type.
 Retrieve the variable type of a distribution, such as
 "continuous" or "discrete".
 }
+\details{
+The variable type is read from the support (see \code{\link[=support]{support()}}):
+\code{"continuous"}, \code{"discrete"}, or \code{"mixed"}. A distribution of several
+variables can also be \code{"singular"}: its probability lies on a set
+spanning fewer dimensions than it has variables, such as a line in the
+plane. It then has neither a density nor any atoms. See
+\code{\link[=support_affine]{support_affine()}}.
+}
 \examples{
 vtype(dst_beta(1, 2))
 vtype(dst_bern(0.4))

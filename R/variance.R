@@ -2,5 +2,5 @@
 #' @export
 variance <- function(distribution) {
   checkmate::assert_class(distribution, "dst")
-  eval_property(distribution, "variance")
+  name_by_variables(eval_property(distribution, "variance"), distribution)
 }

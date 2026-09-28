@@ -4,6 +4,13 @@
 #' "continuous" or "discrete".
 #'
 #' @param distribution Distribution object.
+#' @details
+#' The variable type is read from the support (see [support()]):
+#' `"continuous"`, `"discrete"`, or `"mixed"`. A distribution of several
+#' variables can also be `"singular"`: its probability lies on a set
+#' spanning fewer dimensions than it has variables, such as a line in the
+#' plane. It then has neither a density nor any atoms. See
+#' [support_affine()].
 #' @returns Single character with the variable type.
 #' @examples
 #' vtype(dst_beta(1, 2))

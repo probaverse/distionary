@@ -25,6 +25,7 @@ plot.dst <- function(
   what = c("density", "pmf", "cdf", "survival", "quantile", "hazard", "chf"),
   ...
 ) {
+  assert_univariate(x, "plot")
   ellipsis <- rlang::list2(...)
   specified <- length(what) == 1
   fname <- match.arg(what)

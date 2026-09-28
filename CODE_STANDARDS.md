@@ -80,6 +80,40 @@ which bites hardest against the 72-character limit in examples.
 does not reach inside roxygen `@examples`, so those have to be written this way
 by hand.
 
+## Distributional representations
+
+When building a distribution, two rules settle which representations to state.
+
+### Do not state what the network already derives
+
+distionary derives a representation it was not given: a missing survival from
+the CDF, a missing CDF from the survival, a missing PMF from the jumps. Stating
+one that is the network's own arithmetic rearranged is the same formula written
+twice — two places to keep correct, and nothing gained by it.
+
+### State one when it computes something different
+
+The reason to state a second representation is that it reaches its answer by a
+different route. Take each one from the base representation that carries its
+precision: a survival from a survival, a CDF from a CDF.
+
+``` r
+# Yes                               # No
+survival = function(x) {           survival = function(x) {
+  eval_survival(d, at = x) /         1 - eval_cdf(d, at = x) /
+    p_kept                             p_kept
+}                                  }
+```
+
+Far out in the tail, `eval_cdf()` returns 1 to the last bit a double holds, so
+one minus it is exactly 0 while the probability out there is real and wanted.
+`eval_survival()` still holds every digit of it. Trimming a standard normal at
+0 gave a survival of 0 at `x = 10`, where the answer is 1.5e-23.
+
+The two rules meet in the same place: a stated representation has to earn its
+place by being a better computation, and if it cannot, the network should be
+left to derive it.
+
 ## Function arguments
 
 - Match an argument against a set of allowed string values with

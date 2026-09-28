@@ -29,7 +29,9 @@ variance(distribution)
 function, arguments passed to \code{stats::integrate()}.}
 }
 \value{
-A single numeric.
+A single numeric. For a distribution of several variables,
+\code{mean()} and \code{stdev()} give one number per variable, and \code{variance()}
+gives the covariance matrix.
 }
 \description{
 Get common moment-related quantities of a

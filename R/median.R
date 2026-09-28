@@ -17,5 +17,6 @@
 #' @export
 median.dst <- function(x, ...) {
   rlang::check_dots_empty()
+  assert_univariate(x, "median")
   eval_property(x, "median")
 }

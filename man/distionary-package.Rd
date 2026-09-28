@@ -118,7 +118,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Vincenzo Coia \email{vincenzo.coia@gmail.com} [copyright holder]
+\strong{Maintainer}: Vincenzo Coia \email{vincenzo.coia@gmail.com} (\href{https://orcid.org/0000-0002-2930-0723}{ORCID}) [copyright holder]
 
 Other contributors:
 \itemize{

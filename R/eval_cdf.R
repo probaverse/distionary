@@ -39,6 +39,7 @@
 #' @export
 eval_cdf <- function(distribution, at) {
   checkmate::assert_class(distribution, "dst")
+  assert_univariate(distribution, "eval_cdf", "cdf")
   checkmate::assert_numeric(at)
   eval_property(distribution, "cdf", at)
 }

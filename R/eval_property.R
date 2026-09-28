@@ -36,12 +36,18 @@ eval_property <- function(distribution, entry, ...) {
     if (entry == "realize") {
       return(eval_property(distribution, "realise", ...))
     }
-    eval_from_network <- paste0("eval_", entry, "_from_network")
+    # A multivariate distribution has its own network: the univariate one
+    # would treat its first variable as the whole distribution.
+    prefix <- if (is_multivariate(distribution)) "eval_mv_" else "eval_"
+    eval_from_network <- paste0(prefix, entry, "_from_network")
     available <- exists(eval_from_network)
     if (!available) {
       return(NULL)
     } else {
-      return(rlang::exec(eval_from_network, distribution, ...))
+      # Called through a local name, so that an error shows a short call
+      # rather than the whole distribution spelled out.
+      from_network <- get(eval_from_network, mode = "function")
+      return(from_network(distribution, ...))
     }
   } else {
     if (is.function(repres)) {

@@ -1,3 +1,9 @@
+# distionary (development version)
+
+- Multivariate distributions (experimental), including slices such as
+  fixing the total of two variables. See
+  `vignette("multivariate", package = "distionary")`.
+
 # distionary 0.2.0
 
 This cycle adds support objects: a distribution now says where it places its
